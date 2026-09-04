@@ -17,6 +17,11 @@ import subprocess, glob, os, re, json, tempfile, sys
 from PIL import Image
 import numpy as np
 
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def pdf_path(rel):
+    return rel if os.path.isabs(rel) else os.path.join(ROOT, rel)
+
 DPI, MIN_FRAC = 100, 0.40
 EXNUM = re.compile(r"^\d+\.\d+\.?$")
 
@@ -68,12 +73,13 @@ def rules_on(pdf, page, tmp):
     return keep, h
 
 def main():
-    man = json.load(open("content/manifest.json"))
+    man = json.load(open(os.path.join(ROOT, "content", "manifest.json")))
     out = {}
     for v in man["volumes"]:
+        pdf = pdf_path(v["pdf"])
         for c in v["chapters"]:
             if not c["file"]: continue
-            ch = json.load(open("content/" + c["file"]))
+            ch = json.load(open(os.path.join(ROOT, "content", c["file"])))
             ex = ch.get("exercises")
             if not ex: continue
             secs = ch["sections"]
@@ -83,9 +89,9 @@ def main():
                 allrules, allwords = {}, {}
                 for bp in pages:
                     pp = bp + v["pageOffset"]
-                    ys, h = rules_on(v["pdf"], pp, tmp)
+                    ys, h = rules_on(pdf, pp, tmp)
                     allrules[bp] = [y/h for y in ys]
-                    allwords[bp] = words_on(v["pdf"], pp)
+                    allwords[bp] = words_on(pdf, pp)
 
                 def band_below(bp, yf):
                     """Text just under a rule. Uses a band rather than one line,
@@ -136,7 +142,7 @@ def main():
             else:
                 for s in secs: s.pop("exFrom", None); s.pop("exTo", None)
             ch["exMarks"] = [{"page": p, "y": y} for p, y in marks]
-            json.dump(ch, open("content/"+c["file"], "w"), indent=1, ensure_ascii=False)
+            json.dump(ch, open(os.path.join(ROOT, "content", c["file"]), "w"), indent=1, ensure_ascii=False)
             out[v["id"]+":"+ch["chapter"]] = len(marks)
     return out
 

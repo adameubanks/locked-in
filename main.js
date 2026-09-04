@@ -10,6 +10,11 @@ const STORE_DIR = path.join(os.homedir(), ".locked-in");
 const STATE_FILE = path.join(STORE_DIR, "state.json");
 const CONTENT_DIR = path.join(__dirname, "content");
 
+function resolvePdfPath(p) {
+  if (!p) return p;
+  return path.isAbsolute(p) ? p : path.join(__dirname, p);
+}
+
 let win = null;
 
 function ensureStore() {
@@ -105,12 +110,15 @@ ipcMain.handle("state:set", (_e, data) => {
 });
 
 ipcMain.handle("pdf:check", (_e, p) => {
-  try { return fs.existsSync(p) && fs.statSync(p).size > 0; } catch (e) { return false; }
+  try {
+    const abs = resolvePdfPath(p);
+    return fs.existsSync(abs) && fs.statSync(abs).size > 0;
+  } catch (e) { return false; }
 });
 
 ipcMain.handle("pdf:read", (_e, p) => {
   // Electron blocks file:// XHR from a file:// page, so the bytes come over IPC.
-  const buf = fs.readFileSync(p);
+  const buf = fs.readFileSync(resolvePdfPath(p));
   return new Uint8Array(buf).buffer;
 });
 

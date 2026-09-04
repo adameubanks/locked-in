@@ -7,10 +7,22 @@ by hand for the chapters we've authored (see curate.json).
 """
 import subprocess, re, json, sys, os
 
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MANIFEST = json.load(open(os.path.join(ROOT, "content", "manifest.json")))
+
+def pdf_path(rel):
+    return rel if os.path.isabs(rel) else os.path.join(ROOT, rel)
+
+# Page ranges are extract-only; path/offset/ligatures come from the manifest.
 BOOKS = [
-    {"vol":"vol3","pdf":"/home/adam/Documents/Senior/Vol3.pdf","offset":6,"first":19,"last":378,"lig":False},
-    {"vol":"vol4","pdf":"/home/adam/Documents/Senior/Vol4_Ch1-4.pdf","offset":0,"first":3,"last":140,"lig":True},
+    {"vol":"vol3","offset":6,"first":19,"last":378,"lig":False},
+    {"vol":"vol4","offset":0,"first":3,"last":140,"lig":True},
 ]
+for b in BOOKS:
+    v = next(x for x in MANIFEST["volumes"] if x["id"] == b["vol"])
+    b["pdf"] = pdf_path(v["pdf"])
+    b["offset"] = v.get("pageOffset", b["offset"])
+    b["lig"] = v.get("fixLigatures", b["lig"])
 KINDS = r"(Definition|Theorem|Lemma|Corollary|Proposition|Axiom)"
 START = re.compile(r"^\s*" + KINDS + r"\s+(\d+\.\d+\.\d+)\.?\s*(.*)$")
 STOP  = re.compile(r"^\s*(" + KINDS + r"|Proof|Example|Remark|Nota Bene|Unexample|Figure|Algorithm|Exercise)\b")
@@ -133,7 +145,7 @@ for e in uniq:
     if e["id"] not in cur:
         e["terms"] = [t for t in e["terms"] if t not in NOISE_HW and len(t) > 4]
 
-json.dump({"entries": uniq}, open("content/glossary.json","w"), indent=1, ensure_ascii=False)
+json.dump({"entries": uniq}, open(os.path.join(ROOT, "content", "glossary.json"), "w"), indent=1, ensure_ascii=False)
 named = sum(1 for e in uniq if e["terms"])
 print(f"entries: {len(uniq)}  with headword: {named}  ({100*named//max(1,len(uniq))}%)")
 from collections import Counter

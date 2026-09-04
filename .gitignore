@@ -15,3 +15,6 @@ state.json
 # The book's own text: definitions/theorems extracted from the PDFs.
 # Rebuild locally with `python3 build/extract_glossary.py`.
 content/glossary.json
+
+# Local copies of the ACME PDFs (drop them in textbooks/).
+textbooks/*.pdf
