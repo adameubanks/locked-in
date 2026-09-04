@@ -1,0 +1,758 @@
+{
+ "volume": "vol3",
+ "chapter": "2",
+ "file": "vol3-ch2.json",
+ "title": "Information, Inference, and (more) Probability",
+ "epigraph": {
+  "text": "The average surprise produced by the distribution is exactly the degree of compressibility of that distribution.",
+  "by": "§2.1, on why entropy is one idea and not two"
+ },
+ "sections": [
+  {
+   "id": "2.1",
+   "name": "Information Content and Compression",
+   "from": 94,
+   "to": 100,
+   "exFrom": {
+    "page": 161,
+    "y": 0.543
+   },
+   "exTo": {
+    "page": 162,
+    "y": 0.355
+   }
+  },
+  {
+   "id": "2.2",
+   "name": "Relative Information",
+   "from": 101,
+   "to": 107,
+   "exFrom": {
+    "page": 162,
+    "y": 0.355
+   },
+   "exTo": {
+    "page": 163,
+    "y": 0.232
+   }
+  },
+  {
+   "id": "2.3",
+   "name": "Reasoning from Experience",
+   "from": 108,
+   "to": 113,
+   "exFrom": {
+    "page": 163,
+    "y": 0.232
+   },
+   "exTo": {
+    "page": 164,
+    "y": 0.667
+   }
+  },
+  {
+   "id": "2.4",
+   "name": "Trees",
+   "from": 114,
+   "to": 120,
+   "exFrom": {
+    "page": 164,
+    "y": 0.667
+   },
+   "exTo": {
+    "page": 165,
+    "y": 0.62
+   }
+  },
+  {
+   "id": "2.5",
+   "name": "Continuous Random Variables",
+   "from": 121,
+   "to": 130,
+   "exFrom": {
+    "page": 165,
+    "y": 0.62
+   },
+   "exTo": {
+    "page": 167,
+    "y": 0.321
+   }
+  },
+  {
+   "id": "2.6",
+   "name": "Conditioning and Entropy for Continuous Distributions",
+   "from": 131,
+   "to": 138,
+   "exFrom": {
+    "page": 167,
+    "y": 0.321
+   },
+   "exTo": {
+    "page": 168,
+    "y": 0.575
+   }
+  },
+  {
+   "id": "2.7",
+   "name": "Reasoning with New Data",
+   "from": 139,
+   "to": 145,
+   "exFrom": {
+    "page": 168,
+    "y": 0.575
+   },
+   "exTo": {
+    "page": 170,
+    "y": 0.271
+   }
+  },
+  {
+   "id": "2.8",
+   "name": "Reasoning Sequentially",
+   "from": 146,
+   "to": 152,
+   "exFrom": {
+    "page": 170,
+    "y": 0.271
+   },
+   "exTo": {
+    "page": 171,
+    "y": 0.301
+   }
+  },
+  {
+   "id": "2.9",
+   "name": "Functions of Random Variables",
+   "from": 153,
+   "to": 160,
+   "exFrom": {
+    "page": 171,
+    "y": 0.301
+   },
+   "exTo": {
+    "page": 171,
+    "y": 0.76
+   }
+  }
+ ],
+ "cards": [
+  {
+   "id": "v3c2a1",
+   "s": "2.1",
+   "page": 94,
+   "q": "Define the average codeword length of an encoding, and say what a prefix-free code is and why bijectivity isn't enough.",
+   "a": "<div class='eq'>awl(f(S),P) = &Sigma;<sub>s&isin;S</sub> &#8467;(f(s))P(s) = E[L]</div>where &#8467;(c) is codeword length and L = &#8467;(f(X)). It's just the expected length of one encoded symbol.<p style='margin-top:10px'><b>Why bijective isn't enough:</b> codewords get concatenated into one string with <b>no commas or spaces</b>. A bijection can still be ambiguous &mdash; you can't tell where one codeword ends and the next begins.</p><p><b>Prefix-free</b> (or <b>instantaneous</b>): no codeword is a prefix of another. Then decoding is unambiguous. Prefix-free binary codes correspond one-to-one with binary rooted trees, each codeword a <b>leaf</b>.</p>",
+   "r": {
+    "rot": "you're squeezing symbols into bits and then jamming them together with no separators. so if 'a' &rarr; 0 and 'b' &rarr; 01, then seeing 001 you have no idea what you're looking at. prefix-free fixes it: no codeword is the start of another, so the instant you finish reading a valid codeword, you're done, no lookahead. and prefix-free codes are exactly binary trees with codewords at the leaves &mdash; which is why trees keep showing up.",
+    "ex": "{0, 01} is bijective but ambiguous. {0, 10, 11} is prefix-free: read a 0 and you're done; read a 1 and you know exactly one more bit is coming.",
+    "why": "Average codeword length is the thing the entire section is trying to minimize, and prefix-free is the constraint it's minimized under. Entropy turns out to be exactly the floor.",
+    "math": "awl = E[L] = &Sigma;&#8467;<sub>j</sub>p<sub>j</sub>. Prefix-free &hArr; codewords are leaves of a binary tree."
+   }
+  },
+  {
+   "id": "v3c2a2",
+   "s": "2.1",
+   "page": 96,
+   "q": "State Kraft's inequality and its converse. What is the counting argument?",
+   "a": "<b>Kraft (Thm 2.1.4).</b> Any prefix-free binary encoding satisfies<div class='eq'>&Sigma;<sub>s&isin;S</sub> 2<sup>&minus;&#8467;(f(s))</sup> &le; 1</div><b>Kraft&ndash;McMillan (Thm 2.1.5).</b> Conversely, given positive integers &#8467;&#8321;,&hellip;,&#8467;<sub>N</sub> with &Sigma;2<sup>&minus;&#8467;<sub>i</sub></sup> &le; 1, <b>there exists</b> a prefix-free code with exactly those lengths.<p style='margin-top:10px'><b>The counting argument:</b> let &#8467;<sub>max</sub> be the tree depth. A full binary tree has 2<sup>&#8467;<sub>max</sub></sup> leaves. Placing a codeword of length &#8467;<sub>i</sub> makes that node a leaf, killing the 2<sup>&#8467;<sub>max</sub>&minus;&#8467;<sub>i</sub></sup> descendants below it. You can't destroy more leaves than exist, so &Sigma;2<sup>&#8467;<sub>max</sub>&minus;&#8467;<sub>i</sub></sup> &le; 2<sup>&#8467;<sub>max</sub></sup>.</p>",
+   "r": {
+    "rot": "short codewords are expensive. claim a node high up in the tree and you've just deleted every node beneath it &mdash; a codeword of length 1 costs you literally half the tree. kraft is the budget: 2<sup>&minus;&#8467;</sup> is the fraction of the tree each codeword eats, and the total can't exceed 1. and the converse says the budget is the <i>only</i> obstruction &mdash; satisfy it and a code exists.",
+    "ex": "Lengths (1,2,3,3): 1/2 + 1/4 + 1/8 + 1/8 = 1 &#10003;, so a code exists (and uses the tree exactly). Lengths (1,1,2): 1/2 + 1/2 + 1/4 = 1.25 &gt; 1, so no prefix-free code has those lengths &mdash; the two length-1 codewords already consumed everything.",
+    "why": "Kraft&ndash;McMillan is what lets the entropy proof work. It means you can reason purely about a <i>list of lengths</i> and never construct a code &mdash; pick lengths satisfying the inequality and a code is guaranteed. Thm 2.1.8 does exactly that with &#8467;<sub>k</sub> = &lceil;&minus;log&#8322;p<sub>k</sub>&rceil;.",
+    "math": "&Sigma;2<sup>&minus;&#8467;<sub>i</sub></sup> &le; 1. Construct via Shannon's cumulative probability method: w&#8321; = 0, w<sub>j</sub> from partial sums, codeword = binary expansion of w<sub>j</sub> to length &#8467;<sub>j</sub>."
+   }
+  },
+  {
+   "id": "v3c2a3",
+   "s": "2.1",
+   "page": 98,
+   "q": "Define entropy and state the bound relating it to the best achievable codeword length.",
+   "a": "<div class='eq'>H(P) = &Sigma;<sub>s&isin;S</sub> P(s) log&#8322;<span class='frac'><span>1</span><span>P(s)</span></span> = &minus;&Sigma;<sub>k</sub> p<sub>k</sub> log&#8322; p<sub>k</sub></div><b>Theorem 2.1.8.</b> There exists a prefix-free binary encoding with<div class='eq'>H(P) &le; awl(f(S),P) &le; H(P) + 1</div><b>Proof idea:</b> take &#8467;<sub>k</sub> = &lceil;log&#8322;(1/p<sub>k</sub>)&rceil;. These satisfy Kraft, so a code exists. The lower bound follows since &#8467;<sub>k</sub> &ge; log&#8322;(1/p<sub>k</sub>); the upper since &#8467;<sub>k</sub> &lt; 1 + log&#8322;(1/p<sub>k</sub>).<p style='margin-top:10px'>Convention: 0&middot;log(0) = 0, since lim<sub>p&rarr;0</sub> p log p = 0. <span class='muted'>(Remark 2.1.9)</span></p>",
+   "r": {
+    "rot": "the ideal length for a symbol of probability p is log&#8322;(1/p) bits. rare thing &rarr; long codeword, common thing &rarr; short one. entropy is just the <i>average</i> of those ideal lengths. the annoyance is that lengths have to be whole numbers, so you round up and eat at most 1 extra bit per symbol. that +1 is the only slack in the whole theorem, and the next result kills it.",
+    "ex": "Bernoulli(p): H = &minus;p log&#8322;p &minus; (1&minus;p)log&#8322;(1&minus;p). At p = 0.5, H = 1 (incompressible). At p = 0.8, H &asymp; 0.722. Minimized (H = 0) at p = 0 or 1; uniquely maximized at p = 0.5.",
+    "why": "This is the payoff: <b>entropy is not an analogy for information, it is the exact bit count.</b> Define an outcome's surprise as its optimal codeword length and entropy becomes expected surprise &mdash; so compressibility and surprise are literally the same quantity.",
+    "math": "&#8467;<sub>k</sub> = &lceil;&minus;log&#8322;p<sub>k</sub>&rceil; &rArr; &Sigma;2<sup>&minus;&#8467;<sub>k</sub></sup> &le; &Sigma;2<sup>log&#8322;p<sub>k</sub></sup> = &Sigma;p<sub>k</sub> = 1, satisfying Kraft."
+   }
+  },
+  {
+   "id": "v3c2a4",
+   "s": "2.1",
+   "page": 100,
+   "q": "State Shannon's Source Coding Theorem. What does blocking buy, and why does it work?",
+   "a": "<b>Theorem 2.1.13.</b> For each n there is a prefix-free encoding f on blocks S<sup>n</sup> with<div class='eq'>H(P) &le; <span class='frac'><span>awl(f(S<sup>n</sup>), P<sup>(n)</sup>)</span><span>n</span></span> &le; H(P) + <span class='frac'><span>1</span><span>n</span></span></div>So bits per symbol &rarr; H(P) as n &rarr; &infin;. <b>Entropy is exactly the information content</b> &mdash; both the floor and the limit.<p style='margin-top:10px'><b>Why it works (Lemma 2.1.12):</b> entropy is additive over independent blocks, H(P<sup>(n)</sup>) = nH(P). Apply the &plusmn;1 bound to the block alphabet and divide by n &mdash; the wasted rounding bit is amortized over n symbols.</p>",
+   "r": {
+    "rot": "one bit of rounding waste per symbol is bad. so stop encoding symbols &mdash; encode <i>blocks</i> of n symbols as single units. still one wasted bit, but now spread over n symbols, so the waste is 1/n. crank n and the waste vanishes. entropy isn't just a lower bound you approach from far away, it's the exact limit. the whole trick is that entropy adds over independent draws.",
+    "ex": "The 80/20 coin: encoding blocks of 3 gets 0.728 bits/symbol; the entropy floor is 0.722. Larger blocks close the remaining gap. Huffman on blocks is optimal; Shannon's cumulative method is slightly worse but easier to prove things about.",
+    "why": "This is the theorem that founded information theory, and the additivity lemma is the reason entropy uses a logarithm at all &mdash; log is what turns the product P(s&#8321;)&hellip;P(s<sub>n</sub>) into a sum. Also note a fair coin has H = 1 exactly, so <b>random data cannot be compressed</b>.",
+    "math": "H(P<sup>(n)</sup>) = nH(P) since P<sup>(n)</sup> = &Pi;P(s<sub>i</sub>). Then nH &le; awl &le; nH + 1; divide by n."
+   }
+  },
+  {
+   "id": "v3c2b1",
+   "s": "2.2",
+   "page": 101,
+   "q": "Define cross entropy. What goes wrong when you compress with the wrong distribution?",
+   "a": "<div class='eq'>L(P,Q) = &Sigma;<sub>k</sub> p<sub>k</sub> log&#8322;<span class='frac'><span>1</span><span>q<sub>k</sub></span></span> = &minus;&Sigma;<sub>k</sub> p<sub>k</sub> log&#8322; q<sub>k</sub></div>You build codeword lengths from <b>Q</b> but the symbols actually arrive with frequencies <b>P</b>. <b>Lemma 2.2.3:</b> the average codeword length is then bounded below not by H(P) but by the cross entropy:<div class='eq'>L(P,Q) &le; awl(C,P) &le; L(P,Q) + 1</div><p style='margin-top:10px'>Note the asymmetry: the weights come from the true P, the lengths from the assumed Q.</p>",
+   "r": {
+    "rot": "you optimized your compressor for the wrong distribution. the codeword lengths are log(1/q) &mdash; built from your belief &mdash; but the symbols show up at rate p, the truth. so you average <i>your</i> lengths against <i>reality's</i> frequencies, and you pay. that mismatch is cross entropy. p on the outside, q inside the log. get that backwards and everything downstream is wrong.",
+    "ex": "You assume a fair coin (Q = 0.5, 0.5) and assign both faces 1 bit. The coin is actually 80/20. You spend exactly 1 bit/symbol forever, while entropy says 0.722 was achievable. Your excess: 1 &minus; 0.722 = 0.278 bits/symbol.",
+    "why": "Cross entropy is <b>the loss function you have already been minimizing</b> in every classifier you've trained. Now you know what it means: the number of bits per symbol you waste by believing Q when the truth is P.",
+    "math": "L(P,Q) = &minus;&Sigma;p<sub>k</sub>log&#8322;q<sub>k</sub>. Requires supp(P) &sube; supp(Q), else infinite."
+   }
+  },
+  {
+   "id": "v3c2b2",
+   "s": "2.2",
+   "page": 103,
+   "q": "State Gibbs' inequality and prove it. What does equality require?",
+   "a": "<b>Theorem 2.2.5.</b> For any distributions P, Q on S: <b>L(P,Q) &ge; H(P)</b>, with equality only if P = Q.<p style='margin-top:10px'><b>Proof (Jensen).</b> &minus;log&#8322;x is strictly convex, so</p><div class='eq'>0 = &minus;log&#8322;1 = &minus;log&#8322;(&Sigma;<sub>k</sub> q<sub>k</sub>) = &minus;log&#8322;(&Sigma;<sub>k</sub> p<sub>k</sub><span class='frac'><span>q<sub>k</sub></span><span>p<sub>k</sub></span></span>) &le; &minus;&Sigma;<sub>k</sub> p<sub>k</sub> log&#8322;<span class='frac'><span>q<sub>k</sub></span><span>p<sub>k</sub></span></span> = &Sigma;<sub>k</sub> p<sub>k</sub> log&#8322;<span class='frac'><span>p<sub>k</sub></span><span>q<sub>k</sub></span></span></div><p>Strict convexity means equality in Jensen needs q<sub>k</sub>/p<sub>k</sub> = c for all k; summing both sides forces c = 1, hence Q = P.</p>",
+   "r": {
+    "rot": "you can never beat the true distribution. building your code on any Q other than the truth costs you strictly more bits, always, no exceptions, and the only way to break even is to be exactly right. the proof is one application of jensen to &minus;log, which is convex. the <i>strict</i> convexity is what upgrades 'you can't do better' to 'you do strictly worse unless P = Q.'",
+    "ex": "It's why you can't cheat a compressor. Every possible wrong model of your data costs you real bits, and the cost is a smooth function of how wrong you are.",
+    "why": "Gibbs is what makes KL divergence non-negative, which is what makes it usable as a loss. Every 'minimize the divergence' method in machine learning &mdash; variational inference, EM, VAEs &mdash; leans on this one inequality being the right way around.",
+    "math": "Jensen: for convex &phi;, &phi;(E[Z]) &le; E[&phi;(Z)]. Here Z = q<sub>k</sub>/p<sub>k</sub> under P, &phi; = &minus;log&#8322;."
+   }
+  },
+  {
+   "id": "v3c2b3",
+   "s": "2.2",
+   "page": 104,
+   "q": "Define relative entropy (KL divergence). Is it a distance?",
+   "a": "<div class='eq'>D<sub>kl</sub>(P&#8214;Q) = L(P,Q) &minus; H(P) = &Sigma;<sub>k</sub> p<sub>k</sub> log&#8322;<span class='frac'><span>p<sub>k</sub></span><span>q<sub>k</sub></span></span></div>It is the <b>excess bits per symbol</b> you pay for encoding with Q when the truth is P. By Gibbs it is &ge; 0, and 0 only when P = Q.<p style='margin-top:10px'><b>Not a distance.</b> It is <b>not symmetric</b> &mdash; D<sub>kl</sub>(P&#8214;Q) &ne; D<sub>kl</sub>(Q&#8214;P) in general &mdash; and fails the triangle inequality. You can symmetrize with &frac12;(D<sub>kl</sub>(P&#8214;Q) + D<sub>kl</sub>(Q&#8214;P)), but the book notes it's usually not worth it and makes interpretation harder.</p><p><b>Support matters:</b> requires supp(P) &sube; supp(Q); otherwise p log(p/0) = &infin;.</p>",
+   "r": {
+    "rot": "KL is the bill: how many extra bits per symbol your wrong belief Q costs you when reality is P. zero only if you're exactly right. everyone calls it a distance and it <b>isn't</b> &mdash; swap the arguments and you get a different number. and it explodes if Q assigns zero probability to something P thinks can happen, which is the mathematical version of 'my model said that was impossible and then it happened.'",
+    "ex": "Tree picture (Remark 2.2.9): codeword length = leaf depth. Entropy = average tree depth under the optimal code. Cross entropy = average depth of Q's tree measured against P's frequencies. KL = the average difference in depth.",
+    "why": "The asymmetry is not a defect, it's a modeling choice with real consequences. D<sub>kl</sub>(P&#8214;Q) punishes Q for assigning low probability where P has mass (mode-covering); D<sub>kl</sub>(Q&#8214;P) punishes Q for putting mass where P has none (mode-seeking). Which you minimize changes what your fitted model looks like.",
+    "math": "D<sub>kl</sub>(P&#8214;Q) = L(P,Q) &minus; H(P) &ge; 0. Conventions: 0log(0/q) = 0, p log(p/0) = &infin;."
+   }
+  },
+  {
+   "id": "v3c2b4",
+   "s": "2.2",
+   "page": 106,
+   "q": "Define mutual information and state its three properties. What is the maximum-entropy distribution?",
+   "a": "<div class='eq'>I(X;Y) = D<sub>kl</sub>(P(X,Y) &#8214; P(X)P(Y))</div>It measures how far X and Y are from being independent &mdash; the KL divergence from the joint to the product of the marginals.<p style='margin-top:10px'><b>Prop 2.2.17.</b> (i) I(X;Y) = I(Y;X) &mdash; symmetric. (ii) I(X;Y) &ge; 0, with equality <b>iff X and Y are independent</b>. (iii) I(X;X) = H(X).</p><p style='margin-top:10px'><b>Cor 2.2.13:</b> for a fixed support of size N, the <b>uniform distribution maximizes entropy</b>: H(X) &le; log&#8322;N. And H(X) &ge; 0 with equality iff X is a point mass (Prop 2.2.12).</p>",
+   "r": {
+    "rot": "mutual information asks: how much does knowing Y tell you about X? measure it as the KL gap between the real joint and the fake joint where they're independent. zero gap = zero information = independent. and note (iii): the mutual information of X with <i>itself</i> is its entropy, which is exactly right &mdash; knowing X tells you everything there is to know about X, and that amount is H(X).",
+    "ex": "Bernoulli(p) with Y = X gives I(X;Y) = H(X) (Ex 2.2.16) &mdash; maximal dependence. Independent X, Y gives 0. Entropy bounds: a point mass has H = 0 (no surprise ever); a uniform on N symbols has H = log&#8322;N (maximum ignorance).",
+    "why": "Mutual information is the correlation coefficient's serious cousin: it detects <b>any</b> dependence, not just linear ones. Recall the covariance blind spot from &sect;1.8 &mdash; Cov(X, X&sup2;) = 0 for symmetric X, but the mutual information is large, because it sees the dependence covariance is structurally blind to.",
+    "math": "I(X;Y) = &Sigma;<sub>x,y</sub>P(x,y)log&#8322;[P(x,y)/(P(x)P(y))] = H(X) + H(Y) &minus; H(X,Y)."
+   }
+  },
+  {
+   "id": "v3c2c1",
+   "s": "2.3",
+   "page": 108,
+   "q": "State the principle of minimum discrimination information. How does it generalize the update rules from Chapter 1?",
+   "a": "New information arrives. Consider <b>all</b> distributions P compatible with it, and choose the one encoding the <b>least additional information beyond the prior</b>:<div class='eq'>P<sub>new</sub> = argmin<sub>P</sub> D<sub>kl</sub>(P &#8214; P<sub>old</sub>)</div>subject to the constraints the new information imposes.<p style='margin-top:10px'>The interpretation is exactly &sect;2.2's: D<sub>kl</sub>(P<sub>new</sub>&#8214;P<sub>old</sub>) is the number of extra bits per symbol the update costs. Minimizing it means <b>changing your beliefs as little as the evidence forces you to</b>, and no less.</p><p>This is proposed as a nearly universal method of inference &mdash; conditioning and Jeffrey's rule both fall out as special cases.</p>",
+   "r": {
+    "rot": "occam's razor with a number attached. lots of distributions fit the new evidence. pick the one closest to what you already believed &mdash; closest in the bits-you-had-to-add sense. don't invent structure the data didn't force on you. conditioning (&sect;1.2) and jeffrey's rule (&sect;1.3) aren't separate rules; they're what this optimization spits out for particular kinds of evidence.",
+    "ex": "Constrain only that a die's mean roll is 4.5. Infinitely many distributions do that. Minimum relative entropy against the uniform prior picks exactly one &mdash; and it's the maximum-entropy distribution with that mean.",
+    "why": "This is the chapter's biggest structural claim: Ch 1 gave you two update rules and Dutch-book arguments that they're forced. This gives a <b>single variational principle</b> that generates both. That's the unification move from &sect;1.2.6, applied one level up.",
+    "math": "min<sub>P</sub> D<sub>kl</sub>(P&#8214;P<sub>old</sub>) s.t. E<sub>P</sub>[g<sub>i</sub>] = c<sub>i</sub>. Lagrange multipliers give an exponential-family solution P &prop; P<sub>old</sub>exp(&Sigma;&lambda;<sub>i</sub>g<sub>i</sub>)."
+   }
+  },
+  {
+   "id": "v3c2c2",
+   "s": "2.3",
+   "page": 108,
+   "q": "The unusual die: what makes the three obvious candidate distributions unsatisfactory?",
+   "a": "A six-sided die. With no information, the <b>principle of insufficient reason</b> gives the uniform prior P(k) = 1/6, whose expected value is 3.5. Now you are told the expected value is actually <b>4.5</b>, so it cannot be uniform. Infinitely many distributions are compatible. Three obvious ones:<div class='eq'>(i) P = 0 for k = 1,2,3,6 and P = 0.5 for k = 4,5<br>(ii) P = 0 for k = 1,2 and P = 0.25 for k = 3,4,5,6<br>(iii) P = 0.1 for k = 1,&hellip;,5 and P = 0.5 for k = 6</div><b>All three fit the constraint. All three assert more than you know.</b> (i) claims sides 1, 2, 3 and 6 are <b>impossible</b> &mdash; nothing about a raised mean supports that. (ii) claims sides 1 and 2 are impossible. (iii) fixes that but now claims side 6 is <b>five times</b> more likely than the rest, which is its own bold assertion.<p style='margin-top:8px'>So the criterion cannot be &ldquo;compatible with the data&rdquo; &mdash; infinitely many are. It has to be <b>compatible with the data and nothing more</b>, which is what minimizing relative entropy to the prior expresses.</p>",
+   "r": {
+    "rot": "you know one thing: the die averages 4.5 instead of 3.5. loads of distributions do that. but look at what the easy guesses smuggle in. saying &ldquo;it only ever lands 4 or 5&rdquo; fits the average &mdash; and claims four faces are <b>impossible</b>, which you were never told. saying &ldquo;side 6 is five times likelier&rdquo; also fits &mdash; and invents a specific bias out of nothing. every one of them answers a question you weren't asked. the fix is to demand the distribution that adds the <b>least</b> beyond what you were actually told.",
+    "ex": "The prior itself came from the principle of insufficient reason: absent any information, uniform. The update problem is then &ldquo;how do I move off uniform as little as possible while hitting a mean of 4.5?&rdquo;",
+    "why": "It is the cleanest illustration in the book of why <b>fitting the constraint is not enough</b>. A model can be perfectly consistent with your evidence and still be badly wrong because of what it assumes on the side &mdash; the same worry that shows up as unjustified assumptions in priors (&sect;4.7.4) and as overfitting in Chapter 5.",
+    "math": "Constraint set: {P : &sum;p<sub>k</sub> = 1, &sum;k&middot;p<sub>k</sub> = 4.5}. Infinitely many members; the constraint alone does not select one."
+   }
+  },
+  {
+   "id": "v3c2c3",
+   "s": "2.3",
+   "page": 109,
+   "q": "Solve the unusual die problem. What form does the answer take, and how does its relative entropy compare with the naive candidates?",
+   "a": "Minimize relative entropy to the uniform prior subject to the two constraints:<div class='eq'>argmin<sub>p&#8321;,&hellip;,p&#8326;&ge;0</sub> &sum;<sub>k=1</sub><sup>6</sup> p<sub>k</sub> log&#8322;(6p<sub>k</sub>)&nbsp;&nbsp;s.t.&nbsp;&nbsp;&sum;p<sub>k</sub> = 1,&nbsp; &sum;k p<sub>k</sub> = 4.5</div>Form the Lagrangian, set &part;/&part;p<sub>k</sub> = 0, and every solution has the <b>exponential form</b><div class='eq'>p<sub>k</sub> = K&middot;2<sup>&minus;k&lambda;</sup>,&nbsp;&nbsp;so&nbsp;&nbsp;p<sub>k</sub> = 2<sup>&minus;k&lambda;</sup> / &sum;<sub>j</sub>2<sup>&minus;j&lambda;</sup></div>Imposing the mean constraint gives &sum;k2<sup>&minus;k&lambda;</sup> = 4.5&sum;2<sup>&minus;j&lambda;</sup>, solved numerically by &lambda; = &minus;0.53531, giving<div class='eq'>p&#8321;=0.0544&nbsp; p&#8322;=0.0788&nbsp; p&#8323;=0.1142<br>p&#8324;=0.1654&nbsp; p&#8325;=0.2398&nbsp; p&#8326;=0.3475</div><b>Remark 2.3.1 &mdash; the scoreboard.</b> The three naive candidates have relative entropy &asymp; 1.585, 0.585, and 0.424 &mdash; ranking them exactly as intuition did, (i) worst, (iii) best of the three. The optimum scores <b>0.257</b>, beating them all.<p style='margin-top:8px'>Every face keeps positive probability, they rise monotonically toward 6, and nothing else was assumed.</p>",
+   "r": {
+    "rot": "set up the lagrangian, differentiate, and the answer comes out <b>exponential</b> in k &mdash; p<sub>k</sub> proportional to 2<sup>&minus;k&lambda;</sup>. that shape isn't chosen, it falls out of the optimization. plug in the mean constraint, solve for &lambda; numerically, and you get probabilities climbing smoothly from 5% on side 1 to 35% on side 6. no face is banned, nothing is singled out. and the relative-entropy scores confirm the hunch: the three guesses score 1.59, 0.59 and 0.42, and the real answer scores 0.26 &mdash; less added information than any of them.",
+    "ex": "The ranking is the satisfying part. Relative entropy independently reproduces the informal judgement that (i) was the most presumptuous and (iii) the least &mdash; then beats all three. The intuition and the arithmetic agree.",
+    "why": "The exponential form is not a coincidence of this problem: minimizing relative entropy under linear (moment) constraints <i>always</i> produces P &prop; P<sub>old</sub>exp(&sum;&lambda;<sub>i</sub>g<sub>i</sub>), an exponential family. That's why exponential families are everywhere &mdash; and why Proposition 5.8.1 can lean on them.",
+    "math": "&part;/&part;p<sub>k</sub>: log&#8322;(6p<sub>k</sub>) + 1/log2 + &alpha; + k&lambda; = 0 &rArr; p<sub>k</sub> = K2<sup>&minus;k&lambda;</sup>. Here &lambda; = &minus;0.53531, D<sub>kl</sub> &asymp; 0.257."
+   }
+  },
+  {
+   "id": "v3c2c4",
+   "s": "2.3",
+   "page": 112,
+   "q": "State Theorem 2.3.4. In what sense is Bayes' rule <i>derived</i> here rather than assumed?",
+   "a": "Setup: a family {(&Omega;,F,P<sub>&theta;</sub>)}<sub>&theta;&isin;&Theta;</sub>, a signal x&prime; drawn i.i.d. from the X belonging to some unknown &theta;, and a <b>prior</b> P<sub>old</sub>(&theta;). Seek the posterior P<sub>new</sub>(&theta;) minimizing relative entropy among distributions <b>compatible with the observed signal</b>.<p style='margin-top:6px'>&ldquo;Compatible&rdquo; is made precise by (2.23): having actually observed x&prime;, we are now certain, so the marginal must be the point mass P(X<sup>(n)</sup> = x) = &prod;&delta;<sub>x&prime;<sub>i</sub>,x<sub>i</sub></sub>. Lemma 2.3.2 pushes that into the joint; Lemma 2.3.3 factors the prior's joint by conditional independence.</p><p><b>Theorem 2.3.4.</b> The minimizer is</p><div class='eq'>P<sub>new</sub>(&theta;) = [ &prod;<sub>i</sub> P<sub>&theta;</sub>(X = x&prime;<sub>i</sub>) P<sub>old</sub>(&theta;) ] / [ &sum;<sub>&theta;&prime;</sub> &prod;<sub>j</sub> P<sub>&theta;&prime;</sub>(X = x&prime;<sub>j</sub>) P<sub>old</sub>(&theta;&prime;) ]</div><b>That is exactly Bayes' rule.</b> The Lagrangian gives P<sub>new</sub>(&theta;) = (2<sup>&minus;&lambda;</sup>/e)&prod;<sub>i</sub>P<sub>old</sub>(X<sub>i</sub> = x&prime;<sub>i</sub>, &theta;), and solving for &lambda; by summing over &theta; produces the normalizing denominator.<p style='margin-top:8px'><b>The point:</b> Bayesian updating is not a separate postulate here. It is what you <b>get</b> from &ldquo;change your beliefs as little as the data forces you to,&rdquo; once the new information is the observation of a specific signal.</p>",
+   "r": {
+    "rot": "you already know bayes' rule. what happens here is that nobody assumes it &mdash; it's <b>derived</b>. start from one principle: move your beliefs the minimum distance needed to accommodate what you saw. encode &ldquo;i saw exactly this signal&rdquo; as a constraint (that outcome now has probability 1). do the constrained minimization. bayes' rule falls out, normalizing denominator and all. so bayesian updating isn't a philosophical stance you either adopt or don't. it's the answer to an optimization problem.",
+    "ex": "Example 2.3.5: two identical-feeling coins, one 40% heads, one 80%. Uniform prior, flip five times, see (H,T,H,H,H). Then P<sub>new</sub>(&theta;=1) = (0.4)&#8308;(0.6) / [(0.4)&#8308;(0.6) + (0.8)&#8308;(0.2)] = 0.01536/0.09728 &asymp; 0.158, so P<sub>new</sub>(&theta;=2) &asymp; 0.842.",
+    "why": "It dissolves an argument. Frequentist and Bayesian methods look like rival philosophies; &sect;2.3.4 shows all three approaches in this section are <b>one method</b> with different priors and different constraints on the posterior. Where you land depends on what you're willing to assume, not on which camp you joined.",
+    "math": "argmin<sub>P(&theta;)</sub> D<sub>kl</sub>(P(&theta;) &#8214; &prod;<sub>i</sub>P<sub>old</sub>(X<sub>i</sub>=x&prime;<sub>i</sub>,&theta;)) subject to the observation constraint &rArr; Bayes' rule."
+   }
+  },
+  {
+   "id": "v3c2c5",
+   "s": "2.3",
+   "page": 113,
+   "q": "Derive maximum likelihood from the same principle. What is the epilogue's claim about the three methods?",
+   "a": "Two extra assumptions turn the previous derivation into MLE. First, take the prior P<sub>old</sub>(&theta;) <b>uniform</b> (the principle of insufficient reason). Second, demand a single &theta; rather than a distribution over &theta; &mdash; i.e. constrain the posterior to be a <b>point distribution</b> P<sub>new</sub>(&theta;) = &delta;<sub>&theta;&prime;,&theta;</sub>. Then<div class='eq'>&theta;* = argmin<sub>&theta;&prime;</sub> D<sub>kl</sub>( &prod;&delta;&middot;&delta;<sub>&theta;&prime;,&theta;</sub> &#8214; &prod;<sub>i</sub>P<sub>old</sub>(X<sub>i</sub>=x&prime;<sub>i</sub>,&theta;) )<br>&nbsp;&nbsp;&nbsp;= argmin<sub>&theta;&prime;</sub> log&#8322;( 1 / &prod;<sub>i</sub>P<sub>old</sub>(X<sub>i</sub>=x&prime;<sub>i</sub>,&theta;&prime;) )<br>&nbsp;&nbsp;&nbsp;= <b>argmax<sub>&theta;&prime;</sub> &prod;<sub>i</sub> P<sub>old</sub>(X<sub>i</sub> = x&prime;<sub>i</sub> | &theta;&prime;)</b></div>&mdash; the <b>maximum likelihood estimator</b>. The last step drops P<sub>old</sub>(&theta;&prime;) precisely because the prior is uniform.<p style='margin-top:10px'><b>&sect;2.3.4 &mdash; the epilogue.</b> All three methods of this section assumed a prior P<sub>old</sub> and minimized D<sub>kl</sub>(P&#8214;P<sub>old</sub>) over the distributions satisfying some constraint. The constraint was: a fixed expected value (the die), an observed signal (Bayesian updating), an observed signal plus a point posterior (maximum likelihood).</p><div class='eq'>Bayesian and frequentist &ldquo;philosophies&rdquo; here are <b>one universal method</b> with a different prior and a different constraint.</div>",
+   "r": {
+    "rot": "MLE is bayesian updating with two extra demands: assume you knew nothing to start (uniform prior), and insist on one answer instead of a distribution (point posterior). run the same minimization and out pops &ldquo;pick the &theta; that makes your data most likely.&rdquo; so the three methods in this section &mdash; constrained-moment updating, bayes, maximum likelihood &mdash; are the <b>same machine</b> with different settings. the philosophical fight is really an argument about which prior and which constraint you're willing to accept.",
+    "ex": "Example 2.3.6 finishes the coin problem: &theta;* = argmax P(H|&theta;)&#8308;P(T|&theta;) with (0.4)&#8308;(0.6) = 48/3125 against (0.8)&#8308;(0.2) = 256/3125, so &theta;* = 2. Same answer as the Bayesian version, now as a single choice rather than 0.842 versus 0.158.",
+    "why": "Note what MLE <b>throws away</b>. The Bayesian answer said 84% versus 16%; the MLE says &ldquo;coin 2&rdquo; and nothing else. That discarded uncertainty is exactly what &sect;4.6.2 lists as the fundamental problem with all point estimates, and what credible intervals exist to restore.",
+    "math": "Uniform prior + point-mass posterior constraint &rArr; &theta;* = argmax<sub>&theta;</sub> &prod;<sub>i</sub>P(x&prime;<sub>i</sub>|&theta;). Constraint on the posterior, not on the likelihood."
+   }
+  },
+  {
+   "id": "v3c2d1",
+   "s": "2.4",
+   "page": 117,
+   "q": "How does entropy decide where a decision tree splits? What is the Gini index and why does it exist?",
+   "a": "A leaf &#8467; with empirical class distribution &pi;&#770;<sub>&#8467;,c</sub> contributes (N<sub>&#8467;</sub>/N)&middot;H&#770;(&#8467;) to the loss, where<div class='eq'>H&#770;(&#8467;) = &minus;&Sigma;<sub>c&isin;Y</sub> &pi;&#770;<sub>&#8467;,c</sub> log(&pi;&#770;<sub>&#8467;,c</sub>)</div>Split into &#8467;&#8314;, &#8467;&#8315; and the contribution becomes (N&#8314;/N)H&#770;(&#8467;&#8314;) + (N&#8315;/N)H&#770;(&#8467;&#8315;). The <b>greedy algorithm</b> tries every feature and every split value, and splits if the best result beats the unsplit loss.<p style='margin-top:10px'><b>Gini index:</b> G = &Sigma;<sub>c</sub>&pi;&#770;<sub>c</sub>(1 &minus; &pi;&#770;<sub>c</sub>) = 1 &minus; &Sigma;<sub>c</sub>&pi;&#770;<sub>c</sub>&sup2;, which closely approximates &frac12;H&#770;(&#8467;). It avoids a logarithm, which mattered on 1970s hardware and is <b>negligible today</b> &mdash; trees built either way are usually very similar.</p>",
+   "r": {
+    "rot": "a leaf full of one class has entropy 0 &mdash; perfectly pure, no surprise left. a leaf that's a 50/50 mess has high entropy. so: try every feature, every threshold, and keep the split that drops the weighted entropy the most. that's the whole algorithm, it's greedy, and it's why decision trees are in a chapter about information theory rather than off in a machine learning appendix.",
+    "ex": "Splitting continuous features isn't infinite work: a leaf holds finitely many points, so there are only finitely many distinct thresholds worth trying.",
+    "why": "This is the concrete payoff of &sect;2.1&ndash;2.2 and it's your RandomForest lab. It also demolishes a common belief: Gini vs entropy is <b>not</b> a deep modeling choice, it's a 1970s micro-optimization that survived into the folklore. The book says so outright.",
+    "math": "Split if min over splits of [(N&#8314;/N)H&#770;(&#8467;&#8314;) + (N&#8315;/N)H&#770;(&#8467;&#8315;)] &lt; (N<sub>&#8467;</sub>/N)H&#770;(&#8467;). Information gain = the difference."
+   }
+  },
+  {
+   "id": "v3c2d2",
+   "s": "2.4",
+   "page": 114,
+   "q": "What is a classification tree, what does it output, and what are its practical advantages?",
+   "a": "A <b>classification tree</b> is a classifier f : X &rarr; Y built from a chain of decisions: the input moves down a rooted directed tree until it reaches a leaf, and the leaf returns the most common outcome among the training points that landed there.<p style='margin-top:8px'><b>The usual output is richer:</b> rather than one label, report the <b>percentage of each class</b> at the leaf, so f maps X to [0,1]<sup>|Y|</sup>. That reads as an estimate of the class probabilities &mdash; and lets you score the tree with the same <b>cross-entropy loss</b> used for logistic regression.</p><div class='eq'>Cheap to construct &middot; easy to interpret &middot; handle missing values (just add a decision <i>is this value missing?</i>) &middot; work with mixed categorical and continuous features &middot; robust to outliers</div><b>Nota Bene 2.4.1 &mdash; interpretability is not a nicety.</b> Press articles run headlines like &ldquo;Not Even the People Who Write Algorithms Really Know How They Work.&rdquo; We do understand how they work &mdash; we just can't give a simple explanation. But your inability to interpret a model may decide whether anyone adopts it. And the demand is not unreasonable: the criminal justice system sometimes uses machine learning to recommend sentences. <i>Is it fair to have your sentence set by an algorithm when no one can explain why it gave you longer than someone convicted of the same crime?</i><p style='margin-top:8px'>The book prefers &ldquo;classification tree&rdquo; over &ldquo;decision tree,&rdquo; since the latter means something different in statistical decision theory. Trees have largely been superseded, but they are the foundation of random forests and gradient-boosted trees.</p>",
+   "r": {
+    "rot": "a flowchart. is the passenger female? yes &rarr; what class of ticket? and so on until you hit the bottom and it tells you the answer. that's the whole model. it's fast, it eats missing data without complaint, it doesn't care that one feature is a category and another is a price, and outliers barely move it. the real selling point is that you can <b>show it to someone</b>. that matters more than it sounds: if a model is deciding prison sentences and nobody can say why it gave you longer than the next person, &ldquo;it's 3% more accurate&rdquo; is not an adequate answer.",
+    "ex": "Figure 2.2, the Titanic tree. 231 of 321 women survived against 109 of 577 men, so the root split is M/F. Among women, half of those in third class died against 5% in first or second, so class splits next. Adult men: 529 seen, 84% died. Boys under 18 from families of three or fewer: 30 seen, 83% survived.",
+    "why": "Trees are the weak learners that Chapter 3 spends its whole length combining &mdash; bagging them gives random forests, boosting them gives XGBoost. Understanding what a single tree can and cannot represent is what makes the ensemble methods legible rather than magical.",
+    "math": "f : X &rarr; Y, or X &rarr; [0,1]<sup>|Y|</sup> reporting per-leaf class proportions. Score with misclassification rate or cross-entropy."
+   }
+  },
+  {
+   "id": "v3c2d3",
+   "s": "2.4",
+   "page": 116,
+   "q": "Constructing an optimal tree is NP-hard. Describe the greedy algorithm, and say how candidate splits are enumerated.",
+   "a": "<b>Optimal tree construction is NP-hard.</b> The practical substitute is a simple <b>greedy, recursive</b> algorithm: for each existing leaf, search for the feature and the split on that feature giving the greatest improvement in the loss function. If the improvement is good enough and violates no rule (such as a depth bound), return the split and its two children; otherwise leave the leaf unsplit.<p style='margin-top:10px'><b>Enumerating candidate splits.</b> Iterate over every feature (coordinate of x), and for each feature over every value it takes:</p><div class='eq'><b>Categorical</b> (finite, unordered): for each value v, split into x<sub>i,j</sub> = v against x<sub>i,j</sub> &ne; v.<br><br><b>Ordered or continuous:</b> for each value v, split into x<sub>i,j</sub> &le; v against x<sub>i,j</sub> &gt; v.</div><b>Continuous features are still finite here.</b> Each leaf holds finitely many points, so a feature takes only finitely many values within it &mdash; there are only finitely many places to split, however continuous the underlying variable.<p style='margin-top:8px'><b>Stopping.</b> A completely <b>pure</b> leaf (all survived, or all died) has entropy, Gini index and misclassification all zero and cannot improve, so splitting stops &mdash; and further splitting would overfit anyway. To control overfitting, bound the tree's <b>depth</b> and/or its total number of <b>leaves</b>, and bound the number of points per leaf from <b>below</b>.</p>",
+   "r": {
+    "rot": "finding the best possible tree is NP-hard, so nobody does. instead: at every leaf, try every feature, try every place you could cut it, keep the cut that helps most, repeat. greedy &mdash; each choice is locally best and nobody backtracks. it isn't optimal and it works fine. the neat bit about continuous features: a leaf only contains finitely many data points, so however continuous &ldquo;fare price&rdquo; is in principle, there are only finitely many prices <b>in this leaf</b>, and therefore finitely many cuts to test. stop when a leaf is pure, or when your depth/leaf-count/minimum-size rules say stop.",
+    "ex": "&sect;2.4.3 runs it on the Titanic data. Compute the unsplit Gini index (0.47), then the M/F split: G<sub>M</sub> = 0.31, G<sub>F</sub> = 0.38, weighted by 577/889 and 314/889, giving a benefit of 0.40. Repeat for marital status, for each of the four embarkation values, and for every value of the ordinal and real-valued features. M/F wins, so that becomes the root.",
+    "why": "The greedy shortcut is why single trees overfit and why the depth/leaf limits are not optional. It's also what &sect;3.7 modifies: XGBoost keeps this exact algorithm and swaps in a <b>regularized</b> split criterion, so the stopping decision is driven by the real objective rather than by a hand-set depth bound.",
+    "math": "Greedy: at each leaf pick argmin over (feature, value) of the weighted child loss. Continuous features give at most N<sub>&#8467;</sub>&minus;1 candidate splits within a leaf."
+   }
+  },
+  {
+   "id": "v3c2d4",
+   "s": "2.4",
+   "page": 120,
+   "q": "Give the three loss functions used to build classification trees. Why is misclassification rate the worst choice?",
+   "a": "For a leaf &#8467; with class proportions &pi;&#770;<sub>c</sub> = (1/N<sub>&#8467;</sub>)&sum;<sub>(x<sub>i</sub>,y<sub>i</sub>)&isin;D<sub>&#8467;</sub></sub> 1<sub>y<sub>i</sub>=c</sub>:<div class='eq'><b>Misclassification.</b> With y&#770;<sub>&#8467;</sub> = argmax<sub>c</sub>&pi;&#770;<sub>c</sub> the predicted class, cost<sub>&#8467;</sub> = 1 &minus; &pi;&#770;<sub>y&#770;<sub>&#8467;</sub></sub><br><br><b>Cross-entropy.</b> cost<sub>&#8467;</sub> = (N<sub>&#8467;</sub>/N)H&#770;<sub>&#8467;</sub> = &minus;(N<sub>&#8467;</sub>/N)&sum;<sub>c</sub>&pi;&#770;<sub>c</sub>log(&pi;&#770;<sub>c</sub>)<br><br><b>Gini index.</b> cost<sub>&#8467;</sub> = (N<sub>&#8467;</sub>/N)&sum;<sub>c</sub>&pi;&#770;<sub>c</sub>(1 &minus; &pi;&#770;<sub>c</sub>)</div><b>The problem with misclassification: it does not favour <i>pure</i> splits</b> &mdash; splits that put all of one class on one side.<p style='margin-top:8px'><b>The counterexample.</b> A node of 80 points split (40,40). Compare two splits:</p><div class='eq'>Split A &rarr; (30,10) and (10,30)<br>Split B &rarr; (20,40) and (20,0)&nbsp;&nbsp;&mdash; the second child is <b>pure</b></div>The improvement to the <b>misclassification</b> cost is <b>the same for both</b>. Gini and entropy strongly prefer B. Since pure splits are what you want, Gini and entropy are preferred.<p style='margin-top:8px'>All three are maximized at &pi;&#770;<sub>c</sub> = &frac12; and minimized at 0 and 1; Figure 2.3 plots them with entropy scaled by &frac12;, where Gini and entropy are nearly indistinguishable.</p>",
+   "r": {
+    "rot": "three ways to score how mixed-up a leaf is. counting mistakes is the obvious one and it's the <b>bad</b> one, because it's blind to purity. take 40/40 and split it either as (30,10)+(10,30) or as (20,40)+(20,0). the second one completely isolates a class &mdash; obviously better &mdash; but the mistake count improves by exactly the same amount either way, so misclassification can't tell them apart. gini and entropy both spot it immediately. that's why nobody builds trees on misclassification rate even though it's what you ultimately care about.",
+    "ex": "Gini and entropy are so close (Figure 2.3) that the choice barely matters. Gini avoids a logarithm, which mattered on 1970s hardware when it was introduced; against the other costs of building a tree on a modern machine it is not worth worrying about.",
+    "why": "It's a clean case of the training objective needing to differ from the evaluation metric. You are judged on misclassification rate, and you deliberately <b>optimize something else</b>, because the thing you're judged on gives no gradient toward the good splits. The same logic makes cross-entropy rather than accuracy the training loss in &sect;5.5.",
+    "math": "Misclassification is <b>piecewise linear</b> in &pi;&#770;&#8321;, so weighted averages of children can tie; Gini and entropy are <b>strictly concave</b>, so purity strictly wins."
+   }
+  },
+  {
+   "id": "v3c2d5",
+   "s": "2.4",
+   "page": 120,
+   "q": "What shape are the regions a tree carves out? How do regression trees differ from classification trees?",
+   "a": "<b>Geometry (&sect;2.4.5).</b> Every split looks at a single feature (one coordinate of x), so <b>every cut is orthogonal to a coordinate axis</b>. The regions are therefore axis-aligned boxes. Data naturally divided by a diagonal or a curve needs many small staircase steps to approximate &mdash; though with enough splits a tree can approximate almost any shape.<p style='margin-top:10px'><b>Regression trees (&sect;2.4.6).</b> Same structure, but each y<sub>i</sub> &isin; R. If x lands in leaf &#8467;, return the <b>average</b> of the training responses there:</p><div class='eq'>f<sub>&#8467;</sub>(x) = (1/N<sub>&#8467;</sub>) &sum;<sub>(x<sub>i</sub>,y<sub>i</sub>)&isin;D<sub>&#8467;</sub></sub> y<sub>i</sub></div>You could instead fit a linear or fancier model per leaf, f<sub>&#8467;</sub>(x) = x<sup>T</sup>&beta;&#770;<sub>&#8467;</sub>, but <b>this doesn't tend to be worth the extra work</b>.<p style='margin-top:8px'>The usual loss is <b>mean squared error</b>, L(f<sub>&#8467;</sub>,x<sub>i</sub>,y) = (y<sub>i</sub> &minus; f<sub>&#8467;</sub>(x<sub>i</sub>))&sup2;, with cost<sub>&#8467;</sub> = (1/N)&sum;<sub>D<sub>&#8467;</sub></sub>L. Everything else &mdash; the greedy algorithm, the split enumeration, the depth limits &mdash; is unchanged.</p>",
+   "r": {
+    "rot": "a tree can only cut straight across one variable at a time, so the regions it makes are <b>rectangles</b>. if your classes are separated by a diagonal line, the tree has to build a staircase out of tiny rectangles to fake it. it gets there eventually, but it's clumsy and it costs depth. for regression, nothing structural changes &mdash; you just have the leaf report the average of the numbers that landed in it instead of the majority label, and score it by squared error. so a regression tree is a piecewise-constant function on boxes.",
+    "ex": "Figure 2.4 shows exactly this failure: data naturally split by a diagonal or a curved cut, and the tree forced to approximate it with axis-parallel steps.",
+    "why": "The axis-alignment constraint is a real limitation and it's a reason to reach for an ensemble: averaging many staircases with different splits smooths the diagonal that no single tree can draw. Contrast the models of Chapter 5, whose boundaries are hyperplanes (logistic regression) or quadratics (GDA) &mdash; not axis-aligned, but fixed in shape.",
+    "math": "Splits orthogonal to coordinate axes &rArr; axis-aligned box partition, piecewise-constant f. Regression leaf value = sample mean of y over D<sub>&#8467;</sub>; loss = MSE."
+   }
+  },
+  {
+   "id": "v3c2e1",
+   "s": "2.5",
+   "page": 124,
+   "q": "P(X = x) = 0 for every x. So what defines a continuous random variable, and what is the p.d.f.?",
+   "a": "X : &Omega; &rarr; &Ropf; is a <b>continuous random variable</b> if its c.d.f. F<sub>X</sub>(x) = P(X &le; x) is <b>continuous</b> and can be written as<div class='eq'>F<sub>X</sub>(x) = &int;<sub>&minus;&infin;</sub><sup>x</sup> f<sub>X</sub>(t) dt</div>for a <b>probability density function</b> f<sub>X</sub> &ge; 0. By the Fundamental Theorem of Calculus, f<sub>X</sub> = F&prime;<sub>X</sub> wherever f<sub>X</sub> is continuous.<p style='margin-top:10px'><b>The density is not a probability.</b> f<sub>X</sub>(x) can exceed 1. Only integrals over sets are probabilities: P(a &le; X &le; b) = &int;<sub>a</sub><sup>b</sup>f<sub>X</sub>. Contrast: a discrete variable's c.d.f. is a step function, hence discontinuous.</p><p>In n dimensions: F<sub>X</sub> is the n-fold integral of f<sub>X</sub>, and f<sub>X</sub> is the n-fold mixed partial of F<sub>X</sub>.</p>",
+   "r": {
+    "rot": "every single point has probability zero, and yet <i>something</i> happens. the fix is to stop asking about points. the c.d.f. &mdash; probability of landing at or below x &mdash; is perfectly well behaved, and the density is just its derivative. big warning: <b>the density is not a probability.</b> it can be 5. it can be 500. only its integral over an interval is a probability. probability is area, not height.",
+    "ex": "Uniform on (0, 0.1) has f = 10 everywhere on that interval. Height 10, which would be nonsense as a probability, but &int;f = 1. &#10003;",
+    "why": "This is the move that makes the rest of the volume possible &mdash; sums become integrals, p.m.f.s become p.d.f.s, and every Ch 1 result carries over with that substitution. It's also why the c.d.f., not the density, is the primary object: it exists for <i>every</i> random variable, discrete or continuous.",
+    "math": "F<sub>X</sub>(x) = &int;<sup>x</sup><sub>&minus;&infin;</sub>f<sub>X</sub>; f<sub>X</sub> = F&prime;<sub>X</sub>. P(X&isin;A) = &int;<sub>A</sub>f<sub>X</sub>. P(X = x) = 0 for all x."
+   }
+  },
+  {
+   "id": "v3c2e2",
+   "s": "2.5",
+   "page": 122,
+   "q": "Why can't we require every subset of &Omega; to have a probability? Define a &sigma;-algebra and a general probability space.",
+   "a": "If &Omega; is <b>uncountable</b> (like the real line), insisting that every subset have a well-defined probability is too restrictive &mdash; the problem is intimately connected to the fact that <b>not every subset of R<sup>n</sup> is measurable</b>.<p style='margin-top:8px'>Instead, require probability only on a subcollection F &sub; 2<sup>&Omega;</sup> that contains &Omega; and &empty; and is closed under <b>complements</b>, <b>countable unions</b>, and <b>countable intersections</b>. Such a collection is a <b>&sigma;-algebra</b>. (Closure under complements and countable unions gives countable intersections automatically, by De Morgan.)</p><p><b>Definition 2.5.2.</b> P : F &rarr; [0,1] is a <b>probability measure</b> on (&Omega;,F) if P(&Omega;) = 1 and <b>countable additivity</b> holds: for any countable collection {A<sub>n</sub>} of disjoint events in F,</p><div class='eq'>P( &#8746;<sub>n=1</sub><sup>&infin;</sup> A<sub>n</sub> ) = &sum;<sub>n=1</sub><sup>&infin;</sup> P(A<sub>n</sub>)</div>The triple (&Omega;,F,P) is a <b>probability space</b>.<p style='margin-top:8px'><b>Everything carries over.</b> All the basic properties of discrete probability spaces still hold in this generality &mdash; independence, conditional probability, and Bayes' rule (Thm 2.7.1) included. In the discrete case F = 2<sup>&Omega;</sup>, so every subset is an event and every function is a random variable.</p>",
+   "r": {
+    "rot": "on a finite set you can just assign a probability to every subset and be done. on the real line you can't &mdash; there exist subsets so pathological that no consistent notion of &ldquo;size&rdquo; works for them. so you retreat: pick a collection of subsets you <b>will</b> measure, and require only that the collection be closed under the operations you actually use (complement, countable union, countable intersection). that's a &sigma;-algebra. it isn't a weakening of probability so much as an admission about sets. everything you know still works; you just stop asking about the sets that were never going to cooperate.",
+    "ex": "In the cases this book cares about (Example 2.5.1), &Omega; is a measurable subset of R<sup>n</sup> and F is the collection of all measurable subsets &mdash; so the restriction is invisible in practice.",
+    "why": "It's what lets the rest of the chapter treat continuous and discrete distributions with the same machinery. It also quietly explains a later oddity: conditioning on an event of probability zero (&sect;2.6, the Borel&ndash;Kolmogorov paradox) is genuinely delicate, because the definitions were only ever set up on F.",
+    "math": "&sigma;-algebra: contains &Omega;, closed under complement and countable union. Countable additivity, not finite. Discrete case: F = 2<sup>&Omega;</sup>."
+   }
+  },
+  {
+   "id": "v3c2e3",
+   "s": "2.5",
+   "page": 123,
+   "q": "Define a general random variable and its c.d.f. What does Proposition 2.5.4 say, and what is the support?",
+   "a": "On a general probability space the p.m.f. g<sub>X</sub>(x) = P(X<sup>&minus;1</sup>(x)) isn't very useful, so the <b>c.d.f.</b> takes over. But P(X &le; x) might not even make sense if the sets X<sup>&minus;1</sup>((&minus;&infin;,x]) aren't in F &mdash; which is what forces the definition:<div class='eq'><b>Definition 2.5.3.</b> X : &Omega; &rarr; R is a <b>univariate random variable</b> if X<sup>&minus;1</sup>((&minus;&infin;,x]) &isin; F for <b>every</b> x &isin; R.</div>Its <b>c.d.f.</b> is F<sub>X</sub>(a) = P(X &le; a) = P(X<sup>&minus;1</sup>(&minus;&infin;,a]). Y = (Y&#8321;,&hellip;,Y<sub>n</sub>) : &Omega; &rarr; R<sup>n</sup> is a <b>multivariate</b> random variable if every coordinate is univariate, with joint c.d.f. F<sub>Y</sub>(y) = P(Y&#8321; &le; y&#8321;, &hellip;, Y<sub>n</sub> &le; y<sub>n</sub>). The <b>support</b> is the smallest closed set with P(Y<sup>&minus;1</sup>(S)) = 1.<p style='margin-top:10px'><b>Proposition 2.5.4.</b> For a univariate continuous X supported on all of R, the c.d.f. is <b>nondecreasing</b> and</p><div class='eq'>lim<sub>x&rarr;&infin;</sub> F<sub>X</sub>(x) = 1&nbsp;&nbsp;&nbsp;and&nbsp;&nbsp;&nbsp;lim<sub>x&rarr;&minus;&infin;</sub> F<sub>X</sub>(x) = 0</div>Monotonicity is immediate from P(X &le; b) = P(X &le; a) + P(X &isin; (a,b]); the limits follow from countable additivity over the partition B&#8320; = (&minus;&infin;,0], B<sub>n</sub> = (n&minus;1,n].<p style='margin-top:8px'><b>Remark 2.5.5.</b> For a <b>discrete</b> Y the c.d.f. is discontinuous, jumping upward at every point of the support.</p>",
+   "r": {
+    "rot": "the definition of &ldquo;random variable&rdquo; looks like bureaucracy and isn't. it says: X counts as a random variable exactly when every question of the form &ldquo;is X at most x?&rdquo; is a question you're allowed to ask &mdash; i.e. that set is in your &sigma;-algebra. no measurability, no c.d.f., no probabilities, nothing. the c.d.f. itself is the honest replacement for the p.m.f. once individual points stop having probability: it climbs from 0 to 1, never goes down, and it's <b>continuous</b> for continuous variables and a <b>staircase</b> for discrete ones. that shape difference is the whole distinction.",
+    "ex": "The staircase-versus-smooth contrast is the fastest way to tell the two apart from a picture. A jump of height h in F<sub>X</sub> at x is exactly P(X = x) = h; a continuous c.d.f. has no jumps, hence P(X = x) = 0 everywhere.",
+    "why": "The c.d.f. is the object that survives into every general setting &mdash; convergence in distribution (&sect;4.1) is defined through c.d.f.s, Fourier inversion (&sect;4.2) recovers the c.d.f., and the CLT's conclusion is a statement about c.d.f.s converging pointwise.",
+    "math": "X measurable &hArr; X<sup>&minus;1</sup>((&minus;&infin;,x]) &isin; F for all x. F<sub>X</sub> nondecreasing, right-continuous, limits 0 and 1. supp(Y) = smallest closed S with P(Y &isin; S) = 1."
+   }
+  },
+  {
+   "id": "v3c2e4",
+   "s": "2.5",
+   "page": 125,
+   "q": "Give the uniform and normal distributions. Why does the normal matter so much, and what is the 68-95-99.7 rule?",
+   "a": "<b>Uniform (Example 2.5.9).</b> X ~ Uniform([a,b]) has p.d.f. f<sub>X</sub>(x) = 1/(b&minus;a) on [a,b]. Its mean is the midpoint (a+b)/2 and its variance is (b&minus;a)&sup2;/12.<p style='margin-top:8px'><b>Normal (Example 2.5.10).</b> X ~ N(&mu;,&sigma;&sup2;) has p.d.f.</p><div class='eq'>f<sub>X</sub>(x) = (1/&radic;(2&pi;&sigma;&sup2;)) exp( &minus;(x&minus;&mu;)&sup2; / (2&sigma;&sup2;) )</div>&mdash; a whole family, one for each (&mu;,&sigma;&sup2;); &mu; = 0, &sigma; = 1 is the <b>standard normal</b>. E[X] = &mu; and Var(X) = &sigma;&sup2;.<div class='eq'><b>Why it matters:</b><br>(i) the <b>central limit theorem</b> &mdash; sums of i.i.d. random variables converge to it;<br>(ii) it is the <b>maximum entropy</b> distribution on R with prescribed mean and variance;<br>(iii) Binomial(n,p) is well approximated by N(np, np(1&minus;p)) for large n.</div><b>No closed form c.d.f.</b> &mdash; but every numerical package computes it fast. A numerical computation gives the <b>68-95-99.7 rule</b>:<div class='eq'>P(X &isin; [&mu;&plusmn;&sigma;]) &asymp; 68%&nbsp;&nbsp;&nbsp;P(X &isin; [&mu;&plusmn;2&sigma;]) &asymp; 95%&nbsp;&nbsp;&nbsp;P(X &isin; [&mu;&plusmn;3&sigma;]) &asymp; 99.7%</div>",
+   "r": {
+    "rot": "the uniform is the &ldquo;no opinion&rdquo; distribution on an interval &mdash; flat, mean in the middle. the normal is the bell curve, pinned down by two numbers: where it sits (&mu;) and how wide it is (&sigma;). two independent reasons it's everywhere. add up lots of independent random things and you get it whether you wanted it or not (that's the CLT). and if all you know is a mean and a variance, it's the least-committal distribution consistent with that (max entropy). the 68-95-99.7 rule is the one number set worth memorizing: one sigma catches two thirds, two sigma catches 95%, three sigma catches basically everything.",
+    "ex": "Figure 2.5 plots &sigma; = 0.5, 1.0, 2.0 with &mu; = 0. The area is always 1, so a larger &sigma; spreads the probability out and lowers the peak; as &sigma;&sup2; &rarr; 0 it concentrates into a spike at &mu;.",
+    "why": "Reasons (i) and (ii) are genuinely different justifications that happen to land on the same distribution &mdash; one about what <b>happens</b> to sums, one about what you should <b>assume</b> knowing only two moments. That coincidence is why the normal is both the honest default prior (&sect;4.7.4) and the thing you keep observing empirically.",
+    "math": "Uniform: f = 1/(b&minus;a), mean (a+b)/2, variance (b&minus;a)&sup2;/12. Normal: N(&mu;,&sigma;&sup2;), no closed-form c.d.f., &plusmn;1/2/3&sigma; &asymp; 68/95/99.7%."
+   }
+  },
+  {
+   "id": "v3c2e5",
+   "s": "2.5",
+   "page": 126,
+   "q": "Define the exponential distribution. In what sense is it the continuous analogue of the geometric?",
+   "a": "<b>Example 2.5.11.</b> For &lambda; &gt; 0, the p.d.f. f<sub>T</sub>(t) = &lambda;e<sup>&minus;&lambda;t</sup> on [0,&infin;) defines the <b>exponential distribution</b>, T ~ Expo(&lambda;).<p style='margin-top:8px'><b>The analogy is exact, not loose.</b> Put p = e<sup>&minus;&lambda;</sup> and integrate over a unit interval:</p><div class='eq'>P(k &le; T &lt; k+1) = &int;<sub>k</sub><sup>k+1</sup> &lambda;e<sup>&minus;&lambda;t</sup> dt = e<sup>&minus;&lambda;k</sup>(1 &minus; e<sup>&minus;&lambda;</sup>) = p<sup>k</sup>(1&minus;p)</div>&mdash; which is precisely P(X = k) for a <b>geometric</b> random variable. Chopping the exponential into unit blocks reproduces the geometric exactly. Summing gives the tidy pair<div class='eq'>P(0 &le; T &lt; &#8467;) = 1 &minus; p<sup>&#8467;</sup>&nbsp;&nbsp;&nbsp;&nbsp;P(&#8467; &le; T) = p<sup>&#8467;</sup></div><p style='margin-top:8px'>It is the standard model for the <b>time until an event occurs</b>. It is also Gamma(1,&lambda;) &mdash; the gamma distribution with shape 1.</p>",
+   "r": {
+    "rot": "how long until the thing happens? that's the exponential. it's the continuous version of &ldquo;how many coin flips until the first head,&rdquo; and the correspondence is literal: slice the exponential into unit-length chunks and the chunk probabilities are exactly the geometric's, with p = e<sup>&minus;&lambda;</sup>. bigger &lambda; means events happen faster, so the density drops away quicker. it's the waiting-time distribution, and the tail P(T &ge; &#8467;) = p<sup>&#8467;</sup> decays geometrically, which is where its famous memorylessness comes from.",
+    "ex": "Example 4.7.3 uses it for projector-bulb lifespans, writing it as Gamma(1,&lambda;) so that the gamma&ndash;gamma conjugacy applies: prior Gamma(5,20) from 5 bulbs averaging 4 months, then updates as more bulbs fail.",
+    "why": "It's the bridge between the discrete waiting-time distributions of Chapter 1 and the continuous ones here, and the special case that makes the gamma family worth knowing. Recognizing it as Gamma(1,&lambda;) is what unlocks the conjugate-prior machinery of &sect;4.7 for lifetime data.",
+    "math": "f<sub>T</sub>(t) = &lambda;e<sup>&minus;&lambda;t</sup> on [0,&infin;) = Gamma(1,&lambda;). With p = e<sup>&minus;&lambda;</sup>: P(k &le; T &lt; k+1) = p<sup>k</sup>(1&minus;p), the geometric p.m.f."
+   }
+  },
+  {
+   "id": "v3c2e6",
+   "s": "2.5",
+   "page": 128,
+   "q": "Give the multivariate normal. Which properties of discrete distributions carry over to the continuous case unchanged?",
+   "a": "<b>Example 2.5.14.</b> X is multivariate normal, X ~ N(&mu;,&Sigma;), if it has support R<sup>n</sup> and, for &mu; &isin; R<sup>n</sup> and &Sigma; &gt; 0,<div class='eq'>f<sub>X</sub>(x) = (2&pi;)<sup>&minus;n/2</sup> det(&Sigma;)<sup>&minus;1/2</sup> exp( &minus;&frac12;(x&minus;&mu;)<sup>T</sup>&Sigma;<sup>&minus;1</sup>(x&minus;&mu;) )</div>Every coordinate X<sub>i</sub> is itself normal, and so is <b>every linear combination</b> a<sup>T</sup>X. If &Sigma; is diagonal the level sets are axis-aligned ellipsoids; a general &Sigma; is positive definite, so &Sigma; = U&Lambda;U<sup>T</sup> and x &#8614; U(x&minus;&mu;) rotates the ellipsoids onto the axes.<p style='margin-top:10px'><b>&sect;2.5.4 &mdash; what carries over, with integrals for sums and p.d.f.s for p.m.f.s:</b></p><div class='eq'>marginal&nbsp;&nbsp;f<sub>i</sub>(a) = &int;<sub>x:x<sub>i</sub>=a</sub> f<sub>X</sub>(x) dx<br>independence&nbsp;&nbsp;f<sub>X,Y</sub>(x,y) = f<sub>X</sub>(x)f<sub>Y</sub>(y)<br>expectation&nbsp;&nbsp;E[X] = &int;<sub>R<sup>n</sup></sub> x f<sub>X</sub>(x) dx<br>linearity&nbsp;&nbsp;E[&alpha;X + &beta;Y] = &alpha;E[X] + &beta;E[Y]<br><b>LOTUS</b>&nbsp;&nbsp;E[h(X)] = &int; h(x) f<sub>X</sub>(x) dx<br>products&nbsp;&nbsp;E[XY] = E[X]E[Y] when independent<br>covariance&nbsp;&nbsp;Cov(X) = E[XX<sup>T</sup>] &minus; E[X]E[X]<sup>T</sup><br>variance&nbsp;&nbsp;Var(&alpha;X+&beta;Y) = &alpha;&sup2;Var(X) + 2&alpha;&beta;Cov(X,Y) + &beta;&sup2;Var(Y)</div><b>Independence &rArr; zero covariance, but the converse is false.</b>",
+   "r": {
+    "rot": "the multivariate normal is the bell curve in n dimensions: a mean vector for where it sits and a covariance matrix for its shape and tilt. its contours are ellipsoids, and the covariance matrix's eigenvectors are the axes. the useful headline is that <b>everything you know still works</b> &mdash; marginals, independence, expectation, linearity, LOTUS, covariance, variance-of-a-sum. you replace every sum with an integral and every p.m.f. with a p.d.f. and the formulas are otherwise identical. one thing to keep straight: independent implies zero covariance, and zero covariance does <b>not</b> imply independent.",
+    "ex": "The multivariate case has the same two justifications as the univariate: the multinomial converges to it just as the binomial converges to N(np, np(1&minus;p)), the CLT gives it as the limit of sums of i.i.d. vectors (Thm 4.3.4), and it is the maximum-entropy distribution on R<sup>n</sup> with prescribed mean and covariance.",
+    "why": "It's the distribution assumed by Gaussian discriminant analysis in &sect;5.8, where the per-class &Sigma;<sub>c</sub> is what makes the boundary quadratic &mdash; and where forcing &Sigma;<sub>c</sub> &equiv; &Sigma; collapses it to a linear one. The list of carried-over properties is what makes the rest of the book able to state results once rather than twice.",
+    "math": "f<sub>X</sub>(x) = det(2&pi;&Sigma;)<sup>&minus;1/2</sup>exp(&minus;&frac12;(x&minus;&mu;)<sup>T</sup>&Sigma;<sup>&minus;1</sup>(x&minus;&mu;)). Closed under marginals and linear maps. Cov = 0 &nrArr; independence."
+   }
+  },
+  {
+   "id": "v3c2f1",
+   "s": "2.6",
+   "page": 134,
+   "q": "Define differential entropy. Name the one way it behaves worse than discrete entropy.",
+   "a": "<div class='eq'>H(X) = &minus;&int;<sub>C</sub> f<sub>X</sub>(x) log(f<sub>X</sub>(x)) dx</div>Same formula, sums replaced by integrals and p.m.f. by p.d.f. Base of the log is unimportant &mdash; it only rescales &mdash; so the book always uses the natural log for continuous distributions.<p style='margin-top:10px'><b>The catch: differential entropy can be negative.</b> Discrete entropy satisfies H &ge; 0 because every p<sub>k</sub> &le; 1 makes every log term non-positive. But a <b>density can exceed 1</b>, so log f<sub>X</sub> can be positive and the integral can come out negative. It is <i>not</i> an absolute measure of information the way discrete entropy is.</p><p><b>Gaussian (Ex 2.6.8):</b> X ~ N(&mu;,&sigma;&sup2;) &rArr; H(X) = &frac12;(log(2&pi;&sigma;&sup2;) + 1). Negative whenever &sigma;&sup2; &lt; 1/(2&pi;e).</p>",
+   "r": {
+    "rot": "same formula, integral instead of sum. but here's the trap: densities can be bigger than 1, so log f can be positive, so the whole thing can go <b>negative</b>. a very narrow gaussian has negative entropy. in the discrete world H &ge; 0 always and it counts bits. here it doesn't count anything absolute &mdash; it's only meaningful as a <i>difference</i>. which is exactly why KL divergence still works fine: the differences cancel the problem.",
+    "ex": "N(&mu;, &sigma;&sup2;) with &sigma; = 0.01: H = &frac12;(log(2&pi;&middot;0.0001) + 1) &asymp; &minus;3.2. Squeeze a distribution tightly enough and its differential entropy goes as negative as you like.",
+    "why": "Worth internalizing because it's a genuine trap. Relative entropy and mutual information remain non-negative and well-behaved in the continuous case (Gibbs, Thm 2.6.10) precisely because they are differences of entropies &mdash; the pathology cancels.",
+    "math": "H(X) = &minus;&int;f log f. Not scale-invariant: H(aX) = H(X) + log|a|. Discrete entropy has no such term."
+   }
+  },
+  {
+   "id": "v3c2f2",
+   "s": "2.6",
+   "page": 131,
+   "q": "Define the conditional p.d.f. and c.d.f. What is the Borel&ndash;Kolmogorov paradox and how is it resolved?",
+   "a": "<b>Definition 2.6.1.</b> For continuous X and Y with joint p.d.f. f<sub>X,Y</sub>, and any y with f<sub>Y</sub>(y) &gt; 0:<div class='eq'>f<sub>X|Y</sub>(x | y) = f<sub>X,Y</sub>(x,y) / f<sub>Y</sub>(y)<br><br>F<sub>X|Y</sub>(x | y) = P(X &#8828; x | y) = &int;<sub>a&#8828;x</sub> f<sub>X|Y</sub>(a | y) da</div>Same as the discrete case, with the p.d.f. replacing the p.m.f. and integrals replacing sums. Note the conditional c.d.f. is a function of <b>both</b> x and y.<p style='margin-top:10px'><b>Vista 2.6.2 &mdash; the awkward case.</b> Conditioning on an event of probability zero (or f<sub>Y</sub>(y) = 0) can often still be made sense of, but there are many subtleties; the careful treatment is measure-theoretic probability.</p><p><b>The paradox.</b> Let X be uniform on the unit sphere in R&sup3;, and suppose you learn X lies on a specific <b>great circle</b>. There are two natural ways to compute the conditional distribution. <b>One gives a uniform answer and the other does not.</b></p><p style='margin-top:8px'><b>The resolution:</b> conditioning on a set of probability zero requires considering not just the circle but a <b>family of sets converging to it</b>. The two arguments pick two different families, so they get two different answers. Neither is wrong &mdash; the question was underspecified.</p>",
+   "r": {
+    "rot": "conditioning on a continuous variable is the same recipe as before: joint density divided by marginal density. the trap is conditioning on something with probability <b>zero</b> &mdash; which is every single value of a continuous variable. usually it works out. sometimes it doesn't: put a uniform point on a sphere, tell me it's on a particular great circle, and ask for its distribution along that circle. two reasonable derivations give two different answers. the reason is that &ldquo;on this circle&rdquo; isn't actually a well-posed condition &mdash; you have to say how you're <b>shrinking down</b> onto it, and different shrinkings give different answers.",
+    "ex": "The lesson generalizes: whenever you condition on a measure-zero event, ask what limiting procedure you have implicitly chosen. Answers that seem to differ usually differ because they made different implicit choices.",
+    "why": "It's the sharpest available warning that continuous conditioning is not just discrete conditioning with integrals. Everywhere else in the chapter the substitution really is that mechanical, which is exactly why the one place it isn't deserves flagging.",
+    "math": "f<sub>X|Y</sub>(x|y) = f<sub>X,Y</sub>(x,y)/f<sub>Y</sub>(y), defined only where f<sub>Y</sub>(y) &gt; 0. Conditioning on a null set requires specifying an approximating family."
+   }
+  },
+  {
+   "id": "v3c2f3",
+   "s": "2.6",
+   "page": 132,
+   "q": "State the law of total probability for continuous distributions, and the conditional expectation.",
+   "a": "<b>Total probability (&sect;2.6.2).</b> If f<sub>X</sub> is a p.d.f. on C and A is an event:<div class='eq'>P(A) = &int;<sub>C</sub> P(A | X = x) f<sub>X</sub>(x) dx</div>and for two continuous random variables with Y supported in C:<div class='eq'>f<sub>X</sub>(x) = &int;<sub>C</sub> f<sub>X|Y</sub>(x | Y = y) f<sub>Y</sub>(y) dy</div><b>Conditional expectation (&sect;2.6.3).</b> For any y with f<sub>Y</sub>(y) &gt; 0:<div class='eq'>E[X | Y = y] = &int; x f<sub>X|Y</sub>(x | y) dx = &int; x f<sub>X,Y</sub>(x,y)/f<sub>Y</sub>(y) dx</div><p style='margin-top:8px'>The pattern in both is the same: <b>condition on the thing you wish you knew, then average over it</b>. That's the whole technique &mdash; if the problem is easy once you know Y, write the answer as a function of Y and integrate against f<sub>Y</sub>.</p>",
+   "r": {
+    "rot": "the move is: &ldquo;this would be easy if only i knew Y.&rdquo; so pretend you know it, solve, then average over every value Y could take, weighted by how likely it is. sums become integrals and that's the only change from the discrete version. conditional expectation is the same idea &mdash; the average of X <b>given</b> that Y came out y, computed against the conditional density. both are just: split the problem by cases, solve each case, recombine by weight.",
+    "ex": "Example 2.6.3: spin a spinner to get p &isin; [0,1] uniformly, build a coin with that bias, flip it 4 times. P(4 heads) = &int;&#8320;&sup1; p&#8308; dp = 1/5. Trying to compute it directly is a mess; conditioning on p makes it a one-line integral. Example 2.6.4 does the same for a coin choosing between N(1,1) and N(&minus;1,1), giving a two-bump mixture density.",
+    "why": "This is the continuous form of the tool used constantly later &mdash; it's the tower property behind E[&beta;&#770;] = E[E[&beta;&#770;|X]] in &sect;5.2.3, and it's what turns a hierarchical model (draw a parameter, then draw data) into a computable marginal. Example 2.6.5 works out E[X|Y=y] = &minus;y/2 for a correlated bivariate normal, which is a linear function of y &mdash; the fact regression is built on.",
+    "math": "P(A) = &int;P(A|X=x)f<sub>X</sub>(x)dx. f<sub>X</sub>(x) = &int;f<sub>X|Y</sub>(x|y)f<sub>Y</sub>(y)dy. E[X|Y=y] = &int;x f<sub>X|Y</sub>(x|y)dx."
+   }
+  },
+  {
+   "id": "v3c2f4",
+   "s": "2.6",
+   "page": 136,
+   "q": "State Gibbs' inequality for continuous distributions. Use it to show which distribution maximizes differential entropy.",
+   "a": "<b>Definition 2.6.9.</b> For continuous X, Y with supp(X) &sub; supp(Y):<div class='eq'>D<sub>kl</sub>(X&#8214;Y) = &int; f<sub>X</sub>(x) log( f<sub>X</sub>(x) / f<sub>Y</sub>(x) ) dx</div><b>Theorem 2.6.10 (Gibbs).</b> D<sub>kl</sub>(X&#8214;Y) &ge; 0, with equality <b>iff X ~ Y</b>. The proof is essentially identical to the discrete case.<p style='margin-top:10px'><b>Example 2.6.11 &mdash; the payoff.</b> Take any X with mean &mu; and variance &sigma;&sup2;, and compare it against Y ~ N(&nu;,&tau;&sup2;). Expanding the definition and using &int;f<sub>X</sub> = 1, &int;xf<sub>X</sub> = &mu;, &int;(x&minus;&mu;)&sup2;f<sub>X</sub> = &sigma;&sup2;:</p><div class='eq'>D<sub>kl</sub>(X&#8214;Y) = &minus;H(X) + &frac12;[ log(2&pi;&tau;&sup2;) + &sigma;&sup2;/&tau;&sup2; + (&mu;&minus;&nu;)&sup2;/&tau;&sup2; ]</div>Gibbs says this is &ge; 0, so H(X) &le; &frac12;[log(2&pi;&tau;&sup2;) + &sigma;&sup2;/&tau;&sup2; + (&mu;&minus;&nu;)&sup2;/&tau;&sup2;] for <b>every</b> continuous X. Specializing to &mu; = &nu; and &sigma;&sup2; = &tau;&sup2;:<div class='eq'>H(X) &le; &frac12;( log(2&pi;&sigma;&sup2;) + 1 )</div><b>And Example 2.6.8 computes exactly that value for X ~ N(&mu;,&sigma;&sup2;).</b> The bound is attained, so among continuous distributions with a given mean and variance, <b>the normal has maximum differential entropy</b>.",
+   "r": {
+    "rot": "gibbs says the KL divergence is never negative and is zero only when the two distributions match. that's it &mdash; but it's a lever. compare an arbitrary X against a normal with the same mean and variance, grind out the algebra, and D<sub>kl</sub> &ge; 0 turns into an upper bound on X's entropy. then compute the normal's own entropy and find it hits the bound exactly. conclusion: <b>fix a mean and a variance, and the normal is the most spread-out distribution available</b>. that's a proof, not a slogan, and it's the second big reason the normal is everywhere.",
+    "ex": "This is the &ldquo;maximum entropy distribution on R with prescribed mean and variance&rdquo; claim from Example 2.5.10 (ii), now actually proved &mdash; and the trick is worth keeping: to show something maximizes entropy, compute a KL divergence against it and let Gibbs do the work.",
+    "why": "It's the justification for the MAX ENT rule of &sect;4.7.4 picking N(&mu;,&sigma;&sup2;) when only two moments are known, and for the CLT's limit being &ldquo;unsurprising&rdquo; in &sect;4.3 &mdash; knowing only the mean and variance of &mu;&#770;<sub>n</sub>, the normal is the distribution that assumes least.",
+    "math": "D<sub>kl</sub> &ge; 0 with equality iff equal in distribution. Fixed (&mu;,&sigma;&sup2;) &rArr; H(X) &le; &frac12;(log(2&pi;&sigma;&sup2;)+1), attained by N(&mu;,&sigma;&sup2;)."
+   }
+  },
+  {
+   "id": "v3c2f5",
+   "s": "2.6",
+   "page": 137,
+   "q": "How do you update a continuous distribution? And why is maximizing differential entropy the <i>wrong</i> generalization of the discrete rule?",
+   "a": "<b>Updating (&sect;2.6.6).</b> Same philosophy as &sect;2.3: the posterior should resemble the prior as closely as possible while remaining compatible with the new information &mdash; so minimize relative entropy over the distributions agreeing with what you learned.<div class='eq'>Prior N(&nu;,&tau;&sup2;), told the posterior has mean &mu; and variance &sigma;&sup2; &rArr; posterior is <b>N(&mu;,&sigma;&sup2;)</b>&nbsp;&nbsp;(Ex. 2.6.12)</div>The argument is neat: with &mu; and &sigma;&sup2; fixed, minimizing (2.50) amounts to <b>maximizing H(X)</b>, and Example 2.6.11 says the maximizer is the normal. Example 2.6.13 handles an inequality constraint Var(X) &le; &alpha;, giving &mu; = &nu; and &sigma;&sup2; = min(&alpha;,&tau;&sup2;) &mdash; don't move unless forced.<p style='margin-top:10px'><b>&sect;2.6.7 &mdash; the trap.</b> In the discrete case you choose the most general prior by <b>maximizing entropy</b>. That does <b>not</b> transfer. Take a continuous density f, chop R at points x&#8321;,&hellip;,x<sub>n</sub> drawn i.i.d. from some density m(x), and compute the discrete entropy. Using (x<sub>j+1</sub> &minus; x<sub>j</sub>) &asymp; 1/(nm(x<sub>j</sub>)):</p><div class='eq'>H<sub>n</sub> &asymp; &minus;&sum;<sub>j</sub> f(x<sub>j</sub>)(x<sub>j+1</sub>&minus;x<sub>j</sub>) log( f(x<sub>j</sub>)/m(x<sub>j</sub>) ) + log(n)&sum;<sub>j</sub> f(x<sub>j</sub>)(x<sub>j+1</sub>&minus;x<sub>j</sub>)</div>The second term &rarr; log(n), which <b>diverges</b> &mdash; but it is independent of f and m, so it carries no information. Subtract that nuisance and the first sum converges to<div class='eq'>&minus;&int; f(x) log( f(x)/m(x) ) dx = &minus;D<sub>kl</sub>(X&#8214;Y)</div><b>So maximizing discrete entropy corresponds, in the limit, to <i>minimizing relative entropy</i> against m(x)</b> &mdash; the <b>limiting distribution of discrete points</b> &mdash; not to maximizing differential entropy.",
+   "r": {
+    "rot": "updating in the continuous world is the same principle as everywhere else: move as little as the new information forces. tell a normal prior a new mean and variance and you get a normal posterior; tell it only an upper bound on the variance and it doesn't move unless it has to. the subtle part is the <b>warning</b>. in the discrete case, &ldquo;maximize entropy&rdquo; is the rule for picking a prior. take the limit properly and that rule does <b>not</b> become &ldquo;maximize differential entropy&rdquo; &mdash; it becomes &ldquo;minimize relative entropy against whatever density m your discretization points came from.&rdquo; the divergent log(n) term is what hides the difference, and it drops out because it depends on neither distribution.",
+    "ex": "The m(x) is not optional &mdash; it's a real degree of freedom smuggled in by <i>how you discretized</i>. Different sampling densities for the x<sub>j</sub> give different limits, which is precisely why differential entropy alone can't be the answer.",
+    "why": "This is why &sect;4.7 has to work so hard for a noninformative prior. MAX ENT survives on bounded support (where a uniform m exists) and fails on unbounded support &mdash; which is exactly the failure Unexample 4.7.6 exhibits, and why reference and Jeffreys priors exist at all.",
+    "math": "Discretize with points drawn from m: H<sub>n</sub> &asymp; log(n) &minus; D<sub>kl</sub>(f&#8214;m). Drop the f- and m-independent log(n); max discrete entropy &rarr; min D<sub>kl</sub>(&middot;&#8214;m), not max &minus;&int;f log f."
+   }
+  },
+  {
+   "id": "v3c2g1",
+   "s": "2.7",
+   "page": 142,
+   "q": "You've seen k successes in n Bernoulli trials. Give the posterior for p under a uniform prior.",
+   "a": "<b>Theorem 2.7.8.</b> With prior p ~ Beta(1,1) (the uniform distribution on [0,1]), after n independent Bernoulli(p) trials giving k successes and n&minus;k failures:<div class='eq'>p | S<sub>n</sub> = k&nbsp; ~&nbsp; Beta(k+1, n&minus;k+1)</div>The posterior is a full <b>distribution over the bias</b>, not a point estimate &mdash; it carries your remaining uncertainty. Its mean is (k+1)/(n+2), which is Laplace's rule of succession, not k/n.<p style='margin-top:10px'><b>Beta(a,b)</b> has mean a/(a+b). As a and b grow with the ratio fixed, the mean stays put while the variance shrinks and the peak sharpens &mdash; more data, same estimate, more confidence.</p>",
+   "r": {
+    "rot": "don't report 'the coin is 70% heads.' report a whole curve over how biased it might be. start uniform &mdash; every bias equally plausible &mdash; then each head bumps the first parameter and each tail bumps the second. after k heads and n&minus;k tails you're at Beta(k+1, n&minus;k+1). the counting is the update. and 0 heads in 2 flips gives you 1/4, not 0, because you haven't earned the right to say impossible.",
+    "ex": "Figure 2.8: Beta(3,4), Beta(15,20), Beta(30,40) all have mean 3/7 but progressively narrower peaks. Same belief about the center, wildly different confidence.",
+    "why": "This is the whole Bayesian program made concrete, and it's what &sect;4.6 builds on. The point-estimate answer k/n throws away the uncertainty; the posterior keeps it, which is what you need to make decisions rather than just report numbers.",
+    "math": "f(p) &prop; p<sup>a&minus;1</sup>(1&minus;p)<sup>b&minus;1</sup>. Likelihood p<sup>k</sup>(1&minus;p)<sup>n&minus;k</sup> &times; prior p&#8304;(1&minus;p)&#8304; &rArr; posterior &prop; p<sup>k</sup>(1&minus;p)<sup>n&minus;k</sup>."
+   }
+  },
+  {
+   "id": "v3c2g2",
+   "s": "2.7",
+   "page": 144,
+   "q": "What is a conjugate prior? Give the three pairs this section covers.",
+   "a": "A prior is <b>conjugate</b> to a likelihood when the posterior lands in the <b>same family as the prior</b> &mdash; so the Bayes update becomes an update of <i>parameters</i>, not an integral.<ul style='margin:0;padding-left:19px'><li><b>Beta</b> is conjugate to <b>Bernoulli/binomial</b> (Thm 2.7.8).</li><li><b>Dirichlet</b> is conjugate to <b>categorical</b> (Thm 2.7.13): Dirichlet(1,&hellip;,1) prior plus n draws gives Dirichlet(1 + &Sigma;x<sub>i1</sub>, &hellip;, 1 + &Sigma;x<sub>ik</sub>) &mdash; just add the counts.</li><li><b>Gamma</b> is conjugate to <b>exponential/Poisson</b> rate (Thm 2.7.16).</li></ul><p style='margin-top:10px'>Dirichlet generalizes Beta: Beta is Dirichlet with k = 2, since the 2-simplex is {(p, 1&minus;p)}. Dirichlet(1,&hellip;,1) is uniform on the simplex.</p>",
+   "r": {
+    "rot": "normally bayes makes you compute a horrible normalizing integral. conjugate priors are the families where that integral is already solved &mdash; posterior comes out the same shape as the prior, just with different numbers. so updating is literally <b>adding your counts to the parameters</b>. saw 3 more successes? add 3. that's the update. it feels like cheating and it's completely legitimate.",
+    "ex": "Dirichlet with categorical: a prior of Dirichlet(1,1,1) over three outcomes, then observing counts (7, 2, 5), gives Dirichlet(8, 3, 6). No integration performed.",
+    "why": "Conjugacy is what made Bayesian statistics computable before MCMC existed, and it's still what makes hierarchical models tractable. It's also why you'll meet Dirichlet again in Latent Dirichlet Allocation (your Gibbs_LDA lab) &mdash; the conjugacy is exactly what makes the Gibbs sampler's conditionals easy to draw from.",
+    "math": "Beta&ndash;Binomial, Dirichlet&ndash;Categorical, Gamma&ndash;Poisson/Exponential. All exponential-family pairs."
+   }
+  },
+  {
+   "id": "v3c2g3",
+   "s": "2.7",
+   "page": 140,
+   "q": "State Bayes' theorem in its partition form and its two continuous extensions. What does Nota Bene 2.7.3 warn about?",
+   "a": "<b>Theorem 2.7.1.</b> For a finite collection {E<sub>i</sub>} that is mutually exclusive and collectively exhaustive, with P(E<sub>j</sub>) &gt; 0:<div class='eq'>P(E<sub>i</sub> | A) = P(A|E<sub>i</sub>)P(E<sub>i</sub>) / &sum;<sub>j=1</sub><sup>n</sup> P(A|E<sub>j</sub>)P(E<sub>j</sub>)</div>&mdash; the denominator is just the law of total probability, so this is the original Bayes' theorem with P(A) expanded.<p style='margin-top:10px'><b>Remark 2.7.2 &mdash; continuous versions.</b> Sums become integrals:</p><div class='eq'>f<sub>X|A</sub>(x|A) = P(A|X=x)f<sub>X</sub>(x) / &int;<sub>C</sub> P(A|X=x&prime;)f<sub>X</sub>(x&prime;) dx&prime;<br><br>f<sub>X|Y</sub>(x|y) = f<sub>Y|X</sub>(y|x)f<sub>X</sub>(x) / &int;<sub>C</sub> f<sub>Y|X</sub>(y|x&prime;)f<sub>X</sub>(x&prime;) dx&prime;</div><p style='margin-top:10px'><b>Nota Bene 2.7.3 &mdash; the notational trap.</b> The x&prime; in the denominator is a <b>dummy variable of integration</b> and is <b>not</b> the same as the x in the numerator and on the left. Most users of Bayes' theorem are sloppy and write the same symbol in both places, despite their representing different things.</p><p>The numerator is evaluated at one particular x; the denominator sweeps over <b>all</b> x&prime; and is a constant.</p>",
+   "r": {
+    "rot": "bayes' rule with the bottom written out: the denominator is just &ldquo;how likely was this data, totalling over every hypothesis.&rdquo; sums for discrete, integrals for continuous, same shape. the trap is purely notational and it bites people constantly: the variable in the denominator is being <b>integrated away</b>, so it has nothing to do with the x you're asking about. write x&prime; for it. once you see that the denominator is just a number, you can ignore it entirely most of the time &mdash; which is exactly what &ldquo;posterior &prop; likelihood &times; prior&rdquo; means.",
+    "ex": "Example 2.7.4: two identical-looking coins, one fair and one landing heads 4/5 of the time. Pick one at random, flip three times, get H,H,T. Then P(fair | HHT) = (1/8)(1/2) / [(1/8)(1/2) + (4/5)&sup2;(1/5)(1/2)] = <b>125/253</b> &mdash; just under a half, so the evidence tilts slightly toward the unfair coin.",
+    "why": "The partition form is what makes Bayes computable: without a mutually exclusive, collectively exhaustive family, there is no way to expand P(A). It's also the form the whole of &sect;4.6 uses, where the &ldquo;partition&rdquo; is the continuum of parameter values.",
+    "math": "P(E<sub>i</sub>|A) = P(A|E<sub>i</sub>)P(E<sub>i</sub>)/&sum;<sub>j</sub>P(A|E<sub>j</sub>)P(E<sub>j</sub>). Denominator is constant in i; x&prime; is a bound variable."
+   }
+  },
+  {
+   "id": "v3c2g4",
+   "s": "2.7",
+   "page": 142,
+   "q": "Define the beta distribution. What is Beta(1,1), and how does its shape change with a and b?",
+   "a": "<b>Proposition 2.7.5 / Definition 2.7.6.</b> For real a, b &gt; 0, X ~ Beta(a,b) has support [0,1] and p.d.f.<div class='eq'>f(x) = [ &Gamma;(a+b) / (&Gamma;(a)&Gamma;(b)) ] x<sup>a&minus;1</sup>(1&minus;x)<sup>b&minus;1</sup></div>where &Gamma; is the gamma function, satisfying &Gamma;(k+1) = k! for integers. The constant is exactly what makes it integrate to 1.<div class='eq'><b>Remark 2.7.7.</b>&nbsp;&nbsp;Beta(1,1) = Uniform([0,1])</div><b>How the shape moves.</b> The mean is a/(a+b), so it is fixed by the <b>ratio</b>:<div class='eq'>(3,4), (15,20), (30,40) all have mean 3/7 &mdash; but as a and b grow the <b>variance shrinks</b> and the peak gets taller and narrower (Fig 2.8)<br><br>a = b = 0.5 &mdash; peaks of <b>infinite height</b> at both ends<br>a = b = 1 &mdash; flat, the uniform<br>a = b = 10 &mdash; a single tight maximum at 0.5&nbsp;&nbsp;(Fig 2.9)</div><p style='margin-top:8px'><b>Read it as: the ratio sets where the mass sits, the magnitude sets how sure you are.</b></p>",
+   "r": {
+    "rot": "the beta distribution lives on [0,1], which is exactly where a probability lives &mdash; that's why it's the natural distribution over an unknown probability. two knobs. their <b>ratio</b> a/(a+b) says where the peak is. their <b>size</b> says how confident: (3,4) and (30,40) both centre on 3/7, but the second is a much narrower spike. a = b = 1 is flat, meaning no opinion. and a = b = 0.5 is the weird one that shoots up at both ends &mdash; it thinks the answer is probably near 0 or near 1 but isn't sure which.",
+    "ex": "Beta(0.5, 0.5) has <b>no mode</b>, since its density goes to infinity at both endpoints &mdash; which is the footnote's reason (&sect;4.6.1) that not every distribution has a MAP estimate. It also happens to be the reference prior for a Bernoulli likelihood (Example 4.7.9).",
+    "why": "The magnitude-as-confidence reading is what makes the conjugate update interpretable: observing k successes and n&minus;k failures turns Beta(a,b) into Beta(a+k, b+n&minus;k), so the parameters are literally counts and the distribution narrows as data accumulates.",
+    "math": "f(x) &prop; x<sup>a&minus;1</sup>(1&minus;x)<sup>b&minus;1</sup> on [0,1]. Mean a/(a+b). Beta(1,1) = Uniform. Beta = Dirichlet with k = 2."
+   }
+  },
+  {
+   "id": "v3c2g5",
+   "s": "2.7",
+   "page": 143,
+   "q": "The sun has risen n days running. What is the probability it rises tomorrow? Explain Bayesian model averaging.",
+   "a": "<b>Example 2.7.9, first solved by Laplace.</b> Run n i.i.d. experiments, all successful. From (2.60), f(p | S<sub>n</sub> = n) = (n+1)p<sup>n</sup>, i.e. p ~ Beta(n+1, 1). Now apply the law of total probability over <b>all</b> values of p:<div class='eq'>P(X<sub>n+1</sub>=1 | S<sub>n</sub>=n) = &int;&#8320;&sup1; P(X<sub>n+1</sub>=1 | p) f(p | S<sub>n</sub>=n) dp = &int;&#8320;&sup1; p(n+1)p<sup>n</sup> dp = <b>(n+1)/(n+2)</b></div>Not 1. Twenty successes in a row give 21/22 &asymp; 0.955, never certainty.<p style='margin-top:10px'><b>Remark 2.7.10 &mdash; why integrate rather than plug in.</b> Traditionally you would find the &ldquo;best&rdquo; parameter &theta;* and compute P(X = x | &theta;*). <b>Bayesian model averaging</b> instead integrates over <b>every</b> model, weighted by its probability:</p><div class='eq'>P(X = x) = &int; P(X = x | &theta;) P(&theta;) d&theta;</div><p style='margin-top:6px'>If &theta; is treated as a random variable reflecting your imperfect knowledge, this is <b>required</b> by the law of total probability. <b>Using a single &theta;* would not make sense unless P(&theta;*) = 1</b> &mdash; that is, unless you were certain.</p>",
+   "r": {
+    "rot": "n successes in a row, what's the chance of n+1? the naive answer is 1, because your best estimate of p is 1. laplace's answer is (n+1)/(n+2), and it's better: you never quite get to certainty, and the more data the closer you creep. the mechanism is that you don't <b>pick</b> a p at all. you keep the whole posterior over p and average the prediction across it. picking one value and using it is only justified if you were certain that value was right &mdash; and if you were certain, you wouldn't have needed a distribution.",
+    "ex": "The contrast is sharp at small n. One success gives 2/3, not 1. Ten give 11/12. The plug-in estimate says 1 every time, which is exactly the overconfidence that treating a point estimate as the truth produces.",
+    "why": "Model averaging is the honest version of what MAP and MLE approximate. &sect;4.6.2 makes the same complaint about the MAP &mdash; that a point estimate discards uncertainty &mdash; and it's the reason a credible interval, or the whole posterior, is more useful than any single number.",
+    "math": "p ~ Beta(n+1,1) &rArr; P(next success) = &int;&#8320;&sup1;p&middot;(n+1)p<sup>n</sup>dp = (n+1)/(n+2). Averaging over &theta; is forced by total probability unless P(&theta;*) = 1."
+   }
+  },
+  {
+   "id": "v3c2h1",
+   "s": "2.8",
+   "page": 146,
+   "q": "Define the hypergeometric distribution. When is it right instead of the binomial?",
+   "a": "Drawing n balls from an urn of r red and g green <b>without replacement</b>, X = number of red drawn:<div class='eq'>g<sub>X</sub>(x) = P(X = x) = <span class='frac'><span>C(r,x)&middot;C(g, n&minus;x)</span><span>C(r+g, n)</span></span></div>Denoted X ~ HyperGeom(r,g,n).<p style='margin-top:10px'><b>Binomial vs hypergeometric:</b> binomial assumes each draw is independent with fixed p &mdash; sampling <b>with</b> replacement. Without replacement, each draw changes the composition of what's left, so the trials are <b>dependent</b>.</p><p>Counting the total two ways gives <b>Vandermonde's identity</b>: C(r+g, n) = &Sigma;<sub>x</sub>C(r,x)C(g,n&minus;x).</p>",
+   "r": {
+    "rot": "binomial assumes the odds never change. but if you take a red ball out and don't put it back, there are fewer reds now &mdash; the next draw is a different game. hypergeometric is what you get when you count the actual arrangements instead of pretending. numerator: ways to pick your reds times ways to pick your greens. denominator: ways to pick anything. it's pure combinatorics, no independence assumed.",
+    "ex": "Poker, card counting, quality-control sampling from a finite lot, and capture-recapture wildlife estimates &mdash; all hypergeometric. When the population is huge relative to n, removal barely changes the odds and the binomial becomes a fine approximation.",
+    "why": "It's the honest model whenever the population is finite and you're not putting things back &mdash; which is most real sampling. Assuming binomial understates dependence and gives you confidence intervals that are too wide.",
+    "math": "&Sigma;<sub>x</sub>C(r,x)C(g,n&minus;x) = C(r+g,n) (Vandermonde). Mean nr/(r+g), same as binomial with p = r/(r+g), but smaller variance."
+   }
+  },
+  {
+   "id": "v3c2h2",
+   "s": "2.8",
+   "page": 150,
+   "q": "Events arrive as a Poisson process with rate &lambda;. Derive the distribution of the time to the first event.",
+   "a": "Let T be the waiting time. <b>T &gt; t</b> exactly when <b>no events occur in [0,t]</b>, and the count over that window is Poisson(t&lambda;):<div class='eq'>P(T &gt; t) = P(X = 0), X ~ Poisson(t&lambda;) = e<sup>&minus;t&lambda;</sup></div>So F<sub>T</sub>(t) = 1 &minus; e<sup>&minus;t&lambda;</sup>, and differentiating gives<div class='eq'>f<sub>T</sub>(t) = &lambda;e<sup>&minus;t&lambda;</sup>,&nbsp;&nbsp; T ~ Expo(&lambda;) = Gamma(1,&lambda;)</div><p style='margin-top:10px'>Waiting for <b>a</b> events instead of one gives the general gamma: f(t) = (b<sup>a</sup>/&Gamma;(a))t<sup>a&minus;1</sup>e<sup>&minus;tb</sup>, with mean a/b and variance a/b&sup2;. The scale &theta; = 1/b is the average wait for a single event.</p>",
+   "r": {
+    "rot": "clean derivation, worth doing yourself once. 'the first event hasn't happened by time t' is the same statement as 'zero events in [0,t].' poisson gives you that probability directly: e<sup>&minus;&lambda;t</sup>. that's the survival function, so the c.d.f. is one minus it, differentiate, done &mdash; exponential. <b>counting events is poisson, waiting for them is exponential.</b> two faces of one process.",
+    "ex": "Wait for a events rather than one and you get Gamma(a, &lambda;), mean a/&lambda; &mdash; exactly a times the mean single wait, as it should be.",
+    "why": "This is the link between counting and timing, and the reason exponential and gamma turn up everywhere in survival analysis, queueing, and reliability. It also explains the memorylessness of the exponential: the Poisson process has no memory, so neither can the waiting time.",
+    "math": "P(T &gt; t) = e<sup>&minus;&lambda;t</sup> &rArr; F<sub>T</sub> = 1 &minus; e<sup>&minus;&lambda;t</sup> &rArr; f<sub>T</sub> = &lambda;e<sup>&minus;&lambda;t</sup>. Gamma(a,b) mean a/b, variance a/b&sup2;."
+   }
+  },
+  {
+   "id": "v3c2h3",
+   "s": "2.8",
+   "page": 146,
+   "q": "Draw balls from an urn without replacement. Show the draws are identically distributed but not independent.",
+   "a": "Start with r red and g green. Let X<sub>i</sub> = 1 if the ith draw is red. The first draw gives p = r/(r+g). For the second, condition on the first:<div class='eq'>P(X&#8322;=red) = [(r&minus;1)/(r+g&minus;1)][r/(r+g)] + [r/(r+g&minus;1)][g/(r+g)] = <b>r/(r+g)</b></div><b>The same p.</b> And repeating the computation shows every X<sub>k</sub> has probability r/(r+g) and E[X<sub>k</sub>] = p.<p style='margin-top:8px'><b>But they are not independent</b> &mdash; the second draw's probability plainly <i>does</i> depend on the first outcome, and the covariance is nonzero:</p><div class='eq'>Cov(X&#8321;,X&#8322;) = [(r&minus;1)/(r+g&minus;1)][r/(r+g)] &minus; [r/(r+g)]&sup2; = &minus;rg / [(r+g&minus;1)(r+g)&sup2;] = &minus;p(1&minus;p)/(r+g&minus;1)</div><b>Negative</b>, as it must be &mdash; drawing a red leaves fewer reds.<p style='margin-top:10px'><b>The slick argument for identical distribution:</b> with no information from any other draw, symmetry and the principle of insufficient reason say <b>every ball is equally likely to be the one picked at step i</b>. So the probability of red at step i is r/(r+g), whatever i is.</p><p><b>Identically distributed but not independent is weaker than i.i.d. &mdash; and still very powerful</b>, because linearity of expectation never needed independence in the first place.</p>",
+   "r": {
+    "rot": "deal cards off a shuffled deck. is the seventh card more or less likely to be an ace than the first? <b>the same</b> &mdash; by symmetry, every card is equally likely to be in position seven, so the marginal probability never changes. but the draws are obviously not independent: see three aces go by and the fourth is much less likely. so they're identically distributed <b>without</b> being independent, and the covariance is negative because taking one red leaves fewer reds. that's enough for expectations to add, which is all you usually need.",
+    "ex": "Example 1.6.15 already used this: the expected number of blue marbles in k draws without replacement is kb/(b+r), the same as with replacement, because linearity of expectation doesn't care about the dependence. Only the <b>variance</b> differs.",
+    "why": "That variance difference is exactly the finite-population correction in Proposition 2.8.3: Var(X) = np(1&minus;p)&middot;(r+g&minus;n)/(r+g&minus;1) for the hypergeometric, against np(1&minus;p) for the binomial. Sampling without replacement is <b>less</b> variable, and the correction vanishes when the urn is huge relative to n.",
+    "math": "E[X<sub>k</sub>] = p = r/(r+g) for all k. Cov(X<sub>i</sub>,X<sub>j</sub>) = &minus;p(1&minus;p)/(r+g&minus;1) &lt; 0. Identically distributed &ne; i.i.d."
+   }
+  },
+  {
+   "id": "v3c2h4",
+   "s": "2.8",
+   "page": 148,
+   "q": "Derive the Poisson distribution as a limit of binomials. What are its mean and variance, and how does it scale with time?",
+   "a": "The Poisson describes the number of <b>arrivals</b> in an interval built from many small subintervals, each with low arrival probability and essentially independent of the others &mdash; Geiger-counter clicks, customers in a shop, <b>chocolate chips in a cookie</b> (it needn't be time).<p style='margin-top:8px'><b>The derivation.</b> Let the average number of arrivals per unit interval be &lambda;. Split [0,1] into n subintervals, each with arrival rate &lambda;/n, and model each as Bernoulli(&lambda;/n) &mdash; if the subinterval is small enough, at most one arrival happens. The total is binomial. Now let n &rarr; &infin; so that no subinterval can hold two arrivals:</p><div class='eq'>P(X = k) = lim<sub>n&rarr;&infin;</sub> C(n,k) (&lambda;/n)<sup>k</sup> (1 &minus; &lambda;/n)<sup>n&minus;k</sup> = <b>&lambda;<sup>k</sup>e<sup>&minus;&lambda;</sup> / k!</b></div><b>Definition 2.8.4:</b> X ~ Poisson(&lambda;) with support N. It sums to 1 because &sum;<sub>x</sub>&lambda;<sup>x</sup>/x! = e<sup>&lambda;</sup>.<p style='margin-top:10px'><b>Proposition 2.8.6.</b> E[X] = Var(X) = <b>&lambda;</b>. The heuristic: n&middot;E[X<sub>i</sub>] = n(&lambda;/n) = &lambda;, and n&middot;Var(X<sub>i</sub>) = &lambda;(1 &minus; &lambda;/n) &rarr; &lambda;.</p><p><b>Scaling.</b> Over a period of length t, X ~ <b>Poisson(t&lambda;)</b> &mdash; rescale n intervals to length 1 and the rate scales with them.</p>",
+   "r": {
+    "rot": "the poisson is what the binomial becomes when you have a huge number of chances and each one is tiny. chop an hour into a million milliseconds, each with a minuscule chance of a customer arriving, add them up, take the limit &mdash; and the messy binomial collapses to &lambda;<sup>k</sup>e<sup>&minus;&lambda;</sup>/k!. one parameter. and the signature property: <b>mean equals variance</b>, both &lambda;. that's a real diagnostic &mdash; if your count data has variance much bigger than its mean, it isn't poisson, and you have overdispersion to explain.",
+    "ex": "The chocolate-chip example is the one to remember, because it makes clear the &ldquo;interval&rdquo; needn't be time &mdash; it's any continuum you can subdivide, with rare independent events sprinkled through it.",
+    "why": "Poisson(t&lambda;) scaling is what makes the next subsection work: P(no events in [0,t]) = e<sup>&minus;t&lambda;</sup>, which is exactly 1 minus the exponential c.d.f. &mdash; so &ldquo;how many arrive&rdquo; and &ldquo;how long until the first&rdquo; are two views of the same process.",
+    "math": "P(X=k) = &lambda;<sup>k</sup>e<sup>&minus;&lambda;</sup>/k!, E = Var = &lambda;. Limit of Binomial(n, &lambda;/n). Length t &rArr; Poisson(t&lambda;)."
+   }
+  },
+  {
+   "id": "v3c2h5",
+   "s": "2.8",
+   "page": 151,
+   "q": "Define the survival function and the force of mortality. Why is the exponential the special case?",
+   "a": "Let T &isin; [0,T&#772;] be the time of death, with c.d.f. F(t) = P(T &le; t), F(0) = 0, F(T&#772;) = 1. The complement is the <b>survival function</b><div class='eq'>S(t) = 1 &minus; F(t) = P(t &lt; T)&nbsp;&nbsp;&mdash; still alive at time t</div>Two conditional probabilities follow immediately:<div class='eq'>P(s &lt; T | t &lt; T) = S(s)/S(t)&nbsp;&nbsp;(survive to s given alive at t)<br><br>P(t &lt; T &le; t+&Delta; | t &lt; T) = [S(t) &minus; S(t+&Delta;)] / S(t)</div><b>The force of mortality</b> (instantaneous death rate) is the limiting rate of the second one:<div class='eq'>&mu;(t) = lim<sub>&Delta;&rarr;0</sub> P(t &lt; T &le; t+&Delta; | t &lt; T)/&Delta; = F&prime;(t)/S(t) = &minus;S&prime;(t)/S(t) = &minus;(d/dt) log S(t)</div>equivalently &mu;(t) = f(t)/S(t), and integrating back gives S(t) = S(t&#8320;)exp(&minus;&int;<sub>t&#8320;</sub><sup>t</sup>&mu;(s)ds).<p style='margin-top:10px'><b>The exponential is the constant-hazard case.</b> If &mu;(t) &equiv; &lambda; then S(t) = e<sup>&minus;&lambda;t</sup> and f(t) = &lambda;e<sup>&minus;&lambda;t</sup> &mdash; T is exponential (Example 2.8.7). Exponentials are <b>memoryless</b>: <b>it doesn't matter how long the process has been running &mdash; if it worked yesterday it is no more likely to die today than on its first day.</b> This is a special case; <b>every other survival function has memory</b>.</p>",
+   "r": {
+    "rot": "instead of asking &ldquo;when does it die,&rdquo; ask &ldquo;given it's still alive, how fast is it dying <b>right now</b>?&rdquo; that rate is the force of mortality, and it's the derivative of &minus;log(survival). the whole distribution is recoverable from it. the exponential is the case where that rate is <b>constant</b> &mdash; a machine that's run for ten years is exactly as likely to fail today as a brand new one. that's memorylessness, it's clearly wrong for anything that wears out or ages, and it's the only survival distribution with the property.",
+    "ex": "Example 2.8.8: Gompertz observed in 1825 that human mortality follows a geometric law, &mu;(t) = ae<sup>bt</sup> &mdash; the death rate grows <b>exponentially</b> with age. Then S(t) = S(t&#8320;)exp(&minus;(a/b)(e<sup>bt</sup> &minus; e<sup>bt&#8320;</sup>)). That is aging, and it is exactly what memorylessness rules out.",
+    "why": "The hazard framing is what lets you model wear-out, infant mortality, and aging separately &mdash; each is a shape of &mu;(t). It also explains why the exponential is such a convenient default and such a suspicious one: constant hazard is the assumption that nothing ever ages.",
+    "math": "S(t) = 1 &minus; F(t). &mu;(t) = f(t)/S(t) = &minus;(d/dt)log S(t). S(t) = exp(&minus;&int;&mu;). &mu; constant &hArr; exponential &hArr; memoryless."
+   }
+  },
+  {
+   "id": "v3c2i1",
+   "s": "2.9",
+   "page": 153,
+   "q": "Y = g(X). Give the density of Y, and explain where the derivative factor comes from.",
+   "a": "<b>Prop 2.9.1.</b> In general F<sub>Y</sub>(y) = P(g(X) &le; y). If g is invertible and increasing, F<sub>Y</sub>(y) = F<sub>X</sub>(g<sup>&minus;1</sup>(y)). If g is monotonic with differentiable inverse:<div class='eq'>f<sub>Y</sub>(y) = f<sub>X</sub>(g<sup>&minus;1</sup>(y)) &middot; <span class='frac'><span>d g<sup>&minus;1</sup>(y)</span><span>dy</span></span></div><b>Where the derivative comes from:</b> probability is <i>area</i>, and it must be conserved. g stretches or compresses the axis, so an interval dx maps to an interval dy of a different width. The density has to be rescaled by exactly that stretch factor for the total area to remain 1. It is the one-dimensional Jacobian.",
+   "r": {
+    "rot": "you're not just relabelling the x-axis, you're <i>stretching</i> it. if g doubles the spacing, the same probability now covers twice the width, so the height has to halve. that's the whole reason the derivative is there &mdash; it's a bookkeeping factor keeping the total area at 1. forget it and your 'density' won't integrate to one, which is the classic way to get this wrong.",
+    "ex": "Ex 2.9.2: X ~ Gamma(a,b), Y = 1/X. The transformation gives f<sub>Y</sub> = (1/(b<sup>a</sup>&Gamma;(a)))y<sup>&minus;a&minus;1</sup>e<sup>&minus;1/(yb)</sup> &mdash; the <b>inverse gamma</b> distribution, heavily used in Bayesian statistics as a prior on variances.",
+    "why": "This is the engine behind all of it: change of variables in n dimensions (with |det Jacobian|), inverse transform sampling, and normalizing flows in modern generative modeling. Every one of those is this formula, generalized.",
+    "math": "f<sub>Y</sub>(y) = f<sub>X</sub>(g<sup>&minus;1</sup>(y))|d g<sup>&minus;1</sup>/dy|. In &Ropf;<sup>n</sup>: f<sub>Y</sub>(y) = f<sub>X</sub>(g<sup>&minus;1</sup>(y))|det D g<sup>&minus;1</sup>(y)|."
+   }
+  },
+  {
+   "id": "v3c2i2",
+   "s": "2.9",
+   "page": 154,
+   "q": "State Universality of the Uniform. Why does every random number generator depend on it?",
+   "a": "<b>Theorem 2.9.3.</b> If X has a continuous, strictly increasing c.d.f. F, then:<ul style='margin:0;padding-left:19px'><li><b>F(X) ~ Uniform(0,1)</b> &mdash; pushing any variable through its own c.d.f. flattens it to uniform.</li><li><b>F<sup>&minus;1</sup>(U) ~ X</b> for U ~ Uniform(0,1) &mdash; the inverse c.d.f. turns uniform noise into <i>any</i> distribution you want.</li></ul><p style='margin-top:10px'>The second half is <b>inverse transform sampling</b>: your machine generates uniform random numbers, and this converts them into samples from any distribution with an invertible c.d.f.</p><p><b>Example:</b> for Expo(&lambda;), F(x) = 1 &minus; e<sup>&minus;&lambda;x</sup>, so F<sup>&minus;1</sup>(u) = &minus;ln(1&minus;u)/&lambda;. Draw u uniform, apply that, and you have an exponential sample.</p>",
+   "r": {
+    "rot": "every distribution is secretly a uniform in a costume, and the c.d.f. is the costume. push X through its own c.d.f. and it flattens to uniform &mdash; every time, any distribution. run it backwards and uniform noise becomes whatever you want. your computer only knows how to make uniform randomness. <b>this theorem is how it makes everything else.</b>",
+    "ex": "Exponential: u &rarr; &minus;ln(1&minus;u)/&lambda;. That one line is inside `numpy.random.exponential`. Same trick underlies the samplers in your Sampling and Metropolis labs.",
+    "why": "It's the bridge from theory to your keyboard. Combined with &sect;1.10's Monte Carlo results, it's the full story of how simulation works: uniform bits in, arbitrary distributions out, sample means approximating anything you want.",
+    "math": "P(F(X) &le; u) = P(X &le; F<sup>&minus;1</sup>(u)) = F(F<sup>&minus;1</sup>(u)) = u, which is the Uniform(0,1) c.d.f."
+   }
+  },
+  {
+   "id": "v3c2i3",
+   "s": "2.9",
+   "page": 156,
+   "q": "Give the multivariate change-of-variables formula for densities. What does it say about linear maps of a normal?",
+   "a": "Let Y = &Phi;(X) with &Phi; : R<sup>n</sup> &rarr; R<sup>n</sup> a <b>diffeomorphism</b> (C&sup1; with C&sup1; inverse &Psi; = &Phi;<sup>&minus;1</sup>). For measurable A with B = &Phi;(A),<div class='eq'>&int;<sub>A</sub> f<sub>X</sub>(x)dx = P(X&isin;A) = P(Y&isin;B) = &int;<sub>B</sub> f<sub>Y</sub>(y)dy</div>and the general change-of-variables formula turns the left side into &int;<sub>B</sub>(f<sub>X</sub>&compfn;&Psi;)(y)|det D&Psi;|dy. Since this holds for every A:<div class='eq'>f<sub>Y</sub>(y) = (f<sub>X</sub> &compfn; &Psi;)(y) &middot; |det D&Psi;|</div><b>The Jacobian determinant is the volume-stretching factor</b> &mdash; densities are per unit volume, so squeezing space must raise the density to keep total probability at 1.<p style='margin-top:10px'><b>Example 2.9.9 &mdash; linear maps of a normal.</b> Let X ~ N(&mu;,&Sigma;) and Y = AX with A invertible. Then &Psi; is multiplication by A<sup>&minus;1</sup>, |det D&Psi;| = |det A|<sup>&minus;1</sup>, and using |A&Sigma;A<sup>T</sup>| = |A|&sup2;|&Sigma;| the algebra collapses to</p><div class='eq'>Y ~ N( A&mu;, A&Sigma;A<sup>T</sup> )</div><b>The normal family is closed under invertible linear maps</b>, with the mean and covariance transforming exactly as you'd hope.",
+   "r": {
+    "rot": "change variables and the density has to pick up a jacobian. reason: a density is probability <b>per unit volume</b>, so if your map squashes a region to half its size, the density there must double or you lose probability. that's the |det D&Psi;| factor, nothing more. the headline consequence: apply any invertible matrix to a multivariate normal and you get another multivariate normal, mean A&mu;, covariance A&Sigma;A<sup>T</sup>. normals are closed under linear maps, which is a big part of why they're so easy to work with.",
+    "ex": "Example 2.9.10 is the impressive one. For independent gammas R ~ Gamma(a,&lambda;) and S ~ Gamma(b,&lambda;), transform to U = R+S and V = R/(R+S). The Jacobian is &minus;u, and the resulting joint density <b>factors</b> &mdash; proving that U ~ Gamma(a+b,&lambda;) and V ~ Beta(a,b) are <b>independent</b>. Sum and ratio, gamma and beta, independent of each other.",
+    "why": "The one-dimensional |dg<sup>&minus;1</sup>/dy| from Prop 2.9.1 is just this with n = 1. And the same Jacobian is what makes transformation invariance a real question for priors &mdash; it's exactly the factor that MAX ENT fails to respect (Unexample 4.7.6) and that the Jeffreys prior is built to absorb (Thm 4.7.11).",
+    "math": "f<sub>Y</sub>(y) = f<sub>X</sub>(&Psi;(y))|det D&Psi;(y)|, &Psi; = &Phi;<sup>&minus;1</sup>. X ~ N(&mu;,&Sigma;), Y = AX &rArr; Y ~ N(A&mu;, A&Sigma;A<sup>T</sup>)."
+   }
+  },
+  {
+   "id": "v3c2i4",
+   "s": "2.9",
+   "page": 157,
+   "q": "What is the distribution of a sum of two independent random variables?",
+   "a": "<b>Proposition 2.9.11 (discrete).</b> For independent X, Y on S with p.m.f.s g<sub>X</sub>, g<sub>Y</sub>, the sum Z = X + Y has p.m.f. the <b>convolution</b><div class='eq'>g<sub>Z</sub>(z) = (g<sub>X</sub> * g<sub>Y</sub>)(z) = &sum;<sub>x&isin;S</sub> g<sub>X</sub>(x) g<sub>Y</sub>(z &minus; x)</div><b>The proof is one line of conditioning:</b> P(X+Y=z) = &sum;<sub>x</sub>P(X=x)P(X+Y=z | X=x) = &sum;<sub>x</sub>P(X=x)P(Y=z&minus;x), using independence at the last step.<p style='margin-top:10px'><b>Proposition 2.9.12 (continuous).</b> Same formula with an integral:</p><div class='eq'>f<sub>Z</sub>(z) = (f<sub>X</sub> * f<sub>Y</sub>)(z) = &int;<sub>S</sub> f<sub>X</sub>(x) f<sub>Y</sub>(z &minus; x) dx</div>The proof goes through the c.d.f., substitutes &zeta; = x + y in the inner integral to decouple the limits, swaps the order, and differentiates.<p style='margin-top:10px'><b>Nota Bene 2.9.13 &mdash; the support trap.</b> Even when x and &zeta; are in the support S, that does <b>not</b> mean &zeta; &minus; x is. The integrand must be taken as <b>0 wherever &zeta; &minus; x is outside the support of Y</b>.</p><p>Forgetting this is the standard way to get a wrong answer for a sum of, say, two uniforms or two exponentials.</p>",
+   "r": {
+    "rot": "adding independent random variables <b>convolves</b> their distributions: to land on z, you need X = x and Y = z&minus;x, so sum (or integrate) that product over every x. that's it. the practical warning is about limits &mdash; the formula looks like it integrates over everything, but f<sub>Y</sub>(z&minus;x) is zero whenever z&minus;x falls outside Y's support, and if you don't chop the integral there you get nonsense. for two uniforms on [0,1], for instance, the answer is a triangle, and you only get the triangle by respecting the cutoffs.",
+    "ex": "This is the reason characteristic functions matter so much (&sect;4.2). Convolution is painful and compounds badly: adding n variables means n&minus;1 nested convolutions. Under &phi;<sub>X+Y</sub> = &phi;<sub>X</sub>&phi;<sub>Y</sub> it becomes a single product, or a power for i.i.d. copies.",
+    "why": "It is the operation the central limit theorem is secretly about: S<sub>n</sub> is an n-fold convolution of the parent density with itself, and the CLT says that repeated convolution smooths anything into a Gaussian. Seeing it as convolution is what makes that plausible.",
+    "math": "g<sub>X+Y</sub> = g<sub>X</sub> * g<sub>Y</sub>; f<sub>X+Y</sub>(z) = &int;f<sub>X</sub>(x)f<sub>Y</sub>(z&minus;x)dx. Integrand is 0 where z&minus;x &notin; supp(Y). Needs independence."
+   }
+  },
+  {
+   "id": "v3c2i5",
+   "s": "2.9",
+   "page": 159,
+   "q": "When symbolic inversion fails, how do you get the distribution of Y = &Phi;(X)? Define the standard error.",
+   "a": "<b>Symbolic inversion is often difficult or impossible</b>, and then the change-of-variables formula is useless. The Monte Carlo alternative is almost embarrassingly simple:<div class='eq'>If x&#8321;,&hellip;,x<sub>n</sub> are draws from X, then y<sub>i</sub> = &Phi;(x<sub>i</sub>) are draws from Y.</div><b>Just push your samples through the function.</b> From those you estimate E[Y] &asymp; y&#772;, Var(Y) &asymp; (1/n)&sum;(y<sub>i</sub>&minus;y&#772;)&sup2;, P(Y &le; y) &asymp; (1/n)&sum;1<sub>y<sub>i</sub>&le;y</sub>, and the median as the sample median.<p style='margin-top:10px'><b>How accurate?</b> The CLT says &mu;&#770; is approximately N(&mu;, &sigma;&sup2;/n), so by the 68-95-99.7 rule it lies within one &sigma;/&radic;n of &mu; about 68% of the time. That quantity is the <b>standard error</b>:</p><div class='eq'>SE = &sigma;/&radic;n &asymp; s&#770;<sub>x</sub>/&radic;n,&nbsp;&nbsp;where s&#770;&sup2;<sub>x</sub> = (1/(n&minus;1))&sum;(x<sub>i</sub>&minus;x&#772;)&sup2;</div>(&sigma; is unknown too, so use the <b>unbiased</b> sample variance.) A Monte Carlo estimate lies within <b>two standard errors</b> of the truth with about 95% probability.<p style='margin-top:8px'><b>Example 2.9.14.</b> X ~ Uniform([0,1]), estimate E[X&sup2;] with n = 10&#8310;: y&#772; = 0.333298, s&#770;&sup2;<sub>y</sub> = 0.088995, so SE = 0.0003. The true value is &int;&#8320;&sup1;x&sup2;dx = 1/3, and |y&#772; &minus; &mu;| &asymp; 0.000035 &mdash; well within one standard error.</p>",
+   "r": {
+    "rot": "if you can't invert the function symbolically, don't. sample X, apply &Phi; to every sample, and you now have samples of Y. everything you wanted &mdash; mean, variance, quantiles, probabilities &mdash; comes out of that list. and you get an error bar for free: the standard error &sigma;/&radic;n, estimated with the sample standard deviation. two standard errors is your 95% window. note the &radic;n again &mdash; a hundred times more samples buys you ten times the precision, which is why monte carlo is easy to start and expensive to make precise.",
+    "ex": "&sect;2.9.5's Box&ndash;Muller method is the case where a dedicated trick beats brute force. The normal has no convenient inverse c.d.f., so instead you generate a bivariate normal in <b>polar</b> coordinates: rotational symmetry makes &theta; ~ Uniform([0,2&pi;)), and R&sup2; ~ Gamma(1,&frac12;) is exponential, so R&sup2; = &minus;2log(U&#8321;) and &theta; = 2&pi;U&#8322; give two independent standard normals from two uniforms.",
+    "why": "It closes the section honestly: inversion sampling (&sect;2.9.1) works when F<sup>&minus;1</sup> is known, change of variables works when &Phi; is invertible in closed form, and when neither holds you simulate &mdash; and the standard error tells you how much to trust the result.",
+    "math": "y<sub>i</sub> = &Phi;(x<sub>i</sub>) are draws from Y. SE = &sigma;/&radic;n &asymp; s&#770;<sub>x</sub>/&radic;n. P(|y&#772; &minus; E[h(X)]| &le; 2s&#770;<sub>y</sub>/&radic;n) &asymp; 95%."
+   }
+  }
+ ],
+ "exercises": {
+  "from": 161,
+  "to": 172
+ },
+ "exMarks": [
+  {
+   "page": 161,
+   "y": 0.543
+  },
+  {
+   "page": 162,
+   "y": 0.355
+  },
+  {
+   "page": 163,
+   "y": 0.232
+  },
+  {
+   "page": 164,
+   "y": 0.667
+  },
+  {
+   "page": 165,
+   "y": 0.62
+  },
+  {
+   "page": 167,
+   "y": 0.321
+  },
+  {
+   "page": 168,
+   "y": 0.575
+  },
+  {
+   "page": 170,
+   "y": 0.271
+  },
+  {
+   "page": 171,
+   "y": 0.301
+  },
+  {
+   "page": 171,
+   "y": 0.76
+  }
+ ]
+}

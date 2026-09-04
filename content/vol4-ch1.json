@@ -1,0 +1,439 @@
+{
+ "volume": "vol4",
+ "chapter": "1",
+ "file": "vol4-ch1.json",
+ "title": "Modeling with Dynamics",
+ "epigraph": {
+  "text": "In mathematics the art of proposing a question must be held of higher value than solving it.",
+  "by": "Georg Cantor"
+ },
+ "sections": [
+  {
+   "id": "1.1",
+   "name": "The Art and Science of Mathematical Modeling",
+   "from": 3,
+   "to": 10,
+   "exFrom": {
+    "page": 41,
+    "y": 0.4027
+   },
+   "exTo": {
+    "page": 41,
+    "y": 0.83
+   }
+  },
+  {
+   "id": "1.2",
+   "name": "Modeling Population Dynamics",
+   "from": 11,
+   "to": 20,
+   "exFrom": {
+    "page": 41,
+    "y": 0.83
+   },
+   "exTo": {
+    "page": 42,
+    "y": 0.3827
+   }
+  },
+  {
+   "id": "1.3",
+   "name": "Dimensional Analysis and Nondimensionalization",
+   "from": 21,
+   "to": 27,
+   "exFrom": {
+    "page": 42,
+    "y": 0.3827
+   },
+   "exTo": {
+    "page": 43,
+    "y": 0.2091
+   }
+  },
+  {
+   "id": "1.4",
+   "name": "Buckingham π Theorem",
+   "from": 28,
+   "to": 34,
+   "exFrom": {
+    "page": 43,
+    "y": 0.2091
+   },
+   "exTo": {
+    "page": 43,
+    "y": 0.83
+   }
+  },
+  {
+   "id": "1.5",
+   "name": "Modeling with Newtonian Mechanics",
+   "from": 35,
+   "to": 40,
+   "exFrom": {
+    "page": 43,
+    "y": 0.83
+   },
+   "exTo": {
+    "page": 45,
+    "y": 0.4236
+   }
+  }
+ ],
+ "cards": [
+  {
+   "id": "v4c1a1",
+   "s": "1.1",
+   "page": 4,
+   "q": "There are two fundamental approaches to mathematical modeling. Name both, say which volume handles which, and say which is actually best.",
+   "a": "<b>Data-driven</b> &mdash; fit a model to observations, chosen largely without regard to the source of the data. This is machine learning, and it's Volume 3's subject. <b>First-principles</b> &mdash; derive the model from physical laws you can isolate and observe, like gravity. That's this volume.<p style='margin-top:10px'>The book is explicit that the split is artificial: <b>the best solutions merge both</b> &mdash; derive from first principles, then tune parts of the model against data. Remark 1.1.1 notes the trend is drifting toward pure data-fitting, and that the most powerful modelers use both.</p>",
+   "r": {
+    "rot": "two ways to model. one: watch the world and fit whatever curve works, no theory, pure vibes plus gradient descent &mdash; that's vol 3. two: start from laws you actually believe, like F = ma, and derive &mdash; that's this book. the actual answer is you do both. derive the skeleton from physics, fit the parameters you can't derive. anyone who only does one is leaving information on the table.",
+    "ex": "Weather forecasting: the atmospheric physics (Navier&ndash;Stokes, thermodynamics) is first-principles; the parameterizations for cloud formation are fit to data because the physics is too fine-grained to resolve. Neither half alone forecasts anything.",
+    "why": "This framing is why you're taking Vol 3 and Vol 4 the same semester. They aren't unrelated courses &mdash; they're the two halves of one skill, and the whole point is that you end up able to do both to the same problem.",
+    "math": "Data-driven: choose f from a flexible family, minimize loss over observations. First-principles: derive f from conservation laws and constitutive relations. Hybrid: derive the form, fit the constants."
+   }
+  },
+  {
+   "id": "v4c1a2",
+   "s": "1.1",
+   "page": 4,
+   "q": "What is the modeling philosophy this book advocates, and how does it differ from what other fields do?",
+   "a": "<b>Start with the simplest model possible</b> &mdash; deliberately omitting relevant details &mdash; so it can be completely understood and each component analyzed. Then discover it's too simplistic, return, and add <b>one or two details at a time</b> so you can see the effect of each. Then repeat.<p style='margin-top:10px'>Other fields often try to include every detail, producing a system so complex there is no hope of analyzing the mathematics, and therefore no hope of saying anything rigorous about its predictive power. Mathematics goes the other way: <b>sacrifice detail for simplicity and practicality</b>.</p>",
+   "r": {
+    "rot": "everyone's instinct is to build the big model with all the features. resist. build the dumbest model that could possibly work, understand it completely, watch it fail, then add exactly one thing. if you add five things at once and it gets better you have learned nothing about which one mattered. this is the same reason you change one variable per experiment.",
+    "ex": "This chapter does it live: exponential growth (too simple, unbounded) &rarr; logistic (adds carrying capacity) &rarr; Lotka&ndash;Volterra (adds a predator) &rarr; second-order Lotka&ndash;Volterra (adds carrying capacity back in). Four models, each one detail richer than the last.",
+    "why": "It's also a debugging discipline and a research discipline. A model you can't analyze can't be falsified, and a model that can't be falsified isn't doing science &mdash; it's just an expensive curve fit with good PR.",
+    "math": "Model M&#8320; simple enough to solve in closed form. Identify the qualitative failure. Perturb: M&#8321; = M&#8320; + one term. Re-analyze. Iterate."
+   }
+  },
+  {
+   "id": "v4c1a3",
+   "s": "1.1",
+   "page": 5,
+   "q": "Derive the N-body gravitational model. What three principles go into it?",
+   "a": "<ol style='margin:0;padding-left:19px'><li><b>Newton's Second Law:</b> the force on body i is F = m<sub>i</sub>q&#776;<sub>i</sub>.</li><li><b>Superposition:</b> the total force on a body is the sum of forces from all other bodies.</li><li><b>Inverse square law:</b> the force from body j on body i is proportional to m<sub>i</sub>m<sub>j</sub>, inversely proportional to &#8214;q<sub>j</sub> &minus; q<sub>i</sub>&#8214;&sup2;, directed along the unit vector between them.</li></ol><div class='eq'>m<sub>i</sub> q&#776;<sub>i</sub> = &Sigma;<sub>j&ne;i</sub> <span class='frac'><span>G m<sub>i</sub> m<sub>j</sub> (q<sub>j</sub> &minus; q<sub>i</sub>)</span><span>&#8214;q<sub>j</sub> &minus; q<sub>i</sub>&#8214;&sup3;</span></span></div><p>Note the cube in the denominator: it's the square from the force law, times one more factor of the norm to normalize the direction vector.</p>",
+   "r": {
+    "rot": "three ingredients. F = ma. forces just add up. and force falls off like 1/r&sup2; pointing at the other guy. stack them and you get the n-body equations. the cubed denominator trips everyone &mdash; it's not that force goes like 1/r&sup3;. it's 1/r&sup2; for the magnitude, times 1/r to turn (q&#8323; &minus; q&#8321;) into a unit vector. two jobs, one denominator.",
+    "ex": "N = 2 gives you the two-body problem and Kepler's ellipses in closed form. N = 3 has no general closed-form solution &mdash; which is exactly why numerical methods (Ch 4) exist.",
+    "why": "This is the template for every mechanical model you'll build: state a force law, apply Newton's second law, sum over interactions, and you have a second-order system of ODEs. The rest of the volume is about what to do with such systems once you have them.",
+    "math": "q<sub>i</sub> &isin; &Ropf;&sup3;, masses m<sub>i</sub> constant. q&#775;<sub>i</sub> = velocity, q&#776;<sub>i</sub> = acceleration. The system is 6N-dimensional first-order after the standard reduction."
+   }
+  },
+  {
+   "id": "v4c1a4",
+   "s": "1.1",
+   "page": 5,
+   "q": "Who actually discovered the inverse square law, and what made Newton's contribution a paradigm shift?",
+   "a": "There is written evidence that <b>Hooke</b> &mdash; Newton's contemporary, of spring-constant fame &mdash; proposed the inverse square law first. Kepler's three laws were originally <b>empirical</b>, fit to Tycho Brahe's naked-eye observational data (some of which Kepler admitted obtaining by less-than-ethical means).<p style='margin-top:10px'>The paradigm shift: Newton essentially invented calculus to <b>derive</b> Kepler's laws from the inverse square law. Establishing them as a mathematical consequence rather than as a fit to observations is what changed modeling forever.</p><p>Also worth noting: Kepler first <i>rejected</i> the ellipse because of the prevailing Earth-centric theory, tried every other curve, and only came back to it later. Modeling is often guess and check.</p>",
+   "r": {
+    "rot": "kepler had a mountain of brahe's data and brute-forced curves at it for years. tried everything. ellipse? rejected it, because the reigning theory said no. came back to it later and it fit perfectly. then newton showed up, invented calculus, and <i>derived</i> the whole thing from one force law. that's the jump: from 'this curve happens to match' to 'this curve is forced.' also hooke probably had the inverse square first and got no credit, which is very on brand for science.",
+    "ex": "Modern echo: deep learning models fit data superbly and explain nothing. A derivation from conservation laws explains and predicts outside the data range. Both are useful; only one tells you <i>why</i>.",
+    "why": "It's the historical argument for the whole volume. Fitting curves to data is older than calculus and it plateaus. Deriving the model is what let physics predict things nobody had measured yet &mdash; and Remark 1.1.1 warns that modern practice is drifting back toward pure fitting.",
+    "math": "Empirical: given {(t&#7522;, r&#7522;)}, find a curve. Derived: given F = &minus;GMm/r&sup2; r&#770; and F = ma, prove the orbit is a conic section with the focus at the origin."
+   }
+  },
+  {
+   "id": "v4c1b1",
+   "s": "1.2",
+   "page": 11,
+   "q": "State the SIR model, and list the assumptions it rests on.",
+   "a": "<div class='eq'>S&#775; = &minus;bSI<br>I&#775; = bSI &minus; kI<br>R&#775; = kI</div><b>Assumptions:</b><ol style='margin:0;padding-left:19px'><li>Mild disease, little to no fatality.</li><li>Population splits into Susceptible, Infected, Recovered.</li><li>Population is constant &mdash; no births, deaths, or migration.</li><li>Normalized: S + I + R = 1 for all t &ge; 0, so these are <i>proportions</i>.</li><li><b>No spatial dependence</b> &mdash; everyone contacts everyone equally, regardless of where they live.</li></ol><p style='margin-top:10px'>Recovered individuals have permanent immunity. The <b>bSI</b> term is the modeling heart: new infections need a susceptible <i>and</i> an infected to meet, so the rate goes like the product.</p>",
+   "r": {
+    "rot": "three buckets: healthy, sick, done. people flow S &rarr; I &rarr; R and never backwards. the one term that matters is bSI &mdash; infections need a collision between a well person and a sick person, so it's a <i>product</i>, not a sum. it shows up negative in S&#775; and positive in I&#775; because it's the same people moving. and kI is just 'a fixed fraction of the sick recover each day.'",
+    "ex": "Assumption (v) is the wild one: it says everyone in the population is in contact with everyone else. The book defends it for a large population in a small land mass &mdash; think Manhattan or Singapore. For a country with cities and countryside it's badly wrong, which is why real epidemiology uses networked or spatial models.",
+    "why": "Compartmental models are the entry point to all of mathematical epidemiology, and this is also your SIR_Models lab. More importantly it shows how modeling assumptions get you a tractable system &mdash; and exactly where that system will lie to you.",
+    "math": "Sum the three equations: S&#775; + I&#775; + R&#775; = &minus;bSI + bSI &minus; kI + kI = 0, so S + I + R is constant, confirming the closed-population assumption. (That's Exercise 1.6.)"
+   }
+  },
+  {
+   "id": "v4c1b2",
+   "s": "1.2",
+   "page": 13,
+   "q": "State the exponential growth model, its solution, and what r &lt; 0 means.",
+   "a": "<div class='eq'>x&#775;(t) = r x(t),&nbsp;&nbsp; x(0) &ge; 0&nbsp;&nbsp;&rArr;&nbsp;&nbsp; x(t) = e<sup>rt</sup>x(0)</div>The rate of increase is proportional to the current population, because births and deaths at each moment are proportional to how many individuals exist.<p style='margin-top:10px'>If <b>r &lt; 0</b> the population decays exponentially &mdash; the death rate exceeds the birth rate. Decaying dynamics of this form also describe radioactive decay, chemical reaction rates, over-damped oscillator amplitude, and a car's depreciation. <span class='muted'>(Remark 1.2.3)</span></p>",
+   "r": {
+    "rot": "the growth is proportional to how much there already is. more rabbits &rarr; more rabbit-making &rarr; more rabbits. that self-reference is what makes it explode. flip the sign of r and the exact same equation describes uranium decaying, your car losing value, and a bad guitar note fading out. same math, wildly different stories.",
+    "ex": "Australia had no rabbits until the 18th century. Some escaped from captivity, found no natural predators and vegetation they loved, and the population grew exponentially until they were a national pest by the 20th century. Australia never hit its carrying capacity &mdash; human intervention got there first.",
+    "why": "It's the simplest possible population model and therefore the right place to start per &sect;1.1's philosophy. Its failure &mdash; unbounded growth &mdash; is precisely what motivates the logistic model. The model earns its keep by breaking in an informative way.",
+    "math": "Separable: dx/x = r dt &rArr; ln x = rt + C &rArr; x(t) = x(0)e<sup>rt</sup>. Unbounded for r &gt; 0."
+   }
+  },
+  {
+   "id": "v4c1b3",
+   "s": "1.2",
+   "page": 13,
+   "q": "State the logistic growth equation and its solution. What does the extra factor do at each end?",
+   "a": "<div class='eq'>x&#775; = r x (1 &minus; <span class='frac'><span>x</span><span>k</span></span>)&nbsp;&nbsp;&rArr;&nbsp;&nbsp; x(t) = <span class='frac'><span>k</span><span>1 + Ce<sup>&minus;rt</sup></span></span>,&nbsp; C = <span class='frac'><span>k &minus; x(0)</span><span>x(0)</span></span></div>where <b>k</b> is the carrying capacity. The factor (1 &minus; x/k) is <b>close to 1 when x is small</b>, so growth is nearly exponential, and <b>close to 0 as x &rarr; k</b>, so growth stalls.<p style='margin-top:10px'>As t &rarr; &infin;, x(t) &rarr; k regardless of initial value &mdash; from below it grows up to k, from above it shrinks down to k. Solved by separation of variables.</p>",
+   "r": {
+    "rot": "exponential growth with a brake pedal. the (1 &minus; x/k) term is a dimmer switch: wide open when the population is small, clamped shut when it hits carrying capacity. start below k and you climb to it, start above and you fall to it. everything ends at k. the environment does not care about your initial conditions.",
+    "ex": "10,000 rabbits' worth of food means you don't get 10,001 rabbits. Figure 1.3 shows x(0) = 15 and x(0) = 2 with k = 10 &mdash; one falls, one rises, both land on 10.",
+    "why": "This is your first model with a <b>stable equilibrium</b>, and that concept is the spine of the rest of the volume. It's also the first time a model's long-run behavior is independent of initial conditions &mdash; contrast that sharply with Lotka&ndash;Volterra, which is about to be pathologically dependent on them.",
+    "math": "Rewrite as k/(x(k &minus; x)) &middot; dx/dt = r and integrate both sides in t. Equilibria at x = 0 (unstable) and x = k (stable)."
+   }
+  },
+  {
+   "id": "v4c1b4",
+   "s": "1.2",
+   "page": 15,
+   "q": "Build the first-order Lotka&ndash;Volterra predator-prey system. What assumption produces the interaction terms?",
+   "a": "Prey r grows exponentially alone (r&#775; = &alpha;r); predator w dies off exponentially alone (w&#775; = &minus;&mu;w). The interaction assumption: <b>prey losses and predator gains are both proportional to the number of predators times the number of prey</b> &mdash; encounters go like the product.<div class='eq'>r&#775; = &alpha;r &minus; a&middot;r&middot;w<br>w&#775; = &minus;&mu;w + &beta;a&middot;r&middot;w</div><b>a</b> = prey consumed per interaction (predator metabolism, prey size). <b>&beta;</b> = how much eaten prey converts into predator growth. &beta; near 1: a predator that rarely needs to eat (lion, gazelle). &beta; near 0: one that must eat constantly (frog, flies).",
+   "r": {
+    "rot": "alone, prey boom and predators starve. together, they collide &mdash; and collisions go like (number of prey)&times;(number of predators), so you get an rw term in both equations. minus for the prey, plus for the predators, because it's literally the same event seen from both sides of lunch. &beta; is the conversion rate: how much rabbit becomes fox.",
+    "ex": "&beta; &asymp; 1: a lion eats a gazelle and is set for days. &beta; &asymp; 0: a frog needs an enormous number of flies to gain anything. Same equations, wildly different parameter regimes.",
+    "why": "Investigated independently by Lotka and Volterra in the 1920s, and it's the fundamental model of quantitative population dynamics and epidemiology. The product-of-populations interaction term is the same modeling move as bSI in SIR &mdash; encounters between two groups always look like this.",
+    "math": "&alpha;, &mu;, a, &beta; &gt; 0. Two coupled nonlinear autonomous ODEs. Fixed points at (0,0) and (&mu;/(&beta;a), &alpha;/a)."
+   }
+  },
+  {
+   "id": "v4c1b5",
+   "s": "1.2",
+   "page": 16,
+   "q": "Nondimensionalize Lotka&ndash;Volterra. How many parameters survive, and what does the survivor mean?",
+   "a": "With the change of variables t = &tau;/&mu;, r = &phi;x, w = &epsilon;y, and b = &alpha;/&mu;, &epsilon; = &mu;/a, &phi; = &mu;/(&beta;a):<div class='eq'>dx/d&tau; = bx &minus; xy<br>dy/d&tau; = &minus;y + xy</div>The four parameters (&alpha;, &mu;, a, &beta;) collapse to <b>one</b>: <b>b = &alpha;/&mu;</b>, the ratio of the prey's growth rate to the predator's death rate in isolation.<p style='margin-top:10px'>This is the general strategy of <b>nondimensionalization</b> &mdash; choose scalings that make the whole system unitless.</p>",
+   "r": {
+    "rot": "four knobs became one knob. the change of variables looks like it fell out of the sky, but it isn't magic &mdash; it's just choosing your units so that everything is measured relative to the system itself. and what survives is a <i>ratio</i>: how fast prey breed versus how fast predators starve. the absolute rates never mattered, only their competition. that's usually what nondimensionalization reveals.",
+    "ex": "Instead of solving the system for every combination of four biological constants, you solve it once for each value of b. Every real ecosystem with the same b has the same dynamics after rescaling.",
+    "why": "This is why &sect;1.3 and &sect;1.4 exist and why they come right after. Nondimensionalization isn't cosmetic &mdash; it collapses a four-dimensional parameter study into a one-dimensional one, and it tells you which combination of physical constants actually governs the behavior.",
+    "math": "Parameter count drops from 4 to 1. Buckingham &pi; (&sect;1.4) explains why: nullity of the exponent matrix."
+   }
+  },
+  {
+   "id": "v4c1b6",
+   "s": "1.2",
+   "page": 18,
+   "q": "The first-order Lotka&ndash;Volterra model produces exactly the oscillations you wanted. Why is it still a bad model?",
+   "a": "It is <b>not structurally stable</b>. Three problems:<ol style='margin:0;padding-left:19px'><li>Imperceptibly different initial conditions give a completely different cycle. You never know initial populations exactly.</li><li>For a given b there are <b>infinitely many</b> cyclical solutions depending on initial conditions, and b is not determined by them &mdash; so to use the model you must somehow already know b.</li><li>Worse: the simplifying assumptions were supposed to be harmless. They aren't. Add a carrying capacity for the prey &mdash; r&#775; = r(&alpha; &minus; g&#771;r &minus; aw) &mdash; and the solutions <b>stop oscillating entirely</b>, decaying instead to a fixed equilibrium.</li></ol><p style='margin-top:10px'>The behavior you built the model to capture vanishes under a small, realistic change.</p>",
+   "r": {
+    "rot": "the model gives you gorgeous cycles and you think you've won. then you add one obviously-true detail &mdash; prey can't grow forever, there's finite water &mdash; and the cycles just evaporate. converges to a boring fixed point. the thing you were trying to explain was an artifact of what you left out. that's the nightmare scenario in modeling: your result was load-bearing on your own simplification.",
+    "ex": "Figure 1.4 (first-order) shows a closed orbit &mdash; a perfect repeating cycle. Figure 1.7 (with carrying capacity, same initial conditions) spirals into the fixed point at (1,1). Same starting values, qualitatively different universe.",
+    "why": "This is the most important lesson in the chapter and it generalizes far past ecology. <b>Ask whether your conclusion survives perturbing the assumptions you made for convenience.</b> A result that only holds for the exact simplified system isn't a result about the world. Structural stability is what you're actually demanding when you say a model is 'good.'",
+    "math": "Second-order LV: x&#775; = bx &minus; gx&sup2; &minus; xy, y&#775; = &minus;y + xy. Fixed point at (1,1) becomes attracting; the closed orbits of the first-order system are destroyed by arbitrarily small g &gt; 0."
+   }
+  },
+  {
+   "id": "v4c1c1",
+   "s": "1.3",
+   "page": 21,
+   "q": "What is the difference between a unit and a dimension? Name the seven fundamental dimensions.",
+   "a": "A <b>unit</b> is what you measure in (yards, meters, acres). A <b>dimension</b> is what kind of quantity it is, independent of unit. Distance measured in inches or kilometers is still a <b>length, L</b>. Area is always <b>L&sup2;</b>.<p style='margin-top:10px'>The seven fundamental dimensions: <b>time T, length L, mass M, electric current I, absolute temperature &Theta;, amount of substance N, luminous intensity J</b>.</p><p>Notation: [x] denotes the dimension of x. Velocity [v] = LT<sup>&minus;1</sup>, acceleration LT<sup>&minus;2</sup>, force MLT<sup>&minus;2</sup>, energy ML&sup2;T<sup>&minus;2</sup>, power ML&sup2;T<sup>&minus;3</sup>.</p>",
+   "r": {
+    "rot": "units are the outfit, dimensions are the body. meters and inches are two outfits on the same thing: length. change your units and the number changes; change your dimension and you're talking about something else entirely. seven basic ones, and honestly you'll only ever use three: mass, length, time. everything mechanical is built out of M, L, T.",
+    "ex": "Power is energy per time: [energy] = ML&sup2;T<sup>&minus;2</sup>, so [power] = ML&sup2;T<sup>&minus;3</sup>. Derivatives divide: [df/dq] = [f][q]<sup>&minus;1</sup>, which is why velocity (position per time) is LT<sup>&minus;1</sup>.",
+    "why": "Once you can read dimensions off an expression you get free error-checking on every formula you ever write. If the dimensions don't balance the formula is wrong, and you know it before plugging in a single number.",
+    "math": "[q] = L&#8321;<sup>a&#8321;</sup>&hellip;L<sub>m</sub><sup>a<sub>m</sub></sup>. Multiplication adds exponents; the dimensions form an Abelian group under multiplication."
+   }
+  },
+  {
+   "id": "v4c1c2",
+   "s": "1.3",
+   "page": 22,
+   "q": "Define commensurable. What operations are legal between incommensurable quantities?",
+   "a": "<b>Definition 1.3.1.</b> Two quantities are <b>commensurable</b> if they are of the same kind and have the same dimensions; otherwise <b>incommensurable</b>.<p style='margin-top:10px'>You may <b>not</b> compare, add, or subtract incommensurable quantities &mdash; &ldquo;5 meters &gt; 3 seconds&rdquo; is meaningless. You <b>may</b> multiply, divide, and exponentiate them, and their dimensions multiply, divide, and exponentiate accordingly.</p><p>Note the &ldquo;same kind&rdquo; caveat is admittedly informal: torque and energy both have dimensions ML&sup2;T<sup>&minus;2</sup>, but one is rotational moment and the other is capacity to do work, so adding them is still nonsense. <span class='muted'>(Footnote 7)</span></p>",
+   "r": {
+    "rot": "you can't add meters to seconds. obviously. but you <i>can</i> divide them and get a speed &mdash; multiplication and division are always fine, they just build a new dimension. addition and comparison are the picky ones. and the sneaky bit: matching dimensions still isn't enough. torque and energy have identical dimensions and adding them is still gibberish, because they're not the same <i>kind</i> of thing.",
+    "ex": "Legal: L / T = velocity. Legal: (LT<sup>&minus;2</sup>)(L) = L&sup2;T<sup>&minus;2</sup>. Illegal: 5 m + 3 s. Dimensionally legal but physically nonsense: torque + energy.",
+    "why": "This single constraint &mdash; that added terms must match dimensionally &mdash; is what makes dimensional analysis powerful enough to derive physical laws in the next few pages without solving anything. The book's line: a modeler gets a lot of mileage from just this requirement.",
+    "math": "Addition defined only on quantities with identical dimension vectors. Multiplication: [xy] = [x][y], a group operation on the exponent vectors."
+   }
+  },
+  {
+   "id": "v4c1c3",
+   "s": "1.3",
+   "page": 22,
+   "q": "A ball falls from height h with gravity g and hits at speed v. Find v <i>without</i> solving any differential equation.",
+   "a": "The answer is a velocity, so it has dimension LT<sup>&minus;1</sup>. Available: [h] = L and [g] = LT<sup>&minus;2</sup>. All three are mutually incommensurable, so no adding &mdash; but multiply and take a root:<div class='eq'>[gh] = L&sup2;T<sup>&minus;2</sup>&nbsp;&nbsp;&rArr;&nbsp;&nbsp; [&radic;(gh)] = LT<sup>&minus;1</sup> = [v]</div><div class='eq'>&there4;&nbsp; v = c&radic;(gh),&nbsp; c dimensionless</div>The constant is undetermined by dimensional analysis (it happens to be 1/&radic;2). But the <b>scaling</b> is fully determined: quadrupling h doubles the impact velocity. <span class='muted'>(Example 1.3.2, from <i>Street-fighting Mathematics</i>)</span>",
+   "r": {
+    "rot": "you want a speed. you've got a height and a gravity. there is exactly one way to combine those two into something with units of speed, and it's &radic;(gh). that's it. no calculus, no IVP, no solving &#7825; = &minus;g. the units did the work. you don't learn the constant out front, but you learn how the answer <i>scales</i>, and that's usually the part you actually cared about.",
+    "ex": "The traditional route: solve &#7825; = &minus;g with x(0) = h, x&#775;(0) = 0, find t&#8321; where x(t&#8321;) = 0, evaluate v = x&#775;(t&#8321;). Several lines of calculus for the same scaling law you just read off the units.",
+    "why": "Two payoffs. First, it's a free sanity check on any answer you compute the hard way &mdash; if your calculus result doesn't scale like &radic;(gh), you made an algebra error. Second, it's the entire seed of Buckingham &pi; in &sect;1.4, which turns this trick into a theorem.",
+    "math": "Seek exponents &alpha;, &beta; with [g<sup>&alpha;</sup>h<sup>&beta;</sup>] = LT<sup>&minus;1</sup>: L: &alpha; + &beta; = 1; T: &minus;2&alpha; = &minus;1 &rArr; &alpha; = &beta; = 1/2."
+   }
+  },
+  {
+   "id": "v4c1c4",
+   "s": "1.3",
+   "page": 24,
+   "q": "Define a dimensionally homogeneous function. Which operations are legal on dimensional quantities and which are not?",
+   "a": "<b>Definition 1.3.5.</b> A <b>change of units</b> replaces a dimension L by &lambda;L for a nonzero dimensionless &lambda;. For q with [q] = L&#8321;<sup>a&#8321;</sup>&hellip;L<sub>m</sub><sup>a<sub>m</sub></sup>, a change of units rescales it to q&#771; = &lambda;&#8321;<sup>a&#8321;</sup>&hellip;&lambda;<sub>m</sub><sup>a<sub>m</sub></sup>q. A function f(q&#8321;,&hellip;,q<sub>n</sub>) is <b>dimensionally homogeneous</b> (or <b>unit free</b>) if every change of units gives<div class='eq'>f(q&#771;&#8321;,&hellip;,q&#771;<sub>n</sub>) = &lambda;&#8321;<sup>b&#8321;</sup>&hellip;&lambda;<sub>m</sub><sup>b<sub>m</sub></sup> f(q&#8321;,&hellip;,q<sub>n</sub>),&nbsp;&nbsp;so [f] = L&#8321;<sup>b&#8321;</sup>&hellip;L<sub>m</sub><sup>b<sub>m</sub></sup></div><b>If f is not dimensionally homogeneous it has no well-defined dimension, and changing units gives fundamentally different results.</b><p style='margin-top:10px'><b>Transcendental functions need dimensionless arguments.</b> exp(x) = 1 + x + x&sup2;/2 + &hellip; has a <b>different dimension in every term</b> if [x] = L, so the sum is meaningless. Same for sin, log, and the rest.</p><p><b>But calculus is fine.</b> Integration is a limit of sums of products f(x<sub>i</sub>)&Delta;x, and &Delta;x has the same dimension as x, so</p><div class='eq'>[dx] = [x]&nbsp;&nbsp;&rArr;&nbsp;&nbsp;[&int;f(x)dx] = [f(x)][x]<br><br>[d/dx f(x)] = [f(x)]/[x]&nbsp;&nbsp;&mdash; since h in the difference quotient must match x</div><p style='margin-top:8px'><b>Remark 1.3.7:</b> 0&middot;L&#8321;<sup>a&#8321;</sup>&hellip;L<sub>m</sub><sup>a<sub>m</sub></sup> = 0, so <b>zero has every dimension at once</b> &mdash; which is why f(q&#8321;,&hellip;,q<sub>n</sub>) = 0 always makes sense for homogeneous f, and why you can always rewrite an equation between commensurable quantities as &ldquo;something = 0.&rdquo;</p>",
+   "r": {
+    "rot": "an equation is only allowed to say something if it survives a change of units. that's dimensional homogeneity: rescale metres to feet and every term must rescale by the <b>same</b> factor, or the equation was never a physical law. the practical rules: you may never exponentiate or take the sine or log of something with dimensions, because the taylor series would be adding lengths to areas to volumes. but you <b>may</b> differentiate and integrate &mdash; d/dx divides by [x], &int;dx multiplies by it. and zero is dimensionally promiscuous, so &ldquo;= 0&rdquo; is always legal.",
+    "ex": "Example 1.3.6 checks it explicitly. Rewriting v<sub>i</sub> = &frac12;&radic;(gh) as f(v<sub>i</sub>,g,h) = v<sub>i</sub> &minus; &frac12;&radic;(gh) = 0 and changing units by L &#8614; &lambda;&#8321;L, T &#8614; &lambda;&#8322;T gives f(v&#771;<sub>i</sub>, g&#771;, h&#771;) = &lambda;&#8321;&lambda;&#8322;<sup>&minus;1</sup>f(v<sub>i</sub>,g,h) &mdash; every term, and f itself, has dimension LT<sup>&minus;1</sup>.",
+    "why": "The transcendental rule is a free error-check on any model you write down. If an exponential's argument isn't dimensionless, you have made a mistake &mdash; and it's why decay laws are always written e<sup>&minus;t/&tau;</sup> with a time constant &tau; rather than e<sup>&minus;t</sup>.",
+    "math": "f homogeneous &hArr; f(q&#771;) = &prod;&lambda;<sub>i</sub><sup>b<sub>i</sub></sup>f(q). [&int;f dx] = [f][x]; [df/dx] = [f]/[x]. Transcendental functions require [argument] = 1."
+   }
+  },
+  {
+   "id": "v4c1c5",
+   "s": "1.3",
+   "page": 27,
+   "q": "How do you nondimensionalize an ODE? And how can dimensional analysis help a problem that has no dimensions?",
+   "a": "<b>Example 1.3.10 &mdash; nondimensionalizing.</b> Take x&#775; = a + bx + cx&sup2; with [x] = L, [t] = T. Substitute &xi; = x/u and &tau; = t/k for constants with [u] = L, [k] = T. The chain rule gives<div class='eq'>(u/k) d&xi;/d&tau; = a + (bu)&xi; + (cu&sup2;)&xi;&sup2;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;d&xi;/d&tau; = (k/u)a + (bk)&xi; + (cku)&xi;&sup2;</div><b>Now choose the free constants to kill parameters.</b> Taking k = 1/b and u = ak = a/b collapses it to<div class='eq'>d&xi;/d&tau; = 1 + &xi; + &epsilon;&xi;&sup2;</div>&mdash; <b>three parameters reduced to one.</b> You are choosing the natural units of the problem, so the remaining constant is a genuine dimensionless ratio rather than an artifact of measuring in metres or feet.<p style='margin-top:10px'><b>&sect;1.3.2 &mdash; dimensions where there were none.</b> Even without natural dimensions, assigning them thoughtfully and consistently can solve the problem.</p><p><b>Example 1.3.8.</b> Evaluate &int;&#8320;<sup>&infin;</sup>e<sup>&minus;&alpha;t&sup3;</sup>dt. Give t dimension T. The exponent &alpha;t&sup3; must be dimensionless, so [&alpha;] = T<sup>&minus;3</sup>; the integrand is dimensionless and [dt] = T, so <b>the answer has dimension T</b>. Since t is integrated away, the answer is built from &alpha; alone: it must be &alpha;<sup>m</sup> with T<sup>&minus;3m</sup> = T, so m = &minus;1/3. Hence</p><div class='eq'>&int;&#8320;<sup>&infin;</sup>e<sup>&minus;&alpha;t&sup3;</sup>dt = c/&alpha;<sup>1/3</sup>,&nbsp;&nbsp;c = 0.8929795 by one numerical integration at &alpha; = 1</div><b>The entire &alpha;-dependence came from dimensional bookkeeping</b>; a single computation fixed the constant.",
+   "r": {
+    "rot": "nondimensionalizing is choosing the problem's own natural units so the leftover constants are pure numbers. rescale x and t by two free constants, then pick those constants to make as many coefficients equal 1 as you can. three parameters become one. the second trick is cheekier: a problem with <b>no</b> dimensions can be given some. declare t to be a time, deduce what dimension everything else must have for the expression to make sense, and the answer's dependence on the parameters is forced. you still need one numerical computation to pin the constant, but you get the whole shape for free.",
+    "ex": "Example 1.3.9 does the same for an antiderivative: knowing &int;dx/(1+x&sup2;) = arctan(x) + C, assign x dimension L, deduce [F] = L<sup>&minus;1</sup> so aF(x,a) is dimensionless, guess the ansatz aF(x,a) = f(x/a), and the special case a = 1 forces f = arctan &mdash; giving F(x,a) = (1/a)arctan(x/a) + C with no substitution.",
+    "why": "Reducing the number of parameters is what makes a model studiable. One parameter can be swept and plotted; three cannot. It also makes clear which combinations actually matter &mdash; and that is precisely what the Buckingham &pi; theorem of &sect;1.4 formalizes.",
+    "math": "Substitute x = u&xi;, t = k&tau;, choose u, k to normalize coefficients. Dimensionless-answer trick: deduce [answer] from the integrand, then match powers of the parameters."
+   }
+  },
+  {
+   "id": "v4c1d1",
+   "s": "1.4",
+   "page": 28,
+   "q": "State the Buckingham &pi; theorem.",
+   "a": "<b>Theorem 1.4.1.</b> Given n dimensional quantities q&#8321;,&hellip;,q<sub>n</sub> with<div class='eq'>[q<sub>j</sub>] = L&#8321;<sup>a<sub>1j</sub></sup> L&#8322;<sup>a<sub>2j</sub></sup> &middot;&middot;&middot; L<sub>m</sub><sup>a<sub>mj</sub></sup></div>let A = [a<sub>ij</sub>] be the m&times;n <b>matrix of exponents</b> and let <b>s = nullity(A)</b>. If there is a dimensionally homogeneous law f(q&#8321;,&hellip;,q<sub>n</sub>) = 0, then there exist dimensionless quantities &pi;&#8321;,&hellip;,&pi;<sub>s</sub> built from the q's and an equivalent law<div class='eq'>g(&pi;&#8321;, &hellip;, &pi;<sub>s</sub>) = 0</div><p>The &pi;'s come from a basis of the kernel: if v<sub>k</sub> spans N(A), then &pi;<sub>k</sub> = q<sup>v<sub>k</sub></sup>. Since s &lt; n, the dimensionless law is strictly simpler &mdash; fewer quantities, no units.</p>",
+   "r": {
+    "rot": "the whole theorem is: build a matrix of the exponents, take its <b>kernel</b>, and every basis vector of that kernel is a dimensionless combination of your quantities. n messy dimensional things collapse to s = nullity clean unitless ones. it's linear algebra doing physics. and s &lt; n always, so you strictly win &mdash; fewer parameters, no units, same content.",
+    "ex": "Named for Buckingham's 1914 papers, but proved in a special case by Bertrand (1878), generalized by Vaschy (1892), and popularized by Rayleigh. The book calls this Stigler's Law of Eponymy &mdash; no discovery is named after its discoverer, not even Stigler's Law.",
+    "why": "It converts &sect;1.3's clever ad-hoc trick into a mechanical procedure you can always run: write the matrix, compute the kernel, read off the &pi;'s. It's also the formal justification for the nondimensionalization that turned four Lotka&ndash;Volterra parameters into one.",
+    "math": "rank(A) + nullity(A) = n. Every x with Ax = b is x&#8320; + v for v &isin; N(A), so every monomial in f factors as q<sup>x&#8320;</sup>&Pi;&pi;<sub>k</sub><sup>c<sub>k</sub></sup>; divide out q<sup>x&#8320;</sup>."
+   }
+  },
+  {
+   "id": "v4c1d2",
+   "s": "1.4",
+   "page": 29,
+   "q": "Buckingham &pi; gives nullity s = 1. What extra conclusion do you get, and why does it matter so much?",
+   "a": "<b>Corollary 1.4.2.</b> If s = 1, the single dimensionless quantity &pi; must be <b>locally constant</b> &mdash; hence constant on any open set where it's a continuous function of the q's.<p style='margin-top:10px'><b>Why:</b> the law g(&pi;) = 0 is a finite sum &Sigma;a<sub>c</sub>&pi;<sup>c</sup>, which after clearing denominators makes &pi;<sup>1/d</sup> a root of a polynomial &mdash; so &pi; can take at most N+1 <b>discrete</b> values. But the implicit function theorem says &pi; varies continuously with the q's. A continuous function into a discrete set is locally constant.</p><p>This is the payoff case: s = 1 doesn't just relate your quantities, it <b>pins the relationship down to one unknown number</b>.</p>",
+   "r": {
+    "rot": "nullity 1 is the jackpot. you get one dimensionless combo, and the theorem says it can only take finitely many values &mdash; but it also has to vary continuously with the inputs. continuous into a discrete set means it can't move at all. so &pi; = constant, and you've derived the physical law up to a single unknown number. with s &ge; 2 you only get that one &pi; is <i>some function</i> of the others, which is much weaker.",
+    "ex": "Every worked example in this section &mdash; projectile height, bike drag, the Trinity bomb &mdash; has nullity exactly 1, which is why each one produces a clean formula instead of a vague relation.",
+    "why": "It's the difference between 'these quantities are related somehow' and 'h = cv&sup2;/g'. Remark 1.4.3 spells out the contrast: with s &gt; 1 the implicit function theorem only gives &pi;<sub>s</sub> = h(&pi;&#8321;,&hellip;,&pi;<sub>s&minus;1</sub>), and which &pi; you solve for is arbitrary.",
+    "math": "&Sigma;<sub>c</sub>a<sub>c</sub>&pi;<sup>c</sup> = 0 &rArr; &pi;<sup>k</sup>&Sigma;<sub>j=0</sub><sup>N</sup>a<sub>j</sub>(&pi;<sup>1/d</sup>)<sup>j</sup> = 0. Either &pi; = 0 or &pi;<sup>1/d</sup> is a polynomial root &mdash; at most N+1 values, discrete."
+   }
+  },
+  {
+   "id": "v4c1d3",
+   "s": "1.4",
+   "page": 30,
+   "q": "A projectile of mass m is launched straight up at speed v. Use Buckingham &pi; to find the maximum height h.",
+   "a": "Quantities m, v, h, g with [m] = M, [v] = LT<sup>&minus;1</sup>, [h] = L, [g] = LT<sup>&minus;2</sup>. Rows M, L, T; columns m, v, h, g:<div class='eq'>A = &#9484; 1&nbsp;&nbsp; 0&nbsp; 0&nbsp;&nbsp; 0 &#9488;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#9474; 0&nbsp;&nbsp; 1&nbsp; 1&nbsp;&nbsp; 1 &#9474;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#9492; 0 &minus;1&nbsp; 0 &minus;2 &#9496;</div>rank 3, nullity 1. N(A) is spanned by v = (0, &minus;2, 1, 1), giving &pi; = gh/v&sup2; = c, so<div class='eq'>h = <span class='frac'><span>cv&sup2;</span><span>g</span></span></div><b>The height is independent of mass</b> &mdash; the m column is all zeros in the kernel vector, so mass cannot appear. Energy conservation (&frac12;mv&sup2; = mgh) then gives c = &frac12;.",
+   "r": {
+    "rot": "four quantities, three dimensions, nullity one. the kernel vector comes back (0, &minus;2, 1, 1) &mdash; and that leading <b>zero</b> is the whole story: it's the mass slot, and it's zero, so mass literally cannot appear in the answer. a bowling ball and a marble thrown at the same speed reach the same height. you didn't assume that. the matrix told you.",
+    "ex": "&pi; = m&#8304;v<sup>&minus;2</sup>h&sup1;g&sup1; = gh/v&sup2;. Setting it constant and solving gives h = cv&sup2;/g. Double the launch speed, quadruple the height.",
+    "why": "This is the cleanest demonstration of what dimensional analysis buys you: a genuine physical insight (mass-independence) falling out of a nullspace computation, before any physics is done. Getting c requires actual physics; getting the <i>structure</i> did not.",
+    "math": "Av = 0 with v = (0,&minus;2,1,1): M row 0 = 0 &#10003;; L row &minus;2+1+1 = 0 &#10003;; T row 2+0&minus;2 = 0 &#10003;."
+   }
+  },
+  {
+   "id": "v4c1d4",
+   "s": "1.4",
+   "page": 31,
+   "q": "Wind resistance on a cyclist depends on speed v, frontal area a, and air density &rho;. Derive how the drag force scales.",
+   "a": "[F] = MLT<sup>&minus;2</sup>, [v] = LT<sup>&minus;1</sup>, [a] = L&sup2;, [&rho;] = ML<sup>&minus;3</sup>. The exponent matrix has rank 3, nullity 1, with kernel spanned by (1, &minus;2, &minus;1, &minus;1), so &pi; = Fv<sup>&minus;2</sup>a<sup>&minus;1</sup>&rho;<sup>&minus;1</sup> is constant:<div class='eq'>F = c&middot;v&sup2;&middot;a&middot;&rho;</div><b>Drag goes like the square of speed</b> &mdash; so slowing down cuts your work dramatically. It's also proportional to frontal area, so tucking low helps &mdash; but because the two multiply, tucking matters <i>far</i> more at high speed than at low speed.<p style='margin-top:10px'>As an ODE: m&#7823; = c&rho;a(y&#775;)&sup2;.</p>",
+   "r": {
+    "rot": "drag scales with v<b>&sup2;</b>. not v. that's why going 20% slower feels like way more than a 20% savings, and why the last few mph cost you everything. and since it's v&sup2; <i>times</i> area, tucking down on the bars barely matters when you're crawling and matters enormously when you're flying. if you've ridden a bike you already knew both of these in your legs. the matrix just proved them.",
+    "ex": "Everything about this example was guessed: that F depends on v, on a, on &rho;. Buckingham &pi; takes an educated guess about <i>which</i> quantities matter and converts it into an exact scaling law.",
+    "why": "It shows the real workflow. You rarely know the law. You know which quantities plausibly enter it. Dimensional analysis turns that much weaker knowledge into a quantitative prediction you can test &mdash; and here, one you can test on your commute.",
+    "math": "&pi; = F/(v&sup2;a&rho;). Check: MLT<sup>&minus;2</sup> / (L&sup2;T<sup>&minus;2</sup> &middot; L&sup2; &middot; ML<sup>&minus;3</sup>) = MLT<sup>&minus;2</sup>/(MLT<sup>&minus;2</sup>) = 1 &#10003;"
+   }
+  },
+  {
+   "id": "v4c1d5",
+   "s": "1.4",
+   "page": 31,
+   "q": "How did G. I. Taylor compute the yield of the first atomic bomb from magazine photographs?",
+   "a": "Taylor took the declassified photo sequence published in <i>Time</i> (17 September 1945) &mdash; which carried a <b>scale bar and timestamps</b> &mdash; and read off radius-vs-time points for the shock wave. Quantities: time t, energy E, air density &rho;, shock radius r, with [t] = T, [E] = ML&sup2;T<sup>&minus;2</sup>, [&rho;] = ML<sup>&minus;3</sup>, [r] = L. The exponent matrix has rank 3, nullity 1, kernel spanned by (&minus;2, &minus;1, 1, 5):<div class='eq'>&pi; = <span class='frac'><span>&rho;r&#8309;</span><span>Et&sup2;</span></span> = constant&nbsp;&nbsp;&rArr;&nbsp;&nbsp; E &prop; <span class='frac'><span>&rho;r&#8309;</span><span>t&sup2;</span></span></div>Fitting the constant from ordinary small-explosive data gave him the yield of Trinity. <b>He extracted top-secret information from publicly available photographs</b> using nothing but dimensional analysis.",
+   "r": {
+    "rot": "the US classified the bomb's yield and then printed photos of the fireball in Time magazine with a scale bar and timestamps on them. taylor looked at the pictures, measured how fast the blast radius grew, ran buckingham &pi;, and calculated the yield. r&#8309;/t&sup2; times air density gives you energy. he calibrated the constant off regular chemical explosives. the government was reportedly not thrilled. this is the single best advertisement for dimensional analysis ever produced.",
+    "ex": "The r&#8309; is the striking part &mdash; a fifth power, which no intuition would produce. It falls straight out of the nullspace vector (&minus;2, &minus;1, 1, 5).",
+    "why": "It's the whole method in one story: you can't measure the quantity you want, but you can measure things it's dimensionally tied to, and the tie is rigid enough to invert. Dimensional analysis is not a rough estimate here &mdash; it gave a genuinely accurate number.",
+    "math": "Check &pi;: [&rho;r&#8309;/(Et&sup2;)] = (ML<sup>&minus;3</sup>&middot;L&#8309;)/(ML&sup2;T<sup>&minus;2</sup>&middot;T&sup2;) = ML&sup2;/(ML&sup2;) = 1 &#10003;"
+   }
+  },
+  {
+   "id": "v4c1e1",
+   "s": "1.5",
+   "page": 35,
+   "q": "Define work, then derive kinetic energy from it. What are the dimensions?",
+   "a": "For a constant force F over distance s, <b>work w = Fs</b>, so<div class='eq'>[w] = MLT<sup>&minus;2</sup> &middot; L = ML&sup2;T<sup>&minus;2</sup> = [energy]</div>Drop a particle of mass m from height h: gravity mg acts over the whole distance, so w = mgh. When work is applied to a body, its <b>kinetic energy changes by the amount of work done</b>. With v(t) = &minus;gt and distance fallen &#8467; = &frac12;gt&sup2;:<div class='eq'>K = mg&#8467; = &frac12;mv&sup2;</div>With momentum p = mv this is also K = &frac12;pv.<p style='margin-top:10px'>For a variable force along a path C: K = &int;<sub>C</sub> F(x)&middot;dx.</p>",
+   "r": {
+    "rot": "work is force times distance. push harder or push further, more work. and work doesn't vanish &mdash; it turns into motion, which is kinetic energy. that's the whole bridge: &frac12;mv&sup2; isn't a definition handed to you, it's what you get when you integrate a force over the distance it acted. dimensions of work = dimensions of energy, because they're the same currency.",
+    "ex": "Drop a particle from h. Total work by gravity on impact = mgh. That has to have gone somewhere &mdash; it went into &frac12;mv&sup2;. Set them equal and you recover v = &radic;(2gh), matching the c = 1/&radic;2 from the dimensional analysis in &sect;1.3.",
+    "why": "The general form K = &int;<sub>C</sub>F&middot;dx is what generalizes to conservative fields and potential energy, and from there to Lagrangian and Hamiltonian mechanics. It's also the argument that fixed the undetermined constant in Example 1.4.4 &mdash; dimensional analysis gets the structure, energy arguments get the constant.",
+    "math": "d/dt(v&middot;v) = 2v&middot;v&#775;. So K = &int;<sub>&alpha;</sub><sup>&beta;</sup>F&middot;x&#775; dt = &frac12;m&int;2v&middot;a dt = &frac12;m(&#8214;v&#8322;&#8214;&sup2; &minus; &#8214;v&#8321;&#8214;&sup2;)."
+   }
+  },
+  {
+   "id": "v4c1e2",
+   "s": "1.5",
+   "page": 41,
+   "q": "The pendulum equation is nonlinear. What assumption linearizes it, and what does that assumption cost you?",
+   "a": "The pendulum satisfies &theta;&#776; + (g/L)sin&theta; = 0 &mdash; nonlinear because of sin&theta;. For <b>small oscillations</b>, sin&theta; &asymp; &theta;, giving the <b>simple harmonic oscillator</b>:<div class='eq'>&theta;&#776; + (g/L)&theta; = 0,&nbsp;&nbsp; &theta;(t) = A cos(&omega;t + &phi;),&nbsp; &omega; = &radic;(g/L)</div><b>The cost:</b> the linearized period is independent of amplitude, but the true nonlinear pendulum's period <i>grows</i> with amplitude. The approximation is excellent for small swings and progressively wrong for large ones &mdash; and it destroys the large-angle behavior entirely (a real pendulum can go over the top; the linear one never can).",
+   "r": {
+    "rot": "sin&theta; &asymp; &theta; for small &theta;. that one substitution turns an unsolvable equation into the most solvable equation in physics. but you paid for it: the real pendulum swings slower when you pull it further back, and the linearized one stubbornly insists the period never changes. for a grandfather clock, fine. for a pendulum swinging wildly, you deleted the physics you cared about. same trap as first-order lotka&ndash;volterra in &sect;1.2.",
+    "ex": "&sect;1.5.2 shows the reduction explicitly. Oscillators then show up everywhere &mdash; bridges, buildings, quantum mechanics, thermodynamics, biological rhythms, and financial markets (&sect;1.1.5, 'Oscillators Abound').",
+    "why": "Linearization is the single most-used move in the whole volume, and this is the cleanest example of both its power and its price. The recurring question &mdash; <i>does my conclusion survive the simplification I made for convenience?</i> &mdash; is exactly the structural-stability question from &sect;1.2.5.",
+    "math": "Small-angle: sin&theta; = &theta; &minus; &theta;&sup3;/6 + O(&theta;&#8309;). Truncating at first order gives constant period 2&pi;&radic;(L/g); the exact period involves a complete elliptic integral of the first kind and increases with amplitude."
+   }
+  },
+  {
+   "id": "v4c1e3",
+   "s": "1.5",
+   "page": 38,
+   "q": "What does conservation of energy give you that solving the ODE does not?",
+   "a": "For a conservative system, total energy E = K + U (kinetic plus potential) is <b>constant along every trajectory</b>. That is a <b>first integral</b>: one algebraic relation between position and velocity that holds for all time, obtained without ever solving the differential equation.<p style='margin-top:10px'>What it buys you:</p><ul style='margin:0;padding-left:19px'><li>It reduces the order of the system by one.</li><li>Level sets of E <b>are</b> the trajectories in phase space &mdash; you can draw the phase portrait without integrating anything.</li><li>It's a correctness check on any numerical solver: if computed energy drifts, your integrator is wrong (or needs to be symplectic).</li></ul>",
+   "r": {
+    "rot": "instead of solving for where the thing is at every instant, you find one number that never changes no matter where it goes. that constraint alone pins the trajectory to a curve. you get the whole phase portrait for free &mdash; every orbit is just a level set of the energy. and when you write a numerical solver in ch 4, watching the energy drift is how you catch that your method is garbage.",
+    "ex": "Example 1.4.4's constant: at launch all energy is kinetic (&frac12;mv&sup2;), at apex all potential (mgh). Conservation sets them equal, giving h = v&sup2;/(2g), which is exactly the c = &frac12; that Buckingham &pi; could not determine.",
+    "why": "Conserved quantities are the most valuable structure a dynamical system can have. They come from symmetries (Noether), they constrain trajectories without integration, and preserving them is the entire design goal of symplectic integrators. This idea recurs constantly through the rest of the volume.",
+    "math": "E(x, x&#775;) = &frac12;m&#8214;x&#775;&#8214;&sup2; + U(x), dE/dt = mx&#775;&middot;x&#776; + &nabla;U&middot;x&#775; = x&#775;&middot;(mx&#776; + &nabla;U) = 0 by Newton's second law with F = &minus;&nabla;U."
+   }
+  },
+  {
+   "id": "v4c1e4",
+   "s": "1.5",
+   "page": 37,
+   "q": "Define potential energy and derive F = &minus;&nabla;U. Why does total energy come out constant?",
+   "a": "<b>Potential energy</b> is energy due only to an object's <b>position</b> and the forces acting on it &mdash; work that could or will be done as it moves. It depends on position alone, not on velocity or inertia.<p style='margin-top:6px'>Mathematically it is a scalar function U : R<sup>n</sup> &rarr; R. Moving from x&#8321; to x&#8322; changes it by U(x&#8322;) &minus; U(x&#8321;), and an infinitesimal displacement changes it by &nabla;U &middot; dx, so</p><div class='eq'>w = U(x&#8322;) &minus; U(x&#8321;) = &int;<sub>x&#8321;</sub><sup>x&#8322;</sup> &nabla;U &middot; dx</div><b>This is exactly the opposite of the gain in kinetic energy when</b><div class='eq'>F(x) = &minus;&nabla;U(x)</div>&mdash; <b>the potential generates the force.</b> The minus sign is the whole content: force points <b>downhill</b> in the potential.<p style='margin-top:10px'>Assuming the other forms (heat, atomic) are constant, total energy is</p><div class='eq'>E = U + &frac12;m&#8214;v&#8214;&sup2; + C</div><b>and E is constant in time, because when kinetic energy increases, potential energy decreases by exactly the same amount.</b><p style='margin-top:8px'><b>Kinetic energy is path independent.</b> Working through the general work integral with the product rule (d/dt)(v&middot;v) = 2v&middot;v&#775; and Newton's second law gives K = &frac12;m(&#8214;v&#8322;&#8214;&sup2; &minus; &#8214;v&#8321;&#8214;&sup2;) &mdash; it depends <b>only on the initial and final velocities</b>, not on the actual path taken.</p>",
+   "r": {
+    "rot": "potential energy is a landscape: a number attached to each position, and the force is minus its gradient &mdash; you get pushed downhill. that minus sign is why a ball rolls into a valley rather than out of it. total energy is potential plus kinetic, and it's constant because the two trade one-for-one: fall and you lose height (potential) and gain speed (kinetic) by exactly the same amount. and the neat structural fact: the kinetic energy change depends only on the starting and ending speeds, not on which route you took.",
+    "ex": "Example 1.5.1: a constant gravitational field has U = mgh, so F = &minus;dU/dh = &minus;mg. Falling from h&#8321; to h&#8322;, the change mg(h&#8322;&minus;h&#8321;) exactly cancels &frac12;m(v&#8322;&sup2;&minus;v&#8321;&sup2;), so E&#8322; &minus; E&#8321; = 0. Example 1.5.2 does the same for Bob on a spring: F(y) = &minus;ky comes from U(y) = &frac12;ky&sup2;, and differentiating E gives y&#775;(ky + my&#776;) = 0 by the equation of motion.",
+    "why": "The pattern in both examples is the method: write down E, differentiate with respect to t, and the equation of motion makes the derivative vanish. <b>Conservation is a corollary of the ODE, not an extra assumption</b> &mdash; which is why it can be used as a check on a model.",
+    "math": "F = &minus;&nabla;U; E = U + &frac12;m&#8214;v&#8214;&sup2; + C. dE/dt = 0 follows from Newton's second law. &Delta;K depends only on &#8214;v&#8321;&#8214;, &#8214;v&#8322;&#8214;."
+   }
+  },
+  {
+   "id": "v4c1e5",
+   "s": "1.5",
+   "page": 38,
+   "q": "Add damping and total energy stops being constant. Where does it go?",
+   "a": "For the <b>damped</b> harmonic oscillator &mdash; Bob with wind resistance &mdash; equation (1.4) is replaced by (1.7), and the derivative of kinetic plus potential energy is <b>no longer zero</b>. Energy is still conserved; it has just moved somewhere the model wasn't tracking.<p style='margin-top:8px'><b>Example 1.5.3 &mdash; add a heat term.</b> Write E<sub>h</sub> for heat energy (ignoring sound as negligible):</p><div class='eq'>E = &frac12;(ky&sup2; + my&#775;&sup2;) + E<sub>h</sub> + C</div>Differentiating and substituting the damped equation of motion (1.7):<div class='eq'>dE/dt = y&#775;(ky + my&#776;) + dE<sub>h</sub>/dt = <b>&minus;cy&#775;&sup2; + dE<sub>h</sub>/dt</b></div>where c depends on Bob's shape. <b>Demanding that total energy stay constant then <i>determines</i> the heat term:</b><div class='eq'>dE<sub>h</sub>/dt = c y&#775;&sup2;</div><p style='margin-top:8px'><b>Read the result.</b> Heat is generated at a rate proportional to the <b>square</b> of the velocity &mdash; always nonnegative, so heat only ever accumulates, and it accumulates fastest when Bob is moving fastest. That is the mechanical energy being dissipated by the damping.</p><p><b>The method is worth more than the answer.</b> Conservation was not used to check the model; it was used to <b>derive</b> a term the model was missing. When your accounting doesn't balance, the imbalance tells you the form of what you left out.</p>",
+   "r": {
+    "rot": "undamped, energy is constant and that's a check on your model. add friction and the check <b>fails</b> &mdash; energy leaks away. but energy isn't actually lost, you just stopped tracking one of its forms. so add a heat term, insist the total still be constant, and the equation hands you the rate at which heat is produced: c&middot;y&#775;&sup2;. proportional to velocity squared, so always positive, so heat only builds up. that's the whole thermodynamics of the damper, extracted from a bookkeeping identity.",
+    "ex": "The nonnegativity is the sanity check: y&#775;&sup2; &ge; 0, so dE<sub>h</sub>/dt &ge; 0. Heat never spontaneously converts back into Bob's motion, which is what you would demand of any physically sensible damping model.",
+    "why": "It shows conservation laws working in two directions. Examples 1.5.1&ndash;1.5.2 use them to <b>verify</b> a model; this one uses them to <b>discover</b> a missing term. That is the same move as dimensional analysis in &sect;1.3 &mdash; a consistency requirement that constrains the answer before you solve anything.",
+    "math": "Damped: dE/dt = &minus;cy&#775;&sup2; + dE<sub>h</sub>/dt. Setting dE/dt = 0 gives dE<sub>h</sub>/dt = cy&#775;&sup2; &ge; 0."
+   }
+  }
+ ],
+ "exercises": {
+  "from": 41,
+  "to": 47
+ },
+ "exMarks": [
+  {
+   "page": 41,
+   "y": 0.4027
+  },
+  {
+   "page": 41,
+   "y": 0.83
+  },
+  {
+   "page": 42,
+   "y": 0.3827
+  },
+  {
+   "page": 43,
+   "y": 0.2091
+  },
+  {
+   "page": 43,
+   "y": 0.83
+  },
+  {
+   "page": 45,
+   "y": 0.4236
+  }
+ ]
+}

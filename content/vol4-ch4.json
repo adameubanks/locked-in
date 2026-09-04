@@ -1,0 +1,239 @@
+{
+ "volume": "vol4",
+ "chapter": "4",
+ "file": "vol4-ch4.json",
+ "title": "Some Numerical Methods for ODEs",
+ "epigraph": {
+  "text": "This convergence is a limit as h goes to 0. It does not guarantee a good result for every small h you wish to use.",
+  "by": "Nota Bene 4.3.3 — the whole chapter in one sentence"
+ },
+ "sections": [
+  {
+   "id": "4.1",
+   "name": "The Simplest Methods",
+   "from": 106,
+   "to": 110,
+   "exFrom": {
+    "page": 138,
+    "y": 0.4027
+   },
+   "exTo": {
+    "page": 138,
+    "y": 0.6982
+   }
+  },
+  {
+   "id": "4.2",
+   "name": "Error of Finite Difference Methods",
+   "from": 111,
+   "to": 116,
+   "exFrom": {
+    "page": 138,
+    "y": 0.6982
+   },
+   "exTo": {
+    "page": 139,
+    "y": 0.3009
+   }
+  },
+  {
+   "id": "4.3",
+   "name": "Convergence and Stability of Numerical Methods",
+   "from": 117,
+   "to": 126,
+   "exFrom": {
+    "page": 139,
+    "y": 0.3009
+   },
+   "exTo": {
+    "page": 139,
+    "y": 0.7855
+   }
+  },
+  {
+   "id": "4.4",
+   "name": "Runge-Kutta and Taylor Series Methods",
+   "from": 127,
+   "to": 137,
+   "exFrom": {
+    "page": 139,
+    "y": 0.7855
+   },
+   "exTo": {
+    "page": 140,
+    "y": 0.6345
+   }
+  }
+ ],
+ "exercises": {
+  "from": 138,
+  "to": 140
+ },
+ "cards": [
+  {
+   "id": "v4c4a1",
+   "s": "4.1",
+   "page": 106,
+   "q": "Derive forward Euler. What single approximation is the whole method?",
+   "a": "Taylor expand u(t+h) about t, assuming u &isin; C&sup2;, and keep two terms:<div class='eq'>u(t+h) &asymp; u(t) + h&middot;u&#775;(t) = u(t) + h&middot;f(u(t))</div>Partition [t&#8320;,T] into n steps of size h with t<sub>i</sub> = t&#8320; + ih, start from the known v&#8320; = u&#8320;, and iterate:<div class='eq'>v<sub>i+1</sub> = v<sub>i</sub> + h&middot;f(v<sub>i</sub>)</div>That's it &mdash; the whole method is &lsquo;truncate the Taylor series after the linear term&rsquo;. Between grid points you interpolate linearly, which is why an Euler solution is a polygonal path.<p style='margin-top:10px'>Choose [t&#8320;,T] hoping it sits <b>inside the maximal interval of existence</b> &mdash; which is what Ch 2 and Ch 3 were for.</p>",
+   "r": {
+    "rot": "you're at a point, you know the slope, so walk in that direction for a bit. that's it. that's forward euler. you're pretending the solution is a straight line over each little step, then re-aiming. the error is everything the taylor series had past the linear term, which is why it's only first order and why it drifts.",
+    "ex": "u&#775; = au + b, u(0) = 1: v&#8321; = 1 + h(a+b), v&#8322; = 1 + 2h(a+b) + h&sup2;(a&sup2;+ab). You can watch the polynomial in h grow, and compare against the exact (u&#8320; + b/a)e<sup>at</sup> &minus; b/a.",
+    "why": "Everything else in the chapter is a reaction to Euler's shortcomings. It's also the reason Ch 2's existence theory matters operationally: pick [t&#8320;,T] outside the maximal interval and the method still returns numbers, which approximate nothing.",
+    "math": "v<sub>i+1</sub> = v<sub>i</sub> + hf(v<sub>i</sub>). Explicit: v<sub>i+1</sub> depends only on already-known quantities. LTE is O(h), so first order."
+   }
+  },
+  {
+   "id": "v4c4a2",
+   "s": "4.1",
+   "page": 109,
+   "q": "Name the four basic methods and say what distinguishes each.",
+   "a": "All four come from choosing <b>where to evaluate f</b> and <b>which difference approximates u&#775;</b>.<ul style='margin:0;padding-left:19px'><li><b>Forward Euler:</b> f at the <i>start</i> of the step. Explicit, first order.</li><li><b>Backward Euler:</b> f at the <i>end</i> of the step &mdash; v<sub>i+1</sub> = v<sub>i</sub> + hf(v<sub>i+1</sub>). <b>Implicit</b>: v<sub>i+1</sub> appears on both sides, so each step needs a solve. First order.</li><li><b>Trapezoidal:</b> the <i>average</i>, &frac12;[f(u(t)) + f(u(t+h))]. Implicit, second order.</li><li><b>Leapfrog (midpoint):</b> the <b>centered difference</b> [u(t+h) &minus; u(t&minus;h)]/2h. Second order, but needs two previous values.</li></ul><p style='margin-top:10px'>Explicit methods are cheap per step. Implicit ones cost a solve per step and buy <b>stability</b>, which &sect;4.3 shows is often worth far more.</p>",
+   "r": {
+    "rot": "one question: where do you measure the slope? at the start (forward euler, cheap, fragile), at the end (backward euler, costs a solve because you need the answer to compute the answer, but rock solid), or average both (trapezoidal, second order and still stable). leapfrog straddles instead, looking backward and forward. that's the whole design space at this level.",
+    "ex": "Backward Euler on u&#775; = &lambda;u: v<sub>i+1</sub> = v<sub>i</sub> + h&lambda;v<sub>i+1</sub>, so v<sub>i+1</sub> = v<sub>i</sub>/(1&minus;h&lambda;). Here the solve is trivial; for nonlinear f it's a root-find at every step.",
+    "why": "The explicit/implicit split is the central engineering tradeoff in ODE solvers, and it's why `solve_ivp` makes you choose a method. Stiff problems make explicit methods useless no matter how small h is &mdash; which &sect;4.3 makes precise.",
+    "math": "Prop 4.2.11: backward Euler is first order; leapfrog is second order."
+   }
+  },
+  {
+   "id": "v4c4b1",
+   "s": "4.2",
+   "page": 112,
+   "q": "Define the three kinds of error, and say why anyone bothers with the two you don't care about.",
+   "a": "<b>Definition 4.2.5</b>, starting from the true v&#8320; = u&#8320;:<ul style='margin:0;padding-left:19px'><li><b>Global error</b> E<sub>i</sub> = v<sub>i</sub> &minus; u<sub>i</sub> &mdash; how far off you are at step i. <b>This is what you actually want.</b></li><li><b>Local truncation error</b> &tau;(t) = U&#775;(t,h) &minus; F(u(t)) &mdash; how badly the difference formula approximates the derivative, in one step.</li><li><b>One-step error</b> &#8466;(t) = v(t+h) &minus; u(t+h) &mdash; the error after a single step taken from an <i>exact</i> previous value.</li></ul><p style='margin-top:10px'><b>Order p</b> = the largest p with max<sub>i</sub>|&tau;<sub>i</sub>| &isin; O(h<sup>p</sup>).</p><p><b>Why the other two:</b> the global error is what you want and is <b>much harder to compute</b>. The LTE and one-step error are computable by Taylor's theorem <b>without knowing the true solution</b> &mdash; so you bound the thing you can compute and infer the thing you want.</p>",
+   "r": {
+    "rot": "three errors, don't mix them up. <b>global</b> = how wrong you are right now after all those steps. that's the one you care about, and the one you can't compute without knowing the answer. <b>LTE</b> = how wrong your slope formula is, per step. <b>one-step</b> = how wrong one step is if you started from the truth. the last two are computable from taylor's theorem alone, which is the whole reason they exist &mdash; you bound what you can reach and use it to bound what you can't.",
+    "ex": "Forward Euler has &tau;<sub>i</sub> = O(h), so it's first order. The trapezoidal method has &tau;<sub>i</sub> = O(h&sup2;), second order. Halve h and Euler's per-step error halves while trapezoid's quarters.",
+    "why": "&lsquo;Order p&rsquo; is defined via the LTE, not the global error, and errors <b>accumulate</b> over n = (T&minus;t&#8320;)/h steps &mdash; so one power of h gets eaten in going from local to global. That accounting is exactly &sect;4.3.",
+    "math": "Order p &hArr; &tau; = max|&tau;<sub>i</sub>| &isin; O(h<sup>p</sup>). Needs f &isin; C<sup>r</sup> for Taylor's theorem to the required order."
+   }
+  },
+  {
+   "id": "v4c4b2",
+   "s": "4.2",
+   "page": 111,
+   "q": "What makes a method a <i>finite difference</i> method? Give the recipe and identify the four methods of &sect;4.1 as instances.",
+   "a": "Every method of &sect;4.1 is a <b>finite difference method</b>: first uniformly discretize time into t&#8320;,&hellip;,t<sub>n</sub> with t<sub>i</sub> = t&#8320; + ih, then compute approximations v<sub>i</sub> for the true values u<sub>i</sub> = u(t<sub>i</sub>). All of them do it the same way:<div class='eq'>(i) Approximate u&#775;(t) by some U&#775;(t,h) &mdash; a finite linear combination of u(t), u(t+h), u(t&minus;h), &hellip;<br><br>(ii) Approximate f(u(t)) by some F(u(t)). Often F(u) = f(u).</div>Then impose the relation and solve for u(t+h):<div class='eq'>U&#775;(t,h) &asymp; F(u(t))</div><p style='margin-top:8px'><b>So a method is just a pair of choices.</b> Examples 4.2.1&ndash;4.2.4:</p><div class='eq'><b>Forward Euler</b>&nbsp;&nbsp;U&#775; = [u(t+h) &minus; u(t)]/h,&nbsp;&nbsp;F = f(u(t))<br><br><b>Backward Euler</b>&nbsp;&nbsp;U&#775; = [u(t) &minus; u(t&minus;h)]/h,&nbsp;&nbsp;F = f(u(t))<br><br><b>Trapezoidal</b>&nbsp;&nbsp;U&#775; = [u(t+h) &minus; u(t)]/h,&nbsp;&nbsp;F = &frac12;[f(u(t)) + f(u(t+h))]<br><br><b>Leapfrog / midpoint</b>&nbsp;&nbsp;U&#775; = [u(t+h) &minus; u(t&minus;h)]/(2h)&nbsp;&nbsp;(centered),&nbsp;&nbsp;F = f(u(t))</div><p style='margin-top:6px'>The two Eulers and the trapezoid differ only in <b>which</b> approximation they change; leapfrog is the one that changes the derivative approximation to a centered difference.</p>",
+   "r": {
+    "rot": "every method in the last section is the same template with two blanks filled in. blank one: how do you fake the derivative out of nearby values of u? blank two: how do you fake f(u(t))? set them equal, solve for the next step, done. forward and backward euler use the two obvious one-sided difference quotients and leave f alone. the trapezoid keeps the forward difference but averages f at both ends. leapfrog reaches back two steps and uses a <b>centered</b> difference. that's the whole design space, and where a method's order comes from is which of those approximations you improved.",
+    "ex": "Leapfrog (4.12)&ndash;(4.13), v<sub>i+1</sub> = v<sub>i&minus;1</sub> + 2hf(v<sub>i</sub>), is fundamentally different from the trapezoidal method: it uses <b>two</b> previous steps to build the next, and it is <b>explicit</b>. That makes it the simplest <b>multistep</b> method &mdash; Adams&ndash;Bashforth (explicit) and Adams&ndash;Moulton (implicit) are the other important ones.",
+    "why": "Naming the two choices separately is what makes the error analysis possible: the LTE is <b>defined</b> as U&#775;(t,h) &minus; F(u(t)), i.e. exactly the gap in the relation you imposed. So a method's order is a statement about how good those two approximations were together.",
+    "math": "Discretize t<sub>i</sub> = t&#8320; + ih; choose U&#775;(t,h) &asymp; u&#775; and F &asymp; f&compfn;u; impose U&#775;(t,h) &asymp; F(u(t)) and solve for v<sub>i+1</sub>."
+   }
+  },
+  {
+   "id": "v4c4b3",
+   "s": "4.2",
+   "page": 112,
+   "q": "What three questions about error does &sect;4.2 set out to answer?",
+   "a": "Three broad questions about any finite difference method:<div class='eq'>(i) <b>Global error bounds.</b> Can we bound how far v<sub>i</sub> can be from u<sub>i</sub>, for <b>all</b> i?<br><br>(ii) <b>Convergence in h.</b> As h &rarr; 0, does the final step v<sub>n</sub> converge to the correct u(T)? (Remember n <b>grows</b> as h shrinks.)<br><br>(iii) <b>Stability in i.</b> For <b>fixed</b> h, does the error |v<sub>i</sub> &minus; u<sub>i</sub>| stay bounded as i grows?</div><p style='margin-top:6px'>These are genuinely different questions. (ii) asks what happens when you refine the grid; (iii) asks what happens when you keep the grid and run <b>longer</b>. A method can pass one and fail the other.</p><p><b>The tool for all three</b> is Taylor's theorem, which is why the section assumes f &isin; C<sup>r</sup> for r large enough to expand to whatever order the analysis needs. The overview is given for one-dimensional IVPs, but the principles apply in higher dimensions too.</p>",
+   "r": {
+    "rot": "three separate worries, and people run them together. <b>how wrong am i overall</b> &mdash; can you bound the damage at every step. <b>does shrinking the step size help</b> &mdash; take h to zero and does the answer actually approach the truth. and <b>does it blow up if i keep going</b> &mdash; leave h alone, run for a long time, does the error stay bounded or spiral. that last one is stability, and it's the one that bites: a method can converge beautifully as h &rarr; 0 and still explode if you run it too long at a step size you chose.",
+    "ex": "Figure 4.2 shows exactly the (iii) failure. On u&#775; = &minus;15u + 1 with u&#8320; = 4, <b>forward Euler oscillates wildly over the whole interval</b> at larger h, while <b>backward Euler gets better over time</b> and converges rapidly even for large steps. Both have some error over the first few steps; they diverge in what happens afterward.",
+    "why": "Keeping (ii) and (iii) apart is the point of the whole section, and it's what &sect;4.3 is named after &mdash; <i>Convergence and Stability</i>. The leapfrog method is the cautionary case: second order, perfectly convergent, and unstable for the wrong problem.",
+    "math": "Global bound: sup<sub>i</sub>|E<sub>i</sub>|. Convergence: v<sub>n</sub> &rarr; u(T) as h &rarr; 0, n = (T&minus;t&#8320;)/h. Stability: |E<sub>i</sub>| bounded as i &rarr; &infin; at fixed h."
+   }
+  },
+  {
+   "id": "v4c4b4",
+   "s": "4.2",
+   "page": 113,
+   "q": "Compute the LTE and the one-step error of forward Euler. How are the two related?",
+   "a": "<b>LTE (Example 4.2.6).</b> By definition &tau;(t) = U&#775;(t,h) &minus; F(u(t)), and since u&#775; = f(u),<div class='eq'>|&tau;(t)| = | [u(t+h) &minus; u(t)]/h &minus; u&#775;(t) |</div>Taylor's theorem gives u(t+h) = u(t) + hu&#775;(t) + (h&sup2;/2)u&#776;(t) + O(h&sup3;). Substituting, the u(t) cancels and the hu&#775;(t)/h cancels against &minus;u&#775;(t), leaving<div class='eq'>|&tau;(t)| &le; (h/2)|u&#776;(t)| + O(h&sup2;) = <b>O(h)</b></div>using continuity of u&#776; on the compact [t&#8320;,T]. <b>So forward Euler is a first-order method.</b><p style='margin-top:10px'><b>One-step error (Example 4.2.7).</b> Starting from an exact u(t) and taking one step:</p><div class='eq'>&#8466;(t) = |u(t+h) &minus; (u(t) + hf(u(t)))| &le; (h&sup2;/2)|u&#776;(t)| + O(h&sup3;) = <b>O(h&sup2;)</b></div><b>The relation between them is one factor of h:</b><div class='eq'>&#8466;(t) = h&tau;(t) + O(h&sup3;)</div><p style='margin-top:8px'>Which is unsurprising once you look at the definitions &mdash; the LTE divides by h and the one-step error does not.</p>",
+   "r": {
+    "rot": "expand u(t+h) as a taylor series and watch the cancellation. the constant and the first-order term are exactly what euler's formula reproduces, so they vanish; what's left is the h&sup2;/2 u&#776; term. divide by h (that's the LTE) and you get O(h) &mdash; first order. don't divide (that's the one-step error) and you get O(h&sup2;). so the two errors differ by exactly one factor of h, which is not a coincidence, it's just whether the definition had an h in the denominator. remember which is which and the rest is bookkeeping.",
+    "ex": "The trapezoidal method run through the same machinery (Example 4.2.9) keeps one more Taylor term and lands at |&tau;(t)| &le; (h&sup2;/12)|u&#8407;(t)| + O(h&sup3;) = O(h&sup2;) &mdash; <b>second order</b>, and if an implicit method is workable at all it costs little more than backward Euler, which is only first order.",
+    "why": "This is why the LTE is the definition of order rather than the global error: it's computable from Taylor's theorem <b>without knowing the true solution</b>, whereas the global error needs u itself. The whole analysis strategy is to bound what you can reach and then propagate it.",
+    "math": "&tau;(t) = O(h) &rArr; first order. &#8466;(t) = O(h&sup2;). &#8466;(t) = h&tau;(t) + O(h&sup3;). Needs u &isin; C&sup2; on a compact interval."
+   }
+  },
+  {
+   "id": "v4c4b5",
+   "s": "4.2",
+   "page": 114,
+   "q": "Derive the global error recursion for forward Euler on u&#775; = &lambda;u. What does the closed form show?",
+   "a": "Take the one-dimensional linear IVP u&#775;(t) = &lambda;u(t), u(t&#8320;) = u&#8320; on [t&#8320;,T]. The LTE at t<sub>i</sub> is &tau;<sub>i</sub> = (u<sub>i+1</sub> &minus; u<sub>i</sub>)/h &minus; &lambda;u<sub>i</sub>, so the <b>true</b> values satisfy<div class='eq'>u<sub>i+1</sub> = (1 + &lambda;h)u<sub>i</sub> + h&tau;<sub>i</sub></div>while the <b>approximations</b> satisfy v<sub>i+1</sub> = v<sub>i</sub> + hf(v<sub>i</sub>) = (1 + &lambda;h)v<sub>i</sub>. Subtracting, with E&#8320; = v&#8320; &minus; u&#8320; = 0:<div class='eq'>E<sub>k</sub> = (1 + &lambda;h)E<sub>k&minus;1</sub> &minus; h&tau;<sub>k&minus;1</sub><br><br>&nbsp;&nbsp;&nbsp;&nbsp;= &minus;h &sum;<sub>i=1</sub><sup>k</sup> (1 + &lambda;h)<sup>i</sup> &tau;<sub>i&minus;1</sub></div><b>What it shows.</b> The global error is an accumulation of local truncation errors, each <b>amplified</b> by a power of the growth factor (1 + &lambda;h). One step contributes h&tau;; k steps contribute a weighted sum &mdash; and whether that sum stays bounded is entirely a question about |1 + &lambda;h|.<p style='margin-top:10px'><b>The trapezoidal method (Example 4.2.10)</b> gives the same shape with a different amplification factor:</p><div class='eq'>E<sub>k</sub> = [(2+&lambda;h)/(2&minus;&lambda;h)]E<sub>k&minus;1</sub> + [2h/(2&minus;&lambda;h)]&tau;<sub>k&minus;1</sub></div><b>Proposition 4.2.11.</b> Backward Euler is first order; the leapfrog (midpoint) method is second order.",
+   "r": {
+    "rot": "the global error isn't just the local errors added up &mdash; each one gets <b>multiplied</b> by the growth factor once for every step that follows it. write the recursion out and unroll it and you get a sum of local errors weighted by powers of (1 + &lambda;h). that's the whole story of numerical error: you make a small mistake at step 3 and the method keeps multiplying it. if |1 + &lambda;h| &le; 1 the old mistakes shrink and you're fine; if it's bigger than 1 they compound and you get the wild oscillation in figure 4.2. same recursion for the trapezoid with a different factor, and that different factor is why it behaves better.",
+    "ex": "Compare the two amplification factors on a strongly decaying problem (&lambda; very negative). Forward Euler's (1 + &lambda;h) leaves the unit disc as soon as h &gt; 2/|&lambda;|, whereas the trapezoid's (2+&lambda;h)/(2&minus;&lambda;h) has magnitude below 1 for <b>every</b> h &gt; 0. That is exactly the difference between the two panels of Figure 4.2.",
+    "why": "These recursions are stated here and <b>used</b> in &sect;4.3 to derive convergence and stability. That is the payoff of the whole section: convert the computable local quantity into a statement about the global one you actually care about, with the amplification factor carrying all the information.",
+    "math": "u&#775; = &lambda;u: E<sub>k</sub> = (1+&lambda;h)E<sub>k&minus;1</sub> &minus; h&tau;<sub>k&minus;1</sub> = &minus;h&sum;<sub>i=1</sub><sup>k</sup>(1+&lambda;h)<sup>i</sup>&tau;<sub>i&minus;1</sub>. Trapezoid factor (2+&lambda;h)/(2&minus;&lambda;h)."
+   }
+  },
+  {
+   "id": "v4c4c1",
+   "s": "4.3",
+   "page": 117,
+   "q": "Define convergence for a finite difference method. Why isn't shrinking h automatically an improvement?",
+   "a": "<b>Definition 4.3.1.</b> The method <b>converges</b> on [t&#8320;,T] if v<sub>n</sub> &rarr; u(T) as h &rarr; 0, where n = &lfloor;(T&minus;t&#8320;)/h&rfloor;.<p style='margin-top:10px'><b>The tension:</b> shrinking h shrinks the LTE and one-step error, but <b>increases the number of steps</b> n = (T&minus;t&#8320;)/h. If the per-step errors don't shrink faster than n grows, shrinking h makes v<sub>n</sub> <b>worse</b>, not better. Convergence is precisely the claim that the race comes out the right way.</p><p><b>Prop 4.3.2 (forward Euler converges).</b> With &tau;<sub>i</sub> &le; Ch and E<sub>n</sub> = &minus;h&Sigma;(1+&lambda;h)<sup>i</sup>&tau;<sub>i&minus;1</sub>, using 1+x &le; e<sup>x</sup> and nh &le; T&minus;t&#8320;:</p><div class='eq'>|E<sub>n</sub>| &le; hC&middot;e<sup>|&lambda;|</sup>(T &minus; t&#8320;) &rarr; 0</div>Note the global error is O(h) while the LTE was O(h) too &mdash; the h&sup2; per step is multiplied by n &asymp; 1/h steps.",
+   "r": {
+    "rot": "smaller steps are more accurate per step but you need more of them, and errors pile up. convergence is the claim that accuracy wins that race. and notice what the proof does: it multiplies a per-step error by the number of steps and shows the h's don't fully cancel &mdash; you lose exactly one power of h going from local to global. that's why a &lsquo;first-order method&rsquo; has O(h) global error from O(h&sup2;) steps.",
+    "ex": "The analysis is done on u&#775; = &lambda;u with &lambda; <b>complex</b>, on purpose: a higher-dimensional linear system decouples into one scalar equation per eigenspace, so the scalar complex case covers it. Nonlinear f is handled through its Lipschitz constant.",
+    "why": "Nota Bene 4.3.3 is the sentence to remember: <b>convergence is a limit as h &rarr; 0, and it does not guarantee a good result for the particular small h you chose.</b> That gap is what absolute stability is about.",
+    "math": "Forward Euler: |E<sub>n</sub>| &le; h&sup2;C&Sigma;(1+|&lambda;|h)<sup>i</sup> &le; h&sup2;Cn e<sup>|&lambda;|hn</sup> &le; hC(T&minus;t&#8320;)e<sup>|&lambda;|</sup>."
+   }
+  },
+  {
+   "id": "v4c4c2",
+   "s": "4.3",
+   "page": 120,
+   "q": "Define the region of absolute stability, and give it for forward Euler, backward Euler, trapezoidal, and leapfrog.",
+   "a": "For u&#775; = &lambda;u with step h, write z = &lambda;h. The <b>region of absolute stability</b> is the set of z for which the global error does <b>not</b> grow with the step index.<ul style='margin:0;padding-left:19px'><li><b>Forward Euler:</b> {|1 + z| &le; 1} &mdash; the closed unit disk centred at &minus;1. Small.</li><li><b>Backward Euler:</b> {|1 &minus; z| &ge; 1} &mdash; everything <i>outside</i> the unit disk centred at +1. Enormous.</li><li><b>Trapezoidal:</b> {|(2+z)/(2&minus;z)| &le; 1} = <b>the entire left half-plane</b>, Re(z) &le; 0.</li><li><b>Leapfrog:</b> only the open segment of the <b>imaginary axis</b> between &minus;i and i.</li></ul><p style='margin-top:10px'><b>Higher dimensions (Rmk 4.3.8):</b> &lambda; becomes the eigenvalues of the Jacobian, and h must put z = &lambda;h in the region <b>for every eigenvalue</b>.</p>",
+   "r": {
+    "rot": "convergence says &lsquo;it works as h &rarr; 0.&rsquo; stability says &lsquo;does it work at the h you actually used.&rsquo; multiply your eigenvalue by your step size, ask whether that point lands in the method's good region. forward euler's region is one small disk, so a stiff problem &mdash; one big negative eigenvalue &mdash; forces an absurdly tiny h. backward euler's region is basically the whole plane. that's what the extra solve per step buys you.",
+    "ex": "Leapfrog's region is <i>just</i> the imaginary segment, so it's near-useless for real &lambda; &mdash; but excellent for skew-symmetric systems (A<sup>T</sup> = &minus;A), whose eigenvalues are purely imaginary. That's why it survives in Hamiltonian and wave problems.",
+    "why": "This is the concept that decides which solver to reach for. A stiff system has eigenvalues of wildly different magnitudes; the largest one caps h for an explicit method regardless of the accuracy you need. Trapezoidal's whole-left-half-plane region means <b>any</b> h is stable for a decaying system.",
+    "math": "Trapezoidal amplification (2+z)/(2&minus;z); |&middot;| &le; 1 &hArr; Re(z) &le; 0. Leapfrog: &xi;&sup2; = 1 + 2z&xi;, &xi; = z &plusmn; &radic;(z&sup2;+1), need |&xi;| &le; 1 for both roots."
+   }
+  },
+  {
+   "id": "v4c4d1",
+   "s": "4.4",
+   "page": 128,
+   "q": "What is the idea behind Runge&ndash;Kutta, and what is the classical fourth-order method?",
+   "a": "Spend several evaluations of f <i>inside</i> one step, at cleverly chosen intermediate points, and combine them with weights chosen to cancel low-order Taylor terms. Matching the expansion to second order forces w&#8320; + w&#8321; = 1 and w&#8321;&alpha;&#8321;&#8320; = &frac12; &mdash; two equations, three unknowns, so there are <b>infinitely many</b> second-order RK methods.<p style='margin-top:10px'><b>The classical RK4 (Example 4.4.2):</b></p><div class='eq'>k&#8320; = f(u)<br>k&#8321; = f(u + (h/2)k&#8320;)<br>k&#8322; = f(u + (h/2)k&#8321;)<br>k&#8323; = f(u + h&middot;k&#8322;)<br>u(t+h) &asymp; u + (h/6)(k&#8320; + 2k&#8321; + 2k&#8322; + k&#8323;)</div>Assumes f &isin; C&#8309;. Popular for decades because the coefficients are memorable and it's easy to implement.",
+   "r": {
+    "rot": "euler measures the slope once, at the start, and commits. RK says: take a trial step, look at the slope <i>there</i>, take another trial step, look again &mdash; then use a weighted average of all those slopes for the real step. four peeks, weighted 1-2-2-1, and you get fourth-order accuracy. the weights aren't magic, they're just chosen to make the bad taylor terms cancel.",
+    "ex": "Choosing w&#8320; = w&#8321; = &frac12;, &alpha;&#8321;&#8320; = 1 in the second-order family gives u + (h/2)[k&#8320; + k&#8321;] with k&#8321; = f(u + hk&#8320;) &mdash; Heun's method, which is a predictor-corrector: guess with Euler, then average the two slopes.",
+    "why": "RK4 is the default in most solvers, and the tradeoffs are explicit in the text: RK needs little storage and self-starts from a single initial value, but costs <b>several f-evaluations per step</b>, which hurts when f is expensive.",
+    "math": "Second-order conditions: w&#8320; + w&#8321; = 1, w&#8321;&alpha;&#8321;&#8320; = &frac12;. RK4 uses 4 stages for order 4; beyond order 4, stages exceed order."
+   }
+  },
+  {
+   "id": "v4c4d2",
+   "s": "4.4",
+   "page": 133,
+   "q": "For a Taylor series method, how do you choose the order p, and what happens to stability as p grows?",
+   "a": "You choose both h and the order p. Larger p allows a longer step at the same accuracy, but the cost of the Taylor approximation is <b>quadratic in p</b>. Minimizing total flops subject to error below &epsilon; gives<div class='eq'>p = &lceil; &minus;&frac12; log &epsilon; + 1 &rceil;</div><b>Prop 4.4.5.</b> The region of absolute stability is {z &isin; &Copf; : |P(z)| &le; 1}, where P(z) = &Sigma;<sub>k=0</sub><sup>p</sup> z<sup>k</sup>/k! is the degree-p Taylor polynomial of e<sup>z</sup>.<p style='margin-top:10px'><b>The region grows with p</b> &mdash; as P(z) approximates e<sup>z</sup> on a larger set, the stability region approaches the region where |e<sup>z</sup>| &le; 1, the left half-plane.</p>",
+   "r": {
+    "rot": "higher order lets you take bigger steps, but the per-step cost grows like p&sup2;, so there's a sweet spot &mdash; and it's roughly &minus;&frac12;log&epsilon;, i.e. tighter tolerance wants higher order. bonus: stability improves with p too, because the stability region is where the degree-p taylor polynomial of e<sup>z</sup> stays under 1, and as p grows that set creeps toward the left half plane where the true exponential decays.",
+    "ex": "p = 1 gives |1 + z| &le; 1, which is exactly forward Euler's disk &mdash; forward Euler is the first-order Taylor method. Figure 4.6 shows p = 4 and p = 10 with visibly larger regions.",
+    "why": "It's a rare case where higher order buys accuracy <i>and</i> stability at once, which is not generally true &mdash; leapfrog is second order with a nearly empty stability region. It also ties the chapter together: stability regions are always &lsquo;where the amplification factor has modulus &le; 1&rsquo;, and each method just has a different amplification factor.",
+    "math": "&Omega; = {z : |P(z)| &le; 1}, P = degree-p Taylor polynomial of exp. p = 1 recovers forward Euler."
+   }
+  }
+ ],
+ "exMarks": [
+  {
+   "page": 138,
+   "y": 0.4027
+  },
+  {
+   "page": 138,
+   "y": 0.6982
+  },
+  {
+   "page": 139,
+   "y": 0.3009
+  },
+  {
+   "page": 139,
+   "y": 0.7855
+  },
+  {
+   "page": 140,
+   "y": 0.6345
+  }
+ ]
+}

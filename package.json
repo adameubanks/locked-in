@@ -1,0 +1,17 @@
+{
+  "name": "locked-in",
+  "version": "0.1.0",
+  "description": "Study environment for ACME Volumes 3 and 4",
+  "author": "Adam Eubanks",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^32.2.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.123.0",
+    "pdfjs-dist": "3.11.174"
+  }
+}

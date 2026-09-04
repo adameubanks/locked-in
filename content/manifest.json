@@ -1,0 +1,78 @@
+{
+  "volumes": [
+    {
+      "id": "vol3",
+      "short": "Vol 3",
+      "title": "Uncertainty and Data",
+      "pdf": "/home/adam/Documents/Senior/Vol3.pdf",
+      "pageOffset": 6,
+      "chapters": [
+        {
+          "id": "0",
+          "title": "Modeling With Uncertainty and Data",
+          "file": "vol3-ch0.json"
+        },
+        {
+          "id": "1",
+          "title": "Probabilistic Reasoning",
+          "file": "vol3-ch1.json"
+        },
+        {
+          "id": "2",
+          "title": "Information, Inference, and (more) Probability",
+          "file": "vol3-ch2.json"
+        },
+        {
+          "id": "3",
+          "title": "Ensembles, Bagging, and Boosting",
+          "file": "vol3-ch3.json"
+        },
+        {
+          "id": "4",
+          "title": "Measurement and Data",
+          "file": "vol3-ch4.json"
+        },
+        {
+          "id": "5",
+          "title": "Regression and Classification",
+          "file": "vol3-ch5.json"
+        },
+        {
+          "id": "6",
+          "title": "Hypothesis Testing",
+          "file": "vol3-ch6.json"
+        }
+      ]
+    },
+    {
+      "id": "vol4",
+      "short": "Vol 4",
+      "title": "Dynamic Modeling",
+      "pdf": "/home/adam/Documents/Senior/Vol4_Ch1-4.pdf",
+      "pageOffset": 0,
+      "chapters": [
+        {
+          "id": "1",
+          "title": "Modeling with Dynamics",
+          "file": "vol4-ch1.json"
+        },
+        {
+          "id": "2",
+          "title": "ODEs and Their Solutions",
+          "file": "vol4-ch2.json"
+        },
+        {
+          "id": "3",
+          "title": "Linear Systems",
+          "file": "vol4-ch3.json"
+        },
+        {
+          "id": "4",
+          "title": "Some Numerical Methods for ODEs",
+          "file": "vol4-ch4.json"
+        }
+      ],
+      "fixLigatures": true
+    }
+  ]
+}

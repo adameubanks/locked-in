@@ -1,0 +1,213 @@
+{
+ "volume": "vol4",
+ "chapter": "3",
+ "file": "vol4-ch3.json",
+ "title": "Linear Systems",
+ "epigraph": {
+  "text": "Duhamel's Principle always suffices and requires no guessing.",
+  "by": "§3.4, on why this book skips the guess-a-particular-solution ritual"
+ },
+ "sections": [
+  {
+   "id": "3.1",
+   "name": "Homogeneous Linear Systems",
+   "from": 71,
+   "to": 79,
+   "exFrom": {
+    "page": 101,
+    "y": 0.4027
+   },
+   "exTo": {
+    "page": 102,
+    "y": 0.3845
+   }
+  },
+  {
+   "id": "3.2",
+   "name": "Matrix Exponentials and Spectral Calculus",
+   "from": 80,
+   "to": 86,
+   "exFrom": {
+    "page": 102,
+    "y": 0.3845
+   },
+   "exTo": {
+    "page": 102,
+    "y": 0.82
+   }
+  },
+  {
+   "id": "3.3",
+   "name": "Nonautonomous Homogeneous Linear Systems",
+   "from": 87,
+   "to": 92,
+   "exFrom": {
+    "page": 102,
+    "y": 0.82
+   },
+   "exTo": {
+    "page": 104,
+    "y": 0.1936
+   }
+  },
+  {
+   "id": "3.4",
+   "name": "Inhomogeneous Systems and Duhamel",
+   "from": 93,
+   "to": 100,
+   "exFrom": {
+    "page": 104,
+    "y": 0.1936
+   },
+   "exTo": {
+    "page": 104,
+    "y": 0.5636
+   }
+  }
+ ],
+ "exercises": {
+  "from": 101,
+  "to": 105
+ },
+ "cards": [
+  {
+   "id": "v4c3a1",
+   "s": "3.1",
+   "page": 71,
+   "q": "Linear systems escape the local-only limit of Picard&ndash;Lindel&ouml;f. State the theorem and say what powers the proof.",
+   "a": "<b>Theorem 3.1.1.</b> If A(t) is continuous on all of &Ropf;, then every solution of x&#775; = A(t)x has maximal interval of existence equal to <b>all of (&minus;&infin;, &infin;)</b>.<p style='margin-top:10px'><b>The proof is Gronwall plus finite-time blowup.</b> Suppose the interval stopped at &beta; &lt; &infin;. Blowup (Thm 2.3.8) forces &#8214;x(t)&#8214; &rarr; &infin; as t &rarr; &beta;. But from the integral form,</p><div class='eq'>&#8214;x(t)&#8214; &le; &#8214;x&#8320;&#8214; + &int;<sub>t&#8320;</sub><sup>t</sup> L&#8214;x(s)&#8214; ds&nbsp;&nbsp;&rArr;&nbsp;&nbsp; &#8214;x(t)&#8214; &le; &#8214;x&#8320;&#8214;e<sup>L(t&minus;t&#8320;)</sup></div>with L = sup&#8214;A&#8214; finite by continuity on the compact [t&#8320;,&beta;]. The bound stays finite at &beta;, contradicting blowup.",
+   "r": {
+    "rot": "chapter 2 kept apologizing that solutions might die young. linear systems don't. ever. the reason: to stop existing in finite time you have to run off to infinity, but gronwall says a linear system can only grow exponentially &mdash; and exponential is still <i>finite</i> at any finite time. so it can't get to infinity in time to quit. it lives forever, no exceptions.",
+    "ex": "Contrast x&#775; = x&sup2; from &sect;2.1, which detonates at t&#8320; + 1/x&#8320;. That system is nonlinear, so its growth isn't bounded by any e<sup>Lt</sup>, and it outruns every exponential.",
+    "why": "This is the payoff for the analysis in Ch 2 and it's why linear systems are the case you can actually build theory on. Global existence means phase portraits, stability, and long-run behaviour are all well defined &mdash; none of which you can assume for a general nonlinear system.",
+    "math": "Continuity on compact [t&#8320;,&beta;] &rArr; L = sup&#8214;A(t)&#8214; &lt; &infin;. Gronwall with u = &#8214;x&#8214;, &phi; &equiv; L. Bounded at &beta; contradicts Thm 2.3.8."
+   }
+  },
+  {
+   "id": "v4c3a2",
+   "s": "3.1",
+   "page": 73,
+   "q": "Define the fundamental matrix and the principal fundamental matrix. What does &Phi;(t) let you do in one step?",
+   "a": "Solutions of x&#775; = A(t)x form a <b>vector space</b>, and v &#8614; x(t) with x(t&#8320;) = v is a <b>linear map</b>. So a basis of initial conditions gives a basis of solutions.<p style='margin-top:8px'><b>Definition 3.1.3.</b> For a basis {v&#8321;,&hellip;,v<sub>n</sub>} of &Ropf;<sup>n</sup>, let x<sub>k</sub> solve the system with x<sub>k</sub>(t&#8320;) = v<sub>k</sub>. The matrix of columns &Phi;(t) = [x&#8321;(t) &middot;&middot;&middot; x<sub>n</sub>(t)] is the <b>fundamental matrix</b>. If v<sub>k</sub> = e<sub>k</sub> so that &Phi;(t&#8320;) = I, it's the <b>principal</b> fundamental matrix.</p><div class='eq'>&Phi;&#775;(t) = A(t)&Phi;(t),&nbsp;&nbsp; and&nbsp; x(t) = &Phi;(t)v solves the IVP with x(t&#8320;) = v</div>One matrix-vector product gives the solution for <b>any</b> initial condition.",
+   "r": {
+    "rot": "solve the system n times, once for each basis direction, and stack the answers as columns. that matrix is now a machine: hand it any starting vector and it hands back the whole trajectory. you did the work n times and bought yourself infinitely many solutions. principal just means you used the standard basis so &Phi;(t&#8320;) = I, which makes the bookkeeping free.",
+    "ex": "Prop 3.1.4: the columns are linearly independent for all t. If they weren't, two different initial conditions would produce the same solution, contradicting uniqueness from Ch 2.",
+    "why": "This is the structural payoff of linearity, and it's the object every later result is stated about &mdash; AJL computes its determinant, Duhamel uses its inverse. Nonlinear systems have no analogue: you cannot combine two solutions to get a third.",
+    "math": "&Phi;&#775; = A&Phi;, &Phi;(t&#8320;) = [v&#8321; &middot;&middot;&middot; v<sub>n</sub>]. Principal: &Phi;(t&#8320;) = I. Solution set is an n-dimensional vector space."
+   }
+  },
+  {
+   "id": "v4c3a3",
+   "s": "3.1",
+   "page": 75,
+   "q": "Define the matrix exponential and list the properties of Theorem 3.1.8. Which one has a hypothesis you must not forget?",
+   "a": "<div class='eq'>e<sup>tA</sup> = &Sigma;<sub>k&ge;0</sub> (tA)<sup>k</sup>/k!</div><b>Theorem 3.1.8.</b> (i) e<sup>0</sup> = I. (ii) e<sup>tA</sup>e<sup>sA</sup> = e<sup>(t+s)A</sup>. (iii) (e<sup>tA</sup>)<sup>&minus;1</sup> = e<sup>&minus;tA</sup>, so e<sup>tA</sup> is <b>always invertible</b>. (iv) d/dt e<sup>tA</sup> = Ae<sup>tA</sup> = e<sup>tA</sup>A. (vi) A = PDP<sup>&minus;1</sup> &rArr; e<sup>tA</sup> = Pe<sup>tD</sup>P<sup>&minus;1</sup>.<p style='margin-top:10px'><b>(v) is the one with the trap:</b> e<sup>t(A+B)</sup> = e<sup>tA</sup>e<sup>tB</sup> <b>only if AB = BA</b>. Matrices generally don't commute, so this generally fails.</p><p><b>Cor 3.1.9:</b> for the autonomous system x&#775; = Ax, the principal fundamental matrix is &Phi;(t) = e<sup>(t&minus;t&#8320;)A</sup>.</p>",
+   "r": {
+    "rot": "same taylor series as the scalar exponential, just feed it a matrix. almost every rule survives &mdash; except the one everybody wants. e<sup>A+B</sup> &ne; e<sup>A</sup>e<sup>B</sup> unless A and B commute, and matrices mostly don't. that single failure is why matrix exponentials are hard and why half of numerical linear algebra exists.",
+    "ex": "Remark 3.1.7: Cayley&ndash;Hamilton says p(A) = 0 for the characteristic polynomial, so A<sup>n</sup> and every higher power collapse to polynomials of degree &le; n&minus;1. The infinite series is secretly a polynomial of degree at most n&minus;1.",
+    "why": "e<sup>tA</sup> <i>is</i> the solution operator for every constant-coefficient linear system, so this one object solves the whole class. The invertibility in (iii) is what makes Duhamel's &Phi;(s)<sup>&minus;1</sup> legal in &sect;3.4.",
+    "math": "Don't compute via the series: each product costs ~O(n&sup3;) and p iterations gives O(pn&sup3;). &sect;3.2 gives the spectral route instead."
+   }
+  },
+  {
+   "id": "v4c3b1",
+   "s": "3.2",
+   "page": 82,
+   "q": "Define the eigenprojection and eigennilpotent, and state the spectral decomposition of A.",
+   "a": "<b>Definition 3.2.4.</b> For a contour &Gamma; encircling only &lambda; &isin; &sigma;(A), with resolvent R(z) = (zI &minus; A)<sup>&minus;1</sup>:<div class='eq'>P<sub>&lambda;</sub> = <span class='frac'><span>1</span><span>2&pi;i</span></span>&#8750;<sub>&Gamma;</sub> R(z)dz&nbsp;&nbsp;&nbsp; D<sub>&lambda;</sub> = <span class='frac'><span>1</span><span>2&pi;i</span></span>&#8750;<sub>&Gamma;</sub>(z &minus; &lambda;)R(z)dz</div>P<sub>&lambda;</sub> is the <b>eigenprojection</b>, D<sub>&lambda;</sub> the <b>eigennilpotent</b>, with order m<sub>&lambda;</sub> the least m with D<sub>&lambda;</sub><sup>m</sup> = 0.<p style='margin-top:10px'><b>Thm 3.2.6:</b> A = &Sigma;<sub>&lambda;</sub>(&lambda;P<sub>&lambda;</sub> + D<sub>&lambda;</sub>).</p><p><b>Prop 3.2.5:</b> &Sigma;P<sub>&lambda;</sub> = I; P<sub>&lambda;</sub>&sup2; = P<sub>&lambda;</sub>; AP<sub>&lambda;</sub> = P<sub>&lambda;</sub>A; P<sub>&lambda;</sub>P<sub>&lambda;&prime;</sub> = 0 for &lambda; &ne; &lambda;&prime;; D<sub>&lambda;</sub> = (A &minus; &lambda;I)P<sub>&lambda;</sub>; and D<sub>&lambda;</sub><sup>n<sub>&lambda;</sub></sup> = 0 for algebraic multiplicity n<sub>&lambda;</sub>.</p>",
+   "r": {
+    "rot": "chop A into one piece per eigenvalue. each piece is &lambda; times a projection (the diagonalizable part) plus a nilpotent (the part that refuses to diagonalize, and dies after finitely many powers). the projections add to I and annihilate each other, so they carve &Ropf;<sup>n</sup> into independent chunks. it's the jordan form again &mdash; but built by contour integration instead of by finding a basis, which matters because contour integrals are numerically stable and jordan bases are not.",
+    "ex": "If A is semisimple (diagonalizable), every D<sub>&lambda;</sub> = 0 and the decomposition is just A = &Sigma;&lambda;P<sub>&lambda;</sub>. Remark 3.1.15 notes most matrices are semisimple, so the nilpotent parts are the exceptional case.",
+    "why": "The book is explicit that the Jordan decomposition is <b>not well conditioned</b>, so in floating point it isn't really computable. Eigenprojections are the computable substitute, and they're what makes the next result work.",
+    "math": "R<sub>A</sub>(z) = &Sigma;<sub>&lambda;</sub>[P<sub>&lambda;</sub>/(z&minus;&lambda;) + &Sigma;<sub>k=1</sub><sup>m<sub>&lambda;</sub>&minus;1</sup> D<sub>&lambda;</sub><sup>k</sup>/(z&minus;&lambda;)<sup>k+1</sup>]. Each resolvent entry is rational by Cramer's rule."
+   }
+  },
+  {
+   "id": "v4c3b2",
+   "s": "3.2",
+   "page": 84,
+   "q": "Give the spectral formula for e<sup>tA</sup>. Why is it better than summing the series?",
+   "a": "<b>Corollary 3.2.9.</b><div class='eq'>e<sup>tA</sup> = &Sigma;<sub>&lambda;&isin;&sigma;(A)</sub> e<sup>t&lambda;</sup>[ P<sub>&lambda;</sub> + &Sigma;<sub>k=1</sub><sup>m<sub>&lambda;</sub>&minus;1</sup> <span class='frac'><span>t<sup>k</sup>D<sub>&lambda;</sub><sup>k</sup></span><span>k!</span></span> ]</div>It follows from <b>Thm 3.2.8</b> (mapping the spectral decomposition), which computes any holomorphic f(A) by applying f to each eigenvalue and its Taylor coefficients to the nilpotents.<p style='margin-top:10px'><b>Why it's better:</b> the sum is <b>finite</b> &mdash; one term per eigenvalue, and the inner sum stops at m<sub>&lambda;</sub>&minus;1 because D<sub>&lambda;</sub> is nilpotent. No convergence, no truncation error, and you can read the dynamics straight off: each mode grows like e<sup>t&lambda;</sup>, with polynomial-in-t corrections exactly where A fails to diagonalize.</p>",
+   "r": {
+    "rot": "the infinite series becomes a finite sum. one term per eigenvalue, and the nilpotent bits terminate on their own because D<sup>m</sup> = 0. and the best part is you can <i>read</i> it: the e<sup>t&lambda;</sup> factors say how fast each mode grows or decays, and the t<sup>k</sup> terms only appear where the matrix wouldn't diagonalize. every stability fact you'll ever want about x&#775; = Ax is sitting in this formula.",
+    "ex": "Diagonalizable A: all D<sub>&lambda;</sub> = 0 and it collapses to e<sup>tA</sup> = &Sigma;e<sup>t&lambda;</sup>P<sub>&lambda;</sub>. A defective eigenvalue contributes te<sup>t&lambda;</sup>, t&sup2;e<sup>t&lambda;</sup>/2, and so on &mdash; the resonance terms you meet in a critically damped oscillator.",
+    "why": "This is the concrete method for solving any constant-coefficient linear system, and it's the bridge to stability theory: Re(&lambda;) &lt; 0 for all eigenvalues means every term decays and the origin attracts. The Spectral Mapping Theorem (3.2.7), &sigma;(f(A)) = f(&sigma;(A)), is the general statement behind it.",
+    "math": "Requires f holomorphic on an open set containing &sigma;(A). exp is entire, so it always applies."
+   }
+  },
+  {
+   "id": "v4c3c1",
+   "s": "3.3",
+   "page": 87,
+   "q": "For scalars, x&#775; = a(t)x solves as exp(&int;a). Why does the matrix version usually fail, and when does it work?",
+   "a": "The natural guess &Phi;(t) = exp(&int;<sub>t&#8320;</sub><sup>t</sup>A(s)ds) is <b>usually wrong</b>. Differentiating it needs d/dt e<sup>B(t)</sup> = B&#775;(t)e<sup>B(t)</sup>, which requires B(t) and B&#775;(t) to commute &mdash; the same non-commutativity trap as Theorem 3.1.8(v).<p style='margin-top:10px'><b>Prop 3.3.1.</b> If A is continuous and <b>A(s)A(t) = A(t)A(s) for all s,t</b>, then the guess <i>is</i> the principal fundamental matrix solution.</p><p>Proof sketch: with B(t) = &int;A, commutativity gives B(t)A(t) = &int;A(s)A(t)ds = A(t)&int;A(s)ds = A(t)B(t), which is exactly what licenses the differentiation.</p><p class='muted'>Unexample 3.3.2 shows a non-commuting A where it fails.</p>",
+   "r": {
+    "rot": "you want to do the obvious thing: integrate A and exponentiate, like the scalar case. it doesn't work. the reason is the same one that broke e<sup>A+B</sup> &mdash; A at one time doesn't commute with A at another time, so the derivative rule you need isn't true. if A(s) and A(t) <i>do</i> commute for every pair, the trick is legal. that's a strong hypothesis and most A(t) fail it.",
+    "ex": "A(t) commutes with itself across time when, say, A(t) = f(t)M for a fixed matrix M &mdash; then everything is a scalar multiple of M and scalars commute. Mix two non-commuting matrices with t-dependent weights and it breaks.",
+    "why": "This is why nonautonomous linear systems are genuinely harder than autonomous ones and generally have no closed-form fundamental matrix. Everything after this section is about what you <i>can</i> still compute without one &mdash; namely the determinant.",
+    "math": "Needs d/dt e<sup>B(t)</sup> = B&#775;e<sup>B</sup>, valid when [B(t), B&#775;(t)] = 0."
+   }
+  },
+  {
+   "id": "v4c3c2",
+   "s": "3.3",
+   "page": 88,
+   "q": "State the Abel&ndash;Jacobi&ndash;Liouville formula and two corollaries.",
+   "a": "<b>Theorem 3.3.3 (AJL).</b> If &Phi;&#775;(t) = A(t)&Phi;(t), then<div class='eq'>det &Phi;(t) = det &Phi;(t&#8320;) &middot; exp( &int;<sub>t&#8320;</sub><sup>t</sup> tr A(s) ds )</div>The determinant of a fundamental matrix is called the <b>Wronskian</b>. Even when you cannot compute &Phi;, you can always compute its determinant &mdash; from the trace alone.<p style='margin-top:10px'><b>Cor 3.3.8:</b> &Phi;(t) is <b>nonsingular for all t</b>, since the exponential never vanishes and det&Phi;(t&#8320;) &ne; 0.</p><p><b>Cor 3.3.9 (Jacobi's formula):</b> for constant A, det(e<sup>tA</sup>) = e<sup>t&middot;tr A</sup>.</p>",
+   "r": {
+    "rot": "you usually can't write down &Phi;(t). but its <b>determinant</b> you can always get, and it only depends on the trace &mdash; the cheapest number attached to A. that's a strange and useful bargain. and since exp is never zero, &Phi; can never go singular, which re-proves that your n solutions stay independent forever.",
+    "ex": "Jacobi's formula det(e<sup>tA</sup>) = e<sup>t&middot;tr A</sup> is the matrix version of &lsquo;determinant is the product of eigenvalues, trace is their sum&rsquo;, exponentiated. tr A = 0 means volume is preserved &mdash; that's what makes a system Hamiltonian.",
+    "why": "The nonsingularity corollary is what Duhamel's proof leans on in &sect;3.4 when it needs &Phi;(s)<sup>&minus;1</sup>. Geometrically, det&Phi; is how the flow scales volume in phase space, and AJL says the trace is the instantaneous rate.",
+    "math": "d/dt det&Phi; = (tr A)det&Phi;. Never zero, so independence of the columns persists for all t."
+   }
+  },
+  {
+   "id": "v4c3d1",
+   "s": "3.4",
+   "page": 96,
+   "q": "State Duhamel's Principle and variation of parameters. What's the trick in the proof?",
+   "a": "<b>Theorem 3.4.2 (Duhamel).</b> For x&#775; = A(t)x + Q(x,t), x(t&#8320;) = x&#8320;, with &Phi; the principal fundamental matrix of the homogeneous system:<div class='eq'>x(t) = &Phi;(t)x&#8320; + &Phi;(t)&int;<sub>t&#8320;</sub><sup>t</sup> &Phi;(s)<sup>&minus;1</sup>Q(x(s),s) ds</div><b>Q need not be linear in x</b> &mdash; then it's an implicit equation. Taking Q = b(t) gives <b>Cor 3.4.3, variation of parameters</b>, an explicit solution.<p style='margin-top:10px'><b>The trick:</b> the ansatz x(t) = &Phi;(t)h(t) &mdash; treat the constant vector in the homogeneous solution as a <i>function</i>. Substituting, the &Phi;&#775;h terms cancel on both sides, leaving &Phi;(t)h&#775;(t) = Q, so h&#775; = &Phi;<sup>&minus;1</sup>Q. Integrate and substitute back.</p>",
+   "r": {
+    "rot": "homogeneous solution is &Phi;(t) times a constant. forcing shows up? let the constant stop being constant. plug &Phi;(t)h(t) in, and the terms that made &Phi; a solution cancel themselves out, leaving one clean equation for h&#775;. integrate, done. that's the whole method &mdash; and note it works even when the forcing is nonlinear, which is why it's a <i>principle</i> and not just a formula.",
+    "ex": "Remark 3.4.4 is pointed: intro ODE courses teach you to <i>guess</i> a particular solution shaped like b(t) &mdash; trig forcing, guess trig. The book declines, because Duhamel always works and needs no inspiration.",
+    "why": "It needs &Phi;(s)<sup>&minus;1</sup> to exist for every s, which is exactly Corollary 3.3.8 from AJL. That's the chapter's structure paying off: nonsingularity was proved two sections earlier precisely so this integral is defined.",
+    "math": "Ansatz x = &Phi;h &rArr; &Phi;&#775;h + &Phi;h&#775; = A&Phi;h + Q. Since A&Phi; = &Phi;&#775;, cancel to &Phi;h&#775; = Q. h(t&#8320;) = x&#8320; since &Phi;(t&#8320;) = I."
+   }
+  },
+  {
+   "id": "v4c3d2",
+   "s": "3.4",
+   "page": 93,
+   "q": "Does global existence survive adding a forcing term b(t)?",
+   "a": "Yes. <b>Theorem 3.4.1.</b> If A(t) <b>and</b> b(t) are both continuous on all of &Ropf;, then the maximal interval of existence for x&#775; = A(t)x + b(t) is all of (&minus;&infin;, &infin;).<p style='margin-top:10px'>This is the promise Remark 3.1.2 made back in &sect;3.1 &mdash; Theorem 3.1.1 was stated for the homogeneous case, and the inhomogeneous version was deferred to here.</p><p>Same machinery: existence and uniqueness gives a local solution, Gronwall bounds its growth by an exponential, and finite-time blowup then can't happen.</p>",
+   "r": {
+    "rot": "adding forcing doesn't break anything, as long as the forcing itself is continuous everywhere. still no blowup, still alive for all time. same gronwall argument &mdash; the extra b(t) term is bounded on compact intervals so it just rides along inside the bound.",
+    "ex": "A driven oscillator with continuous forcing runs forever. The only way to break it is a forcing term that itself blows up in finite time, which violates the hypothesis.",
+    "why": "Together with Thm 3.1.1 this says linear systems with continuous data are <b>always</b> globally well posed &mdash; existence, uniqueness, continuous dependence, on all of &Ropf;. That is the strongest guarantee in the volume, and nothing nonlinear gets it.",
+    "math": "Same proof as 3.1.1 with &#8214;x&#775;&#8214; &le; &#8214;A&#8214;&#8214;x&#8214; + &#8214;b&#8214;; Gronwall still yields an exponential bound."
+   }
+  }
+ ],
+ "exMarks": [
+  {
+   "page": 101,
+   "y": 0.4027
+  },
+  {
+   "page": 102,
+   "y": 0.3845
+  },
+  {
+   "page": 102,
+   "y": 0.82
+  },
+  {
+   "page": 104,
+   "y": 0.1936
+  },
+  {
+   "page": 104,
+   "y": 0.5636
+  }
+ ]
+}

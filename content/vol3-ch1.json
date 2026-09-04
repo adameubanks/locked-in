@@ -1,0 +1,932 @@
+{
+ "volume": "vol3",
+ "chapter": "1",
+ "file": "vol3-ch1.json",
+ "title": "Probabilistic Reasoning",
+ "epigraph": {
+  "text": "Probabilities do not describe reality&mdash;only our information about reality.",
+  "by": "E.T. Jaynes"
+ },
+ "sections": [
+  {
+   "id": "1.1",
+   "name": "Inference and Probability",
+   "from": 18,
+   "to": 23,
+   "exFrom": {
+    "page": 81,
+    "y": 0.622
+   },
+   "exTo": {
+    "page": 82,
+    "y": 0.518
+   }
+  },
+  {
+   "id": "1.2",
+   "name": "Reasoning with Probabilities",
+   "from": 24,
+   "to": 29,
+   "exFrom": {
+    "page": 82,
+    "y": 0.518
+   },
+   "exTo": {
+    "page": 82,
+    "y": 0.899
+   }
+  },
+  {
+   "id": "1.3",
+   "name": "Jeffrey's Rule and Dutch Books",
+   "from": 30,
+   "to": 35,
+   "exFrom": {
+    "page": 82,
+    "y": 0.899
+   },
+   "exTo": {
+    "page": 83,
+    "y": 0.811
+   }
+  },
+  {
+   "id": "1.4",
+   "name": "Quantifying Uncertainty",
+   "from": 36,
+   "to": 44,
+   "exFrom": {
+    "page": 83,
+    "y": 0.811
+   },
+   "exTo": {
+    "page": 85,
+    "y": 0.113
+   }
+  },
+  {
+   "id": "1.5",
+   "name": "Random Variables and Distributions",
+   "from": 45,
+   "to": 49,
+   "exFrom": {
+    "page": 85,
+    "y": 0.113
+   },
+   "exTo": {
+    "page": 85,
+    "y": 0.513
+   }
+  },
+  {
+   "id": "1.6",
+   "name": "Expectation and Independence",
+   "from": 50,
+   "to": 54,
+   "exFrom": {
+    "page": 85,
+    "y": 0.513
+   },
+   "exTo": {
+    "page": 86,
+    "y": 0.743
+   }
+  },
+  {
+   "id": "1.7",
+   "name": "Conditioning for Random Variables",
+   "from": 55,
+   "to": 61,
+   "exFrom": {
+    "page": 86,
+    "y": 0.743
+   },
+   "exTo": {
+    "page": 87,
+    "y": 0.765
+   }
+  },
+  {
+   "id": "1.8",
+   "name": "Variance and Covariance",
+   "from": 62,
+   "to": 66,
+   "exFrom": {
+    "page": 87,
+    "y": 0.765
+   },
+   "exTo": {
+    "page": 88,
+    "y": 0.483
+   }
+  },
+  {
+   "id": "1.9",
+   "name": "Reasoning by Repeated Observation",
+   "from": 67,
+   "to": 73,
+   "exFrom": {
+    "page": 88,
+    "y": 0.483
+   },
+   "exTo": {
+    "page": 89,
+    "y": 0.667
+   }
+  },
+  {
+   "id": "1.10",
+   "name": "Sampling, Data Generation, and Causal Models",
+   "from": 74,
+   "to": 80,
+   "exFrom": {
+    "page": 89,
+    "y": 0.667
+   },
+   "exTo": {
+    "page": 91,
+    "y": 0.369
+   }
+  }
+ ],
+ "cards": [
+  {
+   "id": "v3c1a1",
+   "s": "1.1",
+   "page": 18,
+   "q": "What separates deductive from inductive inference?",
+   "a": "<b>Deductive:</b> premises, if true, <i>guarantee</i> the conclusion. Mathematical certainty. <b>Inductive:</b> premises, if true, make the conclusion <i>more credible</i> &#8212; more likely to be true, never guaranteed. Science, law, and essentially everyone outside a proof runs on induction. The chapter's whole thesis is that both are special cases of one framework: probabilistic reasoning.",
+   "r": {
+    "rot": "deduction is a locked door. if the premises hold, the conclusion is already inside, no arguing. induction is a vibe check that actually works &#8212; evidence comes in, your belief nudges. you're never <i>certain</i>, you're just less wrong than before. and the twist of this whole chapter: those aren't two things. deduction is just induction where the probabilities got pinned to 0 and 1.",
+    "ex": "Deductive: <q>All primes &gt; 2 are odd. 91 is even. &there4; 91 is not prime.</q> Airtight. Inductive: <q>If it rained, the grass is wet. The grass is wet. &there4; it probably rained.</q> Could have been sprinklers &#8212; but rain just got more credible.",
+    "why": "Because almost nothing you will ever do professionally is deductive. Models, data, experiments, diagnoses, forecasts &#8212; all inductive. This chapter is where you get a rigorous grip on the reasoning you were already doing informally.",
+    "math": "Deductive: P(B|A) = 1 and P(A) = 1 &rArr; P(B) = 1. Inductive: P(A|B) &gt; P(A). Same machinery, different endpoints."
+   }
+  },
+  {
+   "id": "v3c1a2",
+   "s": "1.1",
+   "page": 18,
+   "q": "Write the two deductive syllogisms &#8212; the one behind direct proof and the one behind proof by contradiction.",
+   "a": "<div class='syl'><span class='lbl'>Prior</span><span>A &rArr; B</span><span class='lbl'>News</span><span>A</span><span class='bar'></span><span class='lbl'>&there4;</span><span>B</span></div><p class='tiny muted'><i>Modus ponens</i> &#8212; affirming the antecedent (1.1).</p><div class='syl'><span class='lbl'>Prior</span><span>A &rArr; B</span><span class='lbl'>News</span><span>&not;B</span><span class='bar'></span><span class='lbl'>&there4;</span><span>&not;A</span></div><p class='tiny muted'><i>Modus tollens</i> &#8212; denying the consequent (1.3). This is proof by contradiction.</p>",
+   "r": {
+    "rot": "ponens: rule says A gets you B. you got A. congrats, you have B. tollens: rule says A gets you B. you looked and there's no B anywhere. so there was never any A. running the arrow backwards to prove something <i>isn't</i> &#8212; that's every contradiction proof you've ever written.",
+    "ex": "Ponens (Ex 1.1.1): STW &rArr; FLT was proved in 1986; STW was proved in 1994; therefore FLT. Tollens (Ex 1.1.2): if 341 were prime its only factors would be 1 and 341; but 11 divides it; therefore 341 isn't prime.",
+    "why": "These two are the skeleton of every proof you will write. More importantly, &#167;1.2 shows both fall out of the conditioning update as the special case where probabilities are pinned at 0 and 1 &#8212; you need them memorized to see that collapse happen.",
+    "math": "Ponens: P(B|A)=1, P<sub>new</sub>(A)=1 &rArr; P<sub>new</sub>(B)=1. Tollens: P(B|A)=1, P<sub>new</sub>(&not;B)=1 &rArr; P<sub>new</sub>(A)=0."
+   }
+  },
+  {
+   "id": "v3c1a3",
+   "s": "1.1",
+   "page": 20,
+   "q": "State the two <i>weak</i> (inductive) syllogisms &#8212; the ones where the conclusion only shifts credibility.",
+   "a": "<div class='syl'><span class='lbl'>Prior</span><span>A &rArr; B</span><span class='lbl'>News</span><span>B</span><span class='bar'></span><span class='lbl'>&there4;</span><span>A is more credible</span></div><p class='tiny muted'>(1.5) &#8212; the consequent showed up, so its possible cause gained ground.</p><div class='syl'><span class='lbl'>Prior</span><span>A &rArr; B</span><span class='lbl'>News</span><span>&not;A</span><span class='bar'></span><span class='lbl'>&there4;</span><span>B is less credible</span></div><p class='tiny muted'>(1.8) &#8212; a route to B was closed off, so B lost some support.</p>",
+   "r": {
+    "rot": "these are the ones your logic professor called <i>fallacies</i> and then moved on. affirming the consequent? denying the antecedent? supposedly invalid. but they're not invalid, they're just not <i>deductive</i>. they move the needle, they don't slam it. this book's whole flex is making that precise instead of banning it.",
+    "ex": "Weak form 1 (Ex 1.1.5): general relativity predicts starlight bends near the sun. The 1919 eclipse showed bending. GR didn't become certain &#8212; it became much more credible. Weak form 2 (Ex 1.1.6): Polya's conjecture implies the Riemann hypothesis. Haselgrove disproved Polya's conjecture in 1958. RH didn't die &#8212; it just lost a supporter.",
+    "why": "This is how evidence actually works &#8212; in court, in a lab, in a debugging session. &#167;1.2.4 proves both of these are valid consequences of Bayes' rule, so what philosophy calls a fallacy is really a correctly-signed, quantifiable belief update.",
+    "math": "Form 1: P<sub>new</sub>(A) = P<sub>old</sub>(A)/P<sub>old</sub>(B) &gt; P<sub>old</sub>(A). Form 2: P<sub>new</sub>(&not;B) = P<sub>old</sub>(&not;B)/P<sub>old</sub>(&not;A) &gt; P<sub>old</sub>(&not;B)."
+   }
+  },
+  {
+   "id": "v3c1a4",
+   "s": "1.1",
+   "page": 21,
+   "q": "State the three axioms of probability (Definition 1.1.7).",
+   "a": "<ol style='margin:0;padding-left:20px'><li>P(A) &ge; 0 for any proposition A.</li><li>If A is certainly true, P(A) = 1.</li><li><b>Finite additivity:</b> if A and B are disjoint (AB is false), then P(A &or; B) = P(A) + P(B).</li></ol><p style='margin-top:12px'>From (ii) and (iii): since exactly one of A, &not;A holds, P(A) + P(&not;A) = 1.</p>",
+   "r": {
+    "rot": "three rules. nothing negative. certainty is 1. disjoint stuff adds. that's the entire foundation, everything else in 400 pages is downstream of these three lines. and axiom 3 is the load-bearing one &#8212; break it and a bookie owns you (&#167;1.3.3).",
+    "ex": "Roll a fair die. P(even) &ge; 0 &#10003;. P(gets some face) = 1 &#10003;. P(1 or 2) = P(1) + P(2) = 1/6 + 1/6 = 1/3, because you cannot roll a 1 and a 2 at once &#10003;.",
+    "why": "Remark 1.1.8 is the real answer: axioms (i) and (ii) are conventions &#8212; you could rescale credibility through any injective f and lose nothing but convenience. Axiom (iii) is <i>not</i> a convention. Violate finite additivity and Theorem 1.3.6 guarantees a bookie can construct a finite set of bets you lose on every outcome. Additivity is what coherence costs.",
+    "math": "(i) P(A) &ge; 0. (ii) A certain &rArr; P(A) = 1. (iii) AB = f &rArr; P(A &or; B) = P(A) + P(B)."
+   }
+  },
+  {
+   "id": "v3c1a5",
+   "s": "1.1",
+   "page": 22,
+   "q": "A coin is flipped and lands where nobody can see. Persi then turns it over without telling you. Is anything about this system random? What are your probabilities, and why?",
+   "a": "Nothing here is random &#8212; a coin flip is Newtonian and deterministic, and Diaconis actually built a machine that flips a coin to always land the way it started. Your probabilities are still &frac12; and &frac12;, because <b>probability measures what you know, not what the system is</b>. Turning the coin changed nothing about your information, so symmetry forces the two faces to stay equal. Once Persi looks, <i>his</i> probabilities are 0 and 1 &#8212; same coin, same process, different information. <span class='muted'>(Nota Bene 1.1.9)</span>",
+   "r": {
+    "rot": "the coin is not confused. the coin knows exactly what it is. <i>you</i> are the one with the problem. probability isn't a property of the coin, it's a readout on your own ignorance. persi flips it, looks, and he's at 100% &#8212; you're still at 50 on the same physical object. two different numbers, one coin, nobody's wrong. that's the whole Jaynes thing.",
+    "ex": "You and a friend both look at a sealed envelope holding a card. Your friend peeked. For them P(ace) is 0 or 1. For you it's 1/52. The card has not moved.",
+    "why": "This is the interpretive commitment the entire book rests on &#8212; Bayesian, not frequentist. Footnote 14: frequentism needs repeatable trials, and you cannot repeat <q>is there life on Mars</q> or <q>is the Riemann hypothesis true</q>. Yet you still need coherent numbers for those. This is why.",
+    "math": "P(H) = P(T) = &frac12; by symmetry of information, not symmetry of the coin. Different agents, different information sets, different P &#8212; all coherent."
+   }
+  },
+  {
+   "id": "v3c1a6",
+   "s": "1.1",
+   "page": 23,
+   "q": "State the Addition Rule and the Law of Total Probability.",
+   "a": "<b>Addition Rule</b> (Thm 1.1.10) &#8212; for <i>any</i> A, B:<div class='eq'>P(A &or; B) = P(A) + P(B) &minus; P(AB)</div><b>Law of Total Probability</b> (Thm 1.1.11) &#8212; if {B<sub>1</sub>,&#8230;,B<sub>n</sub>} is exhaustive and mutually exclusive, then for any A:<div class='eq'>P(A) = &Sigma;<sub>i</sub> P(AB<sub>i</sub>)</div>",
+   "r": {
+    "rot": "addition rule: you double-counted the overlap, subtract it back. that's it, that's the rule. total probability: chop the world into pieces that cover everything and don't overlap, ask about A inside each piece, add them up. it's the divide-and-conquer of probability and you will use it in literally every chapter after this.",
+    "ex": "30 students take algebra, 25 take stats, 10 take both, 50 total. P(either) = 30/50 + 25/50 &#8722; 10/50 = 0.9 &#8212; not 1.1, which is what you get if you forget to subtract.",
+    "why": "Total probability is the workhorse. It's the move that turns one impossible question into several easy ones, and it's the engine inside Bayes' alternative form, Jeffrey's rule, the law of total expectation, and the law of total variance. Four later results are this one idea in costume.",
+    "math": "P(A &or; B) = P(A) + P(B) &#8722; P(AB). {B<sub>i</sub>} exhaustive + mutually exclusive &rArr; P(A) = &Sigma;<sub>i</sub> P(AB<sub>i</sub>) = &Sigma;<sub>i</sub> P(A|B<sub>i</sub>)P(B<sub>i</sub>)."
+   }
+  },
+  {
+   "id": "v3c1a7",
+   "s": "1.1",
+   "page": 14,
+   "q": "Name the legal standards of proof in ascending order, and say what each one means as a probability.",
+   "a": "<b>Scintilla</b> &#8212; a spark; the least evidence that justifies opening a case at all. <b>Probable cause</b> &#8212; a fair probability a crime was committed; needed for charges and warrants. <b>Preponderance of the evidence</b> &#8212; more likely than not; the usual civil standard. <b>Clear and convincing</b> &#8212; substantially more likely than not; custody, wills, life support. <b>Beyond all reasonable doubt</b> &#8212; no other explanation can reasonably be inferred; criminal cases; often called moral certainty.",
+   "r": {
+    "rot": "the legal system has been doing bayesian reasoning for centuries and just refused to write down any numbers. scintilla = a spark, barely anything. preponderance = 50.1%, the scale tips. clear and convincing = i'm pretty sure. beyond reasonable doubt = i'd bet my house. all thresholds, zero formalism. this whole book is the formalism showing up late.",
+    "ex": "Same evidence, three outcomes: a fingerprint at a scene might clear probable cause (charge them), clear preponderance (lose the civil suit), and still fail beyond reasonable doubt (acquitted). One fact, three thresholds. O.J. Simpson lost the civil case and won the criminal one on exactly this gap.",
+    "why": "The chapter opens here because it makes the thesis concrete: society already reasons probabilistically about the highest-stakes questions there are, and does it <i>without</i> a formalism. It also sets up the cost-of-information theme &#8212; higher stakes demand a higher threshold before you act.",
+    "math": "Informally: scintilla &gt; 0; probable cause &asymp; fair chance; preponderance &gt; 0.5; clear and convincing &Gt; 0.5; beyond reasonable doubt &rarr; near 1."
+   }
+  },
+  {
+   "id": "v3c1b1",
+   "s": "1.2",
+   "page": 24,
+   "q": "Define conditional probability, then state the product rule, total probability, and Bayes' theorem.",
+   "a": "<div class='eq'>P(A|B) = <span class='frac'><span>P(AB)</span><span>P(B)</span></span>&nbsp;&nbsp;&nbsp;(requires P(B) &gt; 0)</div><b>Product rule:</b> P(AB) = P(A|B)P(B)<br><b>Total probability:</b> P(A) = &Sigma;<sub>i</sub> P(A|B<sub>i</sub>)P(B<sub>i</sub>)<br><b>Bayes:</b> P(A|B) = P(B|A)P(A) / P(B)<p style='margin-top:12px'>Combining the last two gives the form you will actually use:</p><div class='eq'>P(A|B) = <span class='frac'><span>P(B|A)P(A)</span><span>P(B|A)P(A) + P(B|&not;A)P(&not;A)</span></span></div>",
+   "r": {
+    "rot": "conditioning is just zooming in. you had a whole universe, someone tells you B happened, so you throw away everything that isn't B and renormalize what's left so it adds to 1 again. that's the divide by P(B). bayes is the same zoom run backwards &#8212; you know how likely the evidence is given the cause, you want how likely the cause is given the evidence. flip it, weight by the prior.",
+    "ex": "Deck of 52, drawn card is a face card. P(king | face) = P(king and face)/P(face) = (4/52)/(12/52) = 1/3. The universe shrank from 52 cards to 12.",
+    "why": "Footnote 15 in the text is worth reading twice: calling Bayes a <q>theorem</q> is silly since it's one line from the definition, and Bayes wasn't first anyway. But it's the single most-used identity in the book &#8212; everything from &#167;4.6 Bayesian estimation to na&#239;ve Bayes classifiers in &#167;5.7 is this one rearrangement.",
+    "math": "P(A|B) = P(AB)/P(B). P(AB) = P(A|B)P(B). P(A) = &Sigma;P(A|B<sub>i</sub>)P(B<sub>i</sub>). P(A|B) = P(B|A)P(A)/P(B)."
+   }
+  },
+  {
+   "id": "v3c1b2",
+   "s": "1.2",
+   "page": 25,
+   "q": "State the conditioning update rule. What is it for, and what is it <i>not</i> enough for?",
+   "a": "<b>Definition 1.2.3.</b> Given P<sub>old</sub> with P<sub>old</sub>(B) &gt; 0, upon learning B is true:<div class='eq'>P<sub>new</sub>(A) = P<sub>old</sub>(A|B)&nbsp;&nbsp;and&nbsp;&nbsp;P<sub>new</sub>(B) = 1</div>This is the first inference rule of the book &#8212; it turns a static conditional into a <i>procedure for changing your mind</i>. It is <b>not</b> enough when the new information is itself uncertain: news of the form <q>B is now 70% likely</q> is not <q>B is true,</q> and needs Jeffrey's rule (&#167;1.3) instead.",
+   "r": {
+    "rot": "conditioning is the update rule for when you <i>actually saw the thing</i>. B happened, no ambiguity, slam it to 1 and renormalize everything else. the catch: real life mostly doesn't hand you certainty. you squint at a card in candlelight and go <q>eh, 90% violet.</q> conditioning has nothing to say about that. that's the gap jeffrey's rule was built to fill.",
+    "ex": "Test comes back positive (a certain observation) &rarr; conditioning update. Doctor says <q>the scan makes me 80% confident it's glioma</q> (uncertain observation) &rarr; you need Jeffrey's rule.",
+    "why": "Notice the shift in what a conditional <i>is</i>. P(A|B) is a static fact about your current beliefs. The update rule is a claim that this static fact is what you should <i>adopt</i> upon learning B. That step is not free &#8212; Theorem 1.3.8 shows the bookie punishes any other rule.",
+    "math": "P<sub>new</sub>(&middot;) = P<sub>old</sub>(&middot;|B). Verify it satisfies the axioms and it is a legitimate probability."
+   }
+  },
+  {
+   "id": "v3c1b3",
+   "s": "1.2",
+   "page": 25,
+   "q": "Cancer prevalence in your group is 1/10,000. Test sensitivity 97%, specificity 99%. You test positive. What is P(cancer)?",
+   "a": "<div class='eq'>P<sub>new</sub>(C) = <span class='frac'><span>(0.97)(0.0001)</span><span>(0.97)(0.0001) + (0.01)(0.9999)</span></span> = <span class='frac'><span>97</span><span>97 + 9,999</span></span> &asymp; 0.0096</div>Under 1%. The positive result multiplied your probability by roughly 96&times; &#8212; from 0.01% to 0.96% &#8212; and it is <i>still</i> very likely a false positive, because 9,999 healthy people trip the 1% false-positive rate for every 97 sick people the test catches. <span class='muted'>(Example 1.2.5. Note: the text prints 0.009615; the correct value is 0.009608.)</span>",
+   "r": {
+    "rot": "the test is 97% accurate and you're still fine. why? because the disease is <i>rare</i> and the healthy crowd is <i>enormous</i>. picture 1,000,000 people. 100 have it, 97 test positive. 999,900 don't, and 1% of them &#8212; 9,999 people &#8212; test positive anyway. you're one dot in a pile of 10,096 positives and only 97 are real. the test didn't lie to you. there are just way more of them than you.",
+    "ex": "Same arithmetic, no cancer: a 99%-accurate terrorism screener at an airport of 1,000,000 with 10 actual threats flags ~10,000 innocent people to catch ~10 real ones. Base rates devour accuracy.",
+    "why": "This is the single most consequential mistake made by doctors, juries, and machine learning engineers &#8212; and you will meet it again as precision/recall in &#167;3.4 and as the base rate problem in every classifier you build. Accuracy alone is nearly meaningless when classes are imbalanced.",
+    "math": "P(C|T) = P(T|C)P(C) / [P(T|C)P(C) + P(T|&not;C)P(&not;C)] = 97/10,096 &asymp; 0.009608."
+   }
+  },
+  {
+   "id": "v3c1b4",
+   "s": "1.2",
+   "page": 26,
+   "q": "When a prediction is confirmed, what determines how much credibility the hypothesis gains?",
+   "a": "How <i>surprising</i> the prediction was. From the inductive syllogism, P<sub>new</sub>(A) = P<sub>old</sub>(A)/P<sub>old</sub>(B). If P<sub>old</sub>(B) was near 1 &#8212; you expected B anyway &#8212; the ratio is near 1 and you learn almost nothing. If P<sub>old</sub>(B) was tiny, the ratio is huge and A gains enormously. <b>The more unexpected a consequence, the more weight its verification carries.</b> <span class='muted'>(Remark 1.2.9)</span>",
+   "r": {
+    "rot": "predicting something obvious earns you nothing. <q>my theory says the sun rises tomorrow</q> &#8212; cool, so does everyone's. but predict something absurd, something nobody expects, and then it <i>happens</i>? that's when your theory eats. the payout is inversely proportional to how likely everyone thought it was. it's a betting market and you got long odds.",
+    "ex": "Einstein again. Starlight bending was considered unlikely &#8212; P<sub>old</sub>(BSL) was small. When the 1919 eclipse confirmed it, GR's credibility jumped hard. Had GR predicted <q>apples fall down,</q> confirmation would have moved nothing.",
+    "why": "This is the mathematical core of what makes a scientific theory good, and it is Popper's falsifiability with a number attached. A theory that risks a surprising prediction and survives has earned something a safe theory cannot. Same logic drives information content in Ch 2 &#8212; surprise <i>is</i> information.",
+    "math": "P<sub>new</sub>(A) = P<sub>old</sub>(A)/P<sub>old</sub>(B). Gain factor = 1/P<sub>old</sub>(B), unbounded as P<sub>old</sub>(B) &rarr; 0."
+   }
+  },
+  {
+   "id": "v3c1b5",
+   "s": "1.2",
+   "page": 29,
+   "q": "What makes circumstantial evidence strong rather than weak? Write it as a syllogism.",
+   "a": "<div class='syl'><span class='lbl'>Prior I</span><span>A &rArr; B</span><span class='lbl'>Prior II</span><span>P(B|&not;A) &Ll; 1</span><span class='lbl'>News</span><span>B</span><span class='bar'></span><span class='lbl'>&there4;</span><span>P<sub>new</sub>(A) &Gg; P<sub>old</sub>(A)</span></div><p>Prior II is what does the work: the evidence must be <b>unlikely to appear when the hypothesis is false</b>. Informally &#8212; if B without A is hardly credible, then observing B makes A almost certain. <span class='muted'>(Example 1.2.13)</span></p>",
+   "r": {
+    "rot": "evidence isn't strong because it fits your theory. evidence is strong because it <i>doesn't fit anything else</i>. dna at the scene is damning not because a guilty person would leave it &#8212; an innocent one might too &#8212; but because there's almost no innocent story that puts it there. ask <q>how easily could i see this if i were wrong?</q> if the answer is <q>easily,</q> you have nothing.",
+    "ex": "A suspect owning a common kitchen knife: P(B|&not;A) is enormous, nearly everyone owns one, so it proves nothing. A suspect's DNA under the victim's fingernails: P(B|&not;A) is tiny, so it moves the needle hard.",
+    "why": "This is the likelihood ratio in disguise, and it is the single best question to ask of any evidence in any field &#8212; including your own debugging. <q>Would I see this symptom if my hypothesis were wrong?</q> If yes, the symptom isn't diagnostic. Prior II is the whole game.",
+    "math": "P<sub>new</sub>(A)/P<sub>old</sub>(A) = 1/P<sub>old</sub>(B), and P<sub>old</sub>(B) = P(B|A)P(A) + P(B|&not;A)P(&not;A). Small P(B|&not;A) &rArr; small P<sub>old</sub>(B) &rArr; large gain."
+   }
+  },
+  {
+   "id": "v3c1b6",
+   "s": "1.2",
+   "page": 30,
+   "q": "Philosophy texts distinguish four kinds of reasoning: deductive, inductive, abductive, and analogical. What is this chapter's response?",
+   "a": "That the taxonomy is unnecessary. &#167;1.2.5 derives all four as syllogisms inside the single framework of probabilistic reasoning &#8212; abduction is just induction with a probabilistic prior, and analogy is a chain through a hypothetical common cause H. The authors' stance: <q>good mathematical theory abstracts out the essential components of complex ideas,</q> and without it we build categories that silo our thinking rather than serve it.",
+   "r": {
+    "rot": "philosophy spent centuries filing reasoning into four labeled drawers. this book opens all four drawers and shows it's the same object viewed from different angles. that's what good math <i>does</i> &#8212; it collapses your categories. if you need four names for one mechanism, you didn't understand the mechanism.",
+    "ex": "Reasoning by analogy (Ex 1.2.14) looks like its own species until you posit H implying both A and B. Then evidence for B raises H, which raises A &#8212; pure conditioning, twice. No new kind of inference required.",
+    "why": "This is a methodological lesson worth more than the content. Unification is the deliverable of a good theory. You will meet the same move repeatedly in ACME: separate-looking algorithms turning out to be one algorithm under a change of coordinates.",
+    "math": "Each of the four reduces to repeated application of P<sub>new</sub>(&middot;) = P<sub>old</sub>(&middot;|B) plus Bayes."
+   }
+  },
+  {
+   "id": "v3c1c1",
+   "s": "1.3",
+   "page": 30,
+   "q": "State Jeffrey's rule. What problem does it solve that conditioning cannot?",
+   "a": "Conditioning only handles <i>certain</i> news &#8212; B is true. Jeffrey's rule handles news that is itself probabilistic. Given {B<sub>i</sub>} exhaustive and mutually exclusive, upon learning P<sub>new</sub>(B<sub>i</sub>) = p<sub>i</sub> while the conditionals stay fixed:<div class='eq'>P<sub>new</sub>(A) = &Sigma;<sub>i</sub> P<sub>old</sub>(A|B<sub>i</sub>) p<sub>i</sub></div>When the collection is {B, &not;B} and p = 1, it collapses back to the conditioning update &#8212; so it is a genuine generalization. <span class='muted'>(Definition 1.3.1)</span>",
+   "r": {
+    "rot": "conditioning needs you to be <i>sure</i>. jeffrey's rule is for when you're squinting. you're in a dark room, you think the card is 90% violet &#8212; not <q>it is violet.</q> conditioning has no move here. jeffrey says: keep your conditionals, swap in the new weights on the B's, average. that's it. it's total probability with updated weights.",
+    "ex": "Example 1.3.2 &#8212; 12 blue cards, 38 violet. Candlelight. You judge 10% blue, 90% violet. P(giraffe|blue) = 4/12, P(giraffe|violet) = 14/38. Jeffrey gives (4/12)(0.10) + (14/38)(0.90) &asymp; 0.365.",
+    "why": "Real evidence is almost never certain. Sensors are noisy, tests are probabilistic, and your own perception is uncertain. Modern MCED cancer screening (Ex 1.3.4) outputs a distribution over evidence states, not a verdict &#8212; conditioning literally cannot consume that output. Jeffrey's rule can.",
+    "math": "P<sub>new</sub>(A) = &Sigma;<sub>i</sub> P<sub>new</sub>(A|B<sub>i</sub>)P<sub>new</sub>(B<sub>i</sub>) = &Sigma;<sub>i</sub> P<sub>old</sub>(A|B<sub>i</sub>)p<sub>i</sub>, using invariance in the second step."
+   }
+  },
+  {
+   "id": "v3c1c2",
+   "s": "1.3",
+   "page": 33,
+   "q": "What is the invariance condition, and what goes wrong without it?",
+   "a": "<b>Invariance:</b> P<sub>new</sub>(A|B<sub>i</sub>) = P<sub>old</sub>(A|B<sub>i</sub>). The new information changes your weights on the B<sub>i</sub>, but leaves the conditional structure untouched. Both hypotheses are required to apply the rule: (i) the news has the form P<sub>new</sub>(E) = p, and (ii) invariance holds. If the incoming information isn't of that form, applying Jeffrey's rule is an <b>error</b> &#8212; even when the news <i>feels</i> almost probabilistic. <span class='muted'>(&#167;1.3.2 Caveats)</span>",
+   "r": {
+    "rot": "invariance says: the news changed how likely each <i>case</i> is, but not what follows <i>within</i> a case. dim light changed your read on the card's color &#8212; it did not change how many giraffes are behind violet cards. that count is a fact about the deck, not about the lighting. when the news messes with the conditionals themselves, jeffrey's rule is the wrong tool and using it anyway is just wrong.",
+    "ex": "Holds: candlelight makes you unsure of the color, but the deck's composition is untouched. Fails: someone reshuffles the deck AND dims the lights. Now the conditionals moved too, and no amount of reweighting saves you.",
+    "why": "This is the caveat that separates people who understand Jeffrey's rule from people who can quote it. The rule is easy; knowing when it's licensed is the skill. &#167;1.3.2 explicitly warns that new information can feel probabilistic without being of the required form.",
+    "math": "Requires (i) P<sub>new</sub>(E) = p and (ii) P<sub>new</sub>(A|E) = P<sub>old</sub>(A|E). Both, or the rule does not apply."
+   }
+  },
+  {
+   "id": "v3c1c3",
+   "s": "1.3",
+   "page": 33,
+   "q": "What is a Dutch book? Why do bettors have to take a forced side?",
+   "a": "<b>Definition 1.3.5.</b> A Dutch book occurs when a bookie can choose a finite collection of prices &alpha; and stakes S so that, after the bettor freely picks a side of each bet, the bookie profits <b>regardless of outcome</b>.<p style='margin-top:12px'>The forced-side rule exists to strip out psychology. Left free, a thrill-seeker overbets and a risk-averse person won't bet at all &#8212; neither price reveals belief. Forcing the bettor to take <i>one side or the other</i> at price &alpha; isolates the indifference point &alpha; = p(A), which is a clean readout of confidence.</p>",
+   "r": {
+    "rot": "a dutch book is when the bookie doesn't care who wins. he already won. he set up a few bets, you looked at each one and went <q>yeah that's fair by my numbers,</q> took them all, and lost on every branch of the tree. he never needed to know the outcome. he needed your numbers to disagree with each other. the forced-side thing is just so <q>i don't gamble</q> isn't an escape hatch &#8212; you're taking a side, pick one.",
+    "ex": "You say P(rain) = 0.5 and P(no rain) = 0.7. Those sum to 1.2. The bookie sells you both bets slightly over your stated prices and collects the surplus no matter what the sky does.",
+    "why": "This is the justification for the entire axiomatic edifice. Rather than asserting the axioms as self-evident, Ramsey and de Finetti show that violating them makes you <i>exploitable</i>. Coherence isn't aesthetics &#8212; incoherence has a price and someone will collect it.",
+    "math": "Bettor pays S&alpha; and nets S(1 &#8722; &alpha;) if A, else &#8722;S&alpha;. Indifference at &alpha; = p(A). Accept a bet when S(p(A) &#8722; &alpha;) &gt; 0."
+   }
+  },
+  {
+   "id": "v3c1c4",
+   "s": "1.3",
+   "page": 34,
+   "q": "State the three Dutch book theorems. What does each one force you to accept?",
+   "a": "<b>Thm 1.3.6</b> (Ramsey &amp; de Finetti, 1931) &#8212; if your p values violate the <b>axioms of probability</b>, a Dutch book exists. So a rational agent's credences obey the axioms.<br><br><b>Thm 1.3.8</b> (Lewis &amp; Teller, 1972) &#8212; if your update rule gives anything other than P(A|B) on learning B, a three-bet Dutch book exists. So a rational agent uses the <b>conditioning update</b>.<br><br><b>Thm 1.3.9</b> &#8212; if your update on learning P<sub>new</sub>(B<sub>i</sub>) = p<sub>i</sub> differs from &Sigma;P(A|B<sub>i</sub>)p<sub>i</sub>, a Dutch book exists. So a rational agent uses <b>Jeffrey's rule</b>.",
+   "r": {
+    "rot": "three theorems, one threat, escalating. break the axioms &#8594; bookie farms you. use any update rule other than conditioning &#8594; bookie farms you. use any uncertain-evidence rule other than jeffrey's &#8594; bookie farms you. the whole section is <q>be coherent or get got.</q> notice 1.3.9 barely needs a proof &#8212; it just shows your rule violates the axioms and then points at 1.3.6.",
+    "ex": "Thm 1.3.8's bookie places two bets before you learn B and one conditional bet after. The timing is the trick &#8212; he exploits the gap between what you say you'll do and what you do.",
+    "why": "Together these three convert the book's entire framework from <q>here is a nice formalism</q> to <q>here is the only non-self-defeating option.</q> That is a much stronger claim, and it is why this section exists rather than just asserting the rules.",
+    "math": "Axioms violated &rArr; Dutch book (1.3.6). p<sub>new</sub>(A) &ne; P(A|B) &rArr; Dutch book (1.3.8). p<sub>new</sub>(A) &ne; &Sigma;P(A|B<sub>i</sub>)p<sub>i</sub> &rArr; Dutch book (1.3.9)."
+   }
+  },
+  {
+   "id": "v3c1c5",
+   "s": "1.3",
+   "page": 35,
+   "q": "Does the Dutch book argument depend on repeated bets or long-run frequencies?",
+   "a": "No &#8212; and this is the point. It is a <b>one-time</b> set of at most three bets guaranteeing a loss. No limits, no asymptotics, no law of large numbers. That independence is exactly what makes it powerful: it applies to propositions where repeated trials are meaningless &#8212; the probability of life on Mars, or that the Riemann hypothesis is true. A frequentist account has nothing to say about those. The Dutch book argument still binds. <span class='muted'>(Remark 1.3.7)</span>",
+   "r": {
+    "rot": "you cannot re-run the universe to check if there's life on mars. there is no long run. frequentism taps out. but the bookie? the bookie can still take your money <i>today</i>, in three bets, once. that's why this argument beats the frequency one &#8212; it needs zero repetitions to bite.",
+    "ex": "P(Riemann hypothesis is true) &#8212; either it is or it isn't, and it will never be resampled. Yet if your credences about RH and its consequences are incoherent, three bets today clean you out.",
+    "why": "This is the decisive blow in the Bayesian/frequentist argument as this book frames it. Footnote 14 concedes frequentism has its uses and &#167;?? shows the two agree when trials <i>are</i> repeatable &#8212; but the frequentist reading is strictly narrower. Dutch books work everywhere.",
+    "math": "Finite bet set, single occasion. No n &rarr; &infin; anywhere in the proof."
+   }
+  },
+  {
+   "id": "v3c1d1",
+   "s": "1.4",
+   "page": 36,
+   "q": "Define a discrete probability space. What is the difference between an outcome and an event?",
+   "a": "A triple <b>(&Omega;, &Fscr;, P)</b> where &Omega; is a countable set, &Fscr; = 2<sup>&Omega;</sup> is the power set, and P: &Fscr; &rarr; [0,1] satisfies P(&Omega;) = 1, P(&empty;) = 0, and countable additivity. <p style='margin-top:10px'>An <b>outcome</b> is a single element of &Omega; &#8212; one of the 2<sup>n</sup> mutually exclusive, collectively exhaustive conjunctions built from n propositions. An <b>event</b> is a <i>subset</i> E &sube; &Omega; &#8212; a join of one or more outcomes. Outcomes are atoms; events are anything you can build from them.</p>",
+   "r": {
+    "rot": "this is the section where propositions become sets and you stop doing logic and start doing set theory. and (or) not become intersect union complement. outcomes are the atoms &#8212; you can't split them. events are any pile of atoms. &Omega; is every atom, the power set is every possible pile. that's the whole apparatus.",
+    "ex": "Two coin flips. Outcomes: &Omega; = {HH, HT, TH, TT}, four atoms. The event <q>at least one head</q> = {HH, HT, TH}, a pile of three. |&Fscr;| = 2&sup4; = 16 possible events.",
+    "why": "You need this scaffolding to define random variables at all &#8212; a random variable is a <i>function on &Omega;</i>, and without &Omega; there's nothing to define it on. Everything from &#167;1.5 forward stands on this. The Boolean-algebra-to-set-theory translation is the bridge.",
+    "math": "(&Omega;, &Fscr;, P), &Fscr; = 2<sup>&Omega;</sup>, P(&Omega;) = 1, P(&empty;) = 0, countably additive. n propositions &rArr; m = 2<sup>n</sup> outcomes &rArr; 2<sup>m</sup> events."
+   }
+  },
+  {
+   "id": "v3c1d2",
+   "s": "1.4",
+   "page": 41,
+   "q": "Define independence and conditional independence of events. Is conditional independence symmetric?",
+   "a": "<b>Independent:</b> A &perp;&perp; B iff P(AB) = P(A)P(B). Equivalently P(A|B) = P(A) &#8212; knowing B tells you nothing about A.<br><br><b>Conditionally independent given C:</b> A &perp;&perp; B | C iff P(AB|C) = P(A|C)P(B|C). Knowing B tells you nothing about A <i>once you already know C</i>.<br><br>Yes &#8212; conditional independence is symmetric: A &perp;&perp; B | C iff B &perp;&perp; A | C. <span class='muted'>(Remark 1.4.20)</span>",
+   "r": {
+    "rot": "independence means B is useless to you for guessing A. conditional independence means B is useless <i>once you already know C</i> &#8212; C already told you everything B could have. classic trap: neither one implies the other. two things can be independent and stop being independent once you condition, or be dependent and go independent once you condition. these are different claims, don't swap them.",
+    "ex": "Yellow fingernails and lung cancer are <i>dependent</i> &#8212; seeing yellow nails raises your cancer estimate. But given smoking status, they're <i>conditionally independent</i>: once you know someone smokes, their nails tell you nothing more (Ex 1.10.5). The dependence was entirely routed through the common cause.",
+    "why": "Conditional independence is the concept that makes large probabilistic models tractable. It's the assumption behind na&#239;ve Bayes (&#167;5.7), the Markov property in HMMs, and the entire structure of graphical models in &#167;1.10. Without it you'd need the full joint distribution, which is exponentially large.",
+    "math": "A &perp;&perp; B &hArr; P(AB) = P(A)P(B). A &perp;&perp; B | C &hArr; P(AB|C) = P(A|C)P(B|C). Neither implies the other."
+   }
+  },
+  {
+   "id": "v3c1d3",
+   "s": "1.4",
+   "page": 38,
+   "q": "State the principle of insufficient reason. What does Unexample 1.4.8 show is missing from the usual statement?",
+   "a": "When we have no reason to favour one outcome over another <b>and there is a symmetry</b> &mdash; a permutation preserving the structure &mdash; that cannot change our preference, the resulting probabilities should be equal. This is the <b>principle of insufficient reason</b> (also: indifference, equal ignorance).<p style='margin-top:8px'><b>Unexample 1.4.8 &mdash; why symmetry is not optional.</b> Roll a die and ask whether you get a six. Build the space &Omega; = {six, &not;six}. You have &ldquo;no information,&rdquo; so give them equal probability?</p><div class='eq'>Wrong. The right answers are 1/6 and 5/6.</div>The equal-probability argument fails because <b>there is no symmetry swapping the two outcomes</b>. A symmetry would have to map six &rarr; &not;six and back. The die rotations that move six to another face also move the other faces around, so they do not permute {six, &not;six}.<p style='margin-top:8px'><b>Nota Bene 1.4.9.</b> Having no information about which outcome occurs is <b>by itself not enough</b> to conclude equal probability. Many presentations omit the symmetry requirement and are therefore <b>wrong</b>. Laplace and Bernoulli did not state it explicitly, but their applications always had one; the objections from Boole, Venn and Keynes all reduce to a missing symmetry. <b>Once a symmetry is in place, the principle is valid.</b></p>",
+   "r": {
+    "rot": "&ldquo;i know nothing, so everything's equally likely&rdquo; is a very popular and very broken argument. the die example kills it: will i roll a six? two outcomes, no information &mdash; so 50/50? obviously not, it's 1/6. what's missing is a <b>symmetry</b>: something you could do to the situation that swaps the outcomes and leaves your knowledge unchanged. for the six faces of a die, rotating it works. for &ldquo;six vs not-six&rdquo; there's nothing that swaps those two, so ignorance buys you nothing. no symmetry, no equal probabilities.",
+    "ex": "The valid cases all exhibit one. A coin: someone could flip it over once more without looking, so whatever your probability for heads was must now be your probability for tails. A card: there is a natural symmetry interchanging A&spades; and 3&hearts; and leaving the rest fixed, and one for any pair &mdash; so all 52 get probability 1/52.",
+    "why": "The coin case is the sharpest: <b>even if you know the coin is unfair, or that the flipper can control it</b>, so long as you don't know <i>which way</i>, the symmetry survives and you still assign &frac12;. Symmetry is a property of your information, not of the object.",
+    "math": "Uniform (Def 1.4.11): P(&omega;) = 1/|&Omega;| for all &omega;, so P(E) = |E|/|&Omega;|. Justified by a probability-preserving permutation, not by ignorance alone."
+   }
+  },
+  {
+   "id": "v3c1d4",
+   "s": "1.4",
+   "page": 38,
+   "q": "State the addition rule for a discrete probability space, and the two facts that follow immediately from countable additivity.",
+   "a": "<b>Theorem 1.4.5 (Addition Rule).</b> For E, F &isin; F in a discrete probability space:<div class='eq'>P(E &#8746; F) = P(E) + P(F) &minus; P(EF)</div><b>Proof</b> &mdash; write each set as a union of disjoint pieces:<div class='eq'>P(E) + P(F) = [P(E&#8745;F) + P(E&#8745;F<sup>c</sup>)] + [P(E&#8745;F) + P(F&#8745;E<sup>c</sup>)] = P(E&#8746;F) + P(E&#8745;F)</div>The intersection gets counted twice, so subtract it once.<p style='margin-top:10px'><b>Remark 1.4.4 &mdash; two immediate consequences.</b> Countable additivity gives P(E) = &sum;<sub>&omega;&isin;E</sub>P(&omega;), from which:</p><div class='eq'><b>Normalization:</b> P(E) + P(E<sup>c</sup>) = 1<br><br><b>Monotonicity:</b> E &sub; F &rArr; P(F) = P(E) + P(E<sup>c</sup>F) &ge; P(E), since P(E<sup>c</sup>F) &ge; 0</div><p style='margin-top:8px'>The definition of a discrete probability space is a direct generalization of the axioms for propositions (Def 1.1.7): nonnegativity for propositions becomes nonnegativity for subsets, &ldquo;P = 1 when certain&rdquo; becomes P(&Omega;) = 1, and <b>finite additivity is strengthened to countable additivity</b>.</p>",
+   "r": {
+    "rot": "the addition rule is just don't-double-count. add the two probabilities, then subtract the overlap you counted twice. normalization says something and its negation together cover everything, so they sum to 1. monotonicity says a bigger set can't have smaller probability &mdash; obvious, and worth having stated, because it's the thing you lean on whenever you bound one probability by another. all three fall straight out of &ldquo;the probability of a set is the sum over its elements.&rdquo;",
+    "ex": "The upgrade from finite to countable additivity is deliberate. Up to &sect;1.4 only finitely many propositions were in play, so finite additivity sufficed. Infinite sets and infinite sums need the countable version, and it is strictly stronger &mdash; it is the standard assumption throughout probability theory.",
+    "why": "Monotonicity is the workhorse behind every bound in the book: it's what lets Markov's inequality (&sect;1.9) compare P(X &ge; a) against an expectation, and what makes the union bound in the Bonferroni proof (&sect;6.3.3) legal.",
+    "math": "P(E&#8746;F) = P(E) + P(F) &minus; P(EF). P(E) + P(E<sup>c</sup>) = 1. E &sub; F &rArr; P(E) &le; P(F)."
+   }
+  },
+  {
+   "id": "v3c1d5",
+   "s": "1.4",
+   "page": 41,
+   "q": "Give the three conditioning rules in set form. What general strategy does Nota Bene 1.4.18 recommend?",
+   "a": "<b>Definition 1.4.13.</b> For A with P(A) &gt; 0, the conditional probability of B given A is P(B|A) = P(B &#8745; A)/P(A). <b>Theorem 1.4.14</b> then carries the propositional rules over verbatim:<div class='eq'><b>Product rule:</b> P(AB) = P(A|B)P(B)<br><br><b>Law of total probability:</b> for a partition B&#8321;,&hellip;,B<sub>n</sub> of &Omega;,&nbsp;&nbsp;P(A) = &sum;<sub>i</sub> P(A|B<sub>i</sub>)P(B<sub>i</sub>)<br><br><b>Bayes' theorem:</b> P(A|B) = P(B|A)P(A)/P(B)</div><b>Proposition 1.4.15.</b> The conditioning update P<sub>new</sub>(B) = P(B|A) is itself a genuine probability measure on (&Omega;,F) &mdash; so you can condition again, and again.<p style='margin-top:10px'><b>Nota Bene 1.4.18 &mdash; the strategy.</b> Whenever a probability seems hard to compute in the abstract, but <b>would be easy if you only knew something else</b>, use the law of total probability and condition on the events that make things easy.</p>",
+   "r": {
+    "rot": "conditioning in set language is the same three rules as before, now with intersections instead of conjunctions. the one worth internalizing is the <b>strategy</b>, not the formulas: when a probability looks impossible, ask &ldquo;what would i need to know to make this easy?&rdquo; then condition on that and average back over it. it converts one hard problem into several easy ones plus a weighted sum. and because the updated measure is still a legitimate probability measure, you can keep doing it.",
+    "ex": "Example 1.4.17 is the elegant one. Flip until heads; what is P(E), the probability of an even number of flips? Condition on the first flip. If it's heads the game is over on an odd flip, so P(E|H&#8321;) = 0. If not, the game restarts with even and odd <b>swapped</b>, so P(E|H&#8321;<sup>c</sup>) = 1 &minus; P(E). Hence P(E) = (1&minus;P(E))(1&minus;p), giving <b>P(E) = (1&minus;p)/(2&minus;p)</b>.",
+    "why": "That self-referential trick &mdash; conditioning on the first step and recognizing the rest as a copy of the original problem &mdash; recurs constantly. It's exactly how Example 1.7.17 solves the three-doors video game (E[X] = 108 points), and it is the seed of the renewal arguments behind Markov chains.",
+    "math": "P(B|A) = P(B&#8745;A)/P(A). Total probability over a partition; Bayes needs P(A) &gt; 0. P<sub>new</sub>(&middot;) = P(&middot;|A) is a probability measure."
+   }
+  },
+  {
+   "id": "v3c1d6",
+   "s": "1.4",
+   "page": 44,
+   "q": "Define mutual independence for a collection of events. Why isn't pairwise independence enough?",
+   "a": "<b>Definition 1.4.23.</b> A collection C = {E<sub>i</sub>}<sub>i&isin;I</sub> is <b>mutually independent</b> if for <b>every</b> finite subcollection {E<sub>i<sub>k</sub></sub>}<sub>k=1</sub><sup>m</sup>:<div class='eq'>P( &#8745;<sub>k=1</sub><sup>m</sup> E<sub>i<sub>k</sub></sub> ) = &prod;<sub>k=1</sub><sup>m</sup> P(E<sub>i<sub>k</sub></sub>)</div><b>Every</b> subcollection, not just the pairs. That is the whole subtlety.<p style='margin-top:10px'><b>Unexample 1.4.24 &mdash; pairwise is strictly weaker.</b> Roll two fair dice. Let A = &ldquo;1 on the first die,&rdquo; B = &ldquo;1 on the second,&rdquo; C = &ldquo;the sum is 7.&rdquo;</p><div class='eq'>P(A) = P(B) = P(C) = 1/6<br>P(A&#8745;B) = P(B&#8745;C) = P(C&#8745;A) = 1/36&nbsp;&nbsp;&mdash; all three pairs independent<br><br>P(A&#8745;B&#8745;C) = <b>0</b>&nbsp;&nbsp;&ne;&nbsp;&nbsp;(1/6)&sup3; = P(A)P(B)P(C)</div>&mdash; because a double 1 sums to 2, never 7. Pairwise independent, <b>not</b> mutually independent.<p style='margin-top:8px'>(Example 1.4.25 shows the honest case: heads on the first, second and third of three flips is mutually independent &mdash; all three pairs give &frac14; and the triple gives ⅛.)</p>",
+   "r": {
+    "rot": "independence for a whole collection isn't just &ldquo;every pair is independent.&rdquo; you need <b>every</b> subset to factor. the two-dice example shows why: first die is 1, second die is 1, sum is 7. take any two of those and they're independent, honestly. take all three and the probability is <b>zero</b>, because 1 and 1 makes 2, not 7. so knowing any one tells you nothing, knowing any two tells you everything. pairwise independence is a genuinely weaker condition and the gap is not exotic.",
+    "ex": "The pattern is worth recognizing: any two of the three leave the third free, but two of them <b>determine</b> the third. Whenever your events satisfy a global constraint, expect pairwise independence without mutual independence.",
+    "why": "It matters because &ldquo;i.i.d.&rdquo; means <b>mutually</b> independent (&sect;1.9.2 cites this definition), and the sample-mean variance calculation Var(&mu;&#770;<sub>n</sub>) = &sigma;&sup2;/n leans on it. Pairwise would actually suffice for that one, but not for the joint p.m.f. factoring &mdash; which is what the whole likelihood machinery needs.",
+    "math": "Mutual: every finite subcollection factors. Pairwise: only m = 2. Pairwise &nrArr; mutual."
+   }
+  },
+  {
+   "id": "v3c1e1",
+   "s": "1.5",
+   "page": 45,
+   "q": "Define a random variable. Why did Polya object to the name?",
+   "a": "A random variable X on (&Omega;, &Fscr;, P) is a <b>function</b> X: &Omega; &rarr; S &#8212; it assigns a value to each outcome. Polya's complaint: it is neither random nor a variable. It's a deterministic function, and the randomness lives in which &omega; &isin; &Omega; gets drawn, not in X itself. <span class='muted'>(Remark 1.5.2)</span><p style='margin-top:10px'>The <b>support</b> supp(X) is the set of values X actually takes with positive probability. {X = x} is shorthand for the event {&omega; &isin; &Omega; : X(&omega;) = x} &sube; &Omega;.</p>",
+   "r": {
+    "rot": "worst-named object in mathematics and everyone agrees. it's a <i>function</i>. it is completely deterministic. feed it an outcome, get a number, same number every time. the randomness is upstream &#8212; in which outcome nature hands you. X is just the meter reading. polya said this out loud and we named it badly anyway.",
+    "ex": "Two coin flips, &Omega; = {HH, HT, TH, TT}. Let X = number of heads. Then X(HH) = 2, X(HT) = 1, X(TH) = 1, X(TT) = 0. Nothing random in that table &#8212; it's a lookup. supp(X) = {0, 1, 2}.",
+    "why": "Getting this right prevents a whole class of confusion later. E[X|Y] being <i>a random variable</i> (&#167;1.7) only makes sense once you see random variables as functions &#8212; E[X|Y] is the function y &#8614; E[X|Y=y] composed with Y. Students who think of X as <q>a random number</q> never recover from that one.",
+    "math": "X: &Omega; &rarr; S. supp(X) = {x : P(X = x) &gt; 0}. {X = x} := X<sup>&minus;1</sup>({x}) &sube; &Omega;."
+   }
+  },
+  {
+   "id": "v3c1e2",
+   "s": "1.5",
+   "page": 46,
+   "q": "What is a p.m.f.? Can two different random variables share one?",
+   "a": "The probability mass function g<sub>X</sub>(x) = P(X = x) gives the probability of each value in the support. It is the <b>distribution</b> of X.<p style='margin-top:10px'>Yes &#8212; many different random variables can have the same support and the same distribution while being entirely different functions on &Omega;. <q>X and Y have the same distribution</q> is much weaker than <q>X = Y.</q> <span class='muted'>(Remark 1.5.7)</span></p><p><b>Bernoulli:</b> any distribution with support {0,1}. <b>Uniform on finite S:</b> g(x) = 1/|S|. <b>Categorical:</b> p = (p<sub>1</sub>,&#8230;,p<sub>d</sub>) with &Sigma;p<sub>i</sub> = 1.</p>",
+   "r": {
+    "rot": "the p.m.f. is the distribution's fingerprint &#8212; how much probability sits on each value. two random variables can have identical fingerprints and still be different functions. flip a coin: <q>heads = 1</q> and <q>tails = 1</q> are both bernoulli(&frac12;), same distribution, but they're never equal to each other. same shape, different object. this trips people constantly.",
+    "ex": "X = 1 if the coin is heads; Y = 1 if the coin is tails. Both are Bernoulli(&frac12;) &#8212; identical distributions. But X + Y = 1 always, so they are certainly not the same random variable.",
+    "why": "Proposition 1.6.2 says expectation depends <i>only</i> on the distribution, not on the underlying &Omega;. That's what licenses the entire sampling program in &#167;1.10 &#8212; if you only need the distribution, you can sample from any convenient random variable that shares it. The distinction is what makes Monte Carlo legal.",
+    "math": "g<sub>X</sub>(x) = P(X = x), &Sigma;<sub>x&isin;supp(X)</sub> g<sub>X</sub>(x) = 1. X ~ Y means g<sub>X</sub> = g<sub>Y</sub>, which does not mean X = Y."
+   }
+  },
+  {
+   "id": "v3c1e3",
+   "s": "1.5",
+   "page": 47,
+   "q": "Define the Bernoulli and uniform distributions. How are they related?",
+   "a": "<b>Definition 1.5.11 (Bernoulli).</b> Any distribution g with support {0,1} is Bernoulli. For X : &Omega; &rarr; {0,1} with g<sub>X</sub>(1) = p, write X ~ Bernoulli(p):<div class='eq'>g<sub>X</sub>(x) = p<sup>x</sup>(1&minus;p)<sup>1&minus;x</sup> = p if x = 1, 1&minus;p if x = 0</div>The exponent form is the useful one &mdash; it collapses the two cases into a single expression that survives being multiplied over a sample.<p style='margin-top:8px'><b>Definition 1.5.13 (Uniform).</b> For finite S, g(x) = 1/|S|, written X ~ Uniform(S).</p><div class='eq'>Bernoulli(&frac12;) <b>is</b> Uniform({0,1})&nbsp;&nbsp;(Example 1.5.14)</div><b>They overlap but neither contains the other.</b> Bernoulli is about the <b>support</b> being two-valued and allows any p; uniform is about the <b>probabilities</b> being equal and allows any finite support. They coincide exactly at p = &frac12; on two outcomes.<p style='margin-top:8px'>Example 1.5.15: the triple-coin-flip vector X = (X&#8321;,X&#8322;,X&#8323;) is uniform on its eight-element support, every outcome having probability ⅛.</p>",
+   "r": {
+    "rot": "bernoulli is the yes/no distribution &mdash; one parameter p, the chance of yes. uniform is the everything-equally-likely distribution on any finite set. write bernoulli as p<sup>x</sup>(1&minus;p)<sup>1&minus;x</sup> rather than as two cases, because that single expression is what you multiply together over a whole dataset to get a likelihood. and the two families meet in exactly one place: a fair coin. bernoulli(&frac12;) and uniform on {0,1} are the same distribution.",
+    "ex": "Example 1.5.12: let E be 1 if there's a magnitude-6.0 earthquake in Salt Lake City this week and 0 otherwise. If that probability is p, then E ~ Bernoulli(p) &mdash; nothing about coins required.",
+    "why": "Bernoulli is the atom the rest of Chapter 1 is built from: sum n of them and you get the binomial (&sect;1.9.3); its indicator form 1<sub>E</sub> ~ Bernoulli(P(E)) is the bridge from probability to expectation; and the p<sup>x</sup>(1&minus;p)<sup>1&minus;x</sup> form is exactly what the likelihood in &sect;2.3.3 multiplies.",
+    "math": "Bernoulli(p): supp = {0,1}, g(x) = p<sup>x</sup>(1&minus;p)<sup>1&minus;x</sup>. Uniform(S): g(x) = 1/|S|. Bernoulli(&frac12;) = Uniform({0,1})."
+   }
+  },
+  {
+   "id": "v3c1e4",
+   "s": "1.5",
+   "page": 48,
+   "q": "Define the categorical distribution. Why does the book insist on the vector form, and what does Nota Bene 1.5.20 warn against?",
+   "a": "<b>Definition 1.5.16.</b> For p = (p&#8321;,&hellip;,p<sub>d</sub>) with &sum;p<sub>i</sub> = 1 and S = {e&#8321;,&hellip;,e<sub>d</sub>} the standard basis of R<sup>d</sup>, X has <b>vector-categorical</b> distribution if supp(X) = S and<div class='eq'>g<sub>X</sub>(e<sub>i</sub>) = P(X = e<sub>i</sub>) = p<sub>i</sub></div>Such an X is said to be <b>one-hot encoded</b>; write X ~ Cat(p). It generalizes Bernoulli to more than two outcomes &mdash; e.g. a possibly unfair die.<p style='margin-top:10px'><b>Nota Bene 1.5.20 &mdash; the warning.</b> Categorical outcomes have <b>no ordinal or numerical relationship</b>. Most texts define categorical variables with scalar support {1,2,&hellip;,d} instead, and do not even mention the vector convention.</p><div class='eq'>The scalar form <b>strongly and misleadingly suggests</b> that 1, 2, 3&hellip; can be added, multiplied, or at least ranked &mdash; which is almost never the case.</div><b>Many people have made serious mistakes by accidentally treating categorical values as numbers.</b> In code, store them as vectors e<sub>i</sub>, or in a non-numerical format (strings, chars). When the scalar form is unavoidable, the book calls the indices <b>dummy indices</b> as a reminder that the ordering is arbitrary.<p style='margin-top:8px'>The vector form separates each category into its own dimension, which is what makes it safe.</p>",
+   "r": {
+    "rot": "a categorical variable picks one of d options &mdash; red, sunny, virginica. the trap is <b>encoding</b> it. write red = 1, green = 2, blue = 3 and your model can now compute (red + blue)/2 = green, which is nonsense, and it will happily do so without complaining. the one-hot form gives each category its own coordinate so there's nothing to average. it's not pedantry; treating category codes as numbers is a genuinely common and genuinely destructive bug.",
+    "ex": "Example 1.5.17: rain 20%, sun 50%, overcast 30% maps to Cat((0.2, 0.5, 0.3)) with rain &rarr; e&#8321;, sun &rarr; e&#8322;, overcast &rarr; e&#8323;. Example 1.5.18: Cat(p,&hellip;,p) is exactly uniform on {e&#8321;,&hellip;,e<sub>d</sub>}.",
+    "why": "One-hot encoding shows up constantly downstream &mdash; it's how one-versus-rest multiclass logistic regression works (&sect;5.6.2), how the categorical cross-entropy loss is written (Remark 5.6.5), and it's the source of the linear dependence that forced dropping a column in the &sect;5.3.8 regression.",
+    "math": "Cat(p) on {e&#8321;,&hellip;,e<sub>d</sub>}, g(e<sub>i</sub>) = p<sub>i</sub>, &sum;p<sub>i</sub> = 1. E[X] = p, Cov(X) = diag(p) &minus; pp<sup>T</sup>. Scalar form loses the no-order guarantee."
+   }
+  },
+  {
+   "id": "v3c1e5",
+   "s": "1.5",
+   "page": 46,
+   "q": "How does a random variable partition the sample space, and what makes one multivariate?",
+   "a": "<b>Remark 1.5.4 &mdash; the partition.</b> For x &isin; supp(X), write {X = x} as shorthand for the event X<sup>&minus;1</sup>(x) = {&omega; &isin; &Omega; : X(&omega;) = x}. Discarding the outcomes with P(&omega;) = 0 (they never occur), the collection<div class='eq'>{ {X = x} }<sub>x&isin;supp(X)</sub>&nbsp;&nbsp;is a <b>partition</b> of &Omega;</div>&mdash; mutually exclusive and collectively exhaustive. <b>Every random variable slices the sample space into the fibres of its own values.</b><p style='margin-top:10px'><b>Dimension (Definition 1.5.1).</b> X : &Omega; &rarr; R<sup>d</sup> is <b>univariate</b> for d = 1, <b>bivariate</b> for d = 2, <b>multivariate</b> for d &ge; 2. Any function from &Omega; to R<sup>d</sup> is a random variable &mdash; there is no further condition in the discrete case, because F = 2<sup>&Omega;</sup> contains everything.</p><p><b>Example 1.5.5.</b> Three fair coin flips. Each X<sub>k</sub> = 1 if the kth flip is heads is univariate; the count Y = &sum;<sub>k</sub>X<sub>k</sub> is univariate; but X = (X&#8321;,X&#8322;,X&#8323;) is <b>multivariate</b>, with</p><div class='eq'>supp(X) = {(0,0,0),(1,0,0),(0,1,0),(0,0,1),(1,1,0),(1,0,1),(0,1,1),(1,1,1)}</div>",
+   "r": {
+    "rot": "a random variable chops &Omega; into groups &mdash; all the outcomes sending X to 3, all the ones sending it to 4, and so on. those groups don't overlap and they cover everything, so they're a partition. that's the fact that makes the law of total probability apply to any random variable for free, since a partition is exactly what that law needs. and multivariate just means the function outputs a vector: three coin flips can be three separate variables, or one variable with three coordinates, and which you want depends on the question.",
+    "ex": "Same experiment, three legitimate descriptions: the individual flips X<sub>k</sub>, the count Y (which throws away the order), and the full vector X (which keeps it). Y is a function of X, so it can only lose information &mdash; and that is often what you want.",
+    "why": "The partition property is quietly load-bearing. It's why the law of total probability can be stated over the events {Y = y} (Remark 1.7.4), why the tower property holds, and why conditioning on a random variable is well defined at all.",
+    "math": "{X = x} = X<sup>&minus;1</sup>(x); these partition &Omega; over x &isin; supp(X). X : &Omega; &rarr; R<sup>d</sup>; every such function is a random variable when F = 2<sup>&Omega;</sup>."
+   }
+  },
+  {
+   "id": "v3c1f1",
+   "s": "1.6",
+   "page": 50,
+   "q": "Define expected value. Why is linearity of expectation so much stronger than it looks?",
+   "a": "<div class='eq'>E[X] = &Sigma;<sub>x &isin; supp(X)</sub> x &middot; g<sub>X</sub>(x)</div><b>Linearity:</b> E[aX + bY] = aE[X] + bE[Y] &#8212; and this holds <b>whether or not X and Y are independent</b>. That is the surprise. Almost every other identity in the chapter (variance, covariance) needs independence; linearity never does.",
+   "r": {
+    "rot": "linearity of expectation does not care about your dependencies. at all. X and Y can be tangled beyond recognition, correlated, adversarial, whatever &#8212; E[X+Y] = E[X] + E[Y] anyway. every other rule in this chapter has an independence asterisk. this one has none. that's why it solves problems that look impossible.",
+    "ex": "n people throw their hats in a pile and each grabs one at random. Expected number who get their own hat? The events are horribly dependent. But let X<sub>i</sub> = 1 if person i gets their hat. E[X<sub>i</sub>] = 1/n. So E[&Sigma;X<sub>i</sub>] = n &middot; (1/n) = 1. Always 1, for any n. Try that without linearity.",
+    "why": "Remark 1.6.16 flags exactly this &#8212; the indicator-plus-linearity combo is the most powerful elementary technique in the chapter. Decompose a horrible count into a sum of indicators, take expectations termwise, ignore all dependence. You will use it constantly.",
+    "math": "E[X] = &Sigma;x g<sub>X</sub>(x). E[aX + bY] = aE[X] + bE[Y], no independence required. LOTUS: E[k(X)] = &Sigma;<sub>x</sub> k(x)g<sub>X</sub>(x)."
+   }
+  },
+  {
+   "id": "v3c1f2",
+   "s": "1.6",
+   "page": 53,
+   "q": "What is an indicator random variable, and what is the identity that makes it useful?",
+   "a": "For an event E &sube; &Omega;, the indicator <b>1</b><sub>E</sub> is 1 when E occurs and 0 otherwise. <span class='muted'>(Definition 1.6.12)</span><div class='eq'>1<sub>E</sub> ~ Bernoulli(P(E))&nbsp;&nbsp;and&nbsp;&nbsp;E[1<sub>E</sub>] = P(E)</div>That identity &#8212; <b>the expectation of an indicator is the probability of the event</b> &#8212; is the bridge between expectation and probability. It converts counting problems into expectation problems and vice versa.",
+   "r": {
+    "rot": "indicators are how you smuggle probability into an expectation. E[1<sub>E</sub>] = P(E). that's the whole trick. any probability is secretly an expectation, so anything you can do to expectations &#8212; linearity, especially &#8212; you can now do to probabilities. counting problem too hard? make it a sum of indicators and let linearity eat it.",
+    "ex": "P(X &isin; A) = E[1<sub>A</sub>(X)], which is what makes Monte Carlo estimation of probabilities work in &#167;1.10: draw x<sub>1</sub>,&#8230;,x<sub>n</sub>, then P(X &isin; A) &asymp; (1/n)&Sigma;1<sub>A</sub>(x<sub>i</sub>). You are just averaging a bunch of 0s and 1s.",
+    "why": "This one line is load-bearing for the rest of the book. It's how Markov's inequality is proved (&#167;1.9), how sampling estimates probabilities (&#167;1.10), and how you'll estimate any p.m.f. you can't compute analytically.",
+    "math": "1<sub>E</sub>(&omega;) = 1 if &omega; &isin; E, else 0. E[1<sub>E</sub>] = 1&middot;P(E) + 0&middot;P(&not;E) = P(E)."
+   }
+  },
+  {
+   "id": "v3c1f3",
+   "s": "1.6",
+   "page": 52,
+   "q": "State the law of the unconscious statistician and Jensen's inequality. Why is LOTUS a labour-saving result?",
+   "a": "<b>LOTUS (Proposition 1.6.7(ii)).</b> If X : &Omega; &rarr; R<sup>d</sup> and h : R<sup>d</sup> &rarr; R<sup>m</sup>, then Y = h &compfn; X is a random variable and<div class='eq'>E[h(X)] = &sum;<sub>x</sub> h(x) P(X = x) = &sum;<sub>x</sub> h(x) g<sub>X</sub>(x)</div><b>The labour it saves:</b> to compute E[h(X)] you do <b>not</b> have to work out the new p.m.f. g<sub>h(X)</sub>. Use the old g<sub>X</sub> and push h inside the sum. The name is a joke &mdash; it's what an unthinking statistician might use instead of the definition, and the good news is that the unconscious statistician still gets the right answer.<p style='margin-top:10px'><b>Jensen's inequality (Proposition 1.6.7(iii)).</b> If h is <b>convex</b> on supp(X), then</p><div class='eq'>h( E[X] ) &le; E[ h(X) ]</div><b>The function of the average is at most the average of the function.</b> The proof is one line from the general Jensen (Vol 2, Thm 15.2.6) applied to h(&sum;x g<sub>X</sub>(x)).",
+   "r": {
+    "rot": "LOTUS: to average h(X), don't go and work out the distribution of h(X). just weight h(x) by the probabilities you already had for x. it sounds too easy, which is exactly why it's named after the statistician who does it without thinking &mdash; and that statistician is right. jensen: for a convex function, bending happens after averaging. E[X&sup2;] &ge; E[X]&sup2; is the case everyone meets first, and it's the reason variance is never negative.",
+    "ex": "Jensen with h(x) = x&sup2; gives E[X&sup2;] &ge; E[X]&sup2;, i.e. Var(X) = E[X&sup2;] &minus; E[X]&sup2; &ge; 0. The nonnegativity of variance is a special case of convexity, not a separate fact.",
+    "why": "LOTUS is used everywhere without comment &mdash; it's how E[X<sup>k</sup>] = &sum;x<sup>k</sup>g(x) defines moments (&sect;4.2.1), and how the characteristic function E[e<sup>i&langle;t,X&rangle;</sup>] is computed at all. Jensen reappears as the tool asked for in Exercise 5.1 to prove the logistic Hessian is positive definite.",
+    "math": "E[h(X)] = &sum;<sub>x</sub>h(x)g<sub>X</sub>(x), no g<sub>h(X)</sub> needed. h convex &rArr; h(E[X]) &le; E[h(X)]; reverse for concave."
+   }
+  },
+  {
+   "id": "v3c1f4",
+   "s": "1.6",
+   "page": 53,
+   "q": "Define the joint and marginal p.m.f.s. How do you marginalize, and why is it legal?",
+   "a": "For a multivariate X = (X&#8321;,&hellip;,X<sub>d</sub>), the p.m.f. at x is the <b>joint p.m.f.</b><div class='eq'>g<sub>X</sub>(x) = P(X&#8321;=x&#8321;, X&#8322;=x&#8322;, &hellip;, X<sub>d</sub>=x<sub>d</sub>)</div>Two random variables X and Y can be <b>joined</b> into Z = (X,Y) with g<sub>Z</sub>(x,y) = P(X=x, Y=y).<p style='margin-top:10px'><b>Marginalizing</b> is the reverse &mdash; recovering a component's own p.m.f. The justification is a partition: for any fixed x,</p><div class='eq'>{X = x} = &#8746;<sub>y&isin;supp(Y)</sub> {X = x, Y = y}</div>and those parts are <b>disjoint</b>, so additivity lets you simply add:<div class='eq'>g<sub>X</sub>(x) = &sum;<sub>y</sub> g<sub>(X,Y)</sub>(x,y)&nbsp;&nbsp;&nbsp;&nbsp;g<sub>Y</sub>(y) = &sum;<sub>x</sub> g<sub>(X,Y)</sub>(x,y)</div><b>Sum out the variable you don't care about.</b> These are the <b>marginal</b> p.m.f.s of Z.<p style='margin-top:8px'>Example 1.6.8: for the triple coin flip, g<sub>X&#8322;</sub>(x) = &sum;<sub>x&#8321;</sub>&sum;<sub>x&#8323;</sub>P(X&#8321;=x&#8321;,X&#8322;=x,X&#8323;=x&#8323;) = 4&middot;(1/8) = &frac12;, as it must be.</p>",
+   "r": {
+    "rot": "the joint p.m.f. is the full table &mdash; every combination of values and its probability. marginalizing is collapsing the table along one axis: to get the distribution of X on its own, add up each row across all values of Y. it's legal because for a fixed x, the events &ldquo;X = x and Y = y&rdquo; over all y are disjoint and cover &ldquo;X = x&rdquo; exactly, so probabilities just add. the name comes from writing the row sums in the margin of the table.",
+    "ex": "The sampling version is even simpler (&sect;1.10): if x<sub>i</sub> = (y<sub>i</sub>, z<sub>i</sub>) is a draw from the joint, then <b>just discard the z<sub>i</sub></b> and the remaining y's are a draw from the marginal. Marginalizing a sample requires no computation at all.",
+    "why": "Joint and marginal are the two ends conditioning sits between: g<sub>X|Y</sub>(x|y) = g<sub>X,Y</sub>(x,y)/g<sub>Y</sub>(y) (Remark 1.7.4) is literally joint over marginal. Independence is then exactly the case where the joint <b>equals</b> the product of the marginals.",
+    "math": "g<sub>X</sub>(x) = &sum;<sub>y</sub>g<sub>X,Y</sub>(x,y). Legal by disjointness of {X=x,Y=y} over y plus additivity."
+   }
+  },
+  {
+   "id": "v3c1f5",
+   "s": "1.6",
+   "page": 53,
+   "q": "Define independence for random variables, and prove that it makes expectations multiply.",
+   "a": "<b>Definition 1.6.9.</b> X and Y are <b>independent</b> (X &perp;&perp; Y) if all pairs of events {X = x} and {Y = y} are independent &mdash; equivalently, if the <b>joint p.m.f. factors into the marginals</b>:<div class='eq'>P(X=x, Y=y) = P(X=x)P(Y=y)&nbsp;&nbsp;&hArr;&nbsp;&nbsp;g<sub>X,Y</sub>(x,y) = g<sub>X</sub>(x)g<sub>Y</sub>(y)</div><b>Proposition 1.6.10.</b> If X &perp;&perp; Y then E[XY] = E[X]E[Y]. The proof is the factoring plus a rearrangement of the double sum:<div class='eq'>E[XY] = &sum;<sub>x</sub>&sum;<sub>y</sub> xy g<sub>X,Y</sub>(x,y) = &sum;<sub>x</sub>&sum;<sub>y</sub> xy g<sub>X</sub>(x)g<sub>Y</sub>(y)<br><br>&nbsp;&nbsp;&nbsp;&nbsp;= ( &sum;<sub>x</sub> x g<sub>X</sub>(x) )( &sum;<sub>y</sub> y g<sub>Y</sub>(y) ) = E[X]E[Y]</div><p style='margin-top:8px'><b>Contrast this with linearity.</b> E[aX + bY] = aE[X] + bE[Y] holds <b>always</b>. E[XY] = E[X]E[Y] needs independence. Sums are free; products are not.</p>",
+   "r": {
+    "rot": "independent means the joint table is just the outer product of the two margins &mdash; knowing one variable tells you nothing about the other. the payoff is that expectations of <b>products</b> factor, which is the one thing linearity can't give you. keep the asymmetry straight: E[X + Y] = E[X] + E[Y] no matter what, but E[XY] = E[X]E[Y] only when they're independent. every place a covariance term appears is a place where that second identity failed.",
+    "ex": "Example 1.6.11: two fair dice, joint g = 1/36 and margins 1/6 each, so the joint factors and E[XY] = (3.5)&sup2; = 12.25. That matches the intuition &mdash; each roll happens without any reference to or interaction with the other.",
+    "why": "This proposition is the engine of &sect;1.8: Cov(X,Y) = E[XY] &minus; E[X]E[Y], so independence forces the covariance to zero (Cor 1.8.8), which is what makes variances add over independent sums &mdash; and hence what makes Var(&mu;&#770;<sub>n</sub>) = &sigma;&sup2;/n and the whole law of large numbers work.",
+    "math": "X &perp;&perp; Y &hArr; g<sub>X,Y</sub> = g<sub>X</sub>g<sub>Y</sub> &rArr; E[XY] = E[X]E[Y]. Converse false (Unexample 1.8.9)."
+   }
+  },
+  {
+   "id": "v3c1g1",
+   "s": "1.7",
+   "page": 58,
+   "q": "E[X|Y=y] and E[X|Y] &#8212; what kind of object is each?",
+   "a": "<b>E[X|Y=y]</b> is a <i>number</i>: the expectation of X computed under the conditional p.m.f. given the specific value y. But it is a number that <i>depends on y</i> &#8212; so it defines a function of y.<p style='margin-top:10px'><b>E[X|Y]</b> is that function composed with Y, which makes it a <b>random variable</b> &#8212; one whose value is E[X|Y=y] whenever Y takes the value y. <span class='muted'>(Remarks 1.7.11&#8211;1.7.12)</span></p><p>This distinction is why you can take an expectation <i>of</i> E[X|Y] &#8212; which is exactly what the tower property does.</p>",
+   "r": {
+    "rot": "E[X|Y=y] is a number. you plugged in a specific y, you got a number. E[X|Y] is what happens when you <i>don't</i> plug anything in &#8212; you leave y free, so now it's a function, and a function of a random variable is a random variable. this is the exact spot where half the class gets lost. one has a value plugged in. the other doesn't. that's the whole difference.",
+    "ex": "Y = which of two dice you roll (fair d6 or loaded d6), X = the value. E[X|Y=fair] = 3.5, a number. E[X|Y] is the random variable that equals 3.5 when you picked the fair die and something else when you picked the loaded one &#8212; it's random because <i>which die</i> is random.",
+    "why": "You cannot state the tower property or the law of total variance without this. E[E[X|Y]] only parses if the inner object is a random variable &#8212; otherwise there's nothing to take an outer expectation of. Get this wrong and &#167;1.8's law of total variance is unreadable.",
+    "math": "E[X|Y=y] = &Sigma;<sub>x</sub> x g<sub>X|Y</sub>(x|y) &isin; &Ropf;. E[X|Y] := &phi;(Y) where &phi;(y) = E[X|Y=y]. So E[X|Y] is &Omega;-measurable &#8212; a random variable."
+   }
+  },
+  {
+   "id": "v3c1g2",
+   "s": "1.7",
+   "page": 60,
+   "q": "State the law of total expectation (the tower property). What is it good for?",
+   "a": "<div class='eq'>E[X] = E[ E[X|Y] ]</div>Equivalently, over a partition A<sub>1</sub>,&#8230;,A<sub>n</sub> of &Omega;:<div class='eq'>E[X] = &Sigma;<sub>i</sub> E[X|A<sub>i</sub>] P(A<sub>i</sub>)</div>It is the total-probability move applied to expectations: <b>condition on something you don't know, compute the easy conditional expectation, then average over the thing you conditioned on</b>. <span class='muted'>(Thm 1.7.16, Cor 1.7.18)</span><p style='margin-top:10px'>Also: if X &perp;&perp; Y then E[X|Y] = E[X] &#8212; conditioning on something independent tells you nothing.</p>",
+   "r": {
+    "rot": "tower property is the <q>i'll figure it out later</q> of probability. you don't know Y? fine. pretend you do, solve the easy version for each possible Y, then average those answers weighted by how likely each Y was. condition on the thing that's blocking you, solve, un-condition. it turns one hard problem into several easy ones plus a weighted average.",
+    "ex": "Expected number of coin flips to get heads, where the coin is fair with prob &frac12; and two-headed with prob &frac12;. Condition on the coin: E[N|fair] = 2, E[N|two-headed] = 1. So E[N] = 2(&frac12;) + 1(&frac12;) = 1.5.",
+    "why": "This is the single most-used problem-solving technique in the back half of the book. It is how you handle hierarchical models, mixture distributions (&#167;GMM), hidden states in HMMs, and any process with an unobserved layer. Learn to reach for it whenever a problem has a hidden variable.",
+    "math": "E[X] = E[E[X|Y]] = &Sigma;<sub>y</sub> E[X|Y=y] g<sub>Y</sub>(y). X &perp;&perp; Y &rArr; E[X|Y] = E[X]."
+   }
+  },
+  {
+   "id": "v3c1g3",
+   "s": "1.7",
+   "page": 56,
+   "q": "Define the conditional p.m.f., both given an event and given a random variable. What does independence do to it?",
+   "a": "<b>Given an event (Definition 1.7.1).</b> For A &sub; &Omega; with P(A) &gt; 0:<div class='eq'>g<sub>X|A</sub>(x) = P(X = x | A)</div><b>Given a random variable (Definition 1.7.3).</b> Every Y defines a family of events {Y = y}, one per y &isin; supp(Y). Condition on those:<div class='eq'>g<sub>X|Y</sub>(x | y) = P(X = x | Y = y) = g<sub>X,Y</sub>(x,y) / g<sub>Y</sub>(y)</div>&mdash; joint over marginal (Remark 1.7.4). Because {Y = y}<sub>y</sub> is a <b>partition</b>, the law of total probability applies directly:<div class='eq'>g<sub>X</sub>(x) = &sum;<sub>y</sub> g<sub>X|Y</sub>(x|y) g<sub>Y</sub>(y)</div><b>Proposition 1.7.5.</b> If X &perp;&perp; Y then g<sub>X|Y</sub>(x|y) = g<sub>X</sub>(x) &mdash; conditioning changes nothing. One line: independence gives g<sub>X,Y</sub> = g<sub>X</sub>g<sub>Y</sub>, and the g<sub>Y</sub> cancels.",
+   "r": {
+    "rot": "conditioning a random variable is the same as conditioning an event, done once for every value the conditioning variable can take. the formula is joint divided by marginal &mdash; restrict attention to the slice where Y = y, then renormalize so it sums to 1. and independence is exactly the case where the slice looks like the whole thing: g<sub>X|Y</sub> = g<sub>X</sub>, conditioning is a no-op. that's the cleanest possible definition of &ldquo;Y tells you nothing about X.&rdquo;",
+    "ex": "Example 1.7.2, three fair flips with Y the number of heads: conditioning on A (first flip heads) gives g<sub>Y|A</sub>(2) = (2/8)/(4/8) = &frac12;; conditioning on D (at least one head) gives g<sub>Y|D</sub>(2) = (3/8)/(7/8) = 3/7. Different conditioning events, different renormalizations.",
+    "why": "The joint-over-marginal formula is the same one that reappears verbatim for densities in &sect;2.6.1 (f<sub>X|Y</sub> = f<sub>X,Y</sub>/f<sub>Y</sub>) and as the definition of the posterior in Bayesian estimation (&sect;4.6). It is the single most reused formula in the book.",
+    "math": "g<sub>X|Y</sub>(x|y) = g<sub>X,Y</sub>(x,y)/g<sub>Y</sub>(y), defined for y &isin; supp(Y). Independence &hArr; g<sub>X|Y</sub>(x|y) = g<sub>X</sub>(x) for all x,y."
+   }
+  },
+  {
+   "id": "v3c1g4",
+   "s": "1.7",
+   "page": 58,
+   "q": "Give the four properties of conditional expectation in Theorem 1.7.14.",
+   "a": "<div class='eq'>(i)&nbsp;&nbsp;P(A) &gt; 0 &rArr; E[X|A]P(A) = E[X 1<sub>A</sub>]<br><br>(ii)&nbsp;&nbsp;<b>Linearity:</b> E[aX + bY | Z=z] = aE[X|Z=z] + bE[Y|Z=z]<br><br>(iii)&nbsp;&nbsp;E[1<sub>&Omega;</sub> | Y=y] = 1&nbsp;&nbsp;(conditioning preserves constants)<br><br>(iv)&nbsp;&nbsp;<b>Pull-out:</b> E[X h(Y) | Y=y] = h(y) E[X | Y=y] for any real-valued h</div><p style='margin-top:6px'>Every proof runs the same way: multiply by P(&middot;), use property (i) to turn the conditional expectation into an expectation against an indicator, do the algebra, divide back out.</p><p><b>(iv) is the one to remember.</b> Once you have conditioned on Y, any function of Y is <b>a known constant</b> and comes straight out of the expectation. That is the defining intuition for conditional expectation.</p><p style='margin-top:8px'><b>Proposition 1.7.15.</b> If X and Y are independent, E[X|Y] = E[X]. Immediate from P(X=x|Y=y) = P(X=x).</p>",
+   "r": {
+    "rot": "four rules, and three are what you'd guess: it's linear, constants stay constants, and independence makes conditioning do nothing. the fourth is the real one. <b>once you've conditioned on Y, anything built out of Y is just a number</b>, so it slides out of the expectation. E[X&middot;h(Y) | Y = y] = h(y)&middot;E[X | Y = y]. that's the whole mental model for conditional expectation: pretend you've been told Y, treat it as known, do the ordinary expectation over what's left.",
+    "ex": "Property (i) is the workhorse of the proofs rather than something you use directly &mdash; it converts &ldquo;expectation given A, times the probability of A&rdquo; into a plain expectation of X against an indicator, where ordinary linearity applies.",
+    "why": "The pull-out property is what makes the tower property useful in practice: to compute E[Xh(Y)] you condition on Y, extract h(Y), and average. It's the manipulation behind the law of total variance and behind E[&beta;&#770;] = E[E[&beta;&#770;|X]] in &sect;5.2.3.",
+    "math": "E[X|A]P(A) = E[X1<sub>A</sub>]. Linear in X. E[Xh(Y)|Y=y] = h(y)E[X|Y=y]. X &perp;&perp; Y &rArr; E[X|Y] = E[X]."
+   }
+  },
+  {
+   "id": "v3c1g5",
+   "s": "1.7",
+   "page": 61,
+   "q": "Define conditional independence for random variables, given an event and given another random variable.",
+   "a": "X and Y are <b>conditionally independent given the event A</b> (with P(A) &gt; 0) if every pair of events {X = x}, {Y = y} is independent under the conditioned measure:<div class='eq'>P(X=x, Y=y | A) = P(X=x | A) P(Y=y | A)</div><b>Definition 1.7.20</b> states it more efficiently in p.m.f. form:<div class='eq'>g<sub>X,Y|A</sub>(x,y) = g<sub>X|A</sub>(x) g<sub>Y|A</sub>(y)&nbsp;&nbsp;for all x, y&nbsp;&nbsp;&nbsp;&nbsp;(X &perp;&perp; Y | A)</div><b>Definition 1.7.21 &mdash; given a random variable.</b> X and Y are conditionally independent given Z, written X &perp;&perp; Y | Z, if the conditional joint factors <b>for every value of Z</b>:<div class='eq'>g<sub>X,Y|Z</sub>(x, y | z) = g<sub>X|Z</sub>(x | z) g<sub>Y|Z</sub>(y | z)&nbsp;&nbsp;for all x, y, z</div><p style='margin-top:8px'><b>The shape is always the same:</b> independence is &ldquo;the joint factors,&rdquo; and conditional independence is &ldquo;the joint factors <b>once you have conditioned</b>,&rdquo; required at every value of the conditioning variable.</p>",
+   "r": {
+    "rot": "same definition as independence, run inside a conditioned world. X &perp;&perp; Y | Z means: <b>once you know Z, learning Y tells you nothing more about X.</b> not that X and Y are unrelated &mdash; they can be strongly related &mdash; but that all of the relationship was flowing through Z, and knowing Z has already given you it. note the &ldquo;for all z&rdquo;: it has to factor at every value of Z, not just on average.",
+    "ex": "The two are genuinely independent conditions in both directions. Conditioning can <b>destroy</b> independence as easily as create it &mdash; the two dice in Unexample 1.4.24 are independent until you condition on the sum being 7, after which each determines the other completely.",
+    "why": "This is the definition that makes causal models say anything at all: &sect;1.10's rule is that a node is conditionally independent of its non-descendants <b>given its parents</b>. And it's the assumption the naïve Bayes classifier makes and knows to be false &mdash; features conditionally independent given the class (&sect;5.7.1).",
+    "math": "X &perp;&perp; Y | Z &hArr; g<sub>X,Y|Z</sub>(x,y|z) = g<sub>X|Z</sub>(x|z)g<sub>Y|Z</sub>(y|z) for <b>all</b> x,y,z. Neither implies nor is implied by X &perp;&perp; Y."
+   }
+  },
+  {
+   "id": "v3c1g6",
+   "s": "1.7",
+   "page": 61,
+   "q": "State Theorem 1.7.22. In what sense is E[X|Y] the best approximation of X?",
+   "a": "<b>Theorem 1.7.22.</b> For univariate X and Y and <b>any</b> function h : R &rarr; R,<div class='eq'>E[ (X &minus; E[X|Y])&sup2; ] &le; E[ (X &minus; h(Y))&sup2; ]</div>with equality <b>if and only if</b> h(Y) = E[X|Y]. So among all functions of Y, the conditional expectation is the unique minimizer of mean squared error against X.<p style='margin-top:10px'><b>The proof is a calculus exercise in disguise.</b> Write h(Y) as a linear combination of indicators, h(Y) = &sum;<sub>y&prime;</sub>h(y&prime;)1<sub>Y=y&prime;</sub>, and treat the coefficients {h(y&prime;)} as the variables:</p><div class='eq'>E[(X&minus;h(Y))&sup2;] = E[X&sup2;] &minus; 2&sum;<sub>y&prime;</sub>h(y&prime;)E[X1<sub>Y=y&prime;</sub>] + &sum;<sub>y&prime;</sub>h(y&prime;)&sup2;E[1<sub>Y=y&prime;</sub>]</div>Differentiate with respect to each h(y&prime;) and set to zero:<div class='eq'>0 = 2( &minus;E[X | Y=y&prime;] + h(y&prime;) ) P(Y = y&prime;)&nbsp;&nbsp;&rArr;&nbsp;&nbsp;h(y&prime;) = E[X | Y=y&prime;]</div><p style='margin-top:8px'>The objective is a <b>quadratic</b> in the coefficients, so the stationary point is the minimum.</p>",
+   "r": {
+    "rot": "if you're only allowed to see Y and you have to guess X, what's the best guess? <b>E[X|Y]</b>, and best means smallest expected squared error. not one option among several &mdash; it beats every other function of Y, and it's the unique thing that does. the proof is nice: write your candidate function as a list of numbers (one per value of Y), differentiate the squared error with respect to each, set to zero, and each one solves to the conditional mean.",
+    "ex": "This is why regression is what it is. Given features X, the target you are chasing is E[Y|X] &mdash; &sect;5.1's assumption E[&epsilon;|X] = 0 says exactly that f(X) = E[Y|X], so linear regression is trying to approximate the best possible predictor with a linear one.",
+    "why": "It reframes conditional expectation from a computational device into an <b>optimal predictor</b>. Everything about squared-error loss in Chapter 5 inherits from it: mean squared error is minimized by the conditional mean, which is why MSE is the natural loss for regression and why the residuals are what's left over after the best guess.",
+    "math": "argmin<sub>h</sub> E[(X &minus; h(Y))&sup2;] = E[X|Y], uniquely. Objective is quadratic in the coefficients h(y&prime;)."
+   }
+  },
+  {
+   "id": "v3c1h1",
+   "s": "1.8",
+   "page": 62,
+   "q": "Define variance and covariance, and give the computational form of each.",
+   "a": "<div class='eq'>Var(X) = E[(X &minus; E[X])&sup2;] = E[X&sup2;] &minus; E[X]&sup2;</div><div class='eq'>Cov(X,Y) = E[(X &minus; E[X])(Y &minus; E[Y])] = E[XY] &minus; E[X]E[Y]</div>Note Cov(X,X) = Var(X) &#8212; variance is the self-covariance. <p style='margin-top:10px'>If X &perp;&perp; Y then Cov(X,Y) = 0 and Var(X+Y) = Var(X) + Var(Y). <b>The converse fails:</b> zero covariance does not imply independence.</p>",
+   "r": {
+    "rot": "variance: how far X sprawls from its own mean, squared so the negatives don't cancel. covariance: do X and Y sprawl <i>together</i>. the E[X&sup2;] &#8722; E[X]&sup2; form is the one you actually compute with. and the trap you will absolutely be tested on: independent &#10233; zero covariance, but zero covariance does NOT get you back to independent. that arrow only points one way.",
+    "ex": "Let X be uniform on {&#8722;1, 0, 1} and Y = X&sup2;. Then E[XY] = E[X&sup3;] = 0 and E[X]E[Y] = 0, so Cov = 0. But Y is a <i>function</i> of X &#8212; about as dependent as two variables get. Zero covariance, total dependence.",
+    "why": "Covariance only detects <i>linear</i> association. That blind spot is why correlation is a weak tool, why &#167;5 regression assumes a linear model explicitly, and why PCA &#8212; which is entirely an eigendecomposition of the covariance matrix &Sigma; &#8212; can only find linear structure in your data.",
+    "math": "Var(X) = E[X&sup2;] &#8722; E[X]&sup2;. Cov(X,Y) = E[XY] &#8722; E[X]E[Y]. Var(aX + b) = a&sup2;Var(X). Covariance is bilinear. &Sigma;<sub>ij</sub> = Cov(X<sub>i</sub>, X<sub>j</sub>), diagonal = variances."
+   }
+  },
+  {
+   "id": "v3c1h2",
+   "s": "1.8",
+   "page": 66,
+   "q": "State the law of total variance and read off what each term means.",
+   "a": "<div class='eq'>Var(X) = E[ Var(X|Y) ] + Var( E[X|Y] )</div><b>E[Var(X|Y)]</b> &#8212; the average variance left <i>within</i> each group after you know Y. Unexplained scatter.<br><b>Var(E[X|Y])</b> &#8212; how much the group means themselves move around. Variation <i>explained</i> by Y.<p style='margin-top:10px'>Total spread splits cleanly into within-group plus between-group. <span class='muted'>(Thm 1.8.21)</span></p>",
+   "r": {
+    "rot": "you've got scatter. some of it is because the groups differ from each other. some is because things wobble inside each group. total variance = wobble-within + spread-between. that's it. and this is secretly ANOVA, and secretly the bias-variance decomposition, and secretly R&sup2;. same identity wearing different hats across three courses.",
+    "ex": "Heights across a population. Condition on sex: Var(height|sex) is the spread within each group; Var(E[height|sex]) is how far the two group means sit apart. Add them and you recover the total variance of the whole population.",
+    "why": "This is where explained-versus-unexplained variance comes from, which is the foundation of R&sup2; and model selection in &#167;5.3. It's also the shape of the bias&#8211;variance decomposition you'll meet in &#167;3 with ensembles &#8212; the reason averaging many models reduces error.",
+    "math": "Var(X) = E[Var(X|Y)] + Var(E[X|Y]). First term: within-group. Second: between-group."
+   }
+  },
+  {
+   "id": "v3c1h3",
+   "s": "1.8",
+   "page": 63,
+   "q": "Independence implies zero covariance. Show the converse fails, and say what zero variance implies.",
+   "a": "<b>Corollary 1.8.8.</b> If X and Y are independent, then Cov(X,Y) = E[XY] &minus; E[X]E[Y] = <b>0</b>, since independence gives E[XY] = E[X]E[Y].<p style='margin-top:10px'><b>Unexample 1.8.9 &mdash; the converse is false.</b> Let X be uniform on {&minus;1, 0, 1} and set Y = X&sup2;. Then Y is a <b>function</b> of X, so they are about as dependent as two variables can be. But</p><div class='eq'>Cov(X,Y) = E[X&sup3;] &minus; E[X]E[Y] = 0 &minus; 0&middot;E[Y] = <b>0</b></div>because the symmetry of {&minus;1,0,1} kills both E[X] and E[X&sup3;].<div class='eq'>Covariance detects <b>linear</b> association only. A perfect nonlinear relationship can be invisible to it.</div><p style='margin-top:10px'><b>Example 1.8.4 &mdash; the degenerate case.</b> Var(X) = 0 means E[(X&minus;&mu;)&sup2;] = 0, which forces X(&omega;) = &mu; for <b>every</b> &omega;. So X is the constant &mu;1<sub>&Omega;</sub>. A distribution concentrated at a single value is called a <b>point distribution</b>.</p>",
+   "r": {
+    "rot": "independent &rArr; covariance zero. covariance zero &rArr; nothing. the counterexample is worth memorizing because it's so small: X uniform on {&minus;1,0,1} and Y = X&sup2;. Y is <b>completely determined</b> by X, and the covariance is still exactly zero, because the symmetry cancels everything. covariance only sees straight-line relationships. a perfect parabola is a blind spot. and zero variance isn't &ldquo;small spread,&rdquo; it means the variable is a constant &mdash; a point distribution.",
+    "ex": "The mechanism is symmetry: the parabola is even, the support is symmetric about 0, so the positive and negative contributions cancel exactly. Any even relationship over a symmetric support will do the same.",
+    "why": "This is the precise sense in which &ldquo;correlation&rdquo; is a weaker notion than &ldquo;dependence,&rdquo; and it recurs whenever a method relies on covariance &mdash; PCA, linear regression, and the &sect;1.8.4 inner-product geometry all see only the linear part of a relationship.",
+    "math": "X &perp;&perp; Y &rArr; Cov(X,Y) = 0; converse false. Var(X) = 0 &hArr; X = &mu;1<sub>&Omega;</sub> a.s. (point distribution)."
+   }
+  },
+  {
+   "id": "v3c1h4",
+   "s": "1.8",
+   "page": 64,
+   "q": "Define the covariance matrix and state its structure. How does covariance behave under linear combinations?",
+   "a": "<b>Definition 1.8.10.</b> For multivariate X = (X&#8321;,&hellip;,X<sub>d</sub>) with mean &mu;:<div class='eq'>&Sigma; = E[ (X &minus; &mu;)(X &minus; &mu;)<sup>T</sup> ]</div><b>Proposition 1.8.11:</b> the (i,j) entry is Cov(X<sub>i</sub>, X<sub>j</sub>), since e<sub>i</sub><sup>T</sup>&Sigma;e<sub>j</sub> = E[(X<sub>i</sub>&minus;&mu;<sub>i</sub>)(X<sub>j</sub>&minus;&mu;<sub>j</sub>)]. So <b>the diagonal holds the individual variances</b>, and &Sigma; is <b>symmetric and positive semidefinite</b>.<p style='margin-top:10px'><b>Proposition 1.8.15 &mdash; covariance is bilinear:</b></p><div class='eq'>Cov(aX+bY, cZ+dW) = ac Cov(X,Z) + ad Cov(X,W) + bc Cov(Y,Z) + bd Cov(Y,W)</div>which follows immediately from linearity of expectation. The corollaries are the useful forms:<div class='eq'>Var(aX + bY) = a&sup2;Var(X) + 2ab Cov(X,Y) + b&sup2;Var(Y)&nbsp;&nbsp;(1.8.16)<br><br>Var(aX + b) = a&sup2;Var(X)&nbsp;&nbsp;&mdash; shifts don't matter, scales square&nbsp;&nbsp;(1.8.17)<br><br>Var(&sum;a<sub>i</sub>X<sub>i</sub>) = &sum;a<sub>i</sub>&sup2;Var(X<sub>i</sub>) + 2&sum;<sub>i&lt;j</sub>a<sub>i</sub>a<sub>j</sub>Cov(X<sub>i</sub>,X<sub>j</sub>)&nbsp;&nbsp;(1.8.18)</div><b>Pairwise independence kills every cross term</b>, leaving Var(&sum;a<sub>i</sub>X<sub>i</sub>) = &sum;a<sub>i</sub>&sup2;Var(X<sub>i</sub>).",
+   "r": {
+    "rot": "the covariance matrix packs every pairwise covariance into one object: variances down the diagonal, covariances off it, symmetric, and positive semidefinite (it has to be &mdash; it's an expectation of an outer product with itself). the algebra is bilinear, meaning it distributes over linear combinations like a product does. two consequences worth having by heart: adding a constant doesn't change variance, and scaling by a squares it. and if your variables are independent, all the cross terms vanish and variances just <b>add</b>.",
+    "ex": "Example 1.8.13, X ~ Cat(p): for i &ne; j the product X<sub>i</sub>X<sub>j</sub> is always zero (one-hot), so Cov(X<sub>i</sub>,X<sub>j</sub>) = &minus;p<sub>i</sub>p<sub>j</sub>, while the diagonal is p<sub>i</sub>(1&minus;p<sub>i</sub>). That compresses to <b>&Sigma; = diag(p) &minus; pp<sup>T</sup></b>.",
+    "why": "The additivity of variance under independence is the single fact that makes the law of large numbers work: it's what turns Var(&sum;X<sub>i</sub>) into n&sigma;&sup2; and hence Var(&mu;&#770;<sub>n</sub>) into &sigma;&sup2;/n. Every &radic;n in the book traces back to this corollary.",
+    "math": "&Sigma; = E[(X&minus;&mu;)(X&minus;&mu;)<sup>T</sup>], &Sigma;<sub>ij</sub> = Cov(X<sub>i</sub>,X<sub>j</sub>), symmetric PSD. Var(&sum;a<sub>i</sub>X<sub>i</sub>) = &sum;a<sub>i</sub>&sup2;Var(X<sub>i</sub>) under pairwise independence."
+   }
+  },
+  {
+   "id": "v3c1h5",
+   "s": "1.8",
+   "page": 66,
+   "q": "Covariance is an inner product. On what space, and what is the resulting geometry?",
+   "a": "Let C be the univariate random variables on (&Omega;,F,P). Define X &cong; Y if X = Y + c for a constant c. The quotient is isomorphic to the space C&#8320; of <b>centered</b> random variables (E[Z] = 0), with quotient map Z &#8614; Z &minus; E[Z]. Both are vector spaces.<div class='eq'>Covariance is a <b>bilinear form</b> on C, and becomes an <b>inner product</b> on C&#8320;.</div><b>Variance and covariance are preserved by the quotient map</b> &mdash; which is just Corollary 1.8.17 again, that adding a constant changes nothing.<p style='margin-top:8px'>An inner product gives lengths and angles. The cosine of the angle &theta; between X and Y is</p><div class='eq'>cos(&theta;) = Cov(X,Y) / ( &radic;Var(X) &radic;Var(Y) ) = &rho;<sub>X,Y</sub></div>&mdash; the <b>Pearson correlation coefficient</b>. Reading off the geometry:<div class='eq'>highly correlated &rarr; &theta; &asymp; 0 &rarr; &rho; &asymp; 1<br>uncorrelated &rarr; nearly <b>orthogonal</b>, &theta; &asymp; &pi;/2 &rarr; &rho; &asymp; 0<br>inversely related &rarr; &theta; &asymp; &pi; &rarr; &rho; &asymp; &minus;1</div><p style='margin-top:8px'>The standard deviation is the <b>norm</b> induced by this inner product, and &rho; is automatically in [&minus;1,1] by Cauchy&ndash;Schwarz.</p>",
+   "r": {
+    "rot": "random variables form a vector space, and covariance is an inner product on it once you center everything. that one sentence explains a lot. standard deviation is a <b>length</b>. correlation is a <b>cosine</b>. &ldquo;uncorrelated&rdquo; literally means <b>perpendicular</b>. correlation is trapped in [&minus;1,1] for the same reason a cosine is, not because someone normalized it by hand. and the reason you have to center first is that adding a constant slides a variable around without changing its variance &mdash; so constants are the null directions you quotient out.",
+    "ex": "The quotient is doing real work: on the full space C, covariance is only a bilinear <b>form</b> (constants have zero variance, so it's degenerate). Quotienting by constants removes exactly the null space and makes it a genuine inner product.",
+    "why": "It converts statistical facts into geometric ones. Var(X+Y) = Var(X) + Var(Y) for uncorrelated X, Y is the <b>Pythagorean theorem</b>. And Theorem 1.7.22 &mdash; that E[X|Y] is the best approximation of X by a function of Y &mdash; is an orthogonal projection statement in this space.",
+    "math": "&rho;<sub>X,Y</sub> = Cov(X,Y)/(&sigma;<sub>X</sub>&sigma;<sub>Y</sub>) = cos&theta;. |&rho;| &le; 1 by Cauchy&ndash;Schwarz. Uncorrelated &hArr; orthogonal in C&#8320;."
+   }
+  },
+  {
+   "id": "v3c1i1",
+   "s": "1.9",
+   "page": 67,
+   "q": "State Markov's inequality and Chebyshev's inequality. Derive the second from the first.",
+   "a": "<b>Markov</b> &#8212; for X &ge; 0 and a &gt; 0:<div class='eq'>P(X &ge; a) &le; E[X]/a</div><b>Chebyshev</b> &#8212; for X with mean &mu; and variance &sigma;&sup2;, any &epsilon; &gt; 0:<div class='eq'>P(|X &minus; &mu;| &ge; &epsilon;) &le; &sigma;&sup2;/&epsilon;&sup2;</div><b>Derivation:</b> apply Markov to the nonnegative variable (X &#8722; &mu;)&sup2; with threshold &epsilon;&sup2;. Since E[(X &#8722; &mu;)&sup2;] = &sigma;&sup2;, we get P((X &#8722; &mu;)&sup2; &ge; &epsilon;&sup2;) &le; &sigma;&sup2;/&epsilon;&sup2;, and the event (X &#8722; &mu;)&sup2; &ge; &epsilon;&sup2; is the event |X &#8722; &mu;| &ge; &epsilon;.",
+   "r": {
+    "rot": "markov: if the average is small, you can't have much mass way out right. that's it, that's the intuition, and it only needs X &#8805; 0. chebyshev is markov wearing a disguise &#8212; square the deviation, apply markov, unsquare. the squaring is the entire trick. note markov tells you literally nothing when a &#8804; E[X], since the bound is then &#8805; 1.",
+    "ex": "E[X] = 50, Var(X) = 25. P(40 &lt; X &lt; 60)? Chebyshev with &epsilon; = 10 gives P(|X &#8722; 50| &ge; 10) &le; 25/100 = 1/4, so P(40 &lt; X &lt; 60) &ge; 3/4. No distribution assumed &#8212; that bound holds for <i>every</i> distribution with those two moments.",
+    "why": "These are your first <i>concentration inequalities</i>, and they're the reason the law of large numbers works. They're deliberately loose &#8212; Remark 1.9.4 notes that a bound holding for all random variables can't be tight for any particular one. &#167;3.2 sharpens them (Hoeffding, Chernoff) to get the bounds that make ensemble methods provably work.",
+    "math": "X &ge; 0, a &gt; 0: aP(X &ge; a) = E[a1<sub>X&ge;a</sub>] &le; E[X]. Chebyshev: Markov on (X &#8722; &mu;)&sup2; at &epsilon;&sup2;."
+   }
+  },
+  {
+   "id": "v3c1i2",
+   "s": "1.9",
+   "page": 69,
+   "q": "Define a sample and the sample mean. What are its two important properties?",
+   "a": "A <b>sample</b> of X is an i.i.d. sequence X&#8321;,&hellip;,X<sub>n</sub> &mdash; mutually independent copies of X, so the joint p.m.f. factors:<div class='eq'>P(X&#8321;=x&#8321;,&hellip;,X<sub>n</sub>=x<sub>n</sub>) = &prod;<sub>i=1</sub><sup>n</sup> P(X = x<sub>i</sub>)</div>&mdash; the outcome of one experiment is not influenced by any of the others. The <b>sample mean</b> is itself a random variable, being a function of X&#8321;,&hellip;,X<sub>n</sub>:<div class='eq'>&mu;&#770;<sub>n</sub> = (X&#8321; + X&#8322; + &hellip; + X<sub>n</sub>)/n</div><b>Property 1 &mdash; its mean is &mu;</b>, by linearity of expectation alone (independence not needed):<div class='eq'>E[&mu;&#770;<sub>n</sub>] = (1/n)(E[X&#8321;] + &hellip; + E[X<sub>n</sub>]) = &mu;</div><b>Property 2 &mdash; its variance shrinks like 1/n</b>, and <i>this</i> is where independence is used (pairwise independence kills the covariance terms):<div class='eq'>Var(&mu;&#770;<sub>n</sub>) = (1/n&sup2;)Var(X&#8321; + &hellip; + X<sub>n</sub>) = (1/n&sup2;)(n&sigma;&sup2;) = &sigma;&sup2;/n</div><p style='margin-top:8px'>Right mean, shrinking spread &mdash; which is exactly the suggestion that &mu;&#770;<sub>n</sub> congregates around &mu; as n grows.</p>",
+   "r": {
+    "rot": "take n independent copies of the same experiment and average them. that average is <b>itself</b> a random variable &mdash; run the whole thing again and you get a different average. two facts about it. its expected value is the true mean, exactly, always. and its variance is &sigma;&sup2;/<b>n</b> &mdash; it shrinks as you collect more data. so the average sits in the right place and gets tighter. that's the entire reason averaging works, and the &radic;n in every error bar you'll ever see comes from that n in the denominator.",
+    "ex": "Fair coin flips: X ~ Bernoulli(&frac12;) with &mu; = &frac12; and &sigma;&sup2; = &frac14;. So &mu;&#770;<sub>n</sub> has mean &frac12; and variance 1/(4n) &mdash; after 100 flips the standard deviation of the observed proportion is 1/20.",
+    "why": "Notice which property needs which hypothesis. Unbiasedness is pure linearity and survives dependent data; the shrinking variance needs independence and <b>fails</b> when your samples are correlated. That's why a survey of 1000 people who all know each other isn't worth 1000 samples.",
+    "math": "E[&mu;&#770;<sub>n</sub>] = &mu; (linearity). Var(&mu;&#770;<sub>n</sub>) = &sigma;&sup2;/n (needs pairwise independence). Standard deviation &sigma;/&radic;n."
+   }
+  },
+  {
+   "id": "v3c1i3",
+   "s": "1.9",
+   "page": 69,
+   "q": "State the weak law of large numbers and prove it. How does the strong law differ?",
+   "a": "<b>Theorem 1.9.7 (Weak Law).</b> Let X have mean &mu; and variance &sigma;&sup2;, and let X&#8321;,&hellip;,X<sub>n</sub> be a sample of X. For any &epsilon; &gt; 0,<div class='eq'>P(|&mu;&#770;<sub>n</sub> &minus; &mu;| &ge; &epsilon;) &le; &sigma;&sup2;/(n&epsilon;&sup2;)&nbsp;&nbsp;&nbsp;and so&nbsp;&nbsp;&nbsp;lim<sub>n&rarr;&infin;</sub> P(|&mu;&#770;<sub>n</sub> &minus; &mu;| &ge; &epsilon;) = 0</div><b>Proof: one line.</b> &mu;&#770;<sub>n</sub> has mean &mu; and variance &sigma;&sup2;/n, so Chebyshev applied to &mu;&#770;<sub>n</sub> gives the bound directly &mdash; and &sigma;&sup2;/(n&epsilon;&sup2;) &rarr; 0.<p style='margin-top:10px'><b>Remark 1.9.8 &mdash; the strong law.</b> Under fairly general conditions it brings the limit <b>inside</b> the probability, saying essentially that &mu;&#770;<sub>n</sub> &rarr; &mu;1<sub>&Omega;</sub> <b>pointwise</b> on the sample space. As the name suggests, that is a stronger result.</p><div class='eq'>weak: the <b>probability of being far off</b> goes to 0<br>strong: the <b>sequence itself</b> converges, for almost every outcome</div>",
+   "r": {
+    "rot": "average enough independent trials and the average lands on the true mean. the proof is free: you already know the sample mean has variance &sigma;&sup2;/n, so just point chebyshev at it and the bound falls out. the &ldquo;weak&rdquo; version says the <b>chance</b> of being far off shrinks to zero. the &ldquo;strong&rdquo; version says something bigger &mdash; that for basically every possible run of the experiment, the running average actually converges. weak is about probabilities going to zero; strong is about the sequence itself settling down.",
+    "ex": "Example 1.9.9, fair coin: P(|&mu;&#770;<sub>n</sub> &minus; &frac12;| &ge; &epsilon;) &le; 1/(4n&epsilon;&sup2;). Figure 1.1 plots the realized running average over 1000 flips &mdash; wild early, then visibly converging, with four independent runs all funnelling toward &frac12;.",
+    "why": "It is why any of this is empirically useful: it licenses estimating an unknown mean by averaging observations. It's also the first appearance of the weak/strong distinction that &sect;4.1 turns into a full hierarchy &mdash; the weak law is convergence <b>in probability</b>, the strong law is convergence <b>almost surely</b>, and the CLT gives only convergence <b>in distribution</b>.",
+    "math": "Chebyshev on &mu;&#770;<sub>n</sub>: P(|&mu;&#770;<sub>n</sub>&minus;&mu;| &ge; &epsilon;) &le; Var(&mu;&#770;<sub>n</sub>)/&epsilon;&sup2; = &sigma;&sup2;/(n&epsilon;&sup2;). Needs finite &sigma;&sup2;."
+   }
+  },
+  {
+   "id": "v3c1i4",
+   "s": "1.9",
+   "page": 70,
+   "q": "Derive the binomial distribution from repeated Bernoulli trials. Give its p.m.f., mean, and variance.",
+   "a": "Repeat a dichotomous experiment: X&#8321;,&hellip;,X<sub>n</sub> a sample of X ~ Bernoulli(p). The number of successes Y = X&#8321; + &hellip; + X<sub>n</sub> is <b>binomial</b>, Y ~ Binomial(n,p), with support {0,1,&hellip;,n}.<p style='margin-top:8px'><b>Proposition 1.9.10.</b></p><div class='eq'>g<sub>Y</sub>(m) = P(Y = m) = C(n,m) p<sup>m</sup>(1&minus;p)<sup>n&minus;m</sup><br><br>E[Y] = nE[X] = <b>np</b>&nbsp;&nbsp;&nbsp;&nbsp;Var(Y) = n Var(X) = <b>np(1&minus;p)</b></div><b>Where each piece comes from.</b> Independence makes the joint p.m.f. a product, and {Y = m} is the disjoint union over all x with &sum;x<sub>i</sub> = m &mdash; every such term equals p<sup>m</sup>(1&minus;p)<sup>n&minus;m</sup>, and there are C(n,m) of them. The mean is pure <b>linearity</b>. The variance needs the additivity of variance (Cor 1.8.18) plus mutual independence, so the covariances vanish.<p style='margin-top:8px'><b>Sanity check.</b> Summing the p.m.f. and applying the binomial theorem gives &sum;<sub>m</sub> C(n,m)p<sup>m</sup>(1&minus;p)<sup>n&minus;m</sup> = (p + (1&minus;p))<sup>n</sup> = 1.</p>",
+   "r": {
+    "rot": "flip a biased coin n times, count the heads. the count is binomial. the formula has three parts and each one earns its place: p<sup>m</sup> for the m successes, (1&minus;p)<sup>n&minus;m</sup> for the failures, and C(n,m) because you don't care <i>which</i> flips were the heads &mdash; that's how many orderings give the same count. mean is np (obvious &mdash; n trials, p each). variance np(1&minus;p) is biggest at p = &frac12; and vanishes at p = 0 or 1, which is right: a coin that always lands heads has no randomness left.",
+    "ex": "Example 1.9.11: a coin landing heads 80% of the time, flipped 3 times. P(all heads) = C(3,3)(0.8)&sup3; = 0.512 and P(all tails) = C(3,0)(0.2)&sup3; = 0.008 &mdash; a 64-fold difference from a 4-fold bias, because the bias compounds.",
+    "why": "It's the distribution behind every count-of-successes question, and it's the null distribution in the hot-sauce test of &sect;6.1 &mdash; T ~ Binomial(30, &frac12;). Note also that the mean needs no independence and the variance does, the same split as for the sample mean.",
+    "math": "Y = &sum;X<sub>i</sub>, X<sub>i</sub> ~ Bernoulli(p) i.i.d. P(Y=m) = C(n,m)p<sup>m</sup>(1&minus;p)<sup>n&minus;m</sup>. E[Y] = np, Var(Y) = np(1&minus;p)."
+   }
+  },
+  {
+   "id": "v3c1i5",
+   "s": "1.9",
+   "page": 71,
+   "q": "Generalize to categorical outcomes: give the multinomial distribution, its mean, and its covariance matrix. Why are the off-diagonal entries negative?",
+   "a": "Now the outcomes are categories &Omega; = {1,&hellip;,d}. Take X ~ Cat(p) with support {e&#8321;,&hellip;,e<sub>d</sub>} &sub; R<sup>d</sup>, P(X = e<sub>j</sub>) = p<sub>j</sub> &gt; 0 and &sum;p<sub>j</sub> = 1. Then Y = &sum;<sub>j=1</sub><sup>n</sup> X<sub>j</sub> is <b>multinomial</b>, Y ~ mult(n,p):<div class='eq'>g<sub>Y</sub>(x) = ( n choose x&#8321; x&#8322; &hellip; x<sub>d</sub> ) &prod;<sub>j=1</sub><sup>d</sup> p<sub>j</sub><sup>x<sub>j</sub></sup>,&nbsp;&nbsp; x<sub>j</sub> &isin; N, &sum;x<sub>j</sub> = n</div>Linearity of expectation and independence give<div class='eq'>E[Y] = &sum;<sub>m</sub> E[X<sub>m</sub>] = <b>np</b><br><br>Cov(Y) = &sum;<sub>m</sub> Cov(X<sub>m</sub>) = <b>n(diag(p) &minus; pp<sup>T</sup>)</b></div><p style='margin-top:8px'><b>Why the off-diagonals are negative.</b> The counts are constrained to sum to n, so one category getting more forces the others to get less. Categories are <b>negatively correlated by construction</b> &mdash; that is exactly the &minus;pp<sup>T</sup> term.</p>",
+   "r": {
+    "rot": "the binomial counts two outcomes; the multinomial counts d of them. same idea, more buckets: probability for each bucket raised to its count, times a multinomial coefficient for the orderings. the mean is np, one entry per category, no surprise. the covariance is the interesting bit &mdash; it's <b>negative</b> off the diagonal. that's forced: the counts have to add up to n, so if one bucket fills up the others have to empty. buckets compete.",
+    "ex": "Example 1.9.12, d = 2 with p = (p, 1&minus;p): the multinomial <i>is</i> the binomial, and &Sigma; = np(1&minus;p)[[1,&minus;1],[&minus;1,1]]. The (1,1) entry is n times the Bernoulli variance, and the off-diagonal is the covariance of X with 1&minus;X &mdash; same size, opposite sign, because success and failure are perfectly negatively correlated.",
+    "why": "It's the count model behind the categorical cross-entropy of &sect;5.6, and it's what converges to the <b>multivariate</b> normal (Example 2.5.14) just as the binomial converges to the univariate one. The forced negative correlation is also why one-hot encoded features are always linearly dependent unless you drop a column &mdash; the identifiability problem of &sect;5.1.3.",
+    "math": "Y ~ mult(n,p). E[Y] = np, Cov(Y) = n(diag(p) &minus; pp<sup>T</sup>), singular because &sum;Y<sub>j</sub> = n."
+   }
+  },
+  {
+   "id": "v3c1i6",
+   "s": "1.9",
+   "page": 72,
+   "q": "Distinguish a random variable from a realization. Define a signal and its likelihood.",
+   "a": "<b>Before</b> a die is rolled the outcome is uncertain and is described by a distribution. <b>After</b>, the probabilities have been realized and the outcome is certain. The distinction has names:<div class='eq'>X : &Omega; &rarr; R is a <b>random variable</b>, taking x with probability P(X = x).<br>Once an outcome &omega; is observed, x = X(&omega;) is a <b>realization</b> (or draw).</div>For a sample X&#8321;,&hellip;,X<sub>n</sub>, each &omega;<sub>i</sub> gives a realization x<sub>i</sub> = X(&omega;<sub>i</sub>), and the sequence x&#8321;,&hellip;,x<sub>n</sub> is called a <b>signal</b>.<p style='margin-top:8px'><b>The likelihood of a signal</b> is the joint probability of its being realized &mdash; and because the sample is i.i.d., it factors:</p><div class='eq'>P(X&#8321;=x&#8321;,&hellip;,X<sub>n</sub>=x<sub>n</sub>) = &prod;<sub>j=1</sub><sup>n</sup> P(X = x<sub>j</sub>)</div><p><b>Closing the loop.</b> The realized average x&#772;<sub>n</sub> = (x&#8321;+&hellip;+x<sub>n</sub>)/n is a single draw from the random variable &mu;&#770;<sub>n</sub>, and the law of large numbers says the probability that any particular x&#772;<sub>n</sub> is far from &mu; becomes very small as n &rarr; &infin;.</p>",
+   "r": {
+    "rot": "keep two things apart. the random variable is the <b>machine</b> &mdash; the die, before you roll it, described by a distribution. the realization is the <b>number that came out</b>. a whole list of numbers that came out is a <b>signal</b>. and the <b>likelihood</b> of that signal is: assuming the machine works how you think it does, what were the odds of getting exactly this list? for independent draws it's just the individual probabilities multiplied. that one product is the thing every estimation method in the book maximizes.",
+    "ex": "Example 1.9.13: a weighted coin flipped 5 times, X ~ Bernoulli(p). The signal x = (1,0,1,1,1) has likelihood p&middot;(1&minus;p)&middot;p&middot;p&middot;p = p&#8308;(1&minus;p). Read as a function of <b>p</b> rather than of x, that is the object you maximize.",
+    "why": "This is the definition MLE is built on &mdash; &sect;2.3.3 derives maximum likelihood, and &sect;4.5 makes it the central estimation method. The switch in perspective is the whole trick: the same expression is a <b>probability</b> when you fix p and vary x, and a <b>likelihood</b> when you fix x and vary p.",
+    "math": "Realization x = X(&omega;). Signal = (x&#8321;,&hellip;,x<sub>n</sub>). Likelihood = &prod;<sub>j</sub>P(X = x<sub>j</sub>), read as a function of the parameter. x&#772;<sub>n</sub> is one draw from &mu;&#770;<sub>n</sub>."
+   }
+  },
+  {
+   "id": "v3c1j1",
+   "s": "1.10",
+   "page": 74,
+   "q": "Name four things you can estimate from a sample x&#8321;,&#8230;,x&#8345;, and what makes this legal.",
+   "a": "<b>1. Expectations</b> &#8212; E[k(X)] &asymp; (1/n)&Sigma;k(x<sub>i</sub>), for any k with E[k(X)] finite.<br><b>2. Probabilities and p.m.f.s</b> &#8212; P(X &isin; A) = E[1<sub>A</sub>(X)] &asymp; (1/n)&Sigma;1<sub>A</sub>(x<sub>i</sub>).<br><b>3. Marginals</b> &#8212; if x<sub>i</sub> = (y<sub>i</sub>, z<sub>i</sub>), just discard the z<sub>i</sub>; the remaining y's are a draw from the marginal.<br><b>4. Quantiles</b> &#8212; sort the sample and read them off.<p style='margin-top:10px'>What licenses all of it: the law of large numbers, plus the fact that expectation depends only on the <i>distribution</i>. So you may sample from any convenient random variable sharing the distribution you care about. This is the Monte Carlo method.</p>",
+   "r": {
+    "rot": "can't compute the integral? don't. sample a bunch, average, walk away. that's monte carlo and it is genuinely that dumb and that powerful. the marginalization one is the best deal in the chapter &#8212; you want the distribution of Y but you sampled (Y,Z) pairs? just <i>delete the Z column</i>. that's marginalization. no integral, no sum, delete the column.",
+    "ex": "Example 1.10.1 &#8212; roll a d6, add to your score, reset to 0 on a 6, count rolls to reach 30. Computing E[N] analytically is genuinely painful. Sampling 100,000 games gives 10.45 in a few lines of code.",
+    "why": "Footnote 22 has the trap: the sample mean <i>always</i> exists, even when the expectation it estimates does not. Sample from a Cauchy distribution and you get a number &#8212; a meaningless one, because LLN doesn't apply. Your code will not warn you. This is why <q>it ran and gave a number</q> is not evidence of correctness.",
+    "math": "E[k(X)] &asymp; (1/n)&Sigma;k(x<sub>i</sub>). P(X&isin;A) &asymp; (1/n)&Sigma;1<sub>A</sub>(x<sub>i</sub>). Requires E[k(X)] to exist."
+   }
+  },
+  {
+   "id": "v3c1j2",
+   "s": "1.10",
+   "page": 77,
+   "q": "In a graphical causal model, what does a <i>missing</i> arrow tell you?",
+   "a": "Conditional independence. For any node X in a causal DAG, <b>conditioned on the parents of X, X is conditionally independent of every non-descendant of X</b>.<p style='margin-top:10px'>A missing arrow between two nodes does <i>not</i> mean they are unrelated &#8212; it means any relation between them is routed entirely through other nodes in the graph.</p><p>The causal reading is interventional: an arrow C &rarr; F means <i>forcing</i> C changes F. Forcing F does not change C. That asymmetry is what makes it causal rather than merely correlational. <span class='muted'>(Ex 1.10.3&#8211;1.10.6)</span></p>",
+   "r": {
+    "rot": "the arrows tell you what causes what. the <i>missing</i> arrows are where the actual information is &#8212; they tell you what becomes irrelevant once you know the parents. and causation here is defined by force: if i reach in and <i>make</i> C happen, does F move? yes &#8594; arrow. if i force F, does C move? no &#8594; no arrow back. that asymmetry is the whole definition.",
+    "ex": "Smoking S &rarr; yellow nails Y, and S &rarr; cancer C, with no arrow between Y and C. Nails and cancer are absolutely correlated. But once you know whether the patient smokes, their nails tell you <i>nothing extra</i> about cancer risk. That's the missing arrow speaking: Y &perp;&perp; C | S.",
+    "why": "This is the yellow-fingernails story from the chapter opener, now made rigorous &#8212; treating the symptom does nothing because the arrow runs from the confounder. It's also the structure that makes large probabilistic models tractable, and it sets up the Bayesian networks, HMMs, and graphical models across the rest of Vol 3.",
+    "math": "X &perp;&perp; nondescendants(X) | parents(X). Chain F&rarr;S&rarr;A gives A &perp;&perp; F | S. Fork Y&larr;S&rarr;C gives Y &perp;&perp; C | S."
+   }
+  },
+  {
+   "id": "v3c1j3",
+   "s": "1.10",
+   "page": 75,
+   "q": "What is the Monte Carlo method, and why is it useful even when you can't write down the p.m.f.?",
+   "a": "The law of large numbers says a realization x&#772;<sub>n</sub> of the sample mean approximates E[X] closely, with explicit bounds on how far off it is likely to be. <b>Sampling from a distribution &mdash; the Monte Carlo method &mdash; extends that to almost any property you want.</b><p style='margin-top:6px'>The key practical point: sampling from a <b>specific random variable</b> may be difficult or expensive, but it is often easy to sample from a <b>different</b> random variable with the same distribution &mdash; and the distribution is what you care about.</p><div class='eq'>y&#772;<sub>n</sub> = &sum;<sub>x&isin;C</sub> k(x)g<sub>X</sub>(x) = E[k(X)] &asymp; (1/n)&sum;<sub>i</sub> k(x<sub>i</sub>)</div>provided E[k(X)] exists (which needs &sum;|k(x)|g<sub>X</sub>(x) &lt; &infin;). If E[k(X)&sup2;] also exists you get the variance too:<div class='eq'>Var(k(X)) &asymp; (1/n) &sum;<sub>i</sub> ( k(x<sub>i</sub>) &minus; y&#772;<sub>n</sub> )&sup2;</div><p style='margin-top:8px'><b>The footnote's warning:</b> the sample mean <b>always</b> exists, even when the expected value it estimates does not. If E[X] doesn't exist, the law of large numbers doesn't apply and the number you computed is <b>meaningless</b>.</p>",
+   "r": {
+    "rot": "you want a number about a distribution and the algebra is horrible. so don't do the algebra &mdash; simulate. draw a hundred thousand samples and average. that's monte carlo, and it works because the law of large numbers guarantees the average converges. it also works when you have <b>no closed form at all</b>, as long as you can describe the process well enough to run it. the one trap: the sample mean is always computable, even when the thing it's estimating doesn't exist. a number always comes out. that doesn't mean it means anything.",
+    "ex": "Example 1.10.1: roll a die repeatedly adding to your score, but a six resets you to zero &mdash; how many rolls to first reach 30? Computing this analytically takes work; Algorithm 1.1 is nine lines of Python. 100,000 runs give a mean of <b>10.45</b>, and the whole p.m.f. comes out of the same samples as g<sub>N</sub>(k) &asymp; (1/100000)&sum;1<sub>N=k</sub>(n<sub>i</sub>).",
+    "why": "It's the reason generative AI is in this chapter at all &mdash; LLMs produce output by <b>sampling</b> from a learned distribution. It's also what makes non-conjugate Bayesian analysis practical (&sect;4.7.1): the intractable posterior integrals are done by Monte Carlo, which is why Bayesian statistics only became usable near the end of the 20th century.",
+    "math": "E[k(X)] &asymp; (1/n)&sum;k(x<sub>i</sub>), valid when E[k(X)] exists. Same samples give probabilities via P(X&isin;A) = E[1<sub>A</sub>(X)] and quantiles by sorting."
+   }
+  },
+  {
+   "id": "v3c1j4",
+   "s": "1.10",
+   "page": 77,
+   "q": "What is a graphical causal model, and what does an arrow mean? Give the intervention test.",
+   "a": "Modelling usually needs a description of the <b>data generation process</b> &mdash; how the random variables affect one another and combine to produce the data. That means identifying <b>causes</b>, not just statistical properties.<p style='margin-top:6px'><b>A graphical causal model</b> is a graph whose <b>nodes are random variables</b> and whose <b>directed edges encode a potential causal relation</b>: the result of one node can potentially impact every node it points to.</p><p>For simplicity the book assumes causal models are <b>directed acyclic graphs</b> (DAGs) &mdash; no cycles. Vocabulary: Y is a <b>parent</b> of X if there's an edge Y &rarr; X; Z is a <b>descendant</b> of X if there's a path X &rarr; &hellip; &rarr; Z, and then X is an <b>ancestor</b> of Z. Every child is potentially influenced by its parents and by all its ancestors. (Nota Bene 1.10.2: not all causal models are DAGs, but DAGs suffice here.)</p><div class='eq'><b>The intervention test.</b> Ask what happens if you <b>force</b> an outcome.</div><b>Example 1.10.3.</b> Three coins, one two-headed and two fair; draw one at random (C) and flip it (F). The model is C &rarr; F. Force C to be the two-headed coin and F must come up heads &mdash; the flip <b>changed</b>. Force F to be all heads and <b>nothing happens</b> to which coin you drew. The result of F can <b>tell you about</b> C without <b>causing</b> it.<p style='margin-top:8px'>An arrow does not mean the child is determined by the parent &mdash; only that the parent has an impact.</p>",
+   "r": {
+    "rot": "draw a box for each variable and an arrow from cause to effect. that's the model. the test for whether an arrow belongs, and which way it points, is <b>intervention</b>: if i reach in and force this variable, does that one change? force the coin to be two-headed and the flips change. force the flips to be all heads and the coin you picked is unaffected. seeing tells you about the cause; doing does not change it. that asymmetry is what an arrow encodes and what plain probability cannot express.",
+    "ex": "The DAG restriction is a real assumption, not just convenience &mdash; feedback loops (predator/prey, price/demand) are genuinely cyclic. The book flags this and sets it aside; the acyclic case is where the clean conditional-independence theory lives.",
+    "why": "The intervention framing is what separates &sect;1.10 from everything before it. Chapter 0 posed the question (yellow fingernails predict cancer but bleaching them does nothing); this is the machinery that answers it, and the reason a regression coefficient in &sect;5.3.7 licenses prediction but never intervention.",
+    "math": "DAG: nodes = random variables, directed edges = potential causal influence. Arrow X &rarr; Y &hArr; forcing X can change Y. Observation is symmetric; intervention is not."
+   }
+  },
+  {
+   "id": "v3c1j5",
+   "s": "1.10",
+   "page": 78,
+   "q": "Work through the chain, the fork, and the collider-free chain examples. What does conditioning on a parent buy you in each?",
+   "a": "<b>The chain (Example 1.10.4)</b> &mdash; fire, smoke, alarm:<div class='eq'>F &rarr; S &rarr; A</div>Fire causes smoke; smoke causes the alarm. <b>Conditioning on S makes F and A conditionally independent</b> (A &perp;&perp; F | S). Suck away all the smoke, or add extra smoke, and under either intervention the fire has no effect on the alarm and the alarm none on the fire. Conditioning on <b>A</b> gives nothing (A is nobody's parent); conditioning on <b>F</b> gives nothing (everything is a descendant of F, hence exempt).<p style='margin-top:10px'><b>The fork (Example 1.10.5)</b> &mdash; smoking, yellow nails, cancer:</p><div class='eq'>Y &larr; S &rarr; C</div>The missing arrow Y &rarr; C does <b>not</b> mean nails and cancer are unrelated. It means Y &perp;&perp; C | S. <b>Know the patient's smoking habits and looking at his nails tells you nothing more</b> about his cancer risk. Don't know them, and yellow nails inform you about smoking, which informs you about cancer.<p style='margin-top:10px'><b>The funnel (Example 1.10.6)</b> &mdash; two dice A, B, their sum C, and a card total D:</p><div class='eq'>A &rarr; C &rarr; D&nbsp;&nbsp;and&nbsp;&nbsp;B &rarr; C</div>A and B are unconditionally independent (no parents, neither a descendant of the other). D's only parent is C, so <b>D &perp;&perp; A | C</b> and <b>D &perp;&perp; B | C</b> &mdash; once you know how many cards to draw, how that number was rolled is irrelevant. And independence is symmetric, so A &perp;&perp; D | C too.",
+   "r": {
+    "rot": "three shapes, one lesson. <b>chain</b> F &rarr; S &rarr; A: the fire only reaches the alarm through the smoke, so once you know the smoke, the fire is irrelevant. <b>fork</b> Y &larr; S &rarr; C: nails and cancer look related because they share a parent; know the parent and the apparent link vanishes. <b>funnel</b>: two dice feed a sum which feeds a card draw &mdash; once you know the sum, how it was rolled doesn't matter. in every case, conditioning on the right node <b>cuts the path</b> and the association disappears.",
+    "ex": "The fork is the yellow-fingernails story from Chapter 0 finally drawn as a graph, and the graph explains it in one line: no arrow Y &rarr; C, so the entire association was routed through S.",
+    "why": "These three patterns are the vocabulary for reading any causal diagram, and they explain why &ldquo;controlling for&rdquo; a variable sometimes removes a spurious association and sometimes destroys a real one &mdash; it depends entirely on where the variable sits in the graph. Example 1.10.6 also makes the practical point: the p.m.f. of D would be painful in closed form and is trivial to estimate by sampling the process (Algorithm 1.2).",
+    "math": "Chain X&rarr;Z&rarr;Y and fork X&larr;Z&rarr;Y: conditioning on Z gives X &perp;&perp; Y | Z. Conditioning on a node with no children, or on a common ancestor of everything, adds nothing."
+   }
+  }
+ ],
+ "exercises": {
+  "from": 81,
+  "to": 92
+ },
+ "exMarks": [
+  {
+   "page": 81,
+   "y": 0.622
+  },
+  {
+   "page": 82,
+   "y": 0.518
+  },
+  {
+   "page": 82,
+   "y": 0.899
+  },
+  {
+   "page": 83,
+   "y": 0.811
+  },
+  {
+   "page": 85,
+   "y": 0.113
+  },
+  {
+   "page": 85,
+   "y": 0.513
+  },
+  {
+   "page": 86,
+   "y": 0.743
+  },
+  {
+   "page": 87,
+   "y": 0.765
+  },
+  {
+   "page": 88,
+   "y": 0.483
+  },
+  {
+   "page": 89,
+   "y": 0.667
+  },
+  {
+   "page": 91,
+   "y": 0.369
+  }
+ ]
+}

@@ -1,0 +1,618 @@
+{
+ "volume": "vol3",
+ "chapter": "4",
+ "file": "vol3-ch4.json",
+ "title": "Measurement and Data",
+ "epigraph": {
+  "text": "It reigns with serenity and in complete self-effacement, amidst the wildest confusion. The huger the mob, and the greater the apparent anarchy, the more perfect is its sway. It is the supreme law of Unreason.",
+  "by": "Sir Francis Galton, on the central limit theorem"
+ },
+ "sections": [
+  {
+   "id": "4.1",
+   "name": "Convergence of Random Variables",
+   "from": 227,
+   "to": 232,
+   "exFrom": {
+    "page": 273,
+    "y": 0.393
+   },
+   "exTo": {
+    "page": 274,
+    "y": 0.408
+   }
+  },
+  {
+   "id": "4.2",
+   "name": "Moments and Characteristic Functions",
+   "from": 233,
+   "to": 237,
+   "exFrom": {
+    "page": 274,
+    "y": 0.408
+   },
+   "exTo": {
+    "page": 275,
+    "y": 0.49
+   }
+  },
+  {
+   "id": "4.3",
+   "name": "The Central Limit Theorem",
+   "from": 238,
+   "to": 243,
+   "exFrom": {
+    "page": 275,
+    "y": 0.49
+   },
+   "exTo": {
+    "page": 276,
+    "y": 0.373
+   }
+  },
+  {
+   "id": "4.4",
+   "name": "Estimates and Estimators",
+   "from": 244,
+   "to": 249,
+   "exFrom": {
+    "page": 276,
+    "y": 0.373
+   },
+   "exTo": {
+    "page": 276,
+    "y": 0.841
+   }
+  },
+  {
+   "id": "4.5",
+   "name": "Parametric Estimation",
+   "from": 250,
+   "to": 255,
+   "exFrom": {
+    "page": 276,
+    "y": 0.841
+   },
+   "exTo": {
+    "page": 277,
+    "y": 0.847
+   }
+  },
+  {
+   "id": "4.6",
+   "name": "Bayesian Estimation",
+   "from": 256,
+   "to": 261,
+   "exFrom": {
+    "page": 277,
+    "y": 0.847
+   },
+   "exTo": {
+    "page": 279,
+    "y": 0.113
+   }
+  },
+  {
+   "id": "4.7",
+   "name": "Priors",
+   "from": 262,
+   "to": 272,
+   "exFrom": {
+    "page": 279,
+    "y": 0.113
+   },
+   "exTo": {
+    "page": 280,
+    "y": 0.338
+   }
+  }
+ ],
+ "exercises": {
+  "from": 273,
+  "to": 280
+ },
+ "cards": [
+  {
+   "id": "v3c4a1",
+   "s": "4.1",
+   "page": 227,
+   "q": "Define the three modes of convergence for random variables and give their implication order.",
+   "a": "<b>In probability</b> (Def 4.1.1): for all &epsilon; &gt; 0, lim<sub>n</sub> P(|X<sub>n</sub> &minus; X| &ge; &epsilon;) = 0.<p style='margin-top:6px'><b>Almost surely</b> (Def 4.1.6): there is N &sube; &Omega; with P(N) = 0 such that X<sub>n</sub>(&omega;) &rarr; X(&omega;) for every &omega; &isin; N<sup>c</sup>. Ordinary pointwise convergence, ignoring a null set.</p><p><b>In distribution</b> (Def 4.1.12): F<sub>X<sub>n</sub></sub>(x) &rarr; F<sub>X</sub>(x) at every x where F<sub>X</sub> is continuous. The variables need not even live on the same probability space.</p><div class='eq'>almost sure &rArr; in probability &rArr; in distribution</div><p>Both implications are <b>strict</b>. Convergence in distribution says nothing about the random variables themselves &mdash; only their distributions.</p>",
+   "r": {
+    "rot": "three strengths of &lsquo;gets close&rsquo;. <b>almost surely</b>: for basically every outcome, the actual sequence of numbers converges. strongest. <b>in probability</b>: the chance of being far off goes to zero &mdash; but it might still be far off sometimes, forever. <b>in distribution</b>: only the <i>shapes</i> match up; the variables might never be near each other at all. arrows point one way only.",
+    "ex": "Unexample 4.1.14 kills the reverse arrow dead: X ~ N(0,1) and X<sub>n</sub> = &minus;X for every n. Same c.d.f., so X<sub>n</sub> &rarr; X in distribution &mdash; but |X<sub>n</sub> &minus; X| = |2X|, which doesn't go anywhere. It converges in distribution and not in probability, on the same probability space.",
+    "why": "Getting the hierarchy right is what keeps you honest about what a limit theorem actually promises. The weak law gives convergence in probability; the strong law (Thm 4.1.9) gives almost sure; the CLT gives only convergence in distribution &mdash; the weakest of the three.",
+    "math": "a.s. &rArr; p (Prop 4.1.8, via upper continuity of P). p &rArr; d. Neither converse holds."
+   }
+  },
+  {
+   "id": "v3c4a2",
+   "s": "4.1",
+   "page": 232,
+   "q": "State Slutsky's theorem and the continuous mapping theorems. What's the trap in Theorem 4.1.16?",
+   "a": "<b>Continuous mapping (Thms 4.1.5, 4.1.11, 4.1.15).</b> For g continuous, X<sub>n</sub> &rarr; X in any of the three modes implies g(X<sub>n</sub>) &rarr; g(X) in that same mode. Convergence survives continuous functions.<p style='margin-top:8px'><b>Theorem 4.1.16.</b> If X<sub>n</sub> &rarr; X in distribution, then E[g(X<sub>n</sub>)] &rarr; E[g(X)] for every <b>bounded</b> continuous g.</p><p><b>Nota Bene 4.1.17 &mdash; the trap:</b> this does <b>not</b> give E[X<sub>n</sub>] &rarr; E[X], because g(x) = x is <b>not bounded</b>. Convergence in distribution does not imply convergence of means.</p><p style='margin-top:8px'><b>Slutsky (Thm 4.1.18).</b> If X<sub>n</sub> &rarr; X in distribution and Y<sub>n</sub> &rarr; c (a constant) in distribution, then X<sub>n</sub> + Y<sub>n</sub> &rarr; X + c and X<sub>n</sub>Y<sub>n</sub> &rarr; Xc.</p>",
+   "r": {
+    "rot": "continuous functions don't break convergence &mdash; squeeze a converging sequence through a continuous map and it still converges, same mode. the trap: convergence in distribution does <b>not</b> mean the means converge. the identity function isn't bounded, so theorem 4.1.16 doesn't cover it. a sequence can converge in distribution while its expectations run off to infinity. slutsky is the practical one: you can mix a converging sequence with something converging to a <i>constant</i> and the algebra works.",
+    "ex": "Slutsky is what licenses replacing an unknown &sigma; with a consistent estimate &sigma;&#770; in a CLT-based confidence interval: (&mu;&#770; &minus; &mu;)/(&sigma;&#770;/&radic;n) still converges to N(0,1) because &sigma;&#770; &rarr; &sigma;, a constant.",
+    "why": "Slutsky is why applied confidence intervals are legal at all &mdash; you never know &sigma;, and this says plugging in an estimate is asymptotically harmless. Note it requires the second limit to be a <b>constant</b>; it fails for a general random limit.",
+    "math": "Requires P(Y = c) = 1. Continuous mapping holds in all three modes; Thm 4.1.16 needs g bounded and continuous."
+   }
+  },
+  {
+   "id": "v3c4a3",
+   "s": "4.1",
+   "page": 228,
+   "q": "State Lemma 4.1.4 &mdash; continuity of P from below and above. Why is it the workhorse of this section?",
+   "a": "For a probability space (&Omega;,F,P) and events (A<sub>i</sub>) &sub; F:<div class='eq'><b>(i) Continuity from below.</b> If A<sub>k</sub> &sub; A<sub>k+1</sub> for every k and &#8746;A<sub>i</sub> = A (written A<sub>i</sub> &uarr; A), then P(A<sub>i</sub>) is nondecreasing and P(A<sub>i</sub>) &uarr; P(A).<br><br><b>(ii) Continuity from above.</b> If A<sub>k+1</sub> &sub; A<sub>k</sub> for every k and &#8745;A<sub>i</sub> = A (written A<sub>i</sub> &darr; A), then P(A<sub>i</sub>) is nonincreasing and P(A<sub>i</sub>) &darr; P(A).</div><b>The proof of (i)</b> is the standard disjointification: set B&#8320; = A&#8320; and B<sub>k</sub> = A<sub>k</sub> \\ A<sub>k&minus;1</sub>. The B<sub>i</sub> are mutually exclusive with the same finite unions and the same total union, so <b>countable additivity</b> gives P(A) = &sum;P(B<sub>i</sub>) = lim P(A<sub>n</sub>). Part (ii) follows by complementing: A&#8320; \\ A<sub>n</sub> &uarr; A&#8320; \\ A.<p style='margin-top:10px'><b>Why it matters here.</b> Convergence of random variables is about probabilities of <b>nested</b> events shrinking to nothing, and this lemma is what licenses passing the limit inside P. It is used twice in this section &mdash; to prove that almost sure convergence implies convergence in probability (Prop 4.1.8), and inside the continuous mapping theorem, where P(&#8214;X&#8214; &ge; k) &darr; P(&empty;) = 0 supplies the compact set the argument needs.</p>",
+   "r": {
+    "rot": "probability is continuous along nested sequences of events. if your events keep growing and fill up A, their probabilities climb to P(A). if they keep shrinking down to A, the probabilities fall to P(A). that sounds obvious and it is <b>exactly</b> what countable additivity buys you over finite additivity &mdash; it's the whole reason the definition was strengthened back in &sect;1.4. and it's the tool that lets you say &ldquo;the probability of being far off eventually goes to zero&rdquo; without hand-waving.",
+    "ex": "The continuous mapping proof needs a compact set to get uniform continuity, and it finds one exactly here: A<sub>k</sub> = {&#8214;x&#8214; &ge; k} shrinks to the empty set, so P(A<sub>k</sub>) &rarr; 0 and some K makes P(&#8214;X&#8214; &gt; K) as small as you like. Compactness comes from a probability estimate.",
+    "why": "It's why countable additivity had to be an axiom (Def 1.4.2 and its footnote). Finite additivity gives none of this, and without it every limiting statement in Chapters 4 and 6 &mdash; laws of large numbers, the CLT, convergence of estimators &mdash; would be unprovable.",
+    "math": "A<sub>i</sub> &uarr; A &rArr; P(A<sub>i</sub>) &uarr; P(A); A<sub>i</sub> &darr; A &rArr; P(A<sub>i</sub>) &darr; P(A). Both from countable additivity via disjointification."
+   }
+  },
+  {
+   "id": "v3c4a4",
+   "s": "4.1",
+   "page": 230,
+   "q": "Give a sequence that converges in probability but not almost surely. What makes it work?",
+   "a": "<b>Unexample 4.1.10 &mdash; the sliding indicator.</b> Take &Omega; = [0,1] with P([a,b]) = b &minus; a, and define a sequence of indicator functions on ever-shorter intervals that sweep across [0,1] repeatedly:<div class='eq'>X&#8321; = 1<sub>[0,1]</sub><br>X&#8322; = 1<sub>[0,1/2]</sub>,&nbsp; X&#8323; = 1<sub>[1/2,1]</sub><br>X&#8324; = 1<sub>[0,1/3]</sub>,&nbsp; X&#8325; = 1<sub>[1/3,2/3]</sub>,&nbsp; X&#8326; = 1<sub>[2/3,1]</sub><br>&hellip;</div><b>It fails to converge almost surely.</b> For <b>any</b> point &omega; &isin; [0,1] there are infinitely many n with X<sub>n</sub>(&omega;) = 1, so the sequence of numbers X<sub>n</sub>(&omega;) never settles. The set where pointwise convergence fails is <b>all of &Omega;</b>, which has probability 1 &mdash; as far from a null set as possible.<p style='margin-top:8px'><b>But it converges in probability to 0.</b> The interval defining X<sub>n</sub> has length 1/k, which shrinks, so for n large enough P(|X<sub>n</sub>| &gt; 0) &lt; &epsilon;.</p><div class='eq'>The <b>bumps get thinner</b> (so probability &rarr; 0) but they <b>never stop coming back</b> (so no pointwise limit).</div><p style='margin-top:8px'>Compare Example 4.1.7, which does converge almost surely: U ~ Uniform([0,1]) and X<sub>n</sub> = U<sup>n</sup>. For every &omega; with U(&omega;) &lt; 1 we get U(&omega;)<sup>n</sup> &rarr; 0; the exceptional set is {U = 1}, which has probability <b>0</b>. That's a genuine null set, so a.s. convergence holds.</p>",
+   "r": {
+    "rot": "this is the classic counterexample and it's worth picturing. imagine a bump of height 1 marching left to right across [0,1], and every time it finishes a pass it gets thinner and starts again. pick any point you like: the bump keeps coming back and hitting it, forever. so <b>no</b> point converges &mdash; pointwise convergence fails everywhere. but the bump is getting thinner, so the chance of it being on top of you at any given moment goes to zero. that's convergence in probability without almost sure convergence, and it's why the two are genuinely different.",
+    "ex": "The contrast with U<sup>n</sup> is the whole lesson: in that case the failures are confined to a <b>fixed null set</b> ({U = 1}); here the failures move around, so no single set of measure zero can contain them all.",
+    "why": "It completes the strictness picture from Unexample 4.1.14. That one shows convergence in distribution does not imply convergence in probability; this shows convergence in probability does not imply almost sure convergence. <b>Both arrows in a.s. &rArr; p &rArr; d are strict</b>, and now you have a witness for each.",
+    "math": "a.s. requires one fixed null set N with X<sub>n</sub>(&omega;) &rarr; X(&omega;) on N<sup>c</sup>. Here the failure set is all of &Omega;, yet P(|X<sub>n</sub>| &gt; 0) &rarr; 0."
+   }
+  },
+  {
+   "id": "v3c4a5",
+   "s": "4.1",
+   "page": 230,
+   "q": "Prove that almost sure convergence implies convergence in probability. State the strong law of large numbers.",
+   "a": "<b>Proposition 4.1.8.</b> X<sub>n</sub> &rarr;<sub>a.s.</sub> X implies X<sub>n</sub> &rarr;<sub>p</sub> X.<p style='margin-top:8px'><b>Proof.</b> Let N with P(N) = 0 be the exceptional set. For &epsilon; &gt; 0 define</p><div class='eq'>D<sub>n</sub>(&epsilon;) = { &omega; : |X<sub>m</sub>(&omega;) &minus; X(&omega;)| &ge; &epsilon; for <b>some</b> m &ge; n },&nbsp;&nbsp;D(&epsilon;) = &#8745;<sub>n</sub>D<sub>n</sub>(&epsilon;)</div>The D<sub>n</sub>(&epsilon;) are <b>nested downward</b>, and D(&epsilon;) &sub; N &mdash; a point in D(&epsilon;) is one whose sequence keeps straying by &epsilon; forever, which is exactly a failure of pointwise convergence. So P(D(&epsilon;)) = 0, and <b>continuity from above</b> (Lemma 4.1.4(ii)) gives<div class='eq'>P(D<sub>n</sub>(&epsilon;)) &darr; P(D(&epsilon;)) = 0</div>Since {|X<sub>n</sub> &minus; X| &ge; &epsilon;} &sub; D<sub>n</sub>(&epsilon;), that probability vanishes too.<p style='margin-top:10px'><b>Theorem 4.1.9 (Strong Law of Large Numbers).</b> For i.i.d. X&#8321;,X&#8322;,&hellip; with finite mean &mu; and finite variance &sigma;&sup2;, the sample mean &mu;&#770;<sub>n</sub> converges <b>almost surely</b> to the constant &mu;. (Not proved here.)</p><div class='eq'>Weak law: P(|&mu;&#770;<sub>n</sub> &minus; &mu;| &ge; &epsilon;) &rarr; 0&nbsp;&nbsp;&mdash; convergence in probability<br>Strong law: &mu;&#770;<sub>n</sub>(&omega;) &rarr; &mu; for almost every &omega;&nbsp;&nbsp;&mdash; almost sure</div><p style='margin-top:6px'>By Proposition 4.1.8 the strong law <b>implies</b> the weak law, which is where the names come from.</p>",
+   "r": {
+    "rot": "the proof is a nice use of the previous lemma. build the event &ldquo;the sequence strays by &epsilon; at some time <b>after</b> n.&rdquo; those events shrink as n grows, and what they shrink down to is the set of points that never settle &mdash; which is inside the null set. continuity from above says the probabilities therefore drop to zero. done. and the strong law is the upgrade of &sect;1.9's weak law: not just &ldquo;the chance of being off goes to zero&rdquo; but &ldquo;for almost every possible run of the experiment, the running average actually converges.&rdquo;",
+    "ex": "The definition of D<sub>n</sub>(&epsilon;) using &ldquo;for <b>some</b> m &ge; n&rdquo; rather than &ldquo;at m = n&rdquo; is the crux &mdash; it is what makes the events nested and what encodes &ldquo;never settles&rdquo; in the intersection.",
+    "why": "It explains the naming and the hierarchy. Strong implies weak, so &sect;1.9's law is the corollary; and both are stronger than the CLT's conclusion, which is only convergence in distribution. Knowing which law gives which mode is what keeps you honest about what a limit theorem promises.",
+    "math": "D<sub>n</sub>(&epsilon;) &darr; D(&epsilon;) &sub; N, P(N) = 0. Continuity from above &rArr; P(D<sub>n</sub>(&epsilon;)) &rarr; 0. Strong law: &mu;&#770;<sub>n</sub> &rarr;<sub>a.s.</sub> &mu;."
+   }
+  },
+  {
+   "id": "v3c4b1",
+   "s": "4.2",
+   "page": 234,
+   "q": "Define the characteristic function. What two theorems make it powerful?",
+   "a": "<div class='eq'>&phi;<sub>X</sub>(t) = E[e<sup>i&langle;t,X&rangle;</sup>]</div><b>Prop 4.2.3:</b> it <b>always exists</b>, for every random variable and every t &mdash; because |e<sup>i&langle;t,x&rangle;</sup>| = 1, so the integral is absolutely convergent, giving &int;f<sub>X</sub> = 1. (The moment generating function, its real cousin, can fail to exist.)<p style='margin-top:10px'><b>Thm 4.2.14 (Fourier inversion):</b> the characteristic function <b>uniquely determines the distribution</b> &mdash; &phi;<sub>X</sub> = &phi;<sub>Y</sub> &rArr; F<sub>X</sub> = F<sub>Y</sub>. And when &phi;<sub>X</sub> is integrable, f<sub>X</sub>(x) = (2&pi;)<sup>&minus;n</sup>&int;e<sup>&minus;i&langle;x,t&rangle;</sup>&phi;<sub>X</sub>(t)dt recovers the density.</p><p><b>Thm 4.2.16 (L&eacute;vy continuity):</b> &phi;<sub>X<sub>n</sub></sub> &rarr; &phi;<sub>X</sub> pointwise <b>if and only if</b> X<sub>n</sub> &rarr; X in distribution.</p>",
+   "r": {
+    "rot": "it's the fourier transform of your distribution, and it's a total fingerprint &mdash; two distributions with the same &phi; are the same distribution, full stop. the mean and variance don't pin down a distribution, but this does. and the <i>reason</i> it's the CLT's weapon: convergence in distribution is annoying to work with directly, but L&eacute;vy says it's <b>exactly the same as</b> pointwise convergence of these functions. so you stop chasing c.d.f.s and just take a limit of ordinary functions.",
+    "ex": "The standard normal is its own transform: f(x) = e<sup>&minus;x&sup2;/2</sup>/&radic;(2&pi;) gives &phi;(t) = e<sup>&minus;t&sup2;/2</sup> (Ex 4.2.15). Also &phi;<sub>X+Y</sub> = &phi;<sub>X</sub>&phi;<sub>Y</sub> for independent X, Y &mdash; sums of independent variables become <i>products</i>, which is why it handles S<sub>n</sub> so well.",
+    "why": "Moments (Def 4.2.1) reveal properties one at a time &mdash; first is the mean, second builds variance, third scaled is <b>skew</b> = &mu;&#8323;/&sigma;&sup3;. The characteristic function packages them <b>all at once</b> (Prop 4.2.10) and turns convolution into multiplication. Those two facts are the entire proof of the CLT.",
+    "math": "&phi;<sub>X</sub>(t) = E[e<sup>i&langle;t,X&rangle;</sup>]. Central moments &mu;<sub>k</sub> = E[(X&minus;&mu;)<sup>k</sup>], &mu;&#8322; = &sigma;&sup2;, skew = &mu;&#8323;/&sigma;&sup3;."
+   }
+  },
+  {
+   "id": "v3c4b2",
+   "s": "4.2",
+   "page": 233,
+   "q": "Define the moments and central moments of a random variable. Why do we care about them?",
+   "a": "The mean and standard deviation give important information but <b>do not uniquely characterize a distribution</b> &mdash; many distributions share both. The full set of moments {E[X<sup>r</sup>] : r &isin; N} often does.<div class='eq'><b>Definition 4.2.1.</b> The kth <b>moment</b> of a univariate X is E[X<sup>k</sup>], when it exists.</div>By the law of the unconscious statistician, E[X<sup>k</sup>] = &int;<sub>R</sub> x<sup>k</sup>f<sub>X</sub>(x)dx for a density, or &sum;<sub>x</sub>x<sup>k</sup>g(x) for a mass function.<p style='margin-top:8px'>It is often useful to <b>recenter at the mean</b> first, giving the <b>central moments</b>:</p><div class='eq'>&mu;<sub>k</sub> = E[(X &minus; &mu;)<sup>k</sup>]</div><b>The first moment is the mean.</b> The second central moment is the <b>variance</b>, &mu;&#8322; = &sigma;&sup2;. The third, appropriately scaled, is the <b>skew</b>:<div class='eq'>skew(X) = &mu;&#8323;/&sigma;&sup3;</div>which measures how lopsided the distribution is. Higher moments similarly reveal further properties.",
+   "r": {
+    "rot": "the mean tells you where a distribution sits and the variance how wide it is &mdash; and that's genuinely not enough, since wildly different shapes share both. moments are the rest of the shape information: E[X], E[X&sup2;], E[X&sup3;], and so on. center them at the mean first and the second one is the variance and the third, divided by &sigma;&sup3;, is the <b>skew</b> &mdash; is the distribution lopsided, and which way. the point of the whole section is that the full list of moments usually pins the distribution down completely, and the characteristic function is the machine that carries the whole list at once.",
+    "ex": "The scaling in skew(X) = &mu;&#8323;/&sigma;&sup3; is what makes it comparable across distributions: dividing by &sigma;&sup3; makes it dimensionless, so it measures shape rather than size. The same trick gives kurtosis at &mu;&#8324;/&sigma;&#8308;.",
+    "why": "This is what motivates the characteristic function two subsections later. Computing E[X<sup>k</sup>] one integral at a time is painful; the characteristic function collects them all and hands them back as derivatives at 0 (Prop 4.2.10). Skew also shows up in practice &mdash; the regression output in &sect;5.3.8 reports it as a diagnostic on the residuals.",
+    "math": "E[X<sup>k</sup>] = &int;x<sup>k</sup>f<sub>X</sub>. Central: &mu;<sub>k</sub> = E[(X&minus;&mu;)<sup>k</sup>], &mu;&#8322; = &sigma;&sup2;, skew = &mu;&#8323;/&sigma;&sup3;."
+   }
+  },
+  {
+   "id": "v3c4b3",
+   "s": "4.2",
+   "page": 235,
+   "q": "Compute the characteristic function for a Bernoulli, a Poisson, and a standard normal.",
+   "a": "<b>Bernoulli(p) (Example 4.2.5).</b> Two terms in the sum:<div class='eq'>&phi;<sub>X</sub>(t) = &sum;<sub>x=0</sub><sup>1</sup> e<sup>itx</sup>P(X=x) = (1&minus;p) + e<sup>it</sup>p</div><b>Poisson(&lambda;) (Example 4.2.6).</b> The sum is an exponential series in disguise:<div class='eq'>&phi;<sub>X</sub>(t) = &sum;<sub>x&ge;0</sub> e<sup>itx</sup> e<sup>&minus;&lambda;</sup>&lambda;<sup>x</sup>/x! = e<sup>&minus;&lambda;</sup> &sum;<sub>x&ge;0</sub> (e<sup>it</sup>&lambda;)<sup>x</sup>/x! = e<sup>&minus;&lambda;</sup>e<sup>e<sup>it</sup>&lambda;</sup> = e<sup>(e<sup>it</sup>&minus;1)&lambda;</sup></div><b>Standard normal (Example 4.2.7).</b> Complete the square in the exponent:<div class='eq'>&phi;<sub>Z</sub>(t) = (1/&radic;(2&pi;)) &int; e<sup>&minus;x&sup2;/2</sup>e<sup>itx</sup> dx = (e<sup>&minus;t&sup2;/2</sup>/&radic;(2&pi;)) &int; e<sup>&minus;(x&minus;it)&sup2;/2</sup> dx = <b>e<sup>&minus;t&sup2;/2</sup></b></div><p style='margin-top:8px'><b>The normal's characteristic function is the same shape as its density.</b> That is the fact the CLT proof runs on &mdash; and Example 4.2.15 notes that inverting it recovers f<sub>X</sub> exactly, as Fourier inversion promises.</p>",
+   "r": {
+    "rot": "three worth knowing by heart. bernoulli is two terms, done in one line. poisson looks nasty until you notice the sum <b>is</b> the exponential series with e<sup>it</sup>&lambda; in place of the usual argument &mdash; then it collapses. the normal is the beautiful one: complete the square and you get e<sup>&minus;t&sup2;/2</sup>, which is the same bell shape you started with. the standard normal is essentially its own fourier transform. that self-similarity is precisely what makes the central limit theorem's proof work, because the limit you're chasing turns out to be a fixed point.",
+    "ex": "Example 4.2.9 shows the leverage: X ~ Binomial(n,p) is a sum of n i.i.d. Bernoullis, so by the product property &phi;<sub>X</sub>(t) = (pe<sup>it</sup> + (1&minus;p))<sup>n</sup> &mdash; obtained without touching the binomial p.m.f. at all.",
+    "why": "These are the worked cases you reason from. And the normal's e<sup>&minus;t&sup2;/2</sup> is the target of the CLT proof in &sect;4.3.3: the whole argument is showing that &phi;<sub>Y<sub>n</sub></sub>(t) &rarr; e<sup>&minus;t&sup2;/2</sup> pointwise, then invoking L&eacute;vy continuity.",
+    "math": "Bernoulli: 1&minus;p+pe<sup>it</sup>. Poisson: exp(&lambda;(e<sup>it</sup>&minus;1)). Standard normal: e<sup>&minus;t&sup2;/2</sup>."
+   }
+  },
+  {
+   "id": "v3c4b4",
+   "s": "4.2",
+   "page": 236,
+   "q": "List the properties in Proposition 4.2.8. Which one does the real work?",
+   "a": "For random variables X, Y taking values in R<sup>n</sup>:<div class='eq'>(i)&nbsp;&nbsp;&phi;<sub>X</sub>(0) = 1 and |&phi;<sub>X</sub>(t)| &le; 1 for all t<br><br>(ii)&nbsp;&nbsp;&phi;<sub>&minus;X</sub>(t) = &phi;<sub>X</sub>(t)&#773;&nbsp;&nbsp;(complex conjugate)<br><br><b>(iii)&nbsp;&nbsp;If X and Y are independent and Z = X + Y, then &phi;<sub>Z</sub>(t) = &phi;<sub>X</sub>(t)&phi;<sub>Y</sub>(t)</b><br><br>(iv)&nbsp;&nbsp;&phi;<sub>aX</sub>(t) = &phi;<sub>X</sub>(ta) for a constant a<br><br>(v)&nbsp;&nbsp;&phi;<sub>AX</sub>(t) = &phi;<sub>X</sub>(A<sup>H</sup>t) for a constant matrix A</div><p style='margin-top:6px'>(The proof is Exercise 4.8.)</p><p><b>(iii) is the one that matters.</b> The distribution of a sum of independent random variables is a <b>convolution</b> of their densities &mdash; awkward, and it compounds badly over many summands. On the characteristic-function side it is a plain <b>product</b>. For n i.i.d. copies it is a single power:</p><div class='eq'>&phi;<sub>X&#8321;+&hellip;+X<sub>n</sub></sub>(t) = ( &phi;<sub>X</sub>(t) )<sup>n</sup></div><p style='margin-top:8px'>Combined with (iv), scaling a sum is just as easy &mdash; which is exactly the manipulation the CLT needs for Y<sub>n</sub> = S<sub>n</sub>/&radic;n.</p>",
+   "r": {
+    "rot": "five properties, and property (iii) is the reason anyone bothers with characteristic functions at all. adding independent random variables is horrible in density-space &mdash; you have to <b>convolve</b>, and convolving n things is worse than convolving two. transform to characteristic functions and addition becomes <b>multiplication</b>. n identical copies become a single nth power. the other properties are housekeeping: it starts at 1, it never exceeds 1 in magnitude, negation conjugates it, and scaling the variable scales the argument. but (iii) is the whole engine.",
+    "ex": "This is how Example 4.2.9 gets the binomial characteristic function in one step from the Bernoulli one, and it's how Proposition 4.3.7 shows the sample mean of a normal sample is <b>exactly</b> normal for every n &mdash; multiply n copies of exp(&mu;ti &minus; &frac12;t&sup2;&sigma;&sup2;/n&sup2;&hellip;) and read off the answer.",
+    "why": "Turning convolution into multiplication is the same reason Fourier transforms matter everywhere else, and the footnote makes the connection explicit &mdash; &phi;<sub>X</sub> is the Fourier transform of f<sub>X</sub> up to a sign. It is what makes the CLT provable in a page rather than a chapter.",
+    "math": "&phi;<sub>X+Y</sub> = &phi;<sub>X</sub>&phi;<sub>Y</sub> for independent X, Y. i.i.d. sum: &phi;<sub>S<sub>n</sub></sub> = &phi;<sub>X</sub><sup>n</sup>. Scaling: &phi;<sub>aX</sub>(t) = &phi;<sub>X</sub>(at)."
+   }
+  },
+  {
+   "id": "v3c4b5",
+   "s": "4.2",
+   "page": 236,
+   "q": "How do you recover the moments from the characteristic function? State Proposition 4.2.10 and use it.",
+   "a": "<b>Proposition 4.2.10.</b> For a univariate X with characteristic function &phi;<sub>X</sub>, the kth moment exists <b>if and only if</b> the kth derivative &phi;<sup>(k)</sup>(0) exists at t = 0, and then<div class='eq'>E[X<sup>k</sup>] = (&minus;i)<sup>k</sup> &phi;<sub>X</sub><sup>(k)</sup>(0)</div>(The proof is Exercise 4.15.) So the characteristic function is a <b>generating function</b> for all the moments at once &mdash; and they are usually easier to get this way than by computing each integral E[X<sup>k</sup>] separately.<p style='margin-top:10px'><b>Bernoulli (Example 4.2.12).</b> From &phi;<sub>X</sub>(t) = 1 &minus; p + pe<sup>it</sup>:</p><div class='eq'>E[X] = &minus;i&phi;&prime;(0) = &minus;i(ie<sup>0</sup>)p = <b>p</b><br>E[X&sup2;] = &minus;&phi;&Prime;(0) = <b>p</b><br>Var(X) = p &minus; p&sup2; = <b>p(1&minus;p)</b></div><b>Poisson (Example 4.2.13).</b> From &phi;<sub>X</sub>(t) = e<sup>(e<sup>it</sup>&minus;1)&lambda;</sup>:<div class='eq'>E[X] = <b>&lambda;</b>&nbsp;&nbsp;&nbsp;E[X&sup2;] = &lambda; + &lambda;&sup2;&nbsp;&nbsp;&nbsp;Var(X) = &lambda; + &lambda;&sup2; &minus; &lambda;&sup2; = <b>&lambda;</b></div><p style='margin-top:8px'><b>Remark 4.2.11</b> generalizes to the multivariate case: the mixed moment E[X&#8321;<sup>a&#8321;</sup>&hellip;X<sub>n</sub><sup>a<sub>n</sub></sup>] exists iff the corresponding mixed partial of &phi;<sub>X</sub> exists at 0, and equals (&minus;i)<sup>a</sup> times it.</p>",
+   "r": {
+    "rot": "differentiate the characteristic function at zero and moments fall out. k derivatives, multiply by (&minus;i)<sup>k</sup>, done. and it's an <b>iff</b> &mdash; the kth moment exists exactly when the kth derivative does, so the characteristic function knows which moments you're allowed to have. that's why it's worth computing once: you get the mean, the variance, the skew and everything else from a single object by differentiating, instead of doing a fresh integral for each. the poisson calculation is the satisfying one &mdash; mean &lambda;, variance &lambda;, falling out of two derivatives.",
+    "ex": "Compare the effort. Computing E[X&sup2;] for a Poisson directly means summing x&sup2;e<sup>&minus;&lambda;</sup>&lambda;<sup>x</sup>/x! and finding the trick; here you differentiate exp(&lambda;(e<sup>it</sup>&minus;1)) twice and read it off. Both give &lambda; + &lambda;&sup2;.",
+    "why": "The if-and-only-if is doing quiet work. It is the moment-existence question that decides whether the CLT applies at all &mdash; and &sect;4.3.5's Cauchy warning is exactly the case where the characteristic function exists (it always does) but is <b>not differentiable</b> at 0, so no mean exists and the theorem is void.",
+    "math": "E[X<sup>k</sup>] = (&minus;i)<sup>k</sup>&phi;<sup>(k)</sup>(0), existing iff &phi;<sup>(k)</sup>(0) does. Bernoulli: p, p, p(1&minus;p). Poisson: &lambda;, &lambda;+&lambda;&sup2;, &lambda;."
+   }
+  },
+  {
+   "id": "v3c4c1",
+   "s": "4.3",
+   "page": 238,
+   "q": "State the Central Limit Theorem precisely. Which mode of convergence does it give &mdash; and which does it <i>not</i>?",
+   "a": "<b>Theorem 4.3.1.</b> Let X&#8321;,X&#8322;,&hellip; be i.i.d. with finite mean &mu; and variance &sigma;&sup2;. With S<sub>n</sub> = X&#8321; + &hellip; + X<sub>n</sub> and<div class='eq'>Y<sub>n</sub> = <span class='frac'><span>S<sub>n</sub> &minus; n&mu;</span><span>&radic;n &middot; &sigma;</span></span></div>then Y<sub>n</sub> &rarr; N(0,1) <b>in distribution</b>.<p style='margin-top:10px'><b>Only in distribution.</b> Example 4.1.13 is explicit: the CLT does <b>not</b> guarantee almost sure convergence, and does <b>not</b> guarantee convergence in probability. It is a statement about c.d.f.s alone.</p><p><b>Cor 4.3.2:</b> for large n, &mu;&#770;<sub>n</sub> is approximately N(&mu;, &sigma;&sup2;/n) and S<sub>n</sub> is approximately N(n&mu;, n&sigma;&sup2;).</p><p style='margin-top:8px'>What makes it astonishing: it holds <b>no matter how the X<sub>i</sub> are distributed</b>, provided the mean and variance are finite.</p>",
+   "r": {
+    "rot": "add up a pile of independent things, centre and rescale, and you get a bell curve. it does not matter what you were adding &mdash; coin flips, dice, incomes, anything with a finite mean and variance. that's the miracle. the fine print everyone skips: it converges <b>in distribution only</b>. the shape converges. the actual random variables are not settling down anywhere.",
+    "ex": "Figure 4.1 shows it on Beta(1,4), a visibly lopsided distribution: n = 1 is skewed, n = 4 less so, n = 16 already looks normal.",
+    "why": "There's a lovely justification in the text: N(&mu;, &sigma;&sup2;/n) is the <b>maximum entropy</b> distribution among all distributions with that mean and variance. So the CLT is saying that summing washes out every feature except the first two moments &mdash; you're left with the distribution that assumes nothing else, exactly the &sect;2.3 principle.",
+    "math": "Proof (&sect;4.3.3) via characteristic functions: &phi;<sub>Y<sub>n</sub></sub>(t) &rarr; e<sup>&minus;t&sup2;/2</sup> pointwise, then L&eacute;vy continuity converts that into convergence in distribution."
+   }
+  },
+  {
+   "id": "v3c4c2",
+   "s": "4.3",
+   "page": 238,
+   "q": "State Corollary 4.3.2 &mdash; the form of the CLT you actually use. How does it follow from Theorem 4.3.1?",
+   "a": "The theorem is stated about the standardized Y<sub>n</sub> = (S<sub>n</sub> &minus; n&mu;)/(&radic;n &sigma;). The usable form undoes the standardization:<div class='eq'><b>Corollary 4.3.2.</b> For large n,<br><br>&mu;&#770;<sub>n</sub> is approximately <b>N(&mu;, &sigma;&sup2;/n)</b><br><br>S<sub>n</sub> is approximately <b>N(n&mu;, n&sigma;&sup2;)</b></div><b>Proof: it's a change of variables.</b> Write the event in terms of Y<sub>n</sub>, apply the theorem, then substitute back:<div class='eq'>P(&mu;&#770;<sub>n</sub> &le; z) = P( (S<sub>n</sub>/n &minus; &mu;)/(&sigma;/&radic;n) &le; (z&minus;&mu;)/(&sigma;/&radic;n) ) = P( Y<sub>n</sub> &le; (&radic;n/&sigma;)(z&minus;&mu;) )</div>which is approximately &int; up to (&radic;n/&sigma;)(z&minus;&mu;) of the standard normal density; substituting x = (&radic;n/&sigma;)(v&minus;&mu;) turns it into the c.d.f. of N(&mu;,&sigma;&sup2;/n).<p style='margin-top:10px'><b>Why the answer is not a surprise.</b> The law of large numbers already gives &mu;&#770;<sub>n</sub> mean &mu; and variance &sigma;&sup2;/n. And N(&mu;,&sigma;&sup2;/n) is the <b>maximum entropy</b> distribution with that mean and variance &mdash; so lacking other information, it is exactly the distribution that assumes least.</p>",
+   "r": {
+    "rot": "the theorem is stated in a standardized form nobody uses directly. the corollary is the version you actually reach for: <b>the sample mean is approximately normal with mean &mu; and variance &sigma;&sup2;/n</b>. that's it. the proof is just undoing the standardization &mdash; write your event in terms of Y<sub>n</sub>, apply the theorem, change variables back. and here's a nice sanity check: you already knew from the law of large numbers that &mu;&#770;<sub>n</sub> has that mean and that variance. the normal is the max-entropy distribution with a given mean and variance. so of all the shapes it could have converged to, it converged to the one assuming least.",
+    "ex": "The pairing is worth holding: divide by n and you get N(&mu;, &sigma;&sup2;/n) &mdash; spread shrinking. Don't divide and you get N(n&mu;, n&sigma;&sup2;) &mdash; spread <b>growing</b>, but only like &radic;n while the mean grows like n. Same theorem, opposite-looking conclusions.",
+    "why": "This corollary is what every confidence interval and every t-test in Chapter 6 is built on. It is also what makes the &radic;n in &ldquo;margin of error&rdquo; universal: the standard deviation of &mu;&#770;<sub>n</sub> is &sigma;/&radic;n regardless of what you sampled.",
+    "math": "&mu;&#770;<sub>n</sub> &asymp; N(&mu;,&sigma;&sup2;/n); S<sub>n</sub> &asymp; N(n&mu;,n&sigma;&sup2;). Both are Thm 4.3.1 plus a linear change of variables."
+   }
+  },
+  {
+   "id": "v3c4c3",
+   "s": "4.3",
+   "page": 240,
+   "q": "What is the key point of the CLT, and why are normal distributions so prevalent in practice?",
+   "a": "<b>The key point: X&#8321;,&hellip;,X<sub>n</sub> need not be normally distributed.</b> They can be as un-normal as you like &mdash; heavily skewed, bimodal, discrete &mdash; and as long as they are i.i.d. with a <b>well-defined, finite mean and variance</b>, the average always approaches a normal distribution as n &rarr; &infin;.<div class='eq'>The further from normal the original distribution, the larger n must be before &mu;&#770;<sub>n</sub> looks normal &mdash; but it always gets there.</div><p style='margin-top:8px'><b>Why normals are everywhere.</b> Whenever a quantity is a <b>sum of many independent, identically distributed effects</b>, the CLT (or a suitable generalization) says it will be approximately normal <b>regardless of the distribution of the pieces</b>. Hence exam scores, total annual snowfall, and radio noise &mdash; all determined by sums of many independent factors.</p>",
+   "r": {
+    "rot": "the surprising word in the theorem is <b>any</b>. it doesn't matter what you're averaging. skewed, bimodal, discrete, some hideous shape you invented &mdash; average enough independent copies and the average is bell-shaped. the only requirements are i.i.d. and a finite mean and variance. how fast it converges depends on how weird you started, but it always converges. and that's why bell curves are everywhere in real data: anything that's a sum of lots of small independent influences comes out normal whether or not any individual influence was.",
+    "ex": "Figure 4.1 makes it visible with Beta(1,4), a distinctly lopsided distribution. At n = 1 the histogram of &mu;&#770;<sub>n</sub> is just the skewed original; at n = 4 it is already noticeably more symmetric; at n = 16 it sits close to N(1/5, 2/(75n)).",
+    "why": "Example 4.3.3 shows what it buys over the law of large numbers on the same problem. For fair coin flips at &epsilon; = 1/(2&radic;n), the LLN gives the vacuous bound P &le; 1, while the CLT plus the 68-95-99.7 rule gives P &asymp; 0.32. At two standard deviations the LLN says &le; 0.25 and the CLT says &asymp; 0.05 &mdash; a five-fold sharpening.",
+    "math": "i.i.d. + finite &mu; and &sigma;&sup2; is <b>all</b> that is required. Rate of convergence depends on the parent distribution; the limit does not."
+   }
+  },
+  {
+   "id": "v3c4c4",
+   "s": "4.3",
+   "page": 241,
+   "q": "Sketch the proof of the CLT. What is the multivariate version?",
+   "a": "It suffices to prove it for &mu; = 0, &sigma; = 1, with Y<sub>n</sub> = S<sub>n</sub>/&radic;n.<p style='margin-top:6px'><b>Step 1 &mdash; turn the sum into a power.</b> The X<sub>i</sub> are identically distributed with common &phi;<sub>X</sub>, so by Proposition 4.2.8(iii)&ndash;(iv),</p><div class='eq'>&phi;<sub>Y<sub>n</sub></sub>(t) = ( &phi;<sub>X</sub>(t/&radic;n) )<sup>n</sup></div><b>Step 2 &mdash; Taylor-expand the exponential inside.</b> Using &mu; = 0 and &sigma; = 1, the first-order term vanishes and the second contributes &minus;t&sup2;/2n:<div class='eq'>&phi;<sub>X</sub>(t/&radic;n) = 1 + (it/&radic;n)&mu; &minus; (t&sup2;/2n)&sigma;&sup2; + &hellip; = 1 &minus; t&sup2;/(2n) + h(n,t),&nbsp;&nbsp; h &isin; o(1/n)</div><b>Step 3 &mdash; take the limit.</b> Lemma 4.3.6 (built on the product estimate of Lemma 4.3.5, |&prod;z<sub>i</sub> &minus; &prod;w<sub>i</sub>| &le; &sum;|z<sub>i</sub>&minus;w<sub>i</sub>| for terms bounded by 1) gives<div class='eq'>&phi;<sub>Y<sub>n</sub></sub>(t) &rarr; e<sup>&minus;t&sup2;/2</sup> = &phi;<sub>N</sub>(t)</div><b>Step 4 &mdash; convert back.</b> L&eacute;vy continuity (Thm 4.2.16) turns pointwise convergence of characteristic functions into pointwise convergence of c.d.f.s, which is (4.6).<p style='margin-top:10px'><b>Theorem 4.3.4 (multivariate).</b> For i.i.d. X<sub>i</sub> in R<sup>d</sup> with finite mean &mu; and finite covariance &Sigma; &gt; 0, W<sub>n</sub> = (1/&radic;n)(&sum;<sub>j</sub>X<sub>j</sub> &minus; n&mu;) converges in distribution to <b>N(0,&Sigma;)</b>. The proof relies primarily on the univariate case (Exercise 4.18).</p>",
+   "r": {
+    "rot": "the proof is four moves and none of them are hard. sums are awful, so switch to characteristic functions where a sum of n i.i.d. things becomes an nth <b>power</b>. taylor-expand the inside: the constant is 1, the linear term dies because the mean is 0, and the quadratic term leaves &minus;t&sup2;/2n. so you're computing (1 &minus; t&sup2;/2n)<sup>n</sup>, which is the classic limit that gives e<sup>&minus;t&sup2;/2</sup>. that's the normal's characteristic function. then lévy continuity says converging characteristic functions means converging distributions, and you're done. the whole theorem is (1 + x/n)<sup>n</sup> &rarr; e<sup>x</sup> in disguise.",
+    "ex": "The &radic;n scaling is not a choice &mdash; it is forced. Divide by n and the quadratic term vanishes in the limit (you get the law of large numbers, a point mass). Divide by nothing and it blows up. Only &radic;n leaves a finite nonzero quadratic term, which is why the normal appears at exactly that scaling.",
+    "why": "It shows what the machinery of &sect;4.2 was for: the product property makes step 1 possible and L&eacute;vy continuity makes step 4 possible. Without both, this theorem is genuinely hard; with them it is a page. That is also why &sect;4.2 sits immediately before &sect;4.3.",
+    "math": "&phi;<sub>Y<sub>n</sub></sub>(t) = &phi;<sub>X</sub>(t/&radic;n)<sup>n</sup> = (1 &minus; t&sup2;/2n + o(1/n))<sup>n</sup> &rarr; e<sup>&minus;t&sup2;/2</sup>; L&eacute;vy continuity finishes. Multivariate limit: N(0,&Sigma;)."
+   }
+  },
+  {
+   "id": "v3c4c5",
+   "s": "4.3",
+   "page": 243,
+   "q": "When is the sample mean of a normal sample <i>exactly</i> normal? And when do the CLT and the law of large numbers fail outright?",
+   "a": "<b>Proposition 4.3.7 &mdash; no waiting required.</b> If the sample X&#8321;,&hellip;,X<sub>n</sub> is drawn from N(&mu;,&sigma;&sup2;), then &mu;&#770;<sub>n</sub> is distributed as N(&mu;,&sigma;&sup2;/n) <b>exactly, for every n &ge; 1</b> &mdash; not merely in the limit. Multiply n copies of the normal characteristic function:<div class='eq'>&phi;<sub>&mu;&#770;<sub>n</sub></sub>(t) = &prod;<sub>k=1</sub><sup>n</sup> exp( &mu;ti/n &minus; &frac12;(t/n)&sup2;&sigma;&sup2; ) = exp( &mu;ti &minus; t&sup2;&sigma;&sup2;/(2n) )</div>which is the characteristic function of N(&mu;,&sigma;&sup2;/n).<p style='margin-top:10px'><b>&sect;4.3.5 &mdash; the warning.</b> Both the CLT and the law of large numbers <b>fail</b> if the mean or variance is infinite or undefined. The <b>Cauchy distribution</b> has neither.</p><div class='eq'>Without a mean, Y<sub>n</sub> cannot even be <b>defined</b>, and &mu;&#770;<sub>n</sub> has nothing to converge to.</div><b>And it fails silently.</b> &mu;&#770;<sub>n</sub> still returns a number whenever you ask &mdash; it &ldquo;simply lies to you,&rdquo; giving a value that is not the mean of anything and does not approach the mean of anything. <b>If you don't know in advance that the mean doesn't exist, it is not easy to deduce that from looking at the sample mean.</b><p style='margin-top:8px'>With infinite or undefined variance the true and sample means can stay far apart for a long time, the sample variance and standard deviation are meaningless, anything built on variance is uninformative, and the empirical distribution cannot be expected to resemble the true one.</p>",
+   "r": {
+    "rot": "two ends of the spectrum. if your data is <b>already</b> normal you don't wait for any limit &mdash; the sample mean is exactly normal from n = 1, because normals stay normal when you add them. and the failure case: some distributions (cauchy) have no mean and no variance at all, and then both the CLT and the law of large numbers are simply <b>false</b>. the nasty part is that nothing complains. you compute a sample mean, you get a number, the number looks fine, and it means nothing &mdash; it isn't converging to anything and never will. you can't spot it by staring at the average.",
+    "ex": "The Cauchy is the standard counterexample precisely because it looks harmless &mdash; symmetric, unimodal, bell-ish. Its tails are just heavy enough that &int;|x|f(x)dx diverges, and every conclusion that assumed a mean evaporates.",
+    "why": "It marks the boundary of the whole chapter's machinery. Every result here &mdash; law of large numbers, CLT, the estimators of &sect;4.4&ndash;4.5 &mdash; is conditional on finite moments, and the failure mode is silent rather than loud. That combination is what makes it worth knowing before you need it.",
+    "math": "Exact for normal parents, all n. Fails when E[X] or Var(X) is infinite/undefined (Cauchy): &mu;&#770;<sub>n</sub> returns values but converges to nothing."
+   }
+  },
+  {
+   "id": "v3c4d1",
+   "s": "4.4",
+   "page": 245,
+   "q": "Define bias, and show the sample mean and sample variance estimators differ in it.",
+   "a": "<b>Definition 4.4.3.</b> bias(&Theta;&#770;) = E[&Theta;&#770;] &minus; &theta;. Zero means <b>unbiased</b>; E[&Theta;&#770;<sub>n</sub>] &rarr; &theta; means <b>asymptotically unbiased</b>.<p style='margin-top:8px'><b>Sample mean is unbiased:</b> E[&mu;&#770;] = (1/n)&Sigma;E[X<sub>i</sub>] = &mu;. &#10003;</p><p><b>Biased sample variance is not:</b> for &sigma;&#770;<sub>n</sub>&sup2; = (1/n)&Sigma;(X<sub>i</sub> &minus; &mu;&#770;)&sup2;,</p><div class='eq'>E[&sigma;&#770;<sub>n</sub>&sup2;] = <span class='frac'><span>n &minus; 1</span><span>n</span></span>&sigma;&sup2; &ne; &sigma;&sup2;</div>though it is asymptotically unbiased. <b>Prop 4.4.6:</b> dividing by n&minus;1 instead fixes it &mdash; s&#770;&sup2; = (1/(n&minus;1))&Sigma;(X<sub>i</sub> &minus; &mu;&#770;)&sup2; is the <b>unbiased sample variance</b>.<p style='margin-top:8px'><b>Remark 4.4.2:</b> estimators are <b>random variables</b> &mdash; functions of X&#8321;,&hellip;,X<sub>n</sub>, not of the data x&#8321;,&hellip;,x<sub>n</sub>. An <i>estimate</i> is the number you get from one draw.</p>",
+   "r": {
+    "rot": "bias = on average, how far off is your estimator. sample mean: dead on. sample variance dividing by n: systematically <b>too small</b>, by a factor (n&minus;1)/n. why? you measured spread around the <i>estimated</i> mean, which by construction sits closer to your data than the true mean does. so you undercount. dividing by n&minus;1 pays that back. that's the whole reason for the weird n&minus;1 you were told to use and never told why.",
+    "ex": "The estimator/estimate distinction matters: &mu;&#770; is a random variable with its own distribution (Figure 4.3 plots many draws of it), while &mu;&#770;<sub>x</sub> = 1.934 is one number from one draw.",
+    "why": "Unbiased is <b>not</b> the same as good, which &sect;4.4.3 makes precise. An unbiased estimator can have enormous variance and be worse in practice than a slightly biased one with small variance.",
+    "math": "bias(&Theta;&#770;) = E[&Theta;&#770;] &minus; &theta;. E[&sigma;&#770;<sub>n</sub>&sup2;] = ((n&minus;1)/n)&sigma;&sup2;. Unbiased: s&#770;&sup2; = &Sigma;(X<sub>i</sub>&minus;&mu;&#770;)&sup2;/(n&minus;1)."
+   }
+  },
+  {
+   "id": "v3c4d2",
+   "s": "4.4",
+   "page": 248,
+   "q": "Define MSE and consistency. Why isn't the minimum-variance unbiased estimator always the right target?",
+   "a": "<b>Def 4.4.11:</b> MSE(Y) = E[(Y &minus; &theta;)&sup2;]. <b>Prop 4.4.12:</b><div class='eq'>MSE(Y) = bias(Y)&sup2; + Var(Y) = bias(Y)&sup2; + se(Y)&sup2;</div><b>Def 4.4.13 (consistency):</b> the sequence (&Theta;&#770;<sub>n</sub>) is <b>consistent</b> if &Theta;&#770;<sub>n</sub> &rarr; &theta; <b>in probability</b>. <b>Prop 4.4.14:</b> bias &rarr; 0 and se &rarr; 0 together imply consistency.<p style='margin-top:10px'><b>Why MVUE isn't always right:</b> restricting to unbiased estimators makes MSE = Var, and the best such is the <b>minimum-variance unbiased estimator</b>. But <b>there can be biased estimators with smaller MSE</b>. If you truly want to minimize MSE, you may have to accept some bias. That's the <b>bias&ndash;variance tradeoff</b> again.</p>",
+   "r": {
+    "rot": "MSE = bias&sup2; + variance. third time you've seen this decomposition &mdash; law of total variance in &sect;1.8, under/overfitting in &sect;3.4, now estimators. and the punchline: chasing unbiasedness is a <b>constraint</b>, and constraints cost you. deliberately accepting a little bias can shrink the variance so much that you end up closer on average. that's what every regularized estimator in ch 5 is doing on purpose.",
+    "ex": "Consistency is about the sequence, not any single estimator: bias and standard error both vanishing as n grows is enough (Prop 4.4.14).",
+    "why": "This reframes &lsquo;unbiased = good&rsquo; as a mistake. What you actually want is small MSE, and unbiasedness is a side condition that sometimes helps and sometimes hurts. Ridge regression in &sect;5.4 is the canonical example of trading bias for a big variance reduction.",
+    "math": "MSE = bias&sup2; + Var. Consistent &hArr; &Theta;&#770;<sub>n</sub> &rarr; &theta; in probability. se(&Theta;&#770;) = &radic;Var(&Theta;&#770;) (Def 4.4.8)."
+   }
+  },
+  {
+   "id": "v3c4d3",
+   "s": "4.4",
+   "page": 244,
+   "q": "Distinguish a statistic, an estimator, and an estimate. Why is an estimator a random variable?",
+   "a": "Data x&#8321;,&hellip;,x<sub>n</sub> are draws from an i.i.d. <b>sample</b> X&#8321;,&hellip;,X<sub>n</sub> having the same distribution as X. Then:<div class='eq'><b>Statistic</b> &mdash; any (well-behaved) function T(X&#8321;,&hellip;,X<sub>n</sub>) of the <b>sample</b>. Being a function of random variables, it is <b>itself a random variable</b>.<br><br><b>Estimator</b> &mdash; a statistic used to estimate some quantity or parameter.<br><br><b>Estimate</b> &mdash; what you get when you replace each X<sub>i</sub> by the actual datum x<sub>i</sub>. A <b>number</b>.</div><b>Remark 4.4.2 makes the distinction sharp.</b> The sample mean estimator is a function of X&#8321;,&hellip;,X<sub>n</sub>, not of x&#8321;,&hellip;,x<sub>n</sub>. Evaluating the X<sub>i</sub> at points of &Omega; produces data, and inserting that data gives the estimate:<div class='eq'>estimator&nbsp;&nbsp;&mu;&#770;<sub>n</sub> = (1/n)&sum;X<sub>i</sub>&nbsp;&nbsp;&mdash; a random variable<br>estimate&nbsp;&nbsp;&mu;&#770;<sub>x</sub> = x&#772; = (1/n)&sum;x<sub>i</sub>&nbsp;&nbsp;&mdash; a number</div><b>A different draw produces a different estimate.</b> That variability <b>is</b> the distribution of the estimator, and it is the thing bias, standard error and MSE all describe.<p style='margin-top:8px'>Statistical inference or learning is the process of using data to approximate some quantity or function &mdash; often the underlying distribution or its parameters. When the family is unknown there is no obvious parameter to estimate, and you need <b>nonparametric inference</b>.</p>",
+   "r": {
+    "rot": "three words people use interchangeably and shouldn't. a <b>statistic</b> is any formula applied to the sample. an <b>estimator</b> is a statistic you're using to guess something. an <b>estimate</b> is the number that falls out when you plug in your actual data. the key one: an estimator is a <b>random variable</b>, because the sample is random. run the experiment again and you get a different number. that spread is not noise to be embarrassed about &mdash; it's the object of study, and every quality measure in this section is a statement about it.",
+    "ex": "Definition 4.4.1 gives the two standard ones: the sample mean &mu;&#770;<sub>n</sub> = (1/n)&sum;X<sub>i</sub> and the <b>biased</b> sample variance &sigma;&#770;&sup2;<sub>n</sub> = (1/n)&sum;(X<sub>i</sub> &minus; &mu;&#770;<sub>n</sub>)&sup2;. The CLT then says &mu;&#770;<sub>n</sub> approaches N(&mu;, &sigma;&sup2;/n) &mdash; a statement about the estimator's distribution, which only makes sense because it has one.",
+    "why": "The distinction is what makes the whole chapter coherent. Bias is E[&Theta;&#770;] &minus; &theta;, standard error is &radic;Var(&Theta;&#770;), MSE is E[(&Theta;&#770;&minus;&theta;)&sup2;] &mdash; every one is an expectation over the estimator's distribution, and none of them is even definable for a single estimate.",
+    "math": "T(X&#8321;,&hellip;,X<sub>n</sub>) is a random variable; T(x&#8321;,&hellip;,x<sub>n</sub>) is its realization. Bias, se and MSE are properties of the former."
+   }
+  },
+  {
+   "id": "v3c4d4",
+   "s": "4.4",
+   "page": 246,
+   "q": "Distinguish accuracy from precision for an estimator. Give an example where two unbiased estimators differ.",
+   "a": "<b>The dart-board picture (Figure 4.2).</b> Darts clustered tightly but off-centre: the thrower is <b>precise but not accurate</b>. Darts scattered widely but averaging to the bullseye: <b>accurate but not precise</b>.<div class='eq'><b>Accuracy</b> is the <b>bias</b>, E[&Theta;&#770;] &minus; &theta;.<br><br><b>Precision</b> is the <b>variance</b>, Var(&Theta;&#770;) = E[(&Theta;&#770; &minus; E[&Theta;&#770;])&sup2;].</div>The expectation is taken over the distribution generating the X<sub>i</sub>. <b>Definition 4.4.8:</b> the standard deviation &radic;Var(&Theta;&#770;) is called the <b>standard error</b>, se(&Theta;&#770;).<p style='margin-top:10px'><b>Example 4.4.7 &mdash; unbiased is not enough.</b> For i.i.d. X&#8321;,X&#8322;,X&#8323; with mean &mu; and variance &sigma;&sup2;, the statistic</p><div class='eq'>Y = (X&#8321; + 2X&#8322; + 3X&#8323;)/6</div>is unbiased for &mu;, and by Corollary 1.8.18 its variance is (1/36)(1&sup2;+2&sup2;+3&sup2;)&sigma;&sup2; = <b>(7/18)&sigma;&sup2;</b>. The plain sample mean (X&#8321;+X&#8322;+X&#8323;)/3 is also unbiased, with variance <b>&sigma;&sup2;/3 = (6/18)&sigma;&sup2;</b>.<div class='eq'>Both accurate. <b>The sample mean is more precise.</b></div><p style='margin-top:6px'>Unequal weights waste information: the sum of squared weights is minimized when the weights are equal.</p>",
+   "r": {
+    "rot": "two different ways to be a good estimator, and they're independent. <b>accurate</b> means centred on the truth &mdash; that's bias. <b>precise</b> means tightly clustered &mdash; that's variance, or its square root, the standard error. you can have either without the other. and unbiasedness alone doesn't settle anything: weight your three observations 1:2:3 and you still get an unbiased estimate of the mean, just a worse one, because the weights are lopsided. equal weights minimize the variance, which is why the plain average wins.",
+    "ex": "Example 4.4.9 makes the sample mean's precision concrete: the CLT gives &mu;&#770;<sub>n</sub> &asymp; N(&mu;, &sigma;&sup2;/n), so se(&mu;&#770;<sub>n</sub>) &asymp; &sigma;/&radic;n. Figure 4.3 shows this for Gamma(2,1) with n = 200: the histogram of sample means from 1000 draws sits neatly under the N(2, se&sup2;) density.",
+    "why": "It sets up the next subsection exactly. Since MSE = bias&sup2; + variance, accuracy and precision are the two terms of a single quantity &mdash; and the reason a <b>biased</b> estimator can beat the best unbiased one is that it may trade a little of the first for a lot of the second.",
+    "math": "Accuracy = bias = E[&Theta;&#770;] &minus; &theta;. Precision = Var(&Theta;&#770;); se(&Theta;&#770;) = &radic;Var(&Theta;&#770;). Equal weights minimize &sum;a<sub>i</sub>&sup2; subject to &sum;a<sub>i</sub> = 1."
+   }
+  },
+  {
+   "id": "v3c4d5",
+   "s": "4.4",
+   "page": 248,
+   "q": "You don't know &sigma;. How do you estimate the standard error, and what is a sufficient condition for consistency?",
+   "a": "<b>The problem.</b> The sample mean has standard error &sigma;/&radic;n &mdash; but &sigma; is exactly the sort of thing you don't know. Substitute the <b>sample standard deviation</b>, built from the <b>unbiased</b> sample variance:<div class='eq'>s = &radic;( (1/(n&minus;1)) &sum;<sub>i</sub>(X<sub>i</sub> &minus; &mu;&#770;<sub>n</sub>)&sup2; )</div>giving the <b>estimated standard error</b><div class='eq'>se&#770;(&mu;&#770;<sub>n</sub>) = s/&radic;n = &radic;( &sum;<sub>i</sub>(X<sub>i</sub> &minus; &mu;&#770;<sub>n</sub>)&sup2; / (n(n&minus;1)) )</div><b>Note it is an estimate of an estimate</b> &mdash; and it can be off. Figure 4.4 shows a Gamma(2,1) draw with n = 200 where the true se is 0.1 but the single draw gives &mu;&#770;<sub>x</sub> = 1.934 and se&#770;<sub>x</sub> = 0.899.<p style='margin-top:10px'><b>Proposition 4.4.14 &mdash; a sufficient condition for consistency.</b></p><div class='eq'>bias(&Theta;&#770;<sub>n</sub>) &rarr; 0&nbsp;&nbsp;<b>and</b>&nbsp;&nbsp;se(&Theta;&#770;<sub>n</sub>) &rarr; 0&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&Theta;&#770;<sub>n</sub> is consistent</div>&mdash; equivalently, MSE &rarr; 0 implies convergence in probability, which is Chebyshev in disguise. <b>Both</b> conditions are needed: an estimator can be asymptotically unbiased and still fail to concentrate.<p style='margin-top:8px'><b>Example 4.4.15.</b> Sample from Uniform{1,&hellip;,b} with b unknown, and take b&#770; = (2/n)&sum;X<sub>i</sub> &minus; 1. A direct calculation gives bias(b&#770;) = 0 and Var(b&#770;) = (b&sup2;&minus;1)/3n &rarr; 0, so MSE &rarr; 0 and b&#770; is <b>consistent</b>.</p>",
+   "r": {
+    "rot": "the standard error formula needs &sigma;, which you don't have, so you plug in the sample standard deviation &mdash; with the n&minus;1 denominator, since that's the unbiased one. now your error bar is itself an estimate and can be badly wrong on any single draw. for consistency there's a clean sufficient test: if the bias goes to zero <b>and</b> the standard error goes to zero, the estimator converges in probability. equivalently MSE &rarr; 0, which is just chebyshev pointed at the estimator.",
+    "ex": "The two conditions really are separate. Bias &rarr; 0 with variance staying constant gives an estimator that is centred correctly and never settles down; variance &rarr; 0 with a persistent bias gives one that converges confidently to the wrong answer.",
+    "why": "The estimated standard error is what every reported error bar actually is &mdash; including the <code>std err</code> column of the regression tables in &sect;5.3.8 and the s in the t-statistic of &sect;6.1.2. Knowing it is an estimate is why the t-distribution has fatter tails than the normal.",
+    "math": "se&#770;(&mu;&#770;<sub>n</sub>) = s/&radic;n with s&sup2; the unbiased sample variance. bias &rarr; 0 and se &rarr; 0 &rArr; MSE &rarr; 0 &rArr; consistent."
+   }
+  },
+  {
+   "id": "v3c4e1",
+   "s": "4.5",
+   "page": 250,
+   "q": "Contrast the method of moments with maximum likelihood.",
+   "a": "<b>Method of moments (Def 4.5.1).</b> For &theta; &isin; &Ropf;<sup>k</sup>, choose &theta;&#770; so the first k <b>theoretical</b> moments equal the first k <b>sample</b> moments:<div class='eq'>E[X<sup>j</sup> | &theta;&#770;] = <span class='frac'><span>1</span><span>n</span></span>&Sigma;<sub>i</sub> x<sub>i</sub><sup>j</sup>,&nbsp;&nbsp; j = 1,&hellip;,k</div>k equations, k unknowns. Simple, but it can produce estimates outside the parameter space and isn't reliable for arbitrary distributions.<p style='margin-top:10px'><b>Maximum likelihood (Def 4.5.5).</b> The <b>likelihood</b> of &theta; given a draw x is the joint density evaluated at the data, viewed as a function of &theta;:</p><div class='eq'>L(&theta; | x) = &Pi;<sub>i=1</sub><sup>n</sup> f(x<sub>i</sub> | &theta;)</div>The MLE is the &theta; maximizing it &mdash; <b>the parameter under which what you saw was most likely</b>.",
+   "r": {
+    "rot": "two ways to pick a parameter. <b>moments</b>: force your model's mean (and variance, and so on) to match the sample's. mechanical, sometimes gives nonsense like a negative variance. <b>maximum likelihood</b>: of all parameter values, which one makes the data you actually observed the least surprising? pick that. same formula f(x|&theta;) both times &mdash; but you hold x fixed and vary &theta;, which is the whole conceptual flip.",
+    "ex": "Binomial(m,&theta;) with m known: E[X] = m&theta;, so the method of moments gives &theta;&#770; = (1/mn)&Sigma;x<sub>i</sub>. For Bernoulli, the MLE also comes out to the sample proportion.",
+    "why": "The density-vs-likelihood flip is the single most important idea here. As a <b>density</b>, f(x|&theta;) has &theta; fixed and integrates to 1 over x. As a <b>likelihood</b>, x is fixed and &theta; varies &mdash; and it does <i>not</i> integrate to 1 over &theta;. It is not a probability distribution over &theta;. That's exactly the gap &sect;4.6 fills with a prior.",
+    "math": "MoM: k moment equations. MLE: argmax<sub>&theta;</sub> &Pi;f(x<sub>i</sub>|&theta;); in practice maximize the log-likelihood &Sigma;log f(x<sub>i</sub>|&theta;)."
+   }
+  },
+  {
+   "id": "v3c4e2",
+   "s": "4.5",
+   "page": 255,
+   "q": "State the invariance property of the MLE and its two asymptotic guarantees.",
+   "a": "<b>Prop 4.5.10 (invariance).</b> If &theta;&#770;<sub>x</sub> is the MLE of &theta; and g is a <b>bijection</b>, then g(&theta;&#770;<sub>x</sub>) is the MLE of &tau; = g(&theta;).<p style='margin-top:6px'>Proof: the distribution depends on &tau; only through &theta;, so L(&tau;) = L(g<sup>&minus;1</sup>(&tau;)), and the maximum simply transports.</p><p style='margin-top:10px'><b>Theorem 4.5.11.</b> Under mild conditions the MLE is:</p><ol style='margin:0;padding-left:19px'><li><b>Consistent:</b> &Theta;&#770;<sub>n</sub><sup>MLE</sup> &rarr; &theta; in probability.</li><li><b>Asymptotically normal:</b> &radic;n(&Theta;&#770;<sub>n</sub><sup>MLE</sup> &minus; &theta;) &rarr; N(0, &Sigma;) in distribution.</li></ol>",
+   "r": {
+    "rot": "invariance means you never have to redo the work. got the MLE for the variance? the MLE for the standard deviation is just its square root. reparametrize however you like and the estimate follows along. and asymptotically, the MLE is consistent (it lands on the truth) and normal (its error is a bell curve shrinking like 1/&radic;n) &mdash; which is what lets you put error bars on it.",
+    "ex": "Note the MLE is <b>not</b> generally unbiased &mdash; the MLE for the variance of a normal is the biased &sigma;&#770;<sub>n</sub>&sup2; from &sect;4.4. It's consistent, not unbiased, and &sect;4.4.3 already argued that's often the better trade.",
+    "why": "Asymptotic normality is what makes the MLE usable rather than merely principled: it hands you a limiting distribution, hence confidence intervals and hypothesis tests, for essentially any parametric model. That's why MLE is the default estimator across statistics.",
+    "math": "g bijective &rArr; &tau;&#770; = g(&theta;&#770;). &radic;n(&Theta;&#770;<sup>MLE</sup> &minus; &theta;) &rarr; N(0,&Sigma;), with &Sigma; the inverse Fisher information."
+   }
+  },
+  {
+   "id": "v3c4e3",
+   "s": "4.5",
+   "page": 250,
+   "q": "Define the method of moments precisely. What can go wrong, and what is guaranteed asymptotically?",
+   "a": "<b>Definition 4.5.1.</b> If X's distribution depends on &theta; = (&theta;&#8321;,&hellip;,&theta;<sub>k</sub>) &isin; R<sup>k</sup>, a method-of-moments estimate &theta;&#770;<sub>x</sub> solves the system of k equations in k unknowns<div class='eq'>E[X<sup>j</sup> | &theta;&#770;<sub>x</sub>] = (1/n) &sum;<sub>i</sub> x<sub>i</sub><sup>j</sup>&nbsp;&nbsp;for j = 1,&hellip;,k</div>&mdash; <b>match the first k theoretical moments to the first k sample moments</b>. One equation per unknown parameter.<p style='margin-top:10px'><b>Three things can go wrong.</b></p><div class='eq'>(1) A nonlinear system need not have <b>any</b> solution.<br>(2) If it has one, it need not be <b>unique</b>.<br>(3) Even with a unique solution, it generally <b>cannot be solved analytically</b> and may be hard numerically (Remark 4.5.4).</div><b>But under standard conditions the estimator &Theta;&#770;<sub>n</sub> satisfies:</b><div class='eq'>(i) a unique estimator probably exists, with that probability &rarr; 1 as n &rarr; &infin;<br>(ii) it is <b>consistent</b>: &Theta;&#770;<sub>n</sub> &rarr;<sub>p</sub> &theta;<br>(iii) it is <b>asymptotically normal</b>: &radic;n(&Theta;&#770;<sub>n</sub> &minus; &theta;) &rarr;<sub>d</sub> N(0,&Sigma;)</div><p style='margin-top:6px'>Fortunately, for many familiar distributions the solution <b>is</b> available analytically &mdash; but that cannot be counted on in general.</p>",
+   "r": {
+    "rot": "you have k unknown parameters. write down the first k moments of your distribution as formulas in those parameters, set each equal to the corresponding sample moment, and solve. one equation per unknown, so the counting works out. it's the most obvious estimator anyone could invent and it's often fine. the caveats are honest: a nonlinear system might have no solution, or several, or one you can't write down. but asymptotically it behaves &mdash; consistent and asymptotically normal, which is most of what you want.",
+    "ex": "Example 4.5.3 for Gamma(a,b) needs two moments, since &theta; = (a,b) &isin; R&sup2;. Using &mu; = a/b and &sigma;&sup2; = a/b&sup2;, the system solves cleanly to <b>a&#770;<sub>x</sub> = &mu;&#770;<sub>x</sub>&sup2;/&sigma;&#770;<sub>x</sub>&sup2;</b> and <b>b&#770;<sub>x</sub> = &mu;&#770;<sub>x</sub>/&sigma;&#770;<sub>x</sub>&sup2;</b>, with &sigma;&#770;<sub>x</sub>&sup2; the biased sample variance. Example 4.5.2 for Binomial(m,&theta;) needs only one, giving &theta;&#770;<sub>x</sub> = (1/mn)&sum;x<sub>i</sub>.",
+    "why": "Its real modern use is as a <b>starting guess</b>. Remark 4.5.8 says many MLEs have no closed form and must be found by iterative optimization &mdash; and the method-of-moments estimate, when easy, is the initial point you hand the optimizer. That is exactly what Example 4.5.9 does for the gamma distribution.",
+    "math": "Solve E[X<sup>j</sup>|&theta;&#770;] = (1/n)&sum;x<sub>i</sub><sup>j</sup> for j = 1..k. Consistent and asymptotically normal under standard conditions; existence and uniqueness not guaranteed at finite n."
+   }
+  },
+  {
+   "id": "v3c4e4",
+   "s": "4.5",
+   "page": 252,
+   "q": "Define the likelihood and the MLE. Work out the Bernoulli case.",
+   "a": "<b>Definition 4.5.5.</b> Let X&#8321;,&hellip;,X<sub>n</sub> be a sample from X whose distribution depends on &theta;, writing f(x|&theta;) for the p.d.f. or the p.m.f. as appropriate. Given a draw x, the <b>likelihood</b> of &theta; is the joint density:<div class='eq'>L(&theta;|x) = f(x&#8321;,&hellip;,x<sub>n</sub>|&theta;) = &prod;<sub>i=1</sub><sup>n</sup> f(x<sub>i</sub>|&theta;)</div>A <b>maximum likelihood estimate</b> is a &theta;&#770;<sup>MLE</sup> maximizing it. If a single estimator produces the MLE for every draw, it is <b>the maximum likelihood estimator</b>.<p style='margin-top:6px'>Same expression as a probability, read the other way round: <b>fix the data, vary the parameter</b>, and ask which parameter would have made this data most likely.</p><p style='margin-top:10px'><b>Example 4.5.6 &mdash; Bernoulli.</b> With g(x,p) = p<sup>x</sup>(1&minus;p)<sup>1&minus;x</sup>, the exponents just add:</p><div class='eq'>L(p) = &prod;<sub>i</sub> p<sup>x<sub>i</sub></sup>(1&minus;p)<sup>1&minus;x<sub>i</sub></sup> = p<sup>&sum;x<sub>i</sub></sup>(1&minus;p)<sup>n&minus;&sum;x<sub>i</sub></sup> = p<sup>nx&#772;</sup>(1&minus;p)<sup>n(1&minus;x&#772;)</sup></div>Setting L&prime;(p&#770;) = 0 and factoring out p&#770;<sup>nx&#772;&minus;1</sup>(1&minus;p&#770;)<sup>n(1&minus;x&#772;)&minus;1</sup> leaves<div class='eq'>nx&#772;(1 &minus; p&#770;) = n(1 &minus; x&#772;)p&#770;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;<b>p&#770;<sup>MLE</sup> = x&#772;</b></div><b>The MLE of a coin's bias is the observed proportion of heads.</b> The estimator is p&#770;<sup>MLE</sup>(X&#8321;,&hellip;,X<sub>n</sub>) = &mu;&#770;<sub>n</sub>.",
+   "r": {
+    "rot": "the likelihood is the probability of your data, viewed as a function of the parameter instead of the data. maximum likelihood picks the parameter that makes what you actually saw as unsurprising as possible. for a coin it gives exactly what you'd guess: the fraction of heads. the algebra is easy because the bernoulli p.m.f. written as p<sup>x</sup>(1&minus;p)<sup>1&minus;x</sup> multiplies into p<sup>(total heads)</sup>(1&minus;p)<sup>(total tails)</sup> &mdash; the whole sample collapses into two counts.",
+    "ex": "That collapse is not an accident: the counts are a <b>sufficient statistic</b>. Nothing about <i>which</i> flips came up heads survives into the likelihood, which is exactly why the estimator depends only on x&#772;.",
+    "why": "&sect;2.3.3 already derived maximum likelihood as minimum relative entropy with a uniform prior and a point-mass posterior, so this is that result made operational. And Proposition 4.6.8 closes the loop: for a uniform prior, the MAP <b>is</b> the MLE.",
+    "math": "L(&theta;|x) = &prod;<sub>i</sub>f(x<sub>i</sub>|&theta;); MLE = argmax<sub>&theta;</sub>L. Bernoulli: L(p) = p<sup>nx&#772;</sup>(1&minus;p)<sup>n(1&minus;x&#772;)</sup>, p&#770;<sup>MLE</sup> = x&#772;."
+   }
+  },
+  {
+   "id": "v3c4e5",
+   "s": "4.5",
+   "page": 253,
+   "q": "Derive the MLE for a normal distribution. Why maximize the log, and what happens when there is no closed form?",
+   "a": "<b>Why the log.</b> The likelihood is nonnegative and log is strictly increasing, so <b>&#8467;(&theta;) = log L(&theta;) attains its maximum at the same &theta;</b>. Products become sums, which are far easier to differentiate.<p style='margin-top:8px'><b>Example 4.5.7.</b> For N(&mu;,&sigma;&sup2;) with &theta; = (&mu;,&sigma;&sup2;) both unknown, L(&theta;|x) = (2&pi;&sigma;&sup2;)<sup>&minus;n/2</sup>exp(&minus;&sum;(x<sub>i</sub>&minus;&mu;)&sup2;/2&sigma;&sup2;), so</p><div class='eq'>&#8467;(&theta;) = &minus;(n/2)(log 2&pi; + log &sigma;&sup2;) &minus; (1/2&sigma;&sup2;) &sum;<sub>i</sub>(x<sub>i</sub> &minus; &mu;)&sup2;</div>Differentiate with respect to <b>&sigma;&sup2; as a variable in its own right</b>, not as the square of &sigma;. Setting both partials to zero:<div class='eq'>&part;&#8467;/&part;&mu; = 0&nbsp;&rArr;&nbsp;&minus;(1/2&sigma;&sup2;)&sum;2(x<sub>i</sub>&minus;&mu;&#770;) = 0&nbsp;&rArr;&nbsp;<b>&mu;&#770; = x&#772;</b><br><br>&part;&#8467;/&part;&sigma;&sup2; = 0&nbsp;&rArr;&nbsp;&minus;n/2&sigma;&#770;&sup2; + (1/2(&sigma;&#770;&sup2;)&sup2;)&sum;(x<sub>i</sub>&minus;&mu;&#770;)&sup2; = 0&nbsp;&rArr;&nbsp;<b>&sigma;&#770;&sup2; = (1/n)&sum;(x<sub>i</sub>&minus;&mu;&#770;)&sup2;</b></div><b>The MLE for the variance is the <i>biased</i> sample variance</b> &mdash; the 1/n version, not 1/(n&minus;1). Maximum likelihood does not deliver unbiasedness.<p style='margin-top:10px'><b>Remark 4.5.8 &mdash; when it doesn't close.</b> Many parameters have <b>no closed form</b> for their MLE; the estimate must come from iterative numerical optimization, and the method-of-moments estimate makes a good starting guess. Example 4.5.9 (Gamma) is exactly this: &part;&#8467;/&part;b = 0 gives b = a/x&#772; analytically, but substituting back leaves</p><div class='eq'>h(a) = na(log a &minus; log x&#772; &minus; 1) &minus; n log &Gamma;(a) + (a&minus;1)&sum;log(x<sub>i</sub>)</div>which must be maximized <b>numerically</b> &mdash; needing the <b>digamma</b> function &psi;(a) = &Gamma;&prime;(a)/&Gamma;(a), available by autodifferentiation or preprogrammed in most systems.",
+   "r": {
+    "rot": "take logs first &mdash; same maximizer, and a sum instead of a product. for the normal it works out beautifully: the mean estimate is the sample mean and the variance estimate is the sample variance with <b>n</b> in the denominator, the biased one. that's worth noticing: MLE has no obligation to be unbiased and here it isn't. differentiate with respect to &sigma;&sup2; as its own variable, not &sigma;, or the algebra gets ugly. and the gamma case is the reality check &mdash; one parameter solves in closed form, the other doesn't, and you hand what's left to an optimizer.",
+    "ex": "The bias here is not a defect so much as a different objective. Proposition 4.4.6 gives the unbiased version with n&minus;1; MLE optimizes likelihood, and the two criteria simply disagree at finite n. They agree asymptotically, since (n&minus;1)/n &rarr; 1.",
+    "why": "The two-case pattern &mdash; some parameters analytic, the rest numerical &mdash; is what real fitting looks like. It's also why Proposition 5.2.6's result matters so much: for linear regression with Gaussian noise, the MLE <b>is</b> OLS and does close in a formula.",
+    "math": "&#8467; = log L has the same argmax. Normal: &mu;&#770; = x&#772;, &sigma;&#770;&sup2; = (1/n)&sum;(x<sub>i</sub>&minus;&mu;&#770;)&sup2; (biased). Gamma: b = a/x&#772;, then maximize h(a) numerically."
+   }
+  },
+  {
+   "id": "v3c4f1",
+   "s": "4.6",
+   "page": 258,
+   "q": "What is the MAP estimate, when does it coincide with the MLE, and what's wrong with it?",
+   "a": "The Bayesian posterior f(&theta;|x) is a whole distribution over the parameter. The <b>MAP</b> (maximum a posteriori) estimate collapses it to its <b>mode</b>.<p style='margin-top:8px'><b>Prop 4.6.8.</b> If &theta; is known to lie in [a,b] and the prior is <b>uniform</b> on [a,b], then the MAP <b>equals the MLE</b>. A flat prior contributes nothing to the argmax, so maximizing the posterior is maximizing the likelihood.</p><p style='margin-top:10px'><b>&sect;4.6.2 &mdash; the problem:</b> the MAP <b>need not be a typical point</b> of the posterior. It is the most likely single value, but it can sit nowhere near most samples. The mode of Gamma(1,b) is <b>0</b> for every b &mdash; the far left end of the support.</p>",
+   "r": {
+    "rot": "bayes hands you an entire distribution over the parameter and then someone demands one number. take the peak &mdash; that's the MAP. and if your prior was flat, the peak is exactly the MLE, so MLE is secretly bayes-with-no-opinion. the catch: the tallest point is not the same as a <i>representative</i> point. an exponential distribution peaks at zero even though almost every sample from it is bigger than zero. the mode can be somewhere you'd basically never land.",
+    "ex": "Bernoulli with a uniform prior: the posterior is Beta(1+nx&#772;, 1+n(1&minus;x&#772;)) &mdash; the same conjugate update as &sect;2.7 &mdash; whose mode is x&#772;, precisely the MLE.",
+    "why": "This is the argument for keeping the whole posterior instead of collapsing it. Summarizing by the mode throws away the uncertainty that was the entire point of being Bayesian, and in skewed posteriors the mode isn't even a good summary of location.",
+    "math": "MAP = argmax<sub>&theta;</sub> f(&theta;|x) &prop; argmax<sub>&theta;</sub> f(x|&theta;)P(&theta;). Uniform P(&theta;) &rArr; MAP = MLE."
+   }
+  },
+  {
+   "id": "v3c4f2",
+   "s": "4.6",
+   "page": 256,
+   "q": "Set up Bayesian estimation. What is the essential shift from the estimators of &sect;4.5?",
+   "a": "The estimators of &sect;4.5 all produce a <b>single point estimate</b> for an unknown parameter. The Bayesian shift is this:<div class='eq'>If a parameter is unknown, treat it as a <b>random variable in its own right</b>, with its own distribution.</div>The initial distribution is the <b>prior</b>; the distribution updated for the data is the <b>posterior</b>. Let X&#8321;,&hellip;,X<sub>n</sub> be a sample from X whose distribution f(x|&theta;) depends on an unknown parameter &Theta; with prior f<sub>old</sub>(&theta;). Given a draw x, the posterior is the conditional f(&theta;|x):<div class='eq'>f<sub>new</sub>(&theta;|x) = f(x|&theta;)f<sub>old</sub>(&theta;) / &int; f(x|&theta;&prime;)f<sub>old</sub>(&theta;&prime;) d&theta;&prime;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;= &prod;<sub>i</sub>f(x<sub>i</sub>|&theta;)f<sub>old</sub>(&theta;) / &int; &prod;<sub>i</sub>f(x<sub>i</sub>|&theta;&prime;)f<sub>old</sub>(&theta;&prime;) d&theta;&prime;</div><b>Remark 4.6.1.</b> This notation is used whether the distributions are discrete or continuous, with sums for integrals and p.m.f.s for p.d.f.s as needed.<p style='margin-top:6px'><b>Remark 4.6.2.</b> It stays valid for a <b>multivariate</b> &Theta;. For a normal parameter distribution you would write &Theta; = (&mu;,&sigma;&sup2;) and the integral runs over both.</p>",
+   "r": {
+    "rot": "frequentist estimation asks &ldquo;what's the best single guess for &theta;?&rdquo; bayesian estimation refuses the question and asks &ldquo;what's my <b>distribution</b> over &theta;?&rdquo; you start with a prior &mdash; whatever you believed before &mdash; multiply by how likely your data was for each &theta;, normalize, and get a posterior. the output isn't a number, it's a whole curve over the parameter, and the curve carries its own uncertainty with it. that's the entire shift, and everything else in this section is consequences of it.",
+    "ex": "The denominator is the only awkward part &mdash; an integral over every possible &theta;&prime;. Conjugate priors (&sect;4.7.1) exist precisely to make it evaluable in closed form; otherwise it goes to quadrature or Monte Carlo.",
+    "why": "It is what the MAP, credible intervals, and the whole of &sect;4.7 are built on, and it's the same update rule derived from minimum relative entropy back in Theorem 2.3.4 &mdash; so the Bayesian machinery here is not a new philosophy, just the continuous-parameter version of a result already proved.",
+    "math": "f<sub>new</sub>(&theta;|x) &prop; f(x|&theta;)f<sub>old</sub>(&theta;), normalized by &int;f(x|&theta;&prime;)f<sub>old</sub>(&theta;&prime;)d&theta;&prime;. Output is a distribution over &theta;, not a point."
+   }
+  },
+  {
+   "id": "v3c4f3",
+   "s": "4.6",
+   "page": 257,
+   "q": "Work out the Bernoulli&ndash;beta update. How should you read the parameters of a Beta(a,b) prior?",
+   "a": "<b>Example 4.6.3.</b> Bernoulli(p) likelihood with a Beta(a,b) prior, observing k successes in n trials. Writing the beta density and cancelling the constants:<div class='eq'>f(p|x) &prop; p<sup>nx&#772;</sup>(1&minus;p)<sup>n(1&minus;x&#772;)</sup> &middot; p<sup>a&minus;1</sup>(1&minus;p)<sup>b&minus;1</sup> = p<sup>a+nx&#772;&minus;1</sup>(1&minus;p)<sup>b+n(1&minus;x&#772;)&minus;1</sup></div>which, normalized, is exactly<div class='eq'>f(p|x) = <b>Beta( a + nx&#772;, b + n(1&minus;x&#772;) )</b></div><b>You don't have to evaluate the integral.</b> The numerator differs from the Beta(a+nx&#772;, b+n(1&minus;x&#772;)) density by a constant multiple; both are p.d.f.s, so both integrate to 1, so the constant is 1.<div class='eq'><b>The update is: a &larr; a + successes, b &larr; b + failures.</b></div><p style='margin-top:8px'><b>How to read (a,b).</b> With a uniform prior (a = b = 1) the posterior is Beta(k+1, n&minus;k+1) (Thm 2.7.8). So starting from Beta(a,b) is <b>equivalent to starting uniform and pretending you have already seen a&minus;1 successes and b&minus;1 failures</b>. The prior is measured in units of imaginary data.</p><p><b>And why choose beta at all?</b> Convenience is not a good reason. The better reason is that beta is <b>what arises naturally</b> as the posterior from the uniform prior &mdash; which is the maximum entropy prior.</p>",
+   "r": {
+    "rot": "beta prior in, beta posterior out, and the update is pure bookkeeping: add your successes to a, add your failures to b. no integral is ever computed &mdash; you recognize the shape, and since two densities that are proportional and both integrate to 1 must be equal, you just read off the parameters. the interpretation is the useful bit: Beta(a,b) means &ldquo;i'm starting from ignorance, but pretend i already saw a&minus;1 heads and b&minus;1 tails.&rdquo; your prior is denominated in fake observations, which makes it easy to say how strong it is. Beta(2,2) is weak. Beta(200,200) is very sure the coin is fair.",
+    "ex": "The book is careful about the justification. Convenience does not make a prior right &mdash; but beta earns its place because it's what the maximum-entropy (uniform) prior <i>becomes</i> after data, not because the algebra is pleasant.",
+    "why": "This is the conjugacy relation that &sect;4.7.1 generalizes into a whole table, and it's the same mechanism hiding inside Laplace add-one smoothing for na&iuml;ve Bayes (&sect;5.7.3) &mdash; adding 1 to a count and 2 to the total <b>is</b> a Beta(1,1) prior.",
+    "math": "Beta(a,b) prior + k successes in n trials &rArr; Beta(a+k, b+n&minus;k). Equivalent to uniform plus a&minus;1 pseudo-successes and b&minus;1 pseudo-failures."
+   }
+  },
+  {
+   "id": "v3c4f4",
+   "s": "4.6",
+   "page": 258,
+   "q": "State Nota Bene 4.6.4. Why does it let you drop the denominator, and what is the normalizing constant?",
+   "a": "<b>Nota Bene 4.6.4.</b> For any prior of the form f(&theta;) = Cg(&theta;), the constant C <b>cancels</b> between numerator and denominator:<div class='eq'>f(&theta;|x) = f(x|&theta;)Cg(&theta;) / &int;f(x|&theta;&prime;)Cg(&theta;&prime;)d&theta;&prime; = f(x|&theta;)g(&theta;) / &int;f(x|&theta;&prime;)g(&theta;&prime;)d&theta;&prime;</div><b>So it suffices to define a prior only up to a constant</b>, written P(&theta;) &prop; g(&theta;). And for many purposes it suffices to specify the <b>posterior</b> up to a constant too, so the denominator &mdash; being constant in &theta; &mdash; can simply be discarded:<div class='eq'>P(&theta;|x) &prop; f(x|&theta;) f(&theta;)</div>The denominator Z = &int;f(x|&theta;&prime;)P(&theta;&prime;)d&theta;&prime; is called the <b>normalizing constant</b>.<p style='margin-top:8px'><b>This is what makes Bayesian calculations tractable by hand.</b> Multiply likelihood by prior, throw away everything not containing &theta;, and recognize the shape of what's left. If it matches a known family, the normalizing constant is whatever that family's is &mdash; you never compute the integral.</p>",
+   "r": {
+    "rot": "the denominator in bayes' rule is an integral over every possible parameter value, and it's usually horrible. good news: it doesn't depend on &theta;. so if you only care about the <b>shape</b> of the posterior &mdash; which is almost always &mdash; you can drop it entirely and write posterior &prop; likelihood &times; prior. multiply, discard every factor that has no &theta; in it, and look at what's left. if it's the shape of a gamma, it <b>is</b> a gamma, because there's only one way to normalize it. that one observation is why conjugacy calculations are three lines instead of three pages.",
+    "ex": "Example 4.6.5 is the whole method in miniature: Poisson likelihood, Gamma(a,b) prior, and f(&lambda;|x) &prop; &lambda;<sup>&sum;x<sub>i</sub></sup>e<sup>&minus;n&lambda;</sup>&middot;&lambda;<sup>a&minus;1</sup>e<sup>&minus;b&lambda;</sup> = &lambda;<sup>&sum;x<sub>i</sub>+a&minus;1</sup>e<sup>&minus;(n+b)&lambda;</sup>. That is Gamma(a+&sum;x<sub>i</sub>, b+n) on sight. The factorials in the Poisson p.m.f. never mattered.",
+    "why": "It's also what makes <b>improper</b> priors usable (&sect;4.7.5). A prior with an infinite integral has no normalizing constant at all, but since the constant cancels anyway, Bayes' rule still works formally as long as the posterior itself is a genuine distribution.",
+    "math": "P(&theta;|x) &prop; f(x|&theta;)f(&theta;); Z = &int;f(x|&theta;&prime;)P(&theta;&prime;)d&theta;&prime; is constant in &theta;. Priors and posteriors need only be specified up to proportionality."
+   }
+  },
+  {
+   "id": "v3c4f5",
+   "s": "4.6",
+   "page": 261,
+   "q": "Define a credible interval. How does it differ from a classical confidence interval, and how do you construct one?",
+   "a": "<b>Definition.</b> Given data D and posterior f(&theta;|D), the interval (a,b) is a <b>1&minus;&alpha; credible interval</b> for &theta; if<div class='eq'>P<sub>new</sub>( &theta; &isin; (a,b) | D ) = &int;<sub>a</sub><sup>b</sup> f(&theta;|D) d&theta; = 1 &minus; &alpha;</div><b>The contrast with a confidence interval is a swap of what is random.</b><div class='eq'><b>Credible:</b> &theta; is the random variable; a and b are <b>fixed</b>. The probability that &theta; lies in (a,b) is 1&minus;&alpha;.<br><br><b>Confidence:</b> &theta; is supposed to be <b>fixed</b>; a and b are the random variables. The probability that the random interval <b>contains</b> &theta; is 1&minus;&alpha;.</div>The book's judgement: the credible interval is &ldquo;similar to, but more natural than&rdquo; the confidence interval, which is &ldquo;more awkward and less intuitive.&rdquo;<p style='margin-top:10px'><b>Not unique.</b> Just as there are many estimators for a point value, there are many 1&minus;&alpha; credible intervals. When &theta; is supported on all of R, a natural construction <b>centers</b> it: choose a with &int;<sub>&minus;&infin;</sub><sup>a</sup> = &alpha;/2 and b with &int;<sub>b</sub><sup>&infin;</sup> = &alpha;/2. It can also be estimated by sampling the posterior S &gg; 0 times and taking an interval containing (1&minus;&alpha;)S of the samples.</p>",
+   "r": {
+    "rot": "a credible interval says the thing everyone <b>thinks</b> a confidence interval says: there's a 95% probability the parameter is in here. that's legal in bayesian-land because &theta; is a random variable with a distribution, so you can just ask for the middle 95% of it. a confidence interval can't say that &mdash; there &theta; is a fixed unknown number and the <b>interval</b> is what's random, so the 95% is about the procedure, not about this particular interval. the endpoints and the parameter swap roles. and there are many valid credible intervals; the usual choice is to leave &alpha;/2 in each tail.",
+    "ex": "Example 4.6.9, Poisson likelihood with a Gamma(1,1) prior and draw x = (2,3,1), so the posterior is Gamma(7,4). The one-sided interval (0, 2.9606) is 95% credible; the centered version, solving for &alpha;/2 in each tail, gives (0.70359, 3.26487). Both are 95% intervals for the same posterior.",
+    "why": "It answers the objection &sect;4.6.2 raised against the MAP &mdash; that a point estimate gives no measure of uncertainty. It also anticipates Chapter 6: the reason p-values get misinterpreted (&sect;6.3.1) is that people want P(hypothesis | data), which is exactly what the Bayesian side gives you and the frequentist side does not.",
+    "math": "&int;<sub>a</sub><sup>b</sup>f(&theta;|D)d&theta; = 1&minus;&alpha;, with &theta; random and (a,b) fixed. Centered: &alpha;/2 in each tail. Non-unique for a given &alpha;."
+   }
+  },
+  {
+   "id": "v3c4g1",
+   "s": "4.7",
+   "page": 262,
+   "q": "What is a prior, really (Nota Bene 4.7.1)? Define conjugacy and say why it is special.",
+   "a": "The prior distribution P(&theta;) on the parameter is <b>the one new ingredient</b> Bayesian analysis adds to frequentist methods.<p style='margin-top:8px'><b>Nota Bene 4.7.1 &mdash; two things &ldquo;prior&rdquo; does not mean.</b></p><div class='eq'>Not <b>temporal</b>: the prior isn't necessarily what you knew before collecting data. It should include <b>anything you know that isn't part of what you chose to call the data</b>.<br><br>Not <b>causal</b>: the posterior is not caused by the prior. It follows <b>logically</b> from the information in the prior and in the data.</div><p style='margin-top:8px'><b>Conjugacy.</b> When the prior and the posterior come from the <b>same family</b> of distributions, the prior is said to be <b>conjugate to the likelihood</b>. Beta is conjugate to Bernoulli (Example 4.6.3); gamma is conjugate to Poisson (Example 4.6.5).</p><p><b>It is a rare and special relationship.</b> In general you have to compute nasty integrals with no closed form, done numerically by quadrature or, more usually, Monte Carlo. That is <i>why</i> Bayesian statistics wasn't taken seriously until nearly the end of the 20th century &mdash; the computers and algorithms weren't good enough. Today it is dominant in estimation theory, especially for complex problems where other methods fail.</p><p style='margin-top:8px'>Table 4.1 lists the standard pairs: Bernoulli/binomial/negative binomial &rarr; <b>beta</b>; Poisson and gamma-with-fixed-shape &rarr; <b>gamma</b>; normal with fixed variance &rarr; <b>normal</b>; normal with fixed mean &rarr; <b>inverse gamma</b>. <b>Most likelihoods have no conjugate prior at all.</b></p>",
+   "r": {
+    "rot": "the prior is everything you know that isn't in the dataset. not &ldquo;what you believed yesterday&rdquo; &mdash; the word is misleading, there's no clock involved and no causality either; the posterior just follows logically from prior plus data. <b>conjugate</b> means the prior and posterior are the same shape: start with a beta, do the update, still a beta. that turns a horrible integral into arithmetic on the parameters. it's also rare &mdash; most likelihoods have no conjugate partner, and until computers got good enough to do the integrals numerically, that limitation is basically why bayesian statistics sat on the shelf for most of a century.",
+    "ex": "The Bernoulli&ndash;beta pair from &sect;4.6: observe successes and failures and the beta's two parameters just absorb the counts. No integral is ever computed.",
+    "why": "Conjugacy is convenience, not correctness, and &sect;4.7.3 says so directly &mdash; much of the historical criticism of Bayesian statistics was that priors got chosen for convenience or on subjective grounds rather than for any good reason. The rest of the section is about choosing well instead.",
+    "math": "Conjugate: prior and posterior in the same family. Beta&ndash;Bernoulli, gamma&ndash;Poisson, normal&ndash;normal (variance fixed), inverse gamma&ndash;normal (mean fixed)."
+   }
+  },
+  {
+   "id": "v3c4g2",
+   "s": "4.7",
+   "page": 263,
+   "q": "Work out the conjugacy of the gamma prior for Gamma(&tau;,&theta;) with fixed shape. What happens as n grows?",
+   "a": "Let X ~ Gamma(&tau;,&theta;) with shape &tau; &gt; 0 fixed and rate &theta; &gt; 0 unknown. The likelihood over a sample of size n is<div class='eq'>f(x|&theta;) = (1/&Gamma;(&tau;)<sup>n</sup>) &theta;<sup>n&tau;</sup> e<sup>&minus;&theta;nx&#772;</sup> &prod;<sub>i</sub> x<sub>i</sub><sup>&tau;&minus;1</sup></div>Take the prior Gamma(a,b). Everything not involving &theta; is absorbed into a normalizing constant Z, leaving (4.28):<div class='eq'>P<sub>new</sub>(&theta;|x) = (1/Z) &theta;<sup>n&tau;+a&minus;1</sup> e<sup>&minus;&theta;(nx&#772;+b)</sup></div><p style='margin-top:6px'>As a function of &theta; that is a constant times the p.d.f. of Gamma(a+n&tau;, b+nx&#772;). Both are p.d.f.s, so <b>both integrate to 1 and must therefore be the same function</b>:</p><div class='eq'>posterior = Gamma(a + n&tau;, b + nx&#772;)</div><b>Remark 4.7.2 &mdash; the data swamps the prior.</b> The posterior mean is (a+n&tau;)/(b+nx&#772;) and the MAP (its mode) is (a+n&tau;&minus;1)/(b+nx&#772;) whenever a+n&tau; &ge; 1. As n grows, a and b become negligible and the posterior looks more and more like Gamma(n&tau;, nx&#772;), whose mean equals its mode &tau;/x&#772; &mdash; <b>the MLE</b>.",
+   "r": {
+    "rot": "plug a gamma prior into a gamma likelihood, cancel everything that doesn't contain &theta;, and what's left has exactly the shape of another gamma. the slick bit: you don't have to compute the normalizing constant at all &mdash; two probability densities that are proportional and both integrate to 1 are the <b>same</b> density, so you just read off the parameters. a &rarr; a + n&tau;, b &rarr; b + nx&#772;. and notice what happens as data piles in: the a and b you started with get drowned out, and the bayesian answer converges to the plain maximum-likelihood answer. with enough data the prior stops mattering.",
+    "ex": "Example 4.7.3: projector bulbs with exponential lifespan &mdash; Gamma(1,&lambda;). Prior experience of 5 bulbs averaging 4 months suggests E[&lambda;] = &frac14;, so take Gamma(5,20) (5 failures in about 20 bulb-months). Four more bulbs totalling 26.93 bulb-months gives Gamma(9, 46.93), mean 0.19 and MAP 0.17. Sixteen more gives Gamma(25, 159.5), mean 0.16 and mode 0.15. Figure 4.5 shows the variance shrinking with each update.",
+    "why": "&ldquo;The data swamps the prior&rdquo; is the standard answer to the standard objection that Bayesian conclusions are subjective: with enough data any reasonable prior lands in the same place. It also tells you when the prior <i>does</i> matter &mdash; small n, which is exactly when you most want to use the information you have.",
+    "math": "Gamma(a,b) prior + Gamma(&tau;,&theta;) likelihood (&tau; fixed) &rarr; Gamma(a+n&tau;, b+nx&#772;). Mean (a+n&tau;)/(b+nx&#772;), mode (a+n&tau;&minus;1)/(b+nx&#772;) &rarr; MLE &tau;/x&#772;."
+   }
+  },
+  {
+   "id": "v3c4g3",
+   "s": "4.7",
+   "page": 265,
+   "q": "What is a noninformative prior? State the MAX ENT rule, and define an improper prior.",
+   "a": "A prior is how you incorporate what you know &mdash; but it should not imply <b>more</b> information than you actually have. Priors chosen to avoid adding information are called <b>noninformative</b>.<p style='margin-top:8px'><b>The maximum entropy rule (MAX ENT).</b> Among all distributions satisfying the properties you know to be true, choose the one with <b>maximum entropy</b>. In the finite or bounded-continuous case this amounts to starting from the uniform distribution and choosing the distribution that <b>minimizes relative entropy to it</b> among those meeting your conditions. If the support is unbounded there is no uniform to compare against, so MAX ENT loses that justification &mdash; though it remains popular.</p><div class='eq'>Bernoulli(&theta;), nothing else known &rarr; uniform on [0,1] = <b>Beta(1,1)</b>&nbsp;&nbsp;(Ex. 4.7.4)<br><br>Prior on R with known mean &mu; and variance &sigma;&sup2; &rarr; <b>N(&mu;,&sigma;&sup2;)</b>&nbsp;&nbsp;(Ex. 4.7.5)</div><p style='margin-top:8px'><b>Improper priors.</b> On R with neither mean nor variance known, the uniform P(&theta;) = c looks reasonable &mdash; but no c &gt; 0 has a finite integral, so it is <b>not a distribution at all</b>. Yet the formalism still works: the constant cancels between numerator and denominator,</p><div class='eq'>P(&theta;|D) = f(D|&theta;)P(&theta;) / &int;f(D|&theta;&prime;)P(&theta;&prime;)d&theta;&prime; = f(D|&theta;) / &int;f(D|&theta;&prime;)d&theta;&prime;</div><b>provided the posterior is itself a distribution.</b> Any continuous function of &theta; with a divergent integral that can still be used formally in Bayes' rule to produce a p.d.f. is called an <b>improper prior</b>.",
+   "r": {
+    "rot": "noninformative = a prior that doesn't smuggle in claims you can't back up. the max-entropy rule says: of all the distributions consistent with what you actually know, pick the <b>most spread out</b> one, since entropy measures how noncommittal you're being. know nothing about a coin's bias? uniform on [0,1]. know only a mean and a variance? normal. improper priors are the weird corner: &ldquo;flat on all of R&rdquo; isn't a distribution, its integral is infinite. but the constant cancels in bayes' rule anyway, so as long as what comes <b>out</b> is a real distribution, nobody minds that what went in wasn't.",
+    "ex": "Beta(1,1) is uniform on [0,1] and also happens to be conjugate to Bernoulli &mdash; but Example 4.7.4 is careful to say it was chosen for its entropy, <b>not</b> its convenience. Those two justifications coinciding is luck.",
+    "why": "Maximum entropy is the same principle Chapter 2 built information theory on, now used for a different job: adding the least possible information rather than measuring how much was transmitted. That's why this section sits after the information-theory chapters rather than before them.",
+    "math": "MAX ENT: argmax H(f) over f satisfying known constraints; bounded support &hArr; argmin D<sub>kl</sub>(f&#8214;uniform). Improper: &int;P(&theta;)d&theta; = &infin; but P(&theta;|D) is a p.d.f."
+   }
+  },
+  {
+   "id": "v3c4g4",
+   "s": "4.7",
+   "page": 266,
+   "q": "Why should a rule for choosing priors be transformation invariant? Show that MAX ENT is not, and that minimizing relative entropy is.",
+   "a": "Changing variables gives an <b>equivalent problem</b>, and an equivalent problem should not get a different prior. Unfortunately, for unbounded continuous distributions <b>MAX ENT is not invariant under change of variables</b> &mdash; while minimizing relative entropy is.<p style='margin-top:8px'><b>Unexample 4.7.6.</b> For Bernoulli(&theta;) with only &theta; &isin; [0,1] known, MAX ENT gives the uniform prior f<sub>&theta;</sub>(t) = 1. Now substitute &phi; = &theta;&sup2;, which maps [0,1] to itself:</p><div class='eq'>F<sub>&phi;</sub>(t) = P(&theta;&sup2; &le; t) = P(&theta; &le; t<sup>&frac12;</sup>) = t<sup>&frac12;</sup>,&nbsp;&nbsp;so&nbsp;&nbsp;f<sub>&phi;</sub>(t) = &frac12; t<sup>&minus;&frac12;</sup></div><b>which is certainly not uniform.</b> But if you know nothing about &theta; you know nothing about &phi; either, so MAX ENT applied to &phi; demands a uniform prior. Two different answers for the same state of ignorance.<p style='margin-top:8px'>(Proposition 4.7.7 is the transformation rule doing the work: for Y = g(X) with g monotonic and g<sup>&minus;1</sup> differentiable, f<sub>Y</sub>(y) = f<sub>X</sub>(g<sup>&minus;1</sup>(y))&middot;|dg<sup>&minus;1</sup>(y)/dy|.)</p><p><b>MRE is invariant.</b> Minimizing D<sub>kl</sub>(f&#8214;m) against an existing prior m, the Jacobian |dg<sup>&minus;1</sup>/ds| appears in <b>both</b> f and m inside the logarithm, where it cancels, and the remaining factor is absorbed by the change of variables in the integral &mdash; leaving the original problem unchanged.</p><p><b>The catch:</b> MRE only tells you how to pick f <b>given an m you already have</b>, so it does not solve the problem of choosing a prior from scratch.</p>",
+   "r": {
+    "rot": "if you re-express your parameter &mdash; measure &theta;&sup2; instead of &theta; &mdash; you haven't learned anything, so your prior shouldn't change. max entropy fails this. flat in &theta; turns into <b>not</b> flat in &theta;&sup2;, and max entropy insists both should be flat. contradiction. relative entropy passes, because the jacobian from the change of variables shows up in both the numerator and the denominator inside the log and cancels. but MRE needs a prior to start from, so it can't answer &ldquo;what prior should i use&rdquo; &mdash; only &ldquo;given this one, what next.&rdquo;",
+    "ex": "The concrete failure: uniform on &theta; means &phi; = &theta;&sup2; has density &frac12;t<sup>&minus;&frac12;</sup>, which piles mass near 0. So &ldquo;I know nothing about &theta;&rdquo; and &ldquo;I know nothing about &theta;&sup2;&rdquo; are incompatible states of ignorance under MAX ENT &mdash; which is absurd, since they are the same state.",
+    "why": "It's what forces the section to keep going. Invariance is a genuine requirement, MAX ENT fails it and MRE can't start from scratch, so you need something else &mdash; which is exactly what reference priors and Jeffreys priors are for.",
+    "math": "f<sub>Y</sub>(y) = f<sub>X</sub>(g<sup>&minus;1</sup>(y))|dg<sup>&minus;1</sup>/dy| (Prop 4.7.7). MAX ENT not invariant on unbounded support; D<sub>kl</sub>(f&#8214;m) invariant, Jacobians cancel."
+   }
+  },
+  {
+   "id": "v3c4g5",
+   "s": "4.7",
+   "page": 268,
+   "q": "Define the reference prior and the Jeffreys prior. What is the Fisher information, and when do the two agree?",
+   "a": "<b>Reference priors (Bernardo).</b> A noninformative prior should have little effect on the posterior, letting the data be as informative as possible. Informative data means <b>large relative entropy between prior and posterior</b> &mdash; so choose the prior maximizing that. Since you must choose before seeing data, maximize the <b>expected</b> relative entropy over all possible data. Because relative entropy is transformation invariant, so is the maximizer.<p style='margin-top:8px'><b>Definition 4.7.8.</b> For a likelihood f(X|&theta;) with &theta; &isin; R, the <b>Fisher information</b> is</p><div class='eq'>I(&theta;) = &minus;E<sub>X|&theta;</sub>[ (d&sup2;/d&theta;&sup2;) log f(X|&theta;) ]&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;&nbsp;&nbsp;&nbsp;f(&theta;) &prop; &radic;I(&theta;)</div><b>Definition 4.7.10 &mdash; the Jeffreys prior</b> is the multivariate version, with I(&theta;) = &minus;E<sub>X|&theta;</sub>[D&sup2;<sub>&theta;</sub> log f(X|&theta;)] the Fisher information <b>matrix</b>:<div class='eq'>f(&theta;) &prop; &radic;det(I(&theta;))</div><b>Theorem 4.7.11.</b> The Jeffreys prior is transformation invariant. The proof turns on the identity E<sub>X|&theta;</sub>[D<sub>&theta;</sub> log p(X|&theta;)] = D<sub>&theta;</sub>&int;p(x|&theta;)dx = D<sub>&theta;</sub>1 = <b>0</b>, which kills the second term of the chain rule and leaves I(&phi;) = I(&theta;)(D<sub>&phi;</sub>&Psi;)&sup2; &mdash; exactly the Jacobian factor the change-of-variables formula demands.<p style='margin-top:8px'><b>They agree in one dimension and differ in higher dimensions</b>, where the reference prior generally performs better.</p>",
+   "r": {
+    "rot": "both rules say: let the <b>likelihood</b> pick the prior. fisher information measures how sharply the log-likelihood curves &mdash; how much a single observation tells you about &theta;. put more prior mass where the data will be more informative, specifically proportional to &radic;I(&theta;) (or &radic;det I in several dimensions). that construction is transformation invariant essentially by accident of the chain rule: the jacobian comes out of the square root exactly where the change-of-variables formula needs it. one parameter: reference and jeffreys are the same rule. several: they part ways, and reference usually wins.",
+    "ex": "Example 4.7.9, Bernoulli: I(&theta;) = &theta;/&theta;&sup2; + (1&minus;&theta;)/(1&minus;&theta;)&sup2; = 1/(&theta;(1&minus;&theta;)), so the reference prior is &prop; &theta;<sup>&minus;&frac12;</sup>(1&minus;&theta;)<sup>&minus;&frac12;</sup> = <b>Beta(&frac12;,&frac12;)</b>. Figure 4.6 shows it curving up at the ends but staying close to uniform across most of (0,1). It happens to be conjugate &mdash; the book calls that <b>a lucky coincidence</b>; reference priors usually are not.",
+    "why": "Example 4.7.12 shows the higher-dimensional machinery: for Gamma(a,b) the Fisher information matrix has entries &psi;&prime;(a) (the trigamma function) and a/b&sup2;, giving the Jeffreys prior &radic;(a&psi;&prime;(a)&minus;1)/b &mdash; which is <b>not</b> conjugate for Gamma(a,b). Invariance and convenience really are different goals.",
+    "math": "I(&theta;) = &minus;E[&part;&sup2;<sub>&theta;</sub> log f(X|&theta;)]. Reference: f(&theta;) &prop; &radic;I(&theta;) (1-D). Jeffreys: f(&theta;) &prop; &radic;det I(&theta;). Equal for dim &theta; = 1."
+   }
+  },
+  {
+   "id": "v3c4g6",
+   "s": "4.7",
+   "page": 270,
+   "q": "When are noninformative priors the wrong choice? Describe prior elicitation and the four things to watch for.",
+   "a": "<b>The problem with noninformative priors is that you usually do know something.</b> An improper uniform prior on R for a physical length says a measurement between 10<sup>10<sup>10</sup></sup> km and 10<sup>10<sup>10</sup></sup>+1 km is exactly as probable as one between 0 and 1 km. A normal with mean 0 and a large-but-not-astronomical variance already encodes the real knowledge that human-scale lengths are more likely.<p style='margin-top:8px'>Often you have access to <b>experts</b> whose experience is genuine information about your parameters, and the ability to use it is a <b>great strength</b> of Bayesian analysis. Extracting it is called <b>prior elicitation</b>. It establishes the prior, so it must be done <b>before</b> anyone looks at the data.</p><p><b>The mechanics.</b> To fit N(&mu;,&sigma;&sup2;): ask for the <b>median</b> (mean and median coincide for a normal) to get &mu;; then ask for a range &mu;&plusmn;a in which half the measurements should fall, and solve &int;<sub>&mu;&minus;a</sub><sup>&mu;+a</sup> N(&mu;,&sigma;&sup2;) = &frac12; for &sigma;&sup2;.</p><div class='eq'>(i) People are <b>bad at estimating expectations and probabilities</b>, especially conditional ones &mdash; even people trained in statistics.<br><br>(ii) <b>Medians are easier than means</b> &mdash; but remind them of the difference if your family is asymmetric.<br><br>(iii) <b>Ranges and quartiles are easier than variance.</b> Ask for outer bounds beyond which there is surely an error, then for q&#8321; and q&#8323;.<br><br>(iv) <b>Challenge the numbers</b> with the practical implications.</div><p><b>The challenges (iv) in detail:</b> if they'd win a prize for guessing which half of the median a draw falls in, they should have <b>no preference</b>; likewise for guessing which quarter, and for betting inside versus outside [q&#8321;,q&#8323;]. Expect q&#8321; and q&#8323; nearer the median than the outer bounds, and the closer they are, the more confident the expert is in the median.</p>",
+   "r": {
+    "rot": "&ldquo;i know nothing&rdquo; is usually a lie. a flat prior on all of R says a length of 10<sup>10<sup>10</sup></sup> km is as likely as 1 km, and you don't believe that. so use what you know &mdash; and if an expert knows it, get it out of them. that's elicitation, and it has to happen <b>before</b> anyone sees the data. the practical trick is to never ask for the thing you want. don't ask for a variance, ask where the middle half of measurements would fall. don't ask for a mean, ask for a median. then stress-test their answers by turning them into bets: if they'd rather take one side of the wager, their number is wrong.",
+    "ex": "The betting check is the useful part. &ldquo;You win a prize for guessing which side of your median the next draw falls on&rdquo; &mdash; if the expert has a preference, their stated median isn't their median. Same test with quartiles, and with inside-versus-outside the interquartile range.",
+    "why": "It reframes the standard objection. Priors are called subjective as if that were a defect, but the alternative &mdash; a flat prior asserting that astronomical values are as likely as human ones &mdash; is a <b>stronger and worse</b> claim. Elicitation makes the assumption explicit and testable instead of hiding it in a uniform.",
+    "math": "Elicit &mu; via the median (equal for a symmetric family), &sigma;&sup2; via &int;<sub>&mu;&minus;a</sub><sup>&mu;+a</sup>f = &frac12;. Ask for quantiles, not moments; validate with indifference bets."
+   }
+  }
+ ],
+ "exMarks": [
+  {
+   "page": 273,
+   "y": 0.393
+  },
+  {
+   "page": 274,
+   "y": 0.408
+  },
+  {
+   "page": 275,
+   "y": 0.49
+  },
+  {
+   "page": 276,
+   "y": 0.373
+  },
+  {
+   "page": 276,
+   "y": 0.841
+  },
+  {
+   "page": 277,
+   "y": 0.847
+  },
+  {
+   "page": 279,
+   "y": 0.113
+  },
+  {
+   "page": 280,
+   "y": 0.338
+  }
+ ]
+}

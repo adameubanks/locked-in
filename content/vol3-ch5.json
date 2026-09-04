@@ -1,0 +1,649 @@
+{
+ "volume": "vol3",
+ "chapter": "5",
+ "file": "vol3-ch5.json",
+ "title": "Regression and Classification",
+ "epigraph": {
+  "text": "There are no routine statistical questions, only questionable statistical routines.",
+  "by": "Sir David R. Cox"
+ },
+ "sections": [
+  {
+   "id": "5.1",
+   "name": "Linear Regression",
+   "from": 281,
+   "to": 284,
+   "exFrom": {
+    "page": 341,
+    "y": 0.279
+   },
+   "exTo": {
+    "page": 342,
+    "y": 0.899
+   }
+  },
+  {
+   "id": "5.2",
+   "name": "*Properties of the OLS Estimator",
+   "from": 285,
+   "to": 289,
+   "exFrom": {
+    "page": 342,
+    "y": 0.899
+   },
+   "exTo": {
+    "page": 343,
+    "y": 0.364
+   }
+  },
+  {
+   "id": "5.3",
+   "name": "Model Selection",
+   "from": 290,
+   "to": 305,
+   "exFrom": {
+    "page": 343,
+    "y": 0.364
+   },
+   "exTo": {
+    "page": 345,
+    "y": 0.113
+   }
+  },
+  {
+   "id": "5.4",
+   "name": "Regularization",
+   "from": 306,
+   "to": 316,
+   "exFrom": {
+    "page": 345,
+    "y": 0.113
+   },
+   "exTo": {
+    "page": 345,
+    "y": 0.616
+   }
+  },
+  {
+   "id": "5.5",
+   "name": "Logistic Regression",
+   "from": 317,
+   "to": 322,
+   "exFrom": {
+    "page": 345,
+    "y": 0.616
+   },
+   "exTo": {
+    "page": 347,
+    "y": 0.296
+   }
+  },
+  {
+   "id": "5.6",
+   "name": "Logistic Regression II",
+   "from": 323,
+   "to": 329,
+   "exFrom": {
+    "page": 347,
+    "y": 0.296
+   },
+   "exTo": {
+    "page": 350,
+    "y": 0.528
+   }
+  },
+  {
+   "id": "5.7",
+   "name": "Naïve Bayes Classifiers",
+   "from": 330,
+   "to": 333,
+   "exFrom": {
+    "page": 350,
+    "y": 0.528
+   },
+   "exTo": {
+    "page": 351,
+    "y": 0.456
+   }
+  },
+  {
+   "id": "5.8",
+   "name": "Generative Classifiers",
+   "from": 334,
+   "to": 340,
+   "exFrom": {
+    "page": 351,
+    "y": 0.456
+   },
+   "exTo": {
+    "page": 352,
+    "y": 0.746
+   }
+  }
+ ],
+ "exercises": {
+  "from": 340,
+  "to": 352
+ },
+ "cards": [
+  {
+   "id": "v3c5a1",
+   "s": "5.1",
+   "page": 281,
+   "q": "Set up the regression problem, then the linear regression model. What does the assumption E[&epsilon;|X] = 0 actually buy you?",
+   "a": "<b>Regression problem.</b> Random variables X = (X&#8321;,&hellip;,X<sub>d</sub>) in R<sup>d</sup>, and Y, &epsilon; in R with<div class='eq'>E[&epsilon; | X] = 0&nbsp;&nbsp;and&nbsp;&nbsp;Y = f(X) + &epsilon;</div>for some unknown f. &epsilon; is unobservable; you have a sample {(x&#8321;,y&#8321;),&hellip;,(x<sub>n</sub>,y<sub>n</sub>)} and want f&#770; from a family F.<p style='margin-top:8px'><b>What the assumption buys.</b> E[&epsilon;|X] = 0 means E[Y &minus; f(X) | X] = 0, i.e.</p><div class='eq'>E[Y | X] = f(X)</div>so f is exactly the conditional mean &mdash; a <b>noisy model for Y</b> rather than an arbitrary curve.<p style='margin-top:8px'><b>Linear regression</b> takes F to be the affine functions: Y = &beta;&#8320; + X<sup>T</sup>&beta; + &epsilon;. Absorbing the constant by writing X = (1, X&#8321;,&hellip;,X<sub>d</sub>) and &beta; = (&beta;&#8320;,&hellip;,&beta;<sub>d</sub>) gives the clean form Y = X<sup>T</sup>&beta; + &epsilon;.</p><p><b>Vocabulary:</b> Y is the <b>dependent</b> or <b>target</b> variable; X is the <b>independent</b> variable; the components X<sub>i</sub> are <b>features</b> or <b>factors</b>.</p>",
+   "r": {
+    "rot": "you think Y depends on X but not perfectly &mdash; there's noise. write Y = f(X) + noise. the condition E[&epsilon;|X] = 0 says the noise averages out to zero <i>for every value of X</i>, and that's the whole point: it makes f(X) the average value of Y given X. not some curve near the data, <i>the conditional mean</i>. linear regression is then just picking f from the straight-line family. the constant term is annoying to carry around so everyone glues a column of 1s onto X and pretends it was always there.",
+    "ex": "Example 5.1.3: W = &beta;&#8320; + &beta;&#8321;S + &beta;&#8322;E + &beta;&#8323;A + &epsilon; for wage against schooling, experience, and age. &beta;&#770;&#8321; is then the estimated change in wage per additional year of education. The book immediately notes it's probably a bad model &mdash; subject studied, race, and gender obviously matter too.",
+    "why": "It is the reason a regression coefficient means anything at all. Without E[&epsilon;|X] = 0 the fitted f&#770; is not estimating a conditional mean and &beta;&#770;<sub>i</sub> is not &ldquo;the effect of X<sub>i</sub>&rdquo;. It also sets up &sect;5.2: unbiasedness of &beta;&#770; is proved <i>from</i> this assumption, not independently of it.",
+    "math": "E[&epsilon;|X] = 0 &hArr; E[Y|X] = f(X). With the 1 absorbed, X, &beta; &isin; R<sup>d+1</sup> and Y = X<sup>T</sup>&beta; + &epsilon;."
+   }
+  },
+  {
+   "id": "v3c5a2",
+   "s": "5.1",
+   "page": 282,
+   "q": "Define the design matrix, fitted values, residuals, and RSS (Definition 5.1.1). Give the OLS estimator and the normal equation &mdash; and state Nota Bene 5.1.2.",
+   "a": "<b>Design matrix.</b> Stack the rows x<sub>k</sub> = (1, x<sub>k1</sub>,&hellip;,x<sub>kd</sub>) into <b>X</b> &isin; M<sub>n&times;(d+1)</sub> and the responses into y, so the model (5.2) reads y = <b>X</b>&beta; + &epsilon;.<p style='margin-top:8px'><b>Definition 5.1.1.</b> For any estimate &beta;&#771;, the fitted function is f&#771;(x) = x<sup>T</sup>&beta;&#771; and</p><div class='eq'>fitted values&nbsp;&nbsp;y&#771;<sub>i</sub> = x<sub>i</sub><sup>T</sup>&beta;&#771; = (<b>X</b>&beta;&#771;)<sub>i</sub><br>residuals&nbsp;&nbsp;&epsilon;&#771;<sub>i</sub> = y<sub>i</sub> &minus; y&#771;<sub>i</sub><br>RSS = &#8214;y &minus; <b>X</b>&beta;&#771;&#8214;&sup2;&#8322; = &sum;<sub>i</sub> &epsilon;&#771;<sub>i</sub>&sup2;</div><b>OLS.</b> &beta;&#770; = argmin<sub>&beta;&#771;</sub> &#8214;y &minus; <b>X</b>&beta;&#771;&#8214;&sup2;&#8322;. Any minimizer satisfies the <b>normal equation</b><div class='eq'><b>X</b><sup>T</sup><b>X</b>&beta;&#770; = <b>X</b><sup>T</sup>y</div>and if <b>X</b> has full rank d+1 the minimizer is unique: &beta;&#770; = (<b>X</b><sup>T</sup><b>X</b>)<sup>&minus;1</sup><b>X</b><sup>T</sup>y.<p style='margin-top:8px'><b>Nota Bene 5.1.2.</b> Never actually compute that inverse. Solve the system (<b>X</b><sup>T</sup><b>X</b>)&beta;&#770; = <b>X</b><sup>T</sup>y by QR or LU &mdash; faster and more numerically stable.</p>",
+   "r": {
+    "rot": "stack your data into a big matrix, one row per observation, with a column of 1s in front. residual = what you predicted minus what actually happened. RSS = add up the squares of those. least squares means: pick &beta; to make RSS as small as possible. take the derivative, set it to zero, and you get the normal equation &mdash; a linear system. and then the practical bit everyone ignores: the formula has an inverse in it, but writing the inverse in code is the wrong move. solve the system instead. it's faster and it doesn't blow up when the matrix is nearly singular.",
+    "ex": "Exercise 5.2 asks you to build the solver and specifically to use <code>numpy.linalg.solve</code> rather than forming the inverse &mdash; and asks <i>why</i>. Exercise 5.6 does it again with QR and <code>solve_triangular</code>, and asks you to compare speed and accuracy against the first one.",
+    "why": "The normal equation is the bridge from &sect;3.9 of Volume 1 to everything here. And Nota Bene 5.1.2 is not fussiness &mdash; the extended example in &sect;5.3.8 hits condition numbers of 10<sup>23</sup>, where forming the inverse destroys the answer outright.",
+    "math": "&beta;&#770; = (<b>X</b><sup>T</sup><b>X</b>)<sup>&minus;1</sup><b>X</b><sup>T</sup>y when rank(<b>X</b>) = d+1. RSS = &#8214;y &minus; <b>X</b>&beta;&#771;&#8214;&sup2;&#8322;."
+   }
+  },
+  {
+   "id": "v3c5a3",
+   "s": "5.1",
+   "page": 284,
+   "q": "What goes wrong when <b>X</b> is rank deficient? Define the identifiability condition, and give the SVD solution.",
+   "a": "<b>Rank deficiency</b> means some feature columns are linearly dependent, so <b>X</b><sup>T</sup><b>X</b> is singular and (5.6) cannot be used. Exact singularity is rare; <b>near</b>-singularity is common, and it makes the condition number of <b>X</b><sup>T</sup><b>X</b> huge and the problem ill conditioned.<p style='margin-top:8px'><b>The real damage is to interpretation, not to solvability.</b> If a<sub>j&#8321;</sub>X<sub>j&#8321;</sub> + &hellip; + a<sub>j<sub>k</sub></sub>X<sub>j<sub>k</sub></sub> = 0, you can add any multiple of that relation to &beta;&#770; without changing a single prediction. The solution is no longer unique, so you cannot say how much each factor contributes. Requiring <b>X</b><sup>T</sup><b>X</b> to be invertible is therefore called the <b>identifiability condition</b>.</p><p><b>SVD fixes the computation.</b> With the compact SVD <b>X</b> = U&Sigma;V<sup>H</sup> of rank r, Vol 1 Thm 4.6.1 gives the unique solution in N(<b>X</b>)<sup>&perp;</sup>:</p><div class='eq'>&beta;&#770; = V&Sigma;<sup>&minus;1</sup>U<sup>T</sup>y</div>Multiplying <b>right to left</b> costs O(dr + rn), so the whole least-squares solve is O(r&sup2;n + dr) &mdash; O(r&sup2;n) when d &lt; n, O(dr) when n &lt; d (large images).<p style='margin-top:8px'><b>Nota Bene 5.1.5.</b> There are infinitely many solutions (add anything in the kernel), but exactly one orthogonal to N(<b>X</b>). That is the preferred one.</p>",
+   "r": {
+    "rot": "two of your columns say almost the same thing &mdash; SAT and ACT scores, say. the math still finds <i>an</i> answer, but not a unique one: you can shuffle weight between the two twin columns freely and every prediction stays identical. so <b>prediction is fine, blame is not</b>. you can't say &ldquo;SAT contributes this much&rdquo; when a different split of the same total fits equally well. that's identifiability. computationally, SVD saves you &mdash; it picks out the one solution perpendicular to the junk directions.",
+    "ex": "The book's example: SAT and ACT scores in a model predicting freshman GPA. Students who do well on one do well on the other, so if SAT is nearly a multiple of ACT, those two columns are nearly dependent and <b>X</b><sup>T</sup><b>X</b> is nearly singular. &sect;5.3.8 finds a live case &mdash; <code>US</code> and <code>const*US</code> are literally identical columns.",
+    "why": "This is the seam between prediction and causal claims that &sect;5.3.7 hammers on. Rank-deficient models stay perfectly useful for <b>predictive</b> modelling; they only fail when you want to control Y by changing X. It also motivates &sect;5.4: L&sup2;-regularization restores identifiability by making <b>X</b><sup>T</sup><b>X</b> + n&lambda;I invertible.",
+    "math": "&beta;&#770; = V&Sigma;<sup>&minus;1</sup>U<sup>T</sup>y, unique in N(<b>X</b>)<sup>&perp;</sup>. Complexity O(r&sup2;n + dr), r &le; min(d,n)."
+   }
+  },
+  {
+   "id": "v3c5a4",
+   "s": "5.1",
+   "page": 283,
+   "q": "Build a linear model from a real question. What does a coefficient mean, and how do you include a categorical feature?",
+   "a": "<b>Example 5.1.3 &mdash; does postgraduate education affect lifetime earnings?</b> Assume<div class='eq'>W = &beta;&#8320; + &beta;&#8321;S + &beta;&#8322;E + &beta;&#8323;A + &epsilon;</div>with W the current wage (dollars/hour), S total schooling (years), E work experience (months in the current type of job), and A age (years). Each sampled person contributes x<sub>i</sub> = (1, s<sub>i</sub>, e<sub>i</sub>, a<sub>i</sub>) &isin; R&#8308; and y<sub>i</sub> = w<sub>i</sub>.<div class='eq'><b>&beta;&#770;&#8321; is the estimated change in wage per one additional year of education</b> &mdash; holding the other listed factors fixed.</div><b>The book immediately criticizes its own model:</b> it is probably not a good one, because obvious additional factors surely influence W &mdash; the subject studied, and the worker's race and gender.<p style='margin-top:10px'><b>Example 5.1.4 &mdash; adding a categorical feature.</b> To capture whether the subject studied was technical (say, requiring at least a year of maths beyond calculus), introduce a <b>binary variable</b></p><div class='eq'>T = 1 if technical, 0 if not&nbsp;&nbsp;&rArr;&nbsp;&nbsp;W = &beta;&#8320; + &beta;&#8321;S + &beta;&#8322;E + &beta;&#8323;A + &beta;&#8324;T + &epsilon;</div>&beta;&#8324; is then the estimated wage difference attributable to a technical subject.<p style='margin-top:8px'><b>And how do you test whether a feature matters at all?</b> The standard way to test whether some X<sub>i</sub> has no impact on Y is <b>null hypothesis significance testing</b> &mdash; the subject of Chapter 6.</p>",
+   "r": {
+    "rot": "a linear model is a sentence you're willing to defend: wage depends on schooling, experience and age, plus noise. fit it and &beta;&#770;&#8321; reads as &ldquo;an extra year of school is worth this much per hour, holding the rest fixed.&rdquo; categorical features get in via a <b>0/1 indicator</b> &mdash; technical degree or not &mdash; and its coefficient is the gap between the two groups. note the book criticizing its own example: it left out subject, race and gender, and says so. omitted variables don't just make the model incomplete, they make the coefficients you kept <b>biased</b>.",
+    "ex": "The &ldquo;holding the others fixed&rdquo; clause is the whole interpretation and it is fragile. If two features are nearly collinear you cannot hold one fixed while moving the other, which is exactly the identifiability failure of &sect;5.1.3.",
+    "why": "Two threads start here. Omitted variables lead to bias (Exercise 5.10, and the underfitting discussion of &sect;3.4.7); and &ldquo;is &beta;<sub>i</sub> really zero?&rdquo; is the question that stepwise feature removal answers with p-values in &sect;5.3.6 and that Chapter 6 examines critically.",
+    "math": "&beta;<sub>i</sub> = &part;E[Y|X]/&part;X<sub>i</sub>, the change in the conditional mean per unit of X<sub>i</sub> with the others held fixed. Binary feature &rarr; coefficient is a group offset."
+   }
+  },
+  {
+   "id": "v3c5a5",
+   "s": "5.1",
+   "page": 285,
+   "q": "Three ways to solve the least-squares problem. When is each the right choice?",
+   "a": "<div class='eq'><b>1. Invert (X<sup>T</sup>X).</b> &beta;&#770; = (X<sup>T</sup>X)<sup>&minus;1</sup>X<sup>T</sup>y.<br><b>Never do this</b> (Nota Bene 5.1.2). It is slower and less numerically stable than the alternatives.<br><br><b>2. Solve the normal equation by QR or LU.</b> Solve (X<sup>T</sup>X)&beta;&#770; = X<sup>T</sup>y directly.<br>The default. Faster and more stable, and it never forms the inverse.<br><br><b>3. SVD.</b> X = U&Sigma;V<sup>H</sup> of rank r, then &beta;&#770; = V&Sigma;<sup>&minus;1</sup>U<sup>T</sup>y.<br>Required when X is rank deficient; <b>advantageous even when it isn't</b>.</div><b>Why the SVD is cheap despite looking expensive.</b> The compact SVD costs O(r&sup2;n), &Sigma; is diagonal so &Sigma;<sup>&minus;1</sup> costs O(r), and multiplying an a&times;b by a b&times;c matrix costs O(abc). Multiplying <b>right to left</b>:<div class='eq'>V<sub>(d&times;r)</sub> [ &Sigma;<sup>&minus;1</sup><sub>(r&times;r)</sub> ( U<sup>T</sup><sub>(r&times;n)</sub> y<sub>(n&times;1)</sub> ) ]&nbsp;&nbsp;costs O(dr + r&sup2; + rn) = O(dr + rn)</div>since r &le; min(d,n). Total: <b>O(r&sup2;n + dr)</b>, which is O(r&sup2;n) when d &lt; n, and <b>O(dr)</b> when n &lt; d &mdash; the case of large images with d in the tens of thousands or millions of pixels.<p style='margin-top:8px'><b>Order of operations is not a detail.</b> Left to right would form a d&times;n matrix first and cost far more.</p>",
+   "r": {
+    "rot": "three routes to the same answer and they are not equally good. writing the inverse is the textbook formula and the wrong code &mdash; slower and numerically fragile. solving the linear system with QR or LU is the default. SVD is the heavy option that's actually cheap if you multiply in the right order: peel U<sup>T</sup>y down to a short vector first, then &Sigma;<sup>&minus;1</sup>, then V. do it left to right and you build a huge matrix for nothing. SVD is also the only one that survives rank deficiency, and it's the one to reach for when you have more features than data points.",
+    "ex": "The n &lt; d regime is worth noting: with fewer samples than features the problem is automatically rank deficient, r &le; n, and the SVD cost drops to O(dr) &mdash; linear in the number of features. That is what makes least squares feasible on image data at all.",
+    "why": "Nota Bene 5.1.2's warning is not fussiness &mdash; &sect;5.3.8's extended example hits a condition number of 10&sup2;&sup3;, where forming an inverse destroys the answer. And Exercises 5.2 and 5.6 make you implement routes 2 and 3 and compare their speed and accuracy directly.",
+    "math": "Compact SVD O(r&sup2;n); &beta;&#770; = V(&Sigma;<sup>&minus;1</sup>(U<sup>T</sup>y)) right to left costs O(dr + rn). Total O(r&sup2;n + dr), r &le; min(d,n)."
+   }
+  },
+  {
+   "id": "v3c5b1",
+   "s": "5.2",
+   "page": 286,
+   "q": "State Proposition 5.2.1 &mdash; the three algebraic facts about OLS residuals and fitted values.",
+   "a": "Assume y &isin; R<sup>n</sup>, <b>X</b> &isin; M<sub>n&times;d</sub> with <b>first column all 1s</b> (but <i>not</i> assuming <b>X</b><sup>T</sup><b>X</b> invertible), let &beta;&#770; be any minimizer of &#8214;y &minus; <b>X</b>&beta;&#8214;&sup2;&#8322;, and set y&#770; = <b>X</b>&beta;&#770;, &epsilon;&#770; = y &minus; y&#770;. Then:<div class='eq'>(i)&nbsp;&nbsp;&sum;<sub>i=1</sub><sup>n</sup> &epsilon;&#770;<sub>i</sub> = 0<br>(ii)&nbsp;&nbsp;y&#772; = x&#772;<sup>T</sup>&beta;&#770;&nbsp;&nbsp;(the fitted plane passes through the centroid)<br>(iii)&nbsp;&nbsp;(1/n)&sum;<sub>i</sub> y&#770;<sub>i</sub> = y&#772;</div>where y&#772; = (1/n)&sum; y<sub>i</sub> and x&#772; = (1/n)&sum; x<sub>i</sub>.<p style='margin-top:8px'>All three come from the constant column. Minimizing over &beta;&#8320; forces the residuals to sum to zero, and (ii) and (iii) follow. The proof is Exercise 5.7.</p>",
+   "r": {
+    "rot": "three freebies you get purely from having an intercept in the model. the residuals add up to exactly zero &mdash; not approximately, exactly. the fitted plane goes through the centre of mass of your data. and the average prediction equals the average of the actual values. none of these need the matrix to be invertible, and none of them are evidence that the model is any good. they're bookkeeping identities.",
+    "ex": "This is why &ldquo;the residuals sum to zero&rdquo; tells you nothing about fit &mdash; it is guaranteed by the intercept, even for a terrible model. If you fit <i>without</i> a constant column, all three can fail.",
+    "why": "It is the algebra that makes R&sup2; in &sect;5.3.3 well posed: the denominator &sum;(y<sub>i</sub> &minus; y&#772;)&sup2; is the total variation about the mean, and (iii) is what lets you read the ratio as &ldquo;variance explained.&rdquo;",
+    "math": "Needs only: a constant column and &beta;&#770; a minimizer. Not invertibility, not normality, not independence."
+   }
+  },
+  {
+   "id": "v3c5b2",
+   "s": "5.2",
+   "page": 286,
+   "q": "Show that the OLS estimator is unbiased. What is homoskedasticity?",
+   "a": "Treat <b>X</b> and y as random, so &beta;&#770; is an <b>estimator</b> for &beta;. Assume <b>X</b><sup>T</sup><b>X</b> is invertible (formally: X is restricted to the open set where it is).<p style='margin-top:6px'><b>Lemma 5.2.2.</b> For any &beta;, conditioning on <b>X</b> but not y, E[&beta;&#770; | <b>X</b>] = &beta;. (Proof is Exercise 5.8.)</p><p><b>Proposition 5.2.3.</b> &beta;&#770; is <b>unbiased</b>: E[&beta;&#770;] = &beta;. This is one line from Adam's law &mdash; the tower property:</p><div class='eq'>E[&beta;&#770;] = E[ E[&beta;&#770; | <b>X</b>] ] = E[&beta;] = &beta;</div><p style='margin-top:8px'><b>Homoskedasticity.</b> The rest of &sect;5.2 assumes Cov(&epsilon;|<b>X</b>) is known. If the data points are independent it must be diagonal; the common further assumption</p><div class='eq'>Cov(&epsilon; | <b>X</b>) = &sigma;&sup2;I</div>&mdash; every observation has the same noise variance, uncorrelated across observations &mdash; is called <b>homoskedasticity</b>.",
+   "r": {
+    "rot": "unbiased means: if you could re-run the whole experiment a zillion times with fresh data, the average of your &beta;&#770;s would land exactly on the true &beta;. it does <i>not</i> mean your particular &beta;&#770; is close. proof is two steps &mdash; it's true holding <b>X</b> fixed, so it's true on average over <b>X</b> too (tower property). homoskedasticity is the assumption that the noise is the same size everywhere. real data often violates it &mdash; noise grows with the size of the thing you're measuring &mdash; and then the standard errors you get out are lies even though &beta;&#770; itself is still unbiased.",
+    "ex": "The extended example's own output warns about this: &ldquo;Standard Errors assume that the covariance matrix of the errors is correctly specified.&rdquo; That line is exactly the homoskedasticity assumption showing up in a software footnote.",
+    "why": "Unbiasedness is what makes &beta;&#770; a legitimate estimate of a <i>causal</i> coefficient at all, and it is the hypothesis of Gauss&ndash;Markov in the next subsection &mdash; that theorem picks the best estimator <i>among the unbiased ones</i>, so unbiasedness has to come first.",
+    "math": "E[&beta;&#770;|<b>X</b>] = &beta; (Lemma 5.2.2) &rArr; E[&beta;&#770;] = &beta; (tower). Homoskedastic: Cov(&epsilon;|<b>X</b>) = &sigma;&sup2;I."
+   }
+  },
+  {
+   "id": "v3c5b3",
+   "s": "5.2",
+   "page": 287,
+   "q": "State the Gauss&ndash;Markov theorem. What do BLUE and MVLUE mean, and when does the GLS estimator reduce to OLS?",
+   "a": "A <b>linear estimator</b> has the form &beta;&#771; = Ky for a matrix K. Among linear, <b>conditionally unbiased</b> estimators (E[&beta;&#771; &minus; &beta; | <b>X</b>] = 0), Gauss&ndash;Markov identifies the one with minimum covariance &mdash; the <b>MVLUE</b> (minimum-variance linear unbiased estimator), also called the <b>BLUE</b> (best linear unbiased estimator). Minimum covariance means every competitor satisfies<div class='eq'>Cov(&beta;&#771;) = Cov(&beta;&#774;) + C,&nbsp;&nbsp;C positive semidefinite</div><b>Theorem 5.2.4 (Gauss&ndash;Markov).</b> With Q = Cov(&epsilon;|<b>X</b>), the MVLUE is the <b>generalized least squares</b> estimator<div class='eq'>&beta;&#774; = (<b>X</b><sup>T</sup>Q<sup>&minus;1</sup><b>X</b>)<sup>&minus;1</sup><b>X</b><sup>T</sup>Q<sup>&minus;1</sup>y</div><p style='margin-top:6px'><b>Under homoskedasticity Q = &sigma;&sup2;I this collapses to &beta;&#774; = &beta;&#770;</b> &mdash; the plain OLS estimator is the best one.</p><p><b>Corollary 5.2.5.</b> &beta;&#774; also minimizes the <b>MSE</b> among linear conditionally unbiased estimators. (Proof is Exercise 5.9.)</p>",
+   "r": {
+    "rot": "gauss&ndash;markov is a competition with strict entry rules: your estimator has to be linear in y, and it has to be unbiased. among everyone who qualifies, there's a winner, and the winner has the smallest covariance &mdash; any rival's covariance is the winner's plus something positive-semidefinite. if the noise is well behaved (same variance everywhere), the winner is plain old OLS. that's the whole reason OLS is the default. note what the rules exclude, though: <b>biased</b> estimators aren't in the competition, and &sect;5.4 wins by deliberately cheating on that.",
+    "ex": "The proof's mechanism: write any competitor's K as D + (<b>X</b><sup>T</sup>Q<sup>&minus;1</sup><b>X</b>)<sup>&minus;1</sup><b>X</b><sup>T</sup>Q<sup>&minus;1</sup>. Conditional unbiasedness forces E[D<b>X</b>|<b>X</b>] = 0, which kills the cross terms, leaving Cov(&beta;&#771;) = E[DQD<sup>T</sup>] + Cov(&beta;&#774;) &mdash; and DQD<sup>T</sup> is always positive semidefinite.",
+    "why": "This is <i>the</i> justification for using OLS rather than something cleverer, and it's why the next thing you should ask about a regression is whether the noise really is homoskedastic. When it isn't, GLS &mdash; not OLS &mdash; is the right estimator. Corollary 5.2.5 then upgrades &ldquo;smallest covariance&rdquo; to the thing you actually care about, smallest MSE.",
+    "math": "Q = Cov(&epsilon;|<b>X</b>). GLS &beta;&#774; = (<b>X</b><sup>T</sup>Q<sup>&minus;1</sup><b>X</b>)<sup>&minus;1</sup><b>X</b><sup>T</sup>Q<sup>&minus;1</sup>y. Q = &sigma;&sup2;I &rArr; &beta;&#774; = &beta;&#770;."
+   }
+  },
+  {
+   "id": "v3c5b4",
+   "s": "5.2",
+   "page": 288,
+   "q": "Beyond BLUE: in what three further senses is the OLS estimator good?",
+   "a": "<b>1. It is the MLE (Proposition 5.2.6).</b> If &epsilon; | X ~ N(0, &sigma;&sup2;) with &sigma;&sup2; fixed and <b>X</b><sup>T</sup><b>X</b> invertible, then &beta;&#770; = (<b>X</b><sup>T</sup><b>X</b>)<sup>&minus;1</sup><b>X</b><sup>T</sup>y is the maximum likelihood estimator. The single-point likelihood factors as<div class='eq'>L(&beta; | x,y) = f<sub>N(0,&sigma;&sup2;)</sub>(y &minus; x<sup>T</sup>&beta;) &middot; P(x)</div>and taking logs turns the product over the data into the sum of squares. (Details are Exercise 5.11.)<p style='margin-top:8px'><b>2. It is consistent (Theorem 5.2.7).</b> If (1/n)<b>X</b><sup>T</sup><b>X</b> &rarr;<sub>p</sub> Q, finite and invertible, then &beta;&#770; &rarr;<sub>p</sub> &beta;. The trick is &beta;&#770; = &beta; + (<b>X</b><sup>T</sup><b>X</b>)<sup>&minus;1</sup><b>X</b><sup>T</sup>&epsilon;, so it suffices that the second term vanish &mdash; E[X&epsilon;] = 0 by the tower property, and the continuous mapping theorem (Thm 4.1.5) handles the inverse.</p><p><b>3. It is asymptotically normal.</b> &radic;n(&beta;&#770; &minus; &beta;) &rarr;<sub>d</sub> N(0, Q<sup>&minus;1</sup>&Sigma;Q) with Q = E[XX<sup>T</sup>], &Sigma; = E[XX<sup>T</sup>&epsilon;&sup2;], estimated by Q&#770; = (1/n)(<b>X</b><sup>T</sup><b>X</b>)<sup>&minus;1</sup> and &Sigma;&#770; = (1/n)&sum; x<sub>i</sub>x<sub>i</sub><sup>T</sup>&epsilon;&#770;<sub>i</sub>&sup2;.</p>",
+   "r": {
+    "rot": "OLS keeps winning under different rules. under gaussian noise it's the <b>maximum likelihood</b> answer &mdash; minimizing squares <i>is</i> maximizing likelihood, they're the same problem wearing different clothes. with enough data it's <b>consistent</b>, meaning it actually converges to the truth rather than just being right on average. and it's <b>asymptotically normal</b>, which is the thing that lets you put error bars on the coefficients at all. that last one is where every p-value in a regression table comes from.",
+    "ex": "Notice why the shape matters: <b>X</b> is n&times;d and grows, but <b>X</b><sup>T</sup><b>X</b> is d&times;d and <i>doesn't</i>. Writing <b>X</b><sup>T</sup><b>X</b> = &sum;<sub>i</sub> x<sub>i</sub>x<sub>i</sub><sup>T</sup> shows (1/n)<b>X</b><sup>T</sup><b>X</b> is a sample mean, so a law of large numbers applies to it &mdash; that's the whole content of the hypothesis.",
+    "why": "The asymptotic normality is what produces the <code>std err</code>, <code>t</code>, <code>P&gt;|t|</code>, and confidence-interval columns of the regression tables in &sect;5.3.8 &mdash; and therefore what stepwise feature removal is reading when it drops a feature with a large p-value. Consistency is why more data actually helps rather than just tightening a wrong answer.",
+    "math": "MLE under &epsilon;|X ~ N(0,&sigma;&sup2;). Consistent if (1/n)<b>X</b><sup>T</sup><b>X</b> &rarr;<sub>p</sub> Q invertible. &radic;n(&beta;&#770;&minus;&beta;) &rarr;<sub>d</sub> N(0, Q<sup>&minus;1</sup>&Sigma;Q)."
+   }
+  },
+  {
+   "id": "v3c5c1",
+   "s": "5.3",
+   "page": 290,
+   "q": "What is a test-train split, and why is training loss a biased estimate of expected loss?",
+   "a": "The quantity you want is the <b>expected loss</b> E<sub>X,Y</sub>[L(Y, f&#770;(X))]. You can't compute it &mdash; that would need the joint distribution of (X,Y), and if you had that you wouldn't be estimating f. With a second dataset {(x'&#8321;,y'&#8321;),&hellip;,(x'<sub>m</sub>,y'<sub>m</sub>)} from the same distribution you could estimate it:<div class='eq'>E<sub>X,Y</sub>[L(Y, f&#770;(X))] &asymp; (1/m) &sum;<sub>i=1</sub><sup>m</sup> L(y'<sub>i</sub>, f&#770;(x'<sub>i</sub>))</div><b>Using the same data to build f&#770; and to score it gives a biased estimator</b> &mdash; f&#770; was chosen to make those residuals small, so they understate the error on anything new.<p style='margin-top:8px'><b>The split.</b> Randomly select m points as the test set; train on the rest. To compare models, fit each f&#770;<sub>j</sub> on the training data and score each on the test set.</p><p><b>Select the test set randomly.</b> Taking &ldquo;the last 30%&rdquo; can give a biased sample if the data was sorted.</p>",
+   "r": {
+    "rot": "you can't grade your own homework. the model was fit by making the training residuals small, so of course they're small &mdash; that number tells you nothing about new data. so hide some data from the model, fit on the rest, and score on the hidden part. and hide it <b>at random</b>: if you take the last chunk and the file happened to be sorted by date or by size, your test set isn't the same population as your training set and the whole exercise is void.",
+    "ex": "The scientific analogue: one experiment is not good evidence for a hypothesis even when the residuals are small, because those residuals are in-sample. The hypothesis gains real support when a <b>second</b> experiment &mdash; a test set &mdash; reproduces it.",
+    "why": "This is the single most important tool in the chapter for comparing models, and everything else in &sect;5.3 is a workaround for when you can't afford it: cross validation when data is scarce, AIC/BIC when refitting is too expensive. Nota Bene 5.3.1 draws the hard line &mdash; if the test set touches training at all, its value as a test set is diminished.",
+    "math": "Training loss is biased <i>downward</i> for E[L]. An unbiased estimate needs data not used in fitting f&#770;."
+   }
+  },
+  {
+   "id": "v3c5c2",
+   "s": "5.3",
+   "page": 291,
+   "q": "Describe k-fold cross validation. How does the choice of k trade bias against variance?",
+   "a": "Split the dataset at random into k roughly equal, roughly representative parts P&#8321;,&hellip;,P<sub>k</sub> with sizes n<sub>i</sub>. For each i, train on P<sup>&not;i</sup> = &#8746;<sub>j&ne;i</sub>P<sub>j</sub> and test on P<sub>i</sub>, giving L<sub>i</sub> = (1/n<sub>i</sub>)&sum;<sub>j&isin;P<sub>i</sub></sub> L(y<sub>j</sub>, f&#770;<sup>&not;i</sup>(x<sub>j</sub>)). The weighted average is<div class='eq'>E<sub>X,Y</sub>[L] &asymp; (1/n) &sum;<sub>i=1</sub><sup>k</sup> n<sub>i</sub>L<sub>i</sub> = (1/n) &sum;<sub>j=1</sub><sup>n</sup> L(y<sub>j</sub>, f&#770;<sup>&not;&iota;(j)</sup>(x<sub>j</sub>))</div>where &iota;(j) is the part containing point j. Every point gets used for both training and testing &mdash; just never at the same time.<p style='margin-top:8px'><b>The tradeoff.</b> Small k: <b>low variance, some bias</b> (each model is trained on noticeably less data). Large k: <b>lower bias, higher variance</b>. k = n is <b>leave-one-out</b>, and the cost is that f&#770;<sup>&not;j</sup> must be refit for every single point. In practice <b>k is usually 5 to 10</b>.</p><p>Pick the model with the smallest CV loss, then <b>refit it on the full data</b> for the final estimate.</p>",
+   "r": {
+    "rot": "&ldquo;cross validation is a way to use your data and test with it, too.&rdquo; chop the data into k pieces. hold out piece 1, train on the rest, score on piece 1. repeat for every piece. average. every point gets tested exactly once and trained on k&minus;1 times. small k means each model sees less data, so the score is a bit pessimistic &mdash; biased. big k means each model sees nearly everything, so less bias, but the k scores are wildly correlated and expensive to compute. 5 or 10 is the compromise everyone lands on.",
+    "ex": "The book's motivating case: d = 1 with only three data points. Hold one out and you fit a line through two points &mdash; wildly different lines depending on which two &mdash; then score at the one remaining point. Both the fit and the loss estimate swing enormously. You need the full dataset for both jobs, hence CV.",
+    "why": "It is the standard way to choose the regularization parameter &lambda; in &sect;5.4 &mdash; Remarks 5.4.2 and 5.4.4 both say so explicitly, since the figures that show which &lambda; is best only exist in two dimensions and real data isn't plottable.",
+    "math": "k-fold: k fits, each on ~(1&minus;1/k)n points. Leave-one-out: k = n, &iota;(j) = j, n fits. Bias &darr; and variance &uarr; as k &uarr;."
+   }
+  },
+  {
+   "id": "v3c5c3",
+   "s": "5.3",
+   "page": 292,
+   "q": "Define the coefficient of determination R&sup2;. State Nota Bene 5.3.3 &mdash; why must R&sup2; never be used alone on a training set?",
+   "a": "<b>Definition 5.3.2.</b> For Y = f(X) + &epsilon; and an estimate f&#770; with residuals &epsilon;&#770;<sub>i</sub> = y<sub>i</sub> &minus; f&#770;(x<sub>i</sub>):<div class='eq'>R&sup2; = 1 &minus; ( &sum;<sub>i</sub> &epsilon;&#770;<sub>i</sub>&sup2; ) / ( &sum;<sub>i</sub> (y<sub>i</sub> &minus; y&#772;)&sup2; )</div><b>Intuition.</b> (1/n)&sum;(y<sub>i</sub> &minus; y&#772;)&sup2; is the biased sample variance of Y and (1/n)&sum;&epsilon;&#770;<sub>i</sub>&sup2; is the average squared residual, so the ratio is roughly the proportion of variance <b>not</b> explained &mdash; making R&sup2; roughly the proportion <b>explained</b>. Always R&sup2; &le; 1, but it <b>can go negative</b>.<p style='margin-top:10px'><b>Nota Bene 5.3.3 &mdash; the trap.</b> R&sup2; strictly decreases with the average squared residual, so it is larger whenever residuals are smaller, <b>including when the model is overfit</b>. On a training set it therefore <b>rewards overfitting and punishes underfitting</b>.</p><p>Read it asymmetrically: small or negative R&sup2; on the training set is reliable evidence the model is bad. Large R&sup2; on the training set is <b>not</b> evidence it is good &mdash; more likely it is overfit. The book notes it is very common for papers to train on all their data and report training R&sup2; as if it meant something.</p>",
+   "r": {
+    "rot": "R&sup2; asks: how much of the wiggle in Y did my model account for? 1 is perfect, 0 is no better than guessing the mean, and yes it can go <b>negative</b> &mdash; worse than the mean. the trap is that it's a pure function of the residuals, and residuals always shrink when you add features. so on training data R&sup2; literally cannot punish you for overfitting; it pays you for it. the asymmetry is what to remember: a <b>bad</b> R&sup2; on training data is real bad news. a <b>good</b> one is no news at all.",
+    "ex": "In the extended example, the first model has R&sup2; = 0.879 with a design matrix that is outright singular &mdash; a high R&sup2; sitting on top of a broken model. The final, much smaller model has R&sup2; = 0.875, essentially the same fit with seven fewer features.",
+    "why": "It is the cleanest instance of the chapter's recurring theme: any measure computed on the training set is corrupted by having been optimized. AIC and BIC exist precisely because they add a penalty for parameter count that R&sup2; refuses to.",
+    "math": "R&sup2; = 1 &minus; RSS/TSS, TSS = &sum;(y<sub>i</sub>&minus;y&#772;)&sup2;. Monotone decreasing in RSS &rArr; monotone increasing in model complexity on the training set."
+   }
+  },
+  {
+   "id": "v3c5c4",
+   "s": "5.3",
+   "page": 294,
+   "q": "Derive the idea behind the Akaike information criterion and state Definition 5.3.4.",
+   "a": "Given models M<sub>j</sub> = {f<sub>j</sub>(z|&theta;) : &theta; &isin; &Theta;<sub>j</sub>} with MLEs &theta;&#770;<sub>j</sub>, we want the one whose fitted density f&#770;<sub>j</sub> is closest to the true f, measured by <b>relative entropy</b>:<div class='eq'>D<sub>kl</sub>(f &#8214; f&#770;<sub>j</sub>) = &int;f log f &minus; &int;f log f&#770;<sub>j</sub></div>The first term doesn't depend on j, so it suffices to minimize K&#770;<sub>j</sub> = &minus;&int;f(z) log f&#770;<sub>j</sub>(z) dz.<p style='margin-top:8px'>The obvious estimate &minus;(1/n)&sum;<sub>i</sub> log f&#770;<sub>j</sub>(z<sub>i</sub>) is <b>biased</b>, because the same data z&#8321;,&hellip;,z<sub>n</sub> both computed &theta;&#770; and approximated the integral. <b>Akaike proved the bias is approximately &minus;k<sub>j</sub>/n</b>, where k<sub>j</sub> = dim(&Theta;<sub>j</sub>). Correcting and multiplying by 2n gives:</p><div class='eq'><b>Definition 5.3.4.</b>&nbsp;&nbsp;AIC(j) = 2k<sub>j</sub> &minus; 2&#8467;<sub>j</sub>(&theta;&#770;<sub>j</sub>)</div>with &#8467;<sub>j</sub>(&theta;&#770;<sub>j</sub>) = &sum;<sub>i</sub> log f<sub>j</sub>(z<sub>i</sub>|&theta;&#770;) the maximum log-likelihood. The factor 2 is historical and serves no purpose. <b>Minimize AIC.</b><p style='margin-top:8px'><b>Nota Bene 5.3.6.</b> Conventions differ &mdash; some texts use 2&#8467;<sub>j</sub>(&theta;&#770;<sub>j</sub>) &minus; 2d<sub>j</sub>, which you <b>maximize</b>. Check the sign before you compare.</p>",
+   "r": {
+    "rot": "you want the model closest to the truth. &ldquo;closest&rdquo; here means smallest KL divergence, and the piece of that you can't compute cancels out when you're only ranking models. so you estimate the rest from the data &mdash; except the data already got used to fit the model, so the estimate is optimistic by roughly (number of parameters)/(number of data points). akaike worked out that bias exactly. subtract it off, scale by 2n, and you get AIC = 2k &minus; 2&#8467;. <b>more parameters costs you 2 each</b>. lowest AIC wins. and check the sign convention before you trust anyone's AIC.",
+    "ex": "Example 5.3.5 works it out for OLS with Gaussian noise: &theta; = (&beta;, &sigma;&sup2;) has dimension d+1, the MLE is &sigma;&#770;&sup2; = RSS/n, and after dropping model-independent constants you minimize 2(d+1) + n log(RSS/n).",
+    "why": "AIC and BIC are what you use when a test-train split or cross validation isn't available &mdash; not enough data for the split, or fitting is too slow to repeat k times. That's their whole reason for existing, and it's why they appear right after cross validation rather than before it.",
+    "math": "AIC(j) = 2k<sub>j</sub> &minus; 2&#8467;<sub>j</sub>(&theta;&#770;<sub>j</sub>), k<sub>j</sub> = dim(&Theta;<sub>j</sub>). Minimizes estimated D<sub>kl</sub> from the true distribution."
+   }
+  },
+  {
+   "id": "v3c5c5",
+   "s": "5.3",
+   "page": 296,
+   "q": "Define the BIC. How does it differ from the AIC, and what should you do when they disagree?",
+   "a": "<b>Definition 5.3.7.</b> With the same setup and &theta;&#770;<sub>j</sub> the MLE:<div class='eq'>BIC(j) = k<sub>j</sub> log(n) &minus; 2&#8467;<sub>j</sub>(&theta;&#770;<sub>j</sub>)</div>Its justification is different from AIC's: BIC is minimized precisely when the <b>posterior probability of the model given the data</b> is maximized. AIC instead estimates relative entropy from the true distribution.<p style='margin-top:10px'><b>Remark 5.3.8 &mdash; they differ in exactly one term.</b> AIC has 2k<sub>j</sub>, BIC has log(n)&middot;k<sub>j</sub>. Since log(n) is generally much larger than 2, <b>BIC penalizes complexity harder</b>, and the gap widens with more data.</p><div class='eq'>AIC &rarr; more likely to choose <b>too complex</b> a model<br>BIC &rarr; more likely to choose <b>too simple</b> a model</div><p><b>When they disagree, choose by your goal.</b> More worried about <b>false inclusion</b> of irrelevant factors &rarr; BIC. More worried about <b>false exclusion</b> of possibly relevant ones &rarr; AIC.</p>",
+   "r": {
+    "rot": "same formula, one number swapped. AIC charges you 2 per parameter; BIC charges you log(n) per parameter. with a thousand data points log(n) is about 7, so BIC is more than three times as stingy about complexity &mdash; and the more data you have the stingier it gets. so AIC tends to keep too much, BIC tends to throw away too much. when they disagree, ask which mistake you'd rather make: keeping a useless feature, or dropping a real one.",
+    "ex": "In &sect;5.3.8's stepwise elimination they part company at the end. Removing more variables <i>increases</i> the AIC while still <i>decreasing</i> the BIC, and the model finally chosen &mdash; 8 features instead of 17 &mdash; is the BIC minimizer, with R&sup2; barely changed at 0.875.",
+    "why": "The two criteria answer genuinely different questions, so &ldquo;which is correct&rdquo; is the wrong framing &mdash; BIC asks which model is most probable, AIC asks which predicts closest to the truth. Knowing that is what lets you pick deliberately rather than by whichever your software prints first.",
+    "math": "AIC = 2k &minus; 2&#8467;. BIC = k log(n) &minus; 2&#8467;. Identical apart from the penalty; log(n) &gt; 2 for n &ge; 8."
+   }
+  },
+  {
+   "id": "v3c5c6",
+   "s": "5.3",
+   "page": 297,
+   "q": "Describe stepwise feature removal. Then state the two pitfalls of OLS regression from &sect;5.3.7.",
+   "a": "<b>Full search</b> is only possible for few features &mdash; F features give 2<sup>F</sup> subsets. <b>Stepwise removal</b> instead: fit the full model and compute AIC/BIC; find a feature with a <b>large p-value</b> (the probability of the data if that coefficient were truly 0) whose <b>95% confidence interval contains 0</b>; drop it, refit, recompute. Keep the new model if the criterion improved; otherwise restore and try another feature. Stop when the AIC stops improving and no feature has p greater than about 0.05.<p style='margin-top:10px'><b>Pitfall 1 &mdash; incorrect models.</b> If the target is bounded (a percentage in [0,1]), nothing constrains the OLS output to stay in range. Use logistic regression instead (&sect;5.5.2).</p><p><b>Pitfall 2 &mdash; correlation is not causation.</b> Given Y = &beta;&#8320; + &beta;&#8321;X&#8321; + &hellip; + &beta;<sub>d</sub>X<sub>d</sub> + &epsilon;, &beta;<sub>i</sub> &ne; 0 says X<sub>i</sub> and Y are <b>correlated</b>: observing a change in X<sub>i</sub> predicts a change in Y. It does <b>not</b> say that changing X<sub>i</sub> changes Y.</p><p style='margin-top:8px'>The algebra makes the point sharply &mdash; if &beta;<sub>i</sub> &ne; 0 you can just rearrange the same equation to</p><div class='eq'>X<sub>i</sub> = (1/&beta;<sub>i</sub>)Y &minus; (&beta;&#8320;/&beta;<sub>i</sub>) &minus; (&beta;&#8321;/&beta;<sub>i</sub>)X&#8321; &minus; &hellip; + &eta;</div>and now <b>Y looks like a predictor of X<sub>i</sub></b>. Being on the right-hand side confers no causal status whatsoever.",
+   "r": {
+    "rot": "can't check all 2<sup>F</sup> feature subsets, so: fit everything, find the feature the data cares least about (big p-value, confidence interval straddling zero), delete it, refit, see if AIC went down. keep going until it stops helping. two ways to still be wrong. first, if Y has to live in [0,1] then a straight line is the wrong shape, full stop. second &mdash; and this one is everywhere &mdash; a significant coefficient means <b>correlation</b>. you can algebraically flip the equation around and make Y the predictor of X. the equation doesn't know which way the arrow points, so it can't be telling you.",
+    "ex": "The yellow-fingernails model again, now as a fitted regression: Y = &beta;&#8320; + &beta;&#8321;X + &epsilon; with cancer risk Y and nail yellowness X, and &beta;&#8321; large and positive. The model is genuinely predictive. Bleaching your fingernails still does nothing.",
+    "why": "Pitfall 2 is Chapter 0's yellow-fingernails point returning with a p-value attached, which is precisely what makes it dangerous &mdash; &ldquo;all features show p &lt; 0.01&rdquo; feels like evidence of mechanism and is not. &sect;6.3.6 lists &ldquo;incorrectly take a low p as evidence of causality&rdquo; as a standard fallacy for the same reason.",
+    "math": "F features &rarr; 2<sup>F</sup> subsets. Drop when p large <b>and</b> the 95% CI contains 0; keep the refit only if AIC/BIC improves. &beta;<sub>i</sub> &ne; 0 &rArr; correlation, never intervention."
+   }
+  },
+  {
+   "id": "v3c5d1",
+   "s": "5.4",
+   "page": 306,
+   "q": "Write down L&sup2;-regularization (ridge regression). Why the 1/n? What are its two benefits?",
+   "a": "Overfit models need <b>large coefficients</b> &mdash; the Wilkinson polynomial &prod;<sub>k=1</sub><sup>20</sup>(x&minus;k) passes through twenty points on the x-axis with coefficients of order 10<sup>19</sup>. Penalize that:<div class='eq'>&beta;&#770; = argmin<sub>&beta;</sub> [ (1/n)&#8214;y &minus; <b>X</b>&beta;&#8214;&sup2;&#8322; + &lambda;&#8214;&beta;&#8214;&sup2;&#8322; ],&nbsp;&nbsp;&lambda; &gt; 0</div>also called <b>Tikhonov</b> or <b>ridge</b> regression.<p style='margin-top:8px'><b>Why the 1/n.</b> The OLS term is a sum of n terms and grows with more data; the penalty does not. Dividing by n keeps the two proportional so &lambda; means the same thing at any sample size.</p><p><b>Effect of &lambda;.</b> Small &lambda; &rarr; near the OLS solution (possibly overfit). Large &lambda; &rarr; near 0 (underfit). Each &lambda; is a different model; choose by cross validation.</p><p style='margin-top:8px'><b>Still a quadratic problem.</b> Stacking &#8214;y &minus; <b>X</b>&beta;&#8214;&sup2;&#8322;/n + &lambda;&#8214;&beta;&#8214;&sup2;&#8322; as a single least-squares problem with <b>X</b>&#771; = [<b>X</b>; &radic;(n&lambda;)I] and y&#771; = [y; 0] gives the <b>regularized normal equation</b></p><div class='eq'>(<b>X</b><sup>T</sup><b>X</b> + n&lambda;I)&beta; = <b>X</b><sup>T</sup>y</div><b>Two benefits.</b> (1) It reduces overfitting by controlling &#8214;&beta;&#770;&#8214;. (2) It <b>restores identifiability</b> &mdash; even when <b>X</b><sup>T</sup><b>X</b> is singular, most &lambda; make <b>X</b><sup>T</sup><b>X</b> + n&lambda;I invertible, so the minimizer is unique.",
+   "r": {
+    "rot": "overfit curves have gigantic coefficients &mdash; that's the tell. so add a fee for large coefficients: minimize the usual squared error <b>plus</b> &lambda; times the size of &beta;. &lambda; is the dial. zero means plain OLS, huge means &beta; gets crushed to nothing, and somewhere in between is right. the 1/n is bookkeeping so &lambda; keeps its meaning as data piles up. two payoffs: less overfitting, and the singular-matrix problem from &sect;5.1.3 just evaporates &mdash; adding n&lambda; to the diagonal makes it invertible.",
+    "ex": "Example 5.4.1: 20 points from y = sin(x) + N(0, 0.01), fit with a degree-19 polynomial. Unregularized, coefficients hit 10<sup>11</sup> and the curve is garbage. &lambda; = 10<sup>&minus;12</sup> is already visibly better, &lambda; = 10<sup>&minus;5</sup> is very good, and &lambda; = 1 crushes everything below 10<sup>&minus;2</sup> &mdash; essentially the line y = 0.",
+    "why": "This is a <b>deliberately biased</b> estimator, so it steps outside the Gauss&ndash;Markov competition of &sect;5.2.2 entirely &mdash; and beats OLS anyway, because a little bias buys a lot of variance. It's also the Levenberg&ndash;Marquardt modification from Vol 2 &sect;12.4.5, adding n&lambda; to every eigenvalue of <b>X</b><sup>T</sup><b>X</b>.",
+    "math": "(<b>X</b><sup>T</sup><b>X</b> + n&lambda;I)&beta;&#770; = <b>X</b><sup>T</sup>y, so &beta;&#770; = (<b>X</b><sup>T</sup><b>X</b> + n&lambda;I)<sup>&minus;1</sup><b>X</b><sup>T</sup>y &mdash; unique for almost every &lambda; &gt; 0."
+   }
+  },
+  {
+   "id": "v3c5d2",
+   "s": "5.4",
+   "page": 308,
+   "q": "Write down L&sup1;-regularization (LASSO). How does it differ from L&sup2; in what it produces, and what does it cost computationally?",
+   "a": "<b>The problem L&sup2; doesn't solve.</b> Ridge shrinks coefficients but almost never zeroes them &mdash; &#8214;&beta;&#770;&#8214;&#8322; is small yet every individual coefficient stays nonzero, so no feature is actually removed. Fine for prediction; awful for interpretation when there are many features each contributing a little.<div class='eq'>&beta;&#770; = argmin<sub>&beta;</sub> [ (1/n)&#8214;y &minus; <b>X</b>&beta;&#8214;&sup2;&#8322; + &lambda;&#8214;&beta;&#8214;&#8321; ]</div>&mdash; sometimes called <b>LASSO</b> (Least Absolute Shrinkage and Selection Operator).<p style='margin-top:8px'><b>The key property:</b> the minimizer is usually <b>sparse</b>, and more sparse for larger &lambda;. Coefficients that are exactly zero mean the corresponding features can be <b>removed</b> &mdash; a feature-selection method that often outperforms the stepwise removal of &sect;5.3.6.</p><p><b>The cost.</b> Unlike L&sup2;, it can't be solved with standard OLS machinery, and the objective is <b>not differentiable</b>, which troubles numerical optimizers. But it <b>is convex</b>, and convex methods such as coordinate descent find the minimizer quickly.</p>",
+   "r": {
+    "rot": "swap the squared norm for the plain absolute-value norm and something qualitatively different happens: coefficients don't just get small, they hit <b>exactly zero</b> and stay there. crank &lambda; and more of them die. a zero coefficient means that feature is gone from the model &mdash; so this is feature selection that happens automatically while fitting, rather than the drop-one-refit dance of &sect;5.3.6. the price: the absolute value has a corner, so it's not differentiable and you can't just solve a linear system. still convex though, so it's not actually hard.",
+    "ex": "Example 5.4.3, same degree-19 curve as before, counting nonzero coefficients with &#8214;&beta;&#770;&#8214;&#8320;: no regularization gives 20, &lambda; = 10<sup>&minus;5</sup> gives 12, 10<sup>&minus;4</sup> gives 6, 10<sup>&minus;3</sup> gives 3, 10<sup>&minus;2</sup> gives 2, &lambda; = 1 gives 0. Note that 2 nonzero coefficients doesn't mean a low-degree polynomial &mdash; they're the degree-2 and degree-11 terms, so it's still degree 11.",
+    "why": "It changes what regularization is <i>for</i>. L&sup2; is about controlling overfitting and fixing identifiability; L&sup1; is about that <b>plus</b> producing a model you can read. &sect;5.4.6 makes the choice explicit: interpretability &rarr; L&sup1;, identifiability worries &rarr; L&sup2;.",
+    "math": "&#8214;&beta;&#8214;&#8321; = &sum;|&beta;<sub>i</sub>|. Convex but nondifferentiable at 0. &#8214;&beta;&#770;&#8214;&#8320; (count of nonzeros) decreases as &lambda; increases."
+   }
+  },
+  {
+   "id": "v3c5d3",
+   "s": "5.4",
+   "page": 311,
+   "q": "Why does the 1-norm produce sparse solutions? And why not just regularize with the 0-norm?",
+   "a": "<b>The geometry.</b> The regularized loss is the sum of the OLS term &#8214;y &minus; <b>X</b>&beta;&#8214;&sup2;&#8322; (whose contours are convex, since the Hessian is positive definite) and the scaled norm &lambda;&#8214;&beta;&#8214;. The minimizer is always at a point where the two contours are <b>tangent</b> &mdash; otherwise you could slide along the OLS contour further inside the norm contour, shrinking the penalty for free.<div class='eq'>L&sup1; contour = a diamond, with <b>sharp corners on the axes</b><br>L&sup2; contour = a circle, <b>smooth everywhere</b></div>A tangency with the diamond tends to land on one of those corners, and a corner means a coordinate is <b>exactly zero</b>. Tangency with a circle is unlikely to land on an axis at all. Special cases where the OLS contour hits a flat face exist, but corners are (provably) more common.<p style='margin-top:10px'><b>Why not the 0-norm?</b> &#8214;&beta;&#8214;&#8320; counts the nonzero entries &mdash; exactly what you want. It isn't a norm (&#8214;a&beta;&#8214;&#8320; &ne; |a|&#8214;&beta;&#8214;&#8320;) but it is lim<sub>p&rarr;0+</sub>&#8214;&beta;&#8214;<sub>p</sub>. The fatal problem: <b>&#8214;&beta;&#8214;<sub>p</sub> is not convex for any p &lt; 1</b>, so the optimization is hard.</p><p><b>q = 1 is the smallest q for which &beta; &#8614; &#8214;&beta;&#8214;<sub>q</sub> is convex</b> &mdash; the 1-norm is the nearest thing to a convexification of the 0-norm, which is exactly why it works as a surrogate.</p>",
+   "r": {
+    "rot": "picture two families of level curves: ellipses from the squared error, and either a diamond (L&sup1;) or a circle (L&sup2;) from the penalty. the answer sits where an ellipse just touches the penalty curve. a diamond has <b>corners</b>, and the corners sit on the axes &mdash; touching there means a coordinate is exactly zero. a circle has no corners, so it touches wherever, almost never on an axis. that's the whole reason lasso zeroes things and ridge doesn't. and the norm you actually want (just count the nonzeros) is non-convex, so it's computationally hopeless. the 1-norm is the closest convex thing to it.",
+    "ex": "Figure 5.6 shows both side by side &mdash; OLS contours in orange, penalty contours in grey. The book suggests drawing the 3-D version yourself, where the L&sup1; ball is an octahedron and the tangency can land on an edge (one zero) or a vertex (two zeros).",
+    "why": "It explains why sparsity is a property of the <b>penalty's shape</b>, not of some clever algorithm &mdash; and therefore why you can't get it by tuning L&sup2; harder. It also frames the whole convexity/tractability tradeoff: you accept a surrogate objective because the one you want isn't optimizable.",
+    "math": "&#8214;&beta;&#8214;&#8320; = lim<sub>p&rarr;0+</sub>&#8214;&beta;&#8214;<sub>p</sub>, not a norm, not convex. &#8214;&beta;&#8214;<sub>q</sub> convex &hArr; q &ge; 1."
+   }
+  },
+  {
+   "id": "v3c5d4",
+   "s": "5.4",
+   "page": 312,
+   "q": "Give the Bayesian interpretation of regularization. Which prior gives L&sup2;, which gives L&sup1;, and what is &lambda;?",
+   "a": "Proposition 5.2.6 said OLS is the MLE: &beta;&#770; = argmax<sub>&beta;</sub> P(D|&beta;). But you may prefer the <b>MAP estimator</b> &beta;&#771; = argmax<sub>&beta;</sub> P(&beta;|D). By Bayes' rule, with the denominator constant in &beta;,<div class='eq'>&beta;&#771; = argmax<sub>&beta;</sub> P(D|&beta;)P(&beta;)</div><b>With &epsilon; ~ N(0,&sigma;&sup2;) and the prior P(&beta;) = N(0, &tau;&sup2;I)</b>, taking logs and discarding &beta;-free terms gives<div class='eq'>&beta;&#771; = argmin<sub>&beta;</sub> [ (1/n)&sum;<sub>i</sub>(y<sub>i</sub> &minus; x<sub>i</sub><sup>T</sup>&beta;)&sup2; + (&sigma;&sup2;/(n&tau;&sup2;))&#8214;&beta;&#8214;&sup2;&#8322; ]</div>which is <b>exactly L&sup2;-regularization with &lambda; = &sigma;&sup2;/(n&tau;&sup2;)</b>.<p style='margin-top:10px'><b>A Laplace prior gives L&sup1;.</b> If the &beta;<sub>j</sub> are independent with &beta;<sub>j</sub>/&tau; Laplace-distributed &mdash; p.d.f. f(x|&mu;,b) = (1/2b)exp(&minus;|x&minus;&mu;|/b), supported on all of R &mdash; the same computation produces L&sup1;-regularization. (Details are Exercise 5.14.)</p><p>The same correspondence holds for logistic regression: normal prior &rarr; L&sup2;, Laplace prior &rarr; L&sup1; (Exercise 5.19).</p><p style='margin-top:8px'><b>Why this explains the improvement:</b> the MAP maximizes the probability of &beta; <b>given the data</b>, rather than the probability of the data given &beta; &mdash; avoiding the <b>prosecutor's fallacy</b>.</p>",
+   "r": {
+    "rot": "regularization isn't a hack, it's a prior. plain OLS asks &ldquo;which &beta; makes my data most likely?&rdquo; &mdash; the MLE. but you actually want &ldquo;which &beta; is most likely given my data?&rdquo; &mdash; the MAP, and those are different questions (swapping them is the prosecutor's fallacy). do the MAP with a normal prior centred at zero and the algebra hands you ridge regression, with &lambda; = &sigma;&sup2;/(n&tau;&sup2;). use a laplace prior instead and you get lasso. so the penalty term is just your belief that coefficients are probably smallish, written in log form.",
+    "ex": "The formula for &lambda; is interpretable on its own: bigger noise &sigma;&sup2; &rarr; more regularization; a wider prior &tau;&sup2; (weaker belief that &beta; is small) &rarr; less; more data n &rarr; less, because the data should swamp the prior.",
+    "why": "It connects Chapter 5 back to the Bayesian estimation of &sect;4.6&ndash;4.7 and gives a principled way to <i>choose</i> the penalty rather than grid-searching blindly &mdash; if you can say something about the scale of the coefficients, you've said something about &lambda;. It's also the second appearance of the prosecutor's fallacy, which returns as the central complaint against p-values in &sect;6.3.1.",
+    "math": "MAP = argmax P(D|&beta;)P(&beta;). N(0,&tau;&sup2;I) prior &rarr; L&sup2; with &lambda; = &sigma;&sup2;/(n&tau;&sup2;). Laplace prior &rarr; L&sup1;."
+   }
+  },
+  {
+   "id": "v3c5d5",
+   "s": "5.4",
+   "page": 314,
+   "q": "What are the three limitations of L&sup1;-regularization, and how does elastic net address them? Which regularizer should be your default?",
+   "a": "<b>Three problems with L&sup1;.</b><div class='eq'>(i) No unique solution when <b>X</b><sup>T</sup><b>X</b> is singular.<br>(ii) It typically keeps at most n features nonzero &mdash; too few when d &gt; n (image data).<br>(iii) Even when n &gt; d, if <b>X</b><sup>T</sup><b>X</b> is nearly singular, L&sup2; empirically outperforms L&sup1;.</div><b>Elastic net</b> keeps the sparsity and adds back L&sup2;'s stability by using both terms:<div class='eq'>&beta;&#770; = argmin<sub>&beta;</sub> [ (1/n)&#8214;y &minus; <b>X</b>&beta;&#8214;&sup2;&#8322; + &lambda;&#8321;&#8214;&beta;&#8214;&#8321; + &lambda;&#8322;&#8214;&beta;&#8214;&sup2;&#8322; ],&nbsp;&nbsp;&lambda;&#8321;,&lambda;&#8322; &ge; 0</div>Using the same stacking trick as for ridge, this rewrites as (1/n)&#8214;y&#771; &minus; <b>X</b>&#771;&beta;&#8214;&sup2;&#8322; + &lambda;&#8321;&#8214;&beta;&#8214;&#8321; &mdash; so solving it is barely different from solving a plain L&sup1; problem.<p style='margin-top:10px'><b>&sect;5.4.6 &mdash; the summary.</b> Regularized models usually beat unregularized ones, so <b>your default model should almost always include a regularization term</b>. Interpretability and few features, no identifiability trouble &rarr; <b>L&sup1;</b>. Worried about identifiability &rarr; <b>L&sup2;</b>. Elastic net is a good compromise and often beats either alone. Choose &lambda;&#8321;, &lambda;&#8322; by cross validation or a train-test split.</p>",
+   "r": {
+    "rot": "lasso has three weak spots, all about rank deficiency: no unique answer when columns are dependent, it caps out at n features (bad when you have more features than data &mdash; think images), and it just loses to ridge when the matrix is nearly singular. elastic net says: why choose. put both penalties in. you keep the zeroing behaviour from L&sup1; and the stability from L&sup2;. the standing advice is simply <b>always regularize</b>. which one depends on whether you care more about reading the model or about it being well posed.",
+    "ex": "&sect;5.4.7 shows problem (i) concretely: if two columns of <b>X</b> are equal, any solution with &beta;<sub>i</sub>, &beta;<sub>j</sub> &ge; 0 can be replaced by &beta;'<sub>i</sub> = &beta;<sub>i</sub> + &alpha;&beta;<sub>j</sub>, &beta;'<sub>j</sub> = (1&minus;&alpha;)&beta;<sub>j</sub> for any &alpha; &isin; [0,1] &mdash; infinitely many minimizers.",
+    "why": "Example 5.4.6 is the sharpest warning here: if x<sub>i</sub> = 2x<sub>j</sub>, L&sup1; must set &beta;&#770;<sub>i</sub> = 0 &mdash; but only because x<sub>j</sub> happens to have larger values. <b>Change x<sub>j</sub> from metres to kilometres and L&sup1; keeps the other feature instead.</b> Which feature survives can be an artifact of your units.",
+    "math": "Elastic net: (1/n)&#8214;y&minus;<b>X</b>&beta;&#8214;&sup2;&#8322; + &lambda;&#8321;&#8214;&beta;&#8214;&#8321; + &lambda;&#8322;&#8214;&beta;&#8214;&sup2;&#8322;. &lambda;&#8321;=0 &rarr; ridge; &lambda;&#8322;=0 &rarr; lasso."
+   }
+  },
+  {
+   "id": "v3c5e1",
+   "s": "5.5",
+   "page": 317,
+   "q": "Why can't linear regression predict probabilities? Define the logistic function and give its four key properties.",
+   "a": "Every model so far has the form f&#770;(X) = &sum;<sub>i</sub>&beta;&#770;<sub>i</sub>&phi;<sub>i</sub>(X). Since the &beta;&#770;<sub>i</sub> can be anything in R, f&#770; cannot be expected to take values in any fixed interval &mdash; and probabilities must lie in [0,1]. <b>Linear regression is structurally the wrong shape for this job.</b><p style='margin-top:8px'><b>Definition (5.21) &mdash; the logistic (sigmoid) function</b> sigm : R &rarr; (0,1):</p><div class='eq'>sigm(x) = 1 / (1 + e<sup>&minus;x</sup>)</div><b>Four key properties:</b><div class='eq'>sigm(0) = &frac12;<br>sigm(t) &rarr; 1 as t &rarr; &infin;<br>sigm(t) &rarr; 0 as t &rarr; &minus;&infin;<br>sigm(&minus;t) = 1 &minus; sigm(t)&nbsp;&nbsp;(symmetry)</div><p style='margin-top:8px'>Scaling and translating gives sigm(&beta;&#8321;t + &beta;&#8320;): larger |&beta;&#8321;| makes the ramp <b>steeper</b>, smaller makes it more spread out, and negative &beta;&#8321; <b>flips it</b>. That family is what makes it suited to predicting a Bernoulli probability.</p><p><b>Binary classification setup:</b> Y &isin; {0,1} conditioned on X &isin; R<sup>d</sup>; a <b>binary classifier</b> is any f taking values in {0,1}; the goal is f&#770; making (X, f&#770;(X)) a good approximation of (X,Y).</p>",
+   "r": {
+    "rot": "a straight line goes off to infinity in both directions. probabilities live in [0,1]. those are incompatible facts, and no amount of fitting fixes it. so use a function that's <b>built</b> to land in (0,1): the sigmoid, an S-curve squashing all of R into the unit interval. half at zero, flattening to 0 and 1 at the ends, and symmetric &mdash; sigm(&minus;t) = 1 &minus; sigm(t), which is exactly &ldquo;probability of not-it.&rdquo; stretch it and slide it with two parameters and you can put the transition anywhere, at any steepness, in either direction.",
+    "ex": "The classic setup: x &isin; R<sup>d</sup> holds the pixel intensities of an image and the classifier returns 1 if it's a picture of a duck and 0 otherwise.",
+    "why": "The symmetry property is doing real work later &mdash; it's what makes S(t,0) = (sigm(t), 1&minus;sigm(t)) in (5.28), so the softmax function of &sect;5.6 is a genuine generalization of the sigmoid rather than a separate invention.",
+    "math": "sigm(x) = 1/(1+e<sup>&minus;x</sup>), sigm : R &rarr; (0,1). sigm(0) = &frac12;; sigm(&minus;t) = 1 &minus; sigm(t)."
+   }
+  },
+  {
+   "id": "v3c5e2",
+   "s": "5.5",
+   "page": 318,
+   "q": "State the logistic regression model and derive the cross-entropy loss. Why is it a convex problem?",
+   "a": "<b>The model (5.22):</b> Y with support {0,1}, conditioned on X in R<sup>d</sup>, is assumed Bernoulli:<div class='eq'>Y | X ~ Bernoulli(sigm(X<sup>T</sup>&beta;)),&nbsp;&nbsp;so&nbsp;&nbsp;P(Y=1|X=x) = 1/(1 + exp(&minus;x<sup>T</sup>&beta;))</div>As before a constant feature X&#8320; = 1 is added; &beta;&#8320; is often called the <b>bias term</b>, which the book notes is a bad name &mdash; it has nothing to do with estimator bias.<p style='margin-top:8px'><b>The MLE.</b> The likelihood factors as &prod;<sub>i</sub> P(Y=y<sub>i</sub>|x<sub>i</sub>,&beta;)P(x<sub>i</sub>), and P(x<sub>i</sub>) is independent of &beta;, so maximizing L(&beta;|D) is maximizing &prod;<sub>i</sub> p<sub>i</sub><sup>y<sub>i</sub></sup>(1&minus;p<sub>i</sub>)<sup>1&minus;y<sub>i</sub></sup> with p<sub>i</sub> = sigm(x<sub>i</sub><sup>T</sup>&beta;).</p><p>That product is <b>not concave</b> in &beta;, but the logarithm preserves the maximizer and <i>is</i> concave; flipping the sign gives a convex minimization. Using 1 &minus; sigm(x<sup>T</sup>&beta;) = 1/(1 + exp(x<sup>T</sup>&beta;)):</p><div class='eq'>&#8467;(&beta;|D) = &sum;<sub>i</sub> [ y<sub>i</sub> log(1 + exp(&minus;x<sub>i</sub><sup>T</sup>&beta;)) + (1&minus;y<sub>i</sub>) log(1 + exp(x<sub>i</sub><sup>T</sup>&beta;)) ]</div>This is the <b>cross-entropy loss</b> &mdash; it is the cross entropy between the empirical distribution and the assumed model (5.22). Each summand is convex, so &#8467; is convex and differentiable, hence has a <b>unique</b> minimizer reachable by standard unconstrained convex optimization.<p style='margin-top:8px'><b>The classifier:</b> f&#770;(x) = 1 if P(Y=1|x) &ge; &frac12;, else 0.</p>",
+   "r": {
+    "rot": "the model says: given x, flip a coin whose bias is sigm(x<sup>T</sup>&beta;). fit &beta; by maximum likelihood. the raw likelihood is a product and it isn't concave, but take the log &mdash; same maximizer, now concave &mdash; and flip the sign to get a convex minimization. the thing you end up minimizing is the cross-entropy loss, and it's called that because it literally is the cross entropy between your data and your model. convex means one minimum, no local traps, and any standard optimizer finds it.",
+    "ex": "Example 5.5.1 fits one feature to labelled points on a line and gets &beta;&#770; = (0.892, &minus;0.547). Negative &beta;&#8321; means probability <i>decreases</i> with x; |&beta;&#8321;| &lt; 1 means the transition is gentler than the plain sigmoid. P = 0.5 at x = 1.632, giving the classifier f&#770;(x) = 1 iff x &lt; 1.632.",
+    "why": "Convexity is the reason logistic regression is a workhorse rather than a research project: unlike a neural network there is one answer and you will find it. It's the same guarantee that carries over to multinomial logistic regression via the log-sum-exp function in Theorem 5.6.6.",
+    "math": "&#8467;(&beta;|D) = &sum;<sub>i</sub>[y<sub>i</sub>log(1+e<sup>&minus;x<sub>i</sub><sup>T</sup>&beta;</sup>) + (1&minus;y<sub>i</sub>)log(1+e<sup>x<sub>i</sub><sup>T</sup>&beta;</sup>)]. Convex, differentiable, unique minimizer."
+   }
+  },
+  {
+   "id": "v3c5e3",
+   "s": "5.5",
+   "page": 321,
+   "q": "What shape is a logistic regression's decision boundary (Remark 5.5.3)? When and why would you move the threshold off &frac12; (Remark 5.5.4)?",
+   "a": "<b>Remark 5.5.3 &mdash; the boundary is always a hyperplane.</b> The locus where P(Y=1|x) = 0.5 is exactly where x<sup>T</sup>&beta; = 0, a hyperplane in R<sup>d</sup>. More generally, for any &tau; &isin; (0,1), the locus where P(Y=1|x) = &tau; is the hyperplane x<sup>T</sup>&beta; = sigm<sup>&minus;1</sup>(&tau;), <b>parallel</b> to the first.<div class='eq'>All level sets of the fitted probability are parallel hyperplanes.</div>So logistic regression is well suited exactly when the division between Y=1 and Y=0 is approximately a hyperplane &mdash; and poorly suited when it isn't.<p style='margin-top:10px'><b>Remark 5.5.4 &mdash; asymmetric costs.</b> Sometimes one kind of mistake costs far more than the other. For cancer screening a <b>false negative</b> (missed cancer, no treatment, death) is worse than a <b>false positive</b> (extra tests, no cancer). Then use</p><div class='eq'>f&#770;(x) = 1 if P(Y=1|x) &gt; &tau;, else 0</div>with &tau; below (or above) 0.5 &mdash; chosen, for instance, to minimize the <b>expected cost</b> of misclassification rather than the count of errors.",
+   "r": {
+    "rot": "no matter how many features, the dividing line between the two classes is <b>flat</b> &mdash; a hyperplane. and every constant-probability contour is a parallel copy of it. so if your two classes are genuinely separated by something curved, logistic regression cannot draw it, period. the threshold is a separate knob. &frac12; is only right when both kinds of error hurt equally. for cancer screening they very much don't &mdash; missing a real case is far worse than a false alarm &mdash; so slide &tau; down and accept more false positives on purpose.",
+    "ex": "Example 5.5.2, heart disease from age and cholesterol: &beta;&#770; = (&minus;42.909, 0.351, 0.081), so the P = 0.5 boundary is the line &minus;42.909 + 0.351x&#8321; + 0.081x&#8322; = 0, drawn straight across the scatter plot.",
+    "why": "The flat-boundary limitation is what motivates &sect;5.8: Gaussian discriminant analysis produces <b>quadratic</b> boundaries and can fit curved divisions that logistic regression structurally cannot &mdash; see Figure 5.11, where unequal covariances make the true boundary nonlinear and logistic regression fails.",
+    "math": "P(Y=1|x) = &tau; &hArr; x<sup>T</sup>&beta; = sigm<sup>&minus;1</sup>(&tau;) = log(&tau;/(1&minus;&tau;)). All such loci are parallel."
+   }
+  },
+  {
+   "id": "v3c5e4",
+   "s": "5.5",
+   "page": 322,
+   "q": "What is linear separability, why does it break the MLE, and how does regularization fix it?",
+   "a": "<b>Linearly separable</b> means there is a &beta;&#780; whose hyperplane {x : x<sup>T</sup>&beta;&#780; = 0} contains no data point, with y = 0 for every x on one side and y = 1 for every x on the other &mdash; a hyperplane that separates the classes <b>perfectly</b>.<p style='margin-top:8px'><b>Then ordinary logistic regression fails.</b> For any separating &beta;&#780;, the likelihood L(a&beta;&#780;|D) &rarr; &infin; as a &rarr; &infin;. Scaling &beta;&#780; up makes every predicted probability more confident and never wrong, so <b>the likelihood has no maximizer</b> and &#8467;(&beta;|D) has no minimizer. (Exercise 5.21.)</p><p><b>The fix is regularization</b> &mdash; add a penalty:</p><div class='eq'>&beta;&#770; = argmin<sub>&beta;</sub> [ &#8467;(&beta;|D) + &lambda;&#8214;&beta;&#8214;&sup2;&#8322; ]&nbsp;&nbsp;or&nbsp;&nbsp;&#8467;(&beta;|D) + &lambda;&#8214;&beta;&#8214;&#8321;</div>As &beta; grows the penalty grows fast enough to stop the objective running to &minus;&infin;, so a minimizer <b>exists</b> even in the separable case. Both &#8467; and the penalty are convex, so the sum is convex for any &lambda; &ge; 0. Elastic net works here too.<p style='margin-top:8px'>Regularization also controls ordinary overfitting, so as with linear regression: <b>your default logistic model should include a regularization term</b>. (Remark 5.5.5: this too has a Bayesian reading &mdash; a normal or Laplace prior on &beta;.)</p>",
+   "r": {
+    "rot": "the pathological case is when your data is <b>too easy</b>. if a straight line separates the two classes with no mistakes, the optimizer notices it can always do better by making &beta; bigger &mdash; same boundary, more confidence, higher likelihood &mdash; forever. there's no best answer, the coefficients just run off to infinity. add a penalty on the size of &beta; and the runaway stops immediately: growing &beta; now costs something, so there's a finite optimum again. one more reason regularization is the default and not an optional extra.",
+    "ex": "Figure 5.9 shows it: a black line completely separating the yellow points from the purple ones. Nothing is wrong with the data &mdash; the model just has no finite MLE.",
+    "why": "It's a rare case where a numerical failure has a clean conceptual cause rather than being a bug, and where the fix from &sect;5.4 does double duty. In software this shows up as coefficients growing without bound or the optimizer refusing to converge &mdash; and the answer is not more iterations.",
+    "math": "Separable &rArr; L(a&beta;&#780;|D) &rarr; &infin; as a &rarr; &infin; &rArr; no MLE. Adding &lambda;&#8214;&beta;&#8214; (any p &ge; 1, &lambda; &gt; 0) restores a finite minimizer, and convexity is preserved."
+   }
+  },
+  {
+   "id": "v3c5f1",
+   "s": "5.6",
+   "page": 323,
+   "q": "Describe one-versus-rest multiclass logistic regression. What is its structural flaw?",
+   "a": "Not all classification is binary &mdash; you may want f : R<sup>d</sup> &rarr; {1,&hellip;,k}, say 1 for &ldquo;duck,&rdquo; 2 for &ldquo;goose,&rdquo; 3 for &ldquo;fire hydrant.&rdquo; There are two standard extensions: <b>one-versus-rest</b> and <b>softmax (multinomial) regression</b>.<p style='margin-top:8px'><b>One-versus-rest.</b> One-hot encode the target: a &ldquo;duck&rdquo; column with 1 if the picture is a duck and 0 otherwise, likewise for goose and hydrant. Then run k <b>separate</b> binary logistic regressions, one per column &mdash; duck-vs-not-duck, goose-vs-not-goose, hydrant-vs-not-hydrant. Classify by taking the highest probability.</p><div class='eq'>The one-hot columns sum to 1 in each row.<br>The resulting <b>probabilities need not sum to 1</b>.</div><p><b>The flaw.</b> Each regression is a separate MLE for one class, with nothing requiring the k answers to be mutually compatible. Two classes can both report probability near 1 for the same point. Nevertheless it often works very well in practice.</p>",
+   "r": {
+    "rot": "you only know how to do two classes, so fake it: run one binary classifier per class &mdash; is it a duck or not, is it a goose or not, is it a hydrant or not &mdash; then pick whichever says yes loudest. simple and usually fine. but nobody ever told the three classifiers about each other, so their probabilities don't have to add to 1 and a point can be &ldquo;definitely a goose&rdquo; and &ldquo;definitely a virginica&rdquo; simultaneously. that's not a bug you can tune away; it's what the method is.",
+    "ex": "Example 5.6.1, the Iris dataset (150 flowers, three species). Fitting on sepal length and width, the setosa-vs-rest boundary is sharp (large &#8214;&beta;&#8214;&sup2;&#8322;) because setosa is cleanly separated, while versicolor-vs-rest is much more spread out because versicolor and virginica interleave. In the bottom-right corner points come out with high probability of being <b>both</b> versicolor and virginica &mdash; each near 1, summing to well over 1.",
+    "why": "The incoherence is exactly what softmax regression fixes by construction, since its entries always sum to 1. Comparing the two on the same Iris data (Example 5.6.7) shows softmax correctly calling the bottom-right corner virginica, which one-versus-rest could not resolve.",
+    "math": "k independent binary fits, each argmax<sub>&beta;<sub>j</sub></sub> of its own cross-entropy. Classify by argmax<sub>j</sub> p<sub>j</sub>. &sum;<sub>j</sub> p<sub>j</sub> &ne; 1 in general."
+   }
+  },
+  {
+   "id": "v3c5f2",
+   "s": "5.6",
+   "page": 325,
+   "q": "Define the softmax function and the multinomial logistic regression model. Why can we assume &beta;<sub>k</sub> = 0?",
+   "a": "<b>Definition 5.6.2.</b> The softmax S : R<sup>k</sup> &rarr; (0,1)<sup>k</sup> is<div class='eq'>S(t&#8321;,&hellip;,t<sub>k</sub>) = ( e<sup>t&#8321;</sup>/&sum;<sub>j</sub>e<sup>t<sub>j</sub></sup>, &hellip;, e<sup>t<sub>k</sub></sup>/&sum;<sub>j</sub>e<sup>t<sub>j</sub></sup> )</div>It is the multivariate sigmoid &mdash; equation (5.28) makes that literal:<div class='eq'>S(t, 0) = (e<sup>t</sup>/(1+e<sup>t</sup>), 1/(1+e<sup>t</sup>)) = (sigm(t), 1 &minus; sigm(t))</div>Its entries <b>always sum to 1</b>, which is what makes it the natural producer of categorical probabilities.<p style='margin-top:8px'><b>The model.</b> Assume Y|X is categorically distributed as Cat(S(X<sup>T</sup>&beta;&#8321;,&hellip;,X<sup>T</sup>&beta;<sub>k</sub>)), so</p><div class='eq'>p<sub>i</sub>(X) = P(Y=i|X) = e<sup>X<sup>T</sup>&beta;<sub>i</sub></sup> / &sum;<sub>j</sub> e<sup>X<sup>T</sup>&beta;<sub>j</sub></sup></div><p><b>Why &beta;<sub>k</sub> = 0 (Exercise 5.23).</b> Without that constraint, infinitely many tuples (&beta;&#8321;,&hellip;,&beta;<sub>k</sub>) give identical probabilities &mdash; adding a common vector to every &beta;<sub>j</sub> cancels between numerator and denominator. The model would be <b>unidentifiable</b>. Fixing &beta;<sub>k</sub> = 0 pins it down.</p><p><b>Remark 5.6.3.</b> For k = 2 this is exactly binary logistic regression: Cat reduces to Bernoulli and p&#8322; = 1 &minus; p&#8321;.</p>",
+   "r": {
+    "rot": "softmax turns any list of k numbers into k probabilities: exponentiate everything, divide by the total. positive by construction, sums to 1 by construction &mdash; so the one-versus-rest incoherence is structurally impossible. it's the sigmoid grown up: feed it (t, 0) and you get exactly (sigm(t), 1&minus;sigm(t)) back. one wrinkle &mdash; adding the same vector to every &beta;<sub>j</sub> changes nothing, since the shift cancels top and bottom. infinitely many &beta;s, same model. so you nail one down (&beta;<sub>k</sub> = 0) and the ambiguity's gone.",
+    "ex": "The name is a stretch, as the footnote admits &mdash; it is essentially the Boltzmann distribution from statistical mechanics, where the same expression gives the probability of a state at a given energy.",
+    "why": "Identifiability appears here for the same reason as in &sect;5.1.3: a parametrization with a hidden redundancy gives infinitely many equally good fits and no coefficient can be interpreted. The fix differs &mdash; there you invert <b>X</b><sup>T</sup><b>X</b> or regularize; here you just fix one parameter block at zero.",
+    "math": "S(t)<sub>i</sub> = e<sup>t<sub>i</sub></sup>/&sum;<sub>j</sub>e<sup>t<sub>j</sub></sup>; &sum;<sub>i</sub>S(t)<sub>i</sub> = 1. Shift invariance S(t + c<b>1</b>) = S(t) forces a normalization; take &beta;<sub>k</sub> = 0."
+   }
+  },
+  {
+   "id": "v3c5f3",
+   "s": "5.6",
+   "page": 326,
+   "q": "Give the categorical cross-entropy loss (Definition 5.6.4) and state Theorem 5.6.6. Why is the loss convex?",
+   "a": "<b>Definition 5.6.4.</b> With classes {c&#8321;,&hellip;,c<sub>k</sub>}, &theta; = (&beta;&#8321;,&hellip;,&beta;<sub>k</sub>), and 1<sub>j</sub>(y<sub>i</sub>) = 1 if y<sub>i</sub> = c<sub>j</sub> and 0 otherwise:<div class='eq'>&#8467;(&theta;|D) = &minus; &sum;<sub>i=1</sub><sup>n</sup> &sum;<sub>j=1</sub><sup>k</sup> 1<sub>j</sub>(y<sub>i</sub>) log p<sub>j</sub>(x<sub>i</sub>)</div><p style='margin-top:6px'><b>Remark 5.6.5:</b> 1<sub>j</sub>(y<sub>i</sub>) is precisely the jth column of the one-hot encoding of y<sub>i</sub>, so with y<sub>i</sub> = (z<sub>i1</sub>,&hellip;,z<sub>ik</sub>) the loss is &minus;&sum;<sub>i</sub>&sum;<sub>j</sub> z<sub>ij</sub> log p<sub>j</sub>(x<sub>i</sub>) &mdash; only the true class's term survives for each data point.</p><p><b>Theorem 5.6.6.</b> The MLE is &theta;&#770; = argmin<sub>&theta;</sub> &#8467;(&theta;|D), and &#8467; is <b>convex</b>.</p><p><b>The convexity argument.</b> Rewrite the loss as</p><div class='eq'>&#8467;(&theta;|D) = &sum;<sub>i</sub>&sum;<sub>j</sub> 1<sub>j</sub>(y<sub>i</sub>) [ log(&sum;<sub>m</sub> e<sup>x<sub>i</sub><sup>T</sup>&beta;<sub>m</sub></sup>) &minus; x<sub>i</sub><sup>T</sup>&beta;<sub>j</sub> ]</div>Each &minus;x<sub>i</sub><sup>T</sup>&beta;<sub>j</sub> is affine in &beta;<sub>j</sub>, and the <b>log-sum-exp</b> function LSE(t) = log&sum;<sub>j</sub>e<sup>t<sub>j</sub></sup> is convex (Vol 2, Example 15.1.15). A sum of convex and affine pieces is convex.<p style='margin-top:8px'>So &theta;&#770; is found by standard convex optimization, and gives P(Y=y|x) &asymp; e<sup>x<sup>T</sup>&beta;&#770;<sub>y</sub></sup>/&sum;<sub>j</sub>e<sup>x<sup>T</sup>&beta;&#770;<sub>j</sub></sup>, with classifier f&#770;(x) = argmax<sub>j</sub> P(Y=c<sub>j</sub>|x).</p>",
+   "r": {
+    "rot": "the loss is: for each data point, look up the probability your model gave the <b>correct</b> class, take &minus;log of it, add them all up. confident and right costs nearly nothing; confident and wrong costs a lot. the indicator 1<sub>j</sub>(y<sub>i</sub>) is just the one-hot encoding doing the looking-up. and it's convex &mdash; rewrite it and it's log-sum-exp (a known convex function) minus a linear term, and convex plus affine stays convex. so again: one minimum, standard optimizer, done.",
+    "ex": "Log-sum-exp is a smooth approximation of the max function, which is why softmax carries the name &mdash; taking the gradient of LSE gives back the softmax probabilities, so the loss and the model are two views of the same object.",
+    "why": "It means the multiclass case inherits every practical virtue of the binary case &mdash; unique optimum, standard solvers, no local minima. That's not automatic; plenty of multiclass extensions of simple methods lose convexity.",
+    "math": "&#8467;(&theta;|D) = &minus;&sum;<sub>i</sub>&sum;<sub>j</sub>1<sub>j</sub>(y<sub>i</sub>)log p<sub>j</sub>(x<sub>i</sub>) = &sum;<sub>i</sub>[LSE(<b>X</b><sub>i</sub>&theta;) &minus; x<sub>i</sub><sup>T</sup>&beta;<sub>y<sub>i</sub></sub>]. Convex; unique minimizer."
+   }
+  },
+  {
+   "id": "v3c5f4",
+   "s": "5.6",
+   "page": 329,
+   "q": "How do you evaluate a classifier? Give the two loss functions, state Nota Bene 5.6.8, and give the AIC/BIC for logistic regression.",
+   "a": "MSE and R&sup2; are <b>not useful for classifiers</b>. Use a test-train split or cross validation with either:<div class='eq'><b>Cross-entropy loss</b> &mdash; (5.25) binary, (5.30) multiclass. Natural, since it's what the model was fit by.<br><br><b>Misclassification rate</b>&nbsp;&nbsp;r = (1/n)&sum;<sub>i</sub>|y<sub>i</sub> &minus; f&#770;(x<sub>i</sub>)| &mdash; the average number of wrong calls.</div><p style='margin-top:6px'><b>Nota Bene 5.6.8 &mdash; both mislead on unbalanced data.</b> With 100,000 healthy patients and 10 diseased ones, the classifier that says <b>everyone is healthy</b> is completely useless and yet has a misclassification rate of 10/100,000 = 0.0001, right 99.99% of the time.</p><p><b>Proposition 5.6.9 &mdash; AIC and BIC.</b> Since &beta;<sub>k</sub> = 0 always, the parameters are k&minus;1 vectors of dimension d:</p><div class='eq'>AIC = 2(k&minus;1)d + 2&#8467;(&theta;&#770;) + C<br>BIC = (k&minus;1)d log(n) + 2&#8467;(&theta;&#770;) + C</div><b>Corollary 5.6.10</b>, taking k = 2: AIC = 2d + 2&#8467;(&beta;&#770;) + C and BIC = d log(n) + 2&#8467;(&beta;&#770;) + C. The constant C is the same for every model and can be dropped when minimizing.",
+   "r": {
+    "rot": "two ways to score a classifier: the cross-entropy (how confident were you in the right answer) or just count the mistakes. both have the same blind spot &mdash; <b>class imbalance</b>. if 99.99% of your patients are healthy, &ldquo;everybody's healthy&rdquo; scores 99.99% and detects zero disease. the number looks great and the classifier is worthless. AIC and BIC still work for model selection, with the parameter count being (k&minus;1)d because one &beta; block is pinned at zero.",
+    "ex": "The rare-disease case is the canonical one, but the same trap hides in fraud detection, spam with a strong prior, and any anomaly problem &mdash; anywhere the interesting class is scarce. It's exactly why &sect;3.4 builds precision, recall, and ROC curves instead of reporting accuracy.",
+    "why": "It closes the loop with &sect;5.3: the same model-selection machinery applies, only the loss changes. And the imbalance warning is the classification analogue of Nota Bene 5.3.3 about R&sup2; &mdash; both are cases where a headline number is technically correct and completely uninformative.",
+    "math": "Parameter count (k&minus;1)d, since &beta;<sub>k</sub> = 0. AIC = 2(k&minus;1)d + 2&#8467;(&theta;&#770;) + C; BIC swaps 2 for log(n). Drop C when ranking."
+   }
+  },
+  {
+   "id": "v3c5g1",
+   "s": "5.7",
+   "page": 330,
+   "q": "What is the bag-of-words model, and why does it defeat logistic regression? State the naïve Bayes classifier and its naïve assumption.",
+   "a": "<b>Bag of words.</b> Fix a vocabulary of length d; map each document to the binary vector whose ith entry is 1 if the ith word occurs anywhere in it, 0 otherwise. To be useful for spam filtering the vocabulary must run to thousands of words.<p style='margin-top:8px'><b>Why the earlier classifiers fail here:</b> logistic regression and decision trees don't work well because <b>d is too large relative to N</b>, the number of training examples.</p><p><b>The model.</b> Classify x with the most probable y &mdash; and since p(x|&theta;) is constant across classes, Bayes' theorem lets you drop it:</p><div class='eq'>f&#770;(x) = argmax<sub>c</sub> p(x|y=c,&theta;) p(y=c|&theta;)</div><p><b>The naïve assumption.</b> In general p(x|y=c,&theta;) = &prod;<sub>j</sub> p(x<sub>j</sub>|x<sub>j&minus;1</sub>,&hellip;,x&#8321;,y=c,&theta;) by the chain rule. Naïve Bayes assumes <b>all coordinates are independent given the class</b>, so each factor is just p(x<sub>j</sub>|y=c,&theta;):</p><div class='eq'>f&#770;(x) = argmax<sub>c</sub> p(y=c|&theta;) &prod;<sub>j=1</sub><sup>d</sup> p(x<sub>j</sub>|y=c,&theta;)</div><b>Why it's worth it.</b> It replaces estimating one d-dimensional joint distribution with estimating d <b>decoupled univariate</b> ones &mdash; tractable when d is large. Independence rarely holds (hence <i>naïve</i>), yet it performs well, partly because few parameters means less computation and less overfitting.<p style='margin-top:8px'><b>Nota Bene 5.7.2.</b> The &ldquo;Bayes&rdquo; here is <b>not</b> Bayesian statistics &mdash; it just refers to using Bayes' theorem in (5.38).</p>",
+   "r": {
+    "rot": "represent a document as a giant vector of yes/no &mdash; does this word appear. thousands of dimensions, not many emails. logistic regression drowns. naïve bayes survives by making an assumption everyone knows is false: that the words are independent given the class. &ldquo;free&rdquo; and &ldquo;viagra&rdquo; are obviously not independent in spam. but pretending they are turns one impossible d-dimensional estimation problem into d easy one-dimensional ones, and the classifier works anyway &mdash; partly <i>because</i> it has so few parameters that it can't overfit much. and the &ldquo;bayes&rdquo; in the name is just bayes' theorem, not bayesian stats.",
+    "ex": "Example 5.7.1 with the ten-word vocabulary (acai, viagra, weight, deal, bargain, loss, probability, mathematics, exponential, school): an email about a summer school on free probability maps to (0,0,0,0,0,0,1,1,0,1).",
+    "why": "It is the chapter's clearest case of a knowingly wrong assumption being the right engineering decision &mdash; you trade bias you know you're introducing for a huge cut in variance and cost. That is the bias&ndash;variance tradeoff of &sect;3.4 being exploited deliberately rather than merely balanced.",
+    "math": "argmax<sub>c</sub> p(y=c|&theta;)&prod;<sub>j</sub>p(x<sub>j</sub>|y=c,&theta;). Drops p(x|&theta;) as constant in c; the naïve step drops all conditioning on other coordinates."
+   }
+  },
+  {
+   "id": "v3c5g2",
+   "s": "5.7",
+   "page": 332,
+   "q": "How do you fit a naïve Bayes classifier? Give the MLE for the class priors, and for normal and Bernoulli features.",
+   "a": "Fitting means estimating &pi;<sub>c</sub> = p(y=c|&theta;) and each p(x<sub>j</sub>|y=c,&theta;) = p(x<sub>j</sub>|&theta;<sub>j,c</sub>). Taking the product over all data and then the negative log-likelihood gives<div class='eq'>NLL = &minus;&sum;<sub>c</sub> N<sub>c</sub> log &pi;<sub>c</sub> &minus; &sum;<sub>j</sub>&sum;<sub>c</sub>&sum;<sub>i : y<sub>i</sub>=c</sub> log p(x<sub>ij</sub>|&theta;<sub>j,c</sub>)</div>with N<sub>c</sub> the number of y<sub>i</sub> equal to c. <b>The summands separate</b>, so each piece is minimized on its own:<div class='eq'>&pi;&#770;<sub>c</sub> = N<sub>c</sub>/N&nbsp;&nbsp;&nbsp;&nbsp;&theta;&#770;<sub>j,c</sub> = argmin<sub>&theta;<sub>j,c</sub></sub> &sum;<sub>i:y<sub>i</sub>=c</sub> &minus;log p(x<sub>ij</sub>|&theta;<sub>j,c</sub>)</div><p style='margin-top:10px'><b>Normal features.</b> If x<sub>j</sub> | y=c ~ N(&mu;<sub>j,c</sub>, &sigma;&sup2;<sub>j,c</sub>), minimizing gives exactly the within-class sample moments:</p><div class='eq'>&mu;&#770;<sub>j,c</sub> = (1/N<sub>c</sub>) &sum;<sub>i:y<sub>i</sub>=c</sub> x<sub>ij</sub>&nbsp;&nbsp;&nbsp;&nbsp;&sigma;&#770;&sup2;<sub>j,c</sub> = (1/N<sub>c</sub>) &sum;<sub>i:y<sub>i</sub>=c</sub> (x<sub>ij</sub> &minus; &mu;<sub>j,c</sub>)&sup2;</div><b>Binary features.</b> If x<sub>j</sub> | y=c ~ Bernoulli(&theta;<sub>j,c</sub>), then<div class='eq'>&theta;&#770;<sub>j,c</sub> = N<sub>j,c</sub> / N<sub>c</sub></div>where N<sub>j,c</sub> counts the points with y<sub>i</sub> = c <b>and</b> x<sub>ij</sub> = 1. Other feature distributions follow the same recipe.",
+   "r": {
+    "rot": "training naïve bayes is basically counting. what fraction of emails are spam? that's &pi;&#770;. of the spam emails, what fraction contain &ldquo;viagra&rdquo;? that's &theta;&#770; for that word. for continuous features, take the mean and variance within each class. that's it &mdash; no optimizer, no iterations, one pass over the data. the reason it decomposes so cleanly is the independence assumption: the negative log-likelihood splits into one independent little problem per (feature, class) pair, so you solve each separately.",
+    "ex": "Compare the cost: logistic regression needs an iterative convex solve over all d coefficients jointly; naïve Bayes needs d&times;k counts. That's the &ldquo;generative models train much faster&rdquo; claim of &sect;5.8.3 made concrete.",
+    "why": "The independence assumption is what makes the NLL separable, and separability is what makes fitting trivial. So the naïve assumption isn't just about tractable <i>modelling</i> &mdash; it's what makes <i>estimation</i> a counting exercise instead of an optimization.",
+    "math": "&pi;&#770;<sub>c</sub> = N<sub>c</sub>/N. Normal: within-class sample mean and (biased) variance. Bernoulli: &theta;&#770;<sub>j,c</sub> = N<sub>j,c</sub>/N<sub>c</sub>."
+   }
+  },
+  {
+   "id": "v3c5g3",
+   "s": "5.7",
+   "page": 334,
+   "q": "What are the underflow and zero-probability problems in naïve Bayes, and how is each fixed?",
+   "a": "<b>Underflow.</b> With d large and several x<sub>j</sub> of low probability, the product in (5.41) underflows to zero. Take logarithms &mdash; the argmax is unchanged and the sum is numerically safe:<div class='eq'>f&#770;(x) = argmax<sub>c</sub> [ log p(y=c|&theta;) + &sum;<sub>j=1</sub><sup>d</sup> log p(x<sub>j</sub>|&theta;) ]</div><p style='margin-top:10px'><b>Zero probability.</b> If a Bernoulli feature x<sub>j</sub> is <b>always 0</b> in the training set, then &theta;&#770;<sub>j,c</sub> = 0 for every c. A later point with x<sub>j</sub> = 1 makes every class have p = 0, and both (5.41) and (5.49) are useless &mdash; no class can be chosen. Same if x<sub>j</sub> is always 1 and a point arrives with x<sub>j</sub> = 0. <b>This is a form of overfitting.</b></p><p><b>Zero variance.</b> The same failure for normal features: if x<sub>j</sub> takes the same value at every training point (or at every point with y = c), then &sigma;&#770;&sup2;<sub>j,c</sub> = 0 and the density p(x<sub>j</sub>|y=c,&theta;&#770;) is <b>undefined</b>.</p><div class='eq'>Bernoulli fix: <b>Laplace add-one smoothing</b> &mdash; add 1 to N<sub>j,c</sub> and 2 to N<sub>c</sub> for each c. Equivalent to a Bayesian training method.<br><br>Normal fix: require every feature variance to exceed some fixed positive floor.</div>",
+   "r": {
+    "rot": "two numerical failures, both from multiplying many small numbers. <b>underflow</b>: a thousand probabilities multiplied together is smaller than a float can hold, so it rounds to zero. take logs and add instead &mdash; same answer, no explosion. <b>zero probability</b>: if a word never appeared in training, its estimated probability is exactly zero, and one zero in a product kills the whole thing for every class. the classifier now can't answer at all. the fix is to pretend you saw it once (add-one smoothing), which is secretly a bayesian prior. same story for a feature with no variance &mdash; put a floor under it.",
+    "ex": "Add-one smoothing is exactly a Beta(1,1) prior on each Bernoulli parameter, updated by the counts &mdash; which is the conjugacy relation of &sect;4.7.1 doing quiet work inside what looks like a numerical patch.",
+    "why": "Both failures come from a single training-set peculiarity generalizing catastrophically, which is overfitting in an unusually literal form: one never-seen word makes the classifier undefined. It's a good reminder that regularization and priors show up as numerical safeguards, not only as accuracy improvements.",
+    "math": "log turns &prod; into &sum;, preserving argmax. Smoothing: &theta;&#770;<sub>j,c</sub> = (N<sub>j,c</sub>+1)/(N<sub>c</sub>+2). Variance floor: &sigma;&#770;&sup2;<sub>j,c</sub> &ge; &sigma;&sup2;<sub>min</sub> &gt; 0."
+   }
+  },
+  {
+   "id": "v3c5g4",
+   "s": "5.7",
+   "page": 331,
+   "q": "Naïve Bayes is a generative classifier. What does that buy it, and why does a false assumption still work?",
+   "a": "The model f&#770;(x) = argmax<sub>c</sub> p(x|y=c,&theta;)p(y=c|&theta;) describes classification through the <b>generating probabilities</b> p(x, y=c|&theta;) &mdash; making naïve Bayes a <b>generative</b> classifier (&sect;5.8.3), unlike logistic regression, which models only p(y|x).<p style='margin-top:8px'><b>What the naïve assumption buys.</b> Without it, p(x|y=c,&theta;) is one <b>d-dimensional joint</b> distribution &mdash; hopeless to estimate when d is in the thousands. With it:</p><div class='eq'>one d-dimensional joint&nbsp;&nbsp;&rarr;&nbsp;&nbsp;<b>d decoupled univariate distributions</b></div><b>&ldquo;This makes the problem much more tractable if the number d of features is large.&rdquo;</b><p style='margin-top:10px'><b>Why a knowingly false assumption still performs.</b> Independence of the coordinates <b>rarely holds</b> &mdash; hence <i>naïve</i> &mdash; and yet the classifier performs well in many situations. The book's reason:</p><div class='eq'>It has <b>few parameters</b>, which makes it <b>less computationally expensive</b> and <b>less likely to overfit</b> than more sophisticated models.</div><p style='margin-top:6px'>It is a deliberate bias&ndash;variance trade: you accept a wrong model (high bias) in exchange for a huge cut in variance, and on d &gg; N problems that trade is a bargain. Training is <b>counting</b> rather than optimization, so it is also far faster than minimizing a cross-entropy loss.</p>",
+   "r": {
+    "rot": "the assumption is false and everyone knows it &mdash; words in an email are obviously not independent. so why does it work? because the alternative is worse. modelling the true joint over a thousand binary features means estimating 2<sup>1000</sup> numbers from a few thousand emails; you'd be fitting noise with both hands. the naïve version needs about 2d numbers and you get them by <b>counting</b>. wrong-but-cheap beats right-but-unestimable. that's the bias&ndash;variance tradeoff being exploited on purpose rather than merely balanced.",
+    "ex": "Compare the parameter counts directly. A full joint over d binary features per class needs 2<sup>d</sup>&minus;1 parameters; naïve Bayes needs d. For a thousand-word vocabulary that is the difference between impossible and a single pass over the data.",
+    "why": "It's the clearest instance in the book of a model whose assumptions you should <b>not</b> try to fix. &sect;5.8 shows what dropping the assumption costs &mdash; Gaussian discriminant analysis must estimate a full &Sigma;<sub>c</sub> per class &mdash; and &sect;5.8.3 lists exactly when that extra realism pays and when it doesn't.",
+    "math": "Generative: models p(x,y|&theta;). Naïve step turns one d-dimensional estimation problem into d univariate ones. Parameters O(d) instead of O(2<sup>d</sup>)."
+   }
+  },
+  {
+   "id": "v3c5g5",
+   "s": "5.7",
+   "page": 330,
+   "q": "Walk a spam filter through end to end: from an email to a classification.",
+   "a": "<b>1. Fix a vocabulary and encode.</b> Bag of words maps each document to a binary vector of length d. With the ten-word list (acai, viagra, weight, deal, bargain, loss, probability, mathematics, exponential, school), the email<div class='eq'>&ldquo;This year's Rocky Mountain Mathematics Consortium summer school is on Free Probability, Random Matrices, and Applications&hellip;&rdquo;</div>becomes <b>(0,0,0,0,0,0,1,1,0,1)</b> &mdash; probability, mathematics, school. (A real filter needs thousands of words, not ten.)<p style='margin-top:10px'><b>2. Train by counting.</b> Over a labelled corpus with N<sub>c</sub> documents in class c and N<sub>j,c</sub> of those containing word j:</p><div class='eq'>&pi;&#770;<sub>c</sub> = N<sub>c</sub>/N&nbsp;&nbsp;(how much mail is spam)<br>&theta;&#770;<sub>j,c</sub> = N<sub>j,c</sub>/N<sub>c</sub>&nbsp;&nbsp;(how often word j appears in class c)</div><b>3. Smooth.</b> A word never seen in class c gives &theta;&#770;<sub>j,c</sub> = 0, which zeroes the entire product for that class. Laplace add-one smoothing &mdash; (N<sub>j,c</sub>+1)/(N<sub>c</sub>+2) &mdash; prevents it.<p style='margin-top:8px'><b>4. Classify in logs</b>, to avoid underflow across thousands of factors:</p><div class='eq'>f&#770;(x) = argmax<sub>c</sub> [ log &pi;&#770;<sub>c</sub> + &sum;<sub>j=1</sub><sup>d</sup> log p(x<sub>j</sub> | &theta;&#770;<sub>j,c</sub>) ]</div>where each term is log &theta;&#770;<sub>j,c</sub> if word j is present and log(1 &minus; &theta;&#770;<sub>j,c</sub>) if absent &mdash; <b>the absent words carry evidence too</b>.<p style='margin-top:8px'>The whole classifier is a table of counts and one dot product's worth of arithmetic per email.</p>",
+   "r": {
+    "rot": "the full pipeline. pick a vocabulary, turn each email into a yes/no vector over those words. count: what fraction of mail is spam, and for each word, what fraction of spam contains it. add one to every count so nothing is ever exactly zero. then to classify a new email, add up log-probabilities &mdash; the prior for the class plus one term per word &mdash; and take the bigger total. two things people forget: the words that are <b>absent</b> contribute too, via log(1&minus;&theta;), and you must work in logs or a thousand small factors underflow to zero.",
+    "ex": "The book's own example is a false positive waiting to happen &mdash; a legitimate summer-school announcement about &ldquo;Free Probability&rdquo; contains <i>free</i>, a classic spam word. That is precisely the case where the class prior and the other words have to outvote one misleading feature.",
+    "why": "Seeing it end to end shows why the pieces of &sect;5.7.2 and &sect;5.7.3 are not optional extras: without smoothing one unseen word breaks the classifier outright, and without logs the arithmetic underflows. The theory and the numerical safeguards are the same result.",
+    "math": "Encode &rarr; count &pi;&#770;<sub>c</sub> = N<sub>c</sub>/N and &theta;&#770;<sub>j,c</sub> = (N<sub>j,c</sub>+1)/(N<sub>c</sub>+2) &rarr; classify by argmax<sub>c</sub>[log&pi;&#770;<sub>c</sub> + &sum;<sub>j</sub>log p(x<sub>j</sub>|&theta;&#770;<sub>j,c</sub>)]."
+   }
+  },
+  {
+   "id": "v3c5h1",
+   "s": "5.8",
+   "page": 334,
+   "q": "Define a generative classification model, then Gaussian discriminant analysis. What shape are its class boundaries?",
+   "a": "Take the naïve Bayes model (5.39) but <b>drop the independence assumption</b>. It's called a <b>generative classification model</b> because it describes classification in terms of the generating probabilities p(x, y=c|&theta;) = p(x|y=c,&theta;)p(y=c|&theta;).<p style='margin-top:8px'><b>Gaussian discriminant analysis (GDA).</b> Take p(x|y=c,&theta;) = N(x|&mu;<sub>c</sub>, &Sigma;<sub>c</sub>). Taking logs and flipping the sign turns (5.39) into</p><div class='eq'>f&#770;(x) = argmin<sub>c</sub> [ &minus;log&pi;<sub>c</sub> + &frac12;log det(2&pi;&Sigma;<sub>c</sub>) + &frac12;(x&minus;&mu;<sub>c</sub>)<sup>T</sup>&Sigma;<sub>c</sub><sup>&minus;1</sup>(x&minus;&mu;<sub>c</sub>) ]</div><p><b>Fitting is again MLE and again separable</b>, giving &pi;&#770;<sub>c</sub> = N<sub>c</sub>/N and the within-class moments</p><div class='eq'>&mu;&#770;<sub>c</sub> = (1/N<sub>c</sub>)&sum;<sub>i:y<sub>i</sub>=c</sub> x<sub>i</sub>&nbsp;&nbsp;&nbsp;&nbsp;&Sigma;&#770;<sub>c</sub> = (1/N<sub>c</sub>)&sum;<sub>i:y<sub>i</sub>=c</sub> (x<sub>i</sub>&minus;&mu;&#770;<sub>c</sub>)(x<sub>i</sub>&minus;&mu;&#770;<sub>c</sub>)<sup>T</sup></div><b>The boundary.</b> Setting the objectives for c and c&prime; equal gives<div class='eq'>C + (x&minus;&mu;<sub>c</sub>)<sup>T</sup>&Sigma;<sub>c</sub><sup>&minus;1</sup>(x&minus;&mu;<sub>c</sub>) = (x&minus;&mu;<sub>c&prime;</sub>)<sup>T</sup>&Sigma;<sub>c&prime;</sub><sup>&minus;1</sup>(x&minus;&mu;<sub>c&prime;</sub>)</div>which is <b>quadratic in x</b>. All class boundaries are quadratic, so GDA is often called <b>quadratic discriminant analysis (QDA)</b>.<p style='margin-top:8px'>If every &Sigma;<sub>c</sub> is diagonal the features are independent and GDA <b>is</b> naïve Bayes with Gaussian features.</p>",
+   "r": {
+    "rot": "naïve bayes, but you stop pretending the features are independent &mdash; fit a full gaussian per class, means and full covariance matrices. training is still just counting and computing moments. the payoff: because each class has its own covariance, the dividing surface between two classes is a <b>quadratic</b>, not a flat plane. curved boundaries, which logistic regression flatly cannot produce. and naïve bayes turns out to be the special case where you force all the covariance matrices to be diagonal.",
+    "ex": "Figure 5.11: two Gaussian classes with means (1,1) and (&minus;1,&minus;1) and <b>unequal</b> covariances. GDA nails it, because the true boundary is nonlinear and it can draw one. Linear discriminant analysis and logistic regression both fail on the same data, since neither can bend.",
+    "why": "It closes a loop from &sect;5.5 &mdash; Remark 5.5.3 said logistic boundaries are always hyperplanes; here is the model that isn't restricted that way. The price is the assumption that each class really is Gaussian, and Figure 5.10 shows what happens when it isn't.",
+    "math": "GDA: p(x|y=c) = N(&mu;<sub>c</sub>,&Sigma;<sub>c</sub>). Boundary quadratic in x &rArr; QDA. Diagonal &Sigma;<sub>c</sub> &rArr; naïve Bayes with Gaussian features."
+   }
+  },
+  {
+   "id": "v3c5h2",
+   "s": "5.8",
+   "page": 335,
+   "q": "What happens to GDA when all the covariances are equal? Show that linear discriminant analysis reduces to a softmax classifier.",
+   "a": "If &Sigma;<sub>c</sub> = &Sigma; for every class, the quadratic term x<sup>T</sup>&Sigma;<sup>&minus;1</sup>x <b>cancels</b> from both sides of the boundary equation, leaving<div class='eq'>0 = C&prime; + 2(&mu;<sub>c&prime;</sub> &minus; &mu;<sub>c</sub>)<sup>T</sup>&Sigma;<sup>&minus;1</sup>x</div>&mdash; <b>linear</b> in x. Hence the name <b>linear discriminant analysis</b>.<p style='margin-top:8px'>Carrying the same cancellation through the posterior, the |2&pi;&Sigma;|<sup>&minus;1/2</sup> factors and the x<sup>T</sup>&Sigma;<sup>&minus;1</sup>x terms cancel between numerator and denominator, giving exactly (5.56):</p><div class='eq'>p(y=c|x,&theta;) = e<sup>&beta;<sub>c</sub><sup>T</sup>x + &gamma;<sub>c</sub></sup> / &sum;<sub>c&prime;</sub> e<sup>&beta;<sub>c&prime;</sub><sup>T</sup>x + &gamma;<sub>c&prime;</sub></sup>&nbsp;&nbsp;&mdash; the softmax<br><br>&beta;<sub>c</sub> = &mu;<sub>c</sub><sup>T</sup>&Sigma;<sup>&minus;1</sup>&nbsp;&nbsp;&nbsp;&nbsp;&gamma;<sub>c</sub> = log&pi;<sub>c</sub> &minus; &frac12;&mu;<sub>c</sub><sup>T</sup>&Sigma;<sup>&minus;1</sup>&mu;<sub>c</sub></div><p><b>Same functional form, different estimation.</b> This is identical to the softmax classifier of &sect;5.6 &mdash; but LDA gets &beta;<sub>c</sub> and &gamma;<sub>c</sub> by plugging in the moment estimates &mu;&#770;<sub>c</sub> and the pooled</p><div class='eq'>&Sigma;&#770; = (1/N) &sum;<sub>i=1</sub><sup>N</sup> (x<sub>i</sub>&minus;&mu;&#770;<sub>y<sub>i</sub></sub>)(x<sub>i</sub>&minus;&mu;&#770;<sub>y<sub>i</sub></sub>)<sup>T</sup></div>whereas softmax regression gets them by <b>minimizing the cross-entropy loss</b> (5.30).<p style='margin-top:8px'>(The footnote: the book reserves the abbreviation LDA for latent Dirichlet allocation, so it writes linear discriminant analysis out in full.)</p>",
+   "r": {
+    "rot": "force every class to share one covariance matrix and the curved boundary straightens out &mdash; the quadratic bits cancel because they're identical on both sides. what's left is linear. and if you push the cancellation all the way through the posterior, you land on <b>exactly the softmax formula</b> from &sect;5.6. same equation, completely different way of getting the numbers: LDA computes means and a pooled covariance in one pass, softmax runs an optimizer on cross-entropy. so &ldquo;which model&rdquo; and &ldquo;how you fit it&rdquo; are genuinely separate questions.",
+    "ex": "The middle panel of Figures 5.10 and 5.11 is linear discriminant analysis both times. In Figure 5.10 the true boundary is a diagonal line, so LDA gets the shape right but fits it poorly; in Figure 5.11 the correct boundary is curved and LDA simply cannot represent it.",
+    "why": "It's the sharpest illustration in the chapter that a model's <b>functional form</b> and its <b>training procedure</b> are independent choices. Two methods with identical p(y|x) can behave very differently &mdash; one much faster, one much more robust &mdash; which is exactly the tradeoff &sect;5.8.3 catalogues.",
+    "math": "&Sigma;<sub>c</sub> &equiv; &Sigma; &rArr; quadratic term cancels &rArr; linear boundary and softmax posterior with &beta;<sub>c</sub> = &mu;<sub>c</sub><sup>T</sup>&Sigma;<sup>&minus;1</sup>, &gamma;<sub>c</sub> = log&pi;<sub>c</sub> &minus; &frac12;&mu;<sub>c</sub><sup>T</sup>&Sigma;<sup>&minus;1</sup>&mu;<sub>c</sub>."
+   }
+  },
+  {
+   "id": "v3c5h3",
+   "s": "5.8",
+   "page": 339,
+   "q": "Distinguish generative from discriminative models. When is each preferred, and what are the advantages of each?",
+   "a": "<b>Generative</b> models compute the <b>joint</b> p(y,x|&theta;), then derive p(y|x,&theta;) and classify by argmax. GDA and naïve Bayes are generative.<br><b>Discriminative</b> models compute only p(y|x,&theta;), never the joint. Softmax and logistic regression are discriminative &mdash; and so are classification trees. <b>Despite the word <i>discriminant</i> in its name, GDA is generative.</b><div class='eq'>Gaussian assumption correct (or nearly) &rarr; prefer <b>GDA</b>: much faster to train than minimizing cross-entropy.<br>Generative assumptions wrong &rarr; prefer <b>softmax / logistic</b>: generally better results.</div><p style='margin-top:8px'><b>Generative advantages</b> (when the assumptions hold):</p><div class='eq'>(i) <b>Classes fit separately</b> &mdash; a new class can be added without refitting the others.<br>(ii) <b>Missing data</b> handled in a principled way.<br>(iii) <b>The joint is visible</b> &mdash; you get p(x|y,&theta;) and p(x,y|&theta;), not just p(y|x,&theta;).</div><b>Discriminative advantages:</b><div class='eq'>(i) <b>More robust</b> &mdash; no generative assumptions to violate. Many different generative assumptions produce the same form for p(y|x,&theta;), so committing to one buys speed only if it's actually true.<br>(ii) <b>Allows feature engineering</b> &mdash; replacing x by &phi;(x) usually destroys the generative model's distributional assumptions, but a discriminative classifier doesn't care.</div>",
+   "r": {
+    "rot": "generative models learn how the data was <b>made</b> &mdash; the whole joint distribution &mdash; and read off the classification from that. discriminative models only ever learn the boundary. generative is faster to train and gives you extras: add a new class without refitting, handle missing values sensibly, even generate fake data. but it's all conditional on the generative story being roughly true. if it isn't, the discriminative model wins, because it never made the assumption in the first place. and if you want to transform your features, generative is out &mdash; &phi;(x) won't be gaussian just because x was.",
+    "ex": "The naming trap is worth holding onto: <b>Gaussian discriminant analysis is a generative model.</b> The word <i>discriminant</i> in its name refers to the discriminant function it computes, not to the generative/discriminative distinction.",
+    "why": "This is the choice you actually make in practice, and it's not about accuracy alone &mdash; training cost, extensibility to new classes, and whether you intend to engineer features all feed into it. Point (i) under discriminative is the deepest: Proposition 5.8.1 shows a whole exponential family of different generative assumptions produce the identical softmax form for p(y|x), so the softmax form is <i>weak</i> evidence for any particular one of them.",
+    "math": "Generative: model p(x,y|&theta;). Discriminative: model p(y|x,&theta;) only. GDA, naïve Bayes generative; logistic, softmax, trees discriminative."
+   }
+  },
+  {
+   "id": "v3c5h4",
+   "s": "5.8",
+   "page": 340,
+   "q": "State Proposition 5.8.1. Why does it matter that the softmax form isn't special to the Gaussian case?",
+   "a": "<b>Proposition 5.8.1.</b> Suppose p(y=c|&theta;) = &pi;<sub>c</sub> and each class-conditional lies in an exponential family with T(x) = x:<div class='eq'>p(x|y=c,&theta;) = h(x) exp( &eta;<sub>c</sub><sup>T</sup>x &minus; A<sub>c</sub>(&eta;<sub>c</sub>) )</div>with h independent of c and &eta;<sub>c</sub>, and A independent of x. Then<div class='eq'>p(y=c|x,&theta;) = e<sup>&eta;<sub>c</sub><sup>T</sup>x + &gamma;<sub>c</sub></sup> / &sum;<sub>c&prime;</sub> e<sup>&eta;<sub>c&prime;</sub><sup>T</sup>x + &gamma;<sub>c&prime;</sub></sup>,&nbsp;&nbsp;&gamma;<sub>c</sub> = &minus;A<sub>c</sub>(&eta;<sub>c</sub>) + log&pi;<sub>c</sub></div>&mdash; the softmax again. (The proof is Exercise 5.35.)<p style='margin-top:10px'><b>Why it matters.</b> Linear discriminant analysis <i>assumed</i> a lot about P(X,Y) and <i>deduced</i> the softmax form for P(Y|X) &mdash; the same form softmax regression simply postulates. This proposition shows the Gaussian assumption was never necessary: <b>normal, binomial, negative binomial, gamma, beta, and Poisson</b> are all exponential families, and every one of them yields a softmax posterior.</p><p><b>Two practical readings.</b> If you <b>know</b> P(X|Y=c), exploit it and train fast as GDA does. If you only know it's <i>some</i> exponential family, the proposition still guarantees P(Y|X) is softmax &mdash; so use softmax regression to estimate it directly.</p>",
+   "r": {
+    "rot": "LDA got the softmax formula by assuming gaussians. this proposition says the gaussians were beside the point: <b>any</b> exponential family class-conditional gives you softmax. normal, poisson, gamma, beta, binomial &mdash; all of them. so softmax regression isn't one arbitrary model among many; it's the shape that an enormous class of generative stories all collapse to. and that cuts both ways. it means softmax regression is safe to use very broadly. it also means observing that softmax fits well tells you almost <b>nothing</b> about which generative story is true, because they all look identical from here.",
+    "ex": "The proposition needs the special exponential-family property T(x) = x &mdash; the sufficient statistic is the data itself. That's what makes the exponent linear in x, which is what makes the ratio a softmax.",
+    "why": "It's the reason discriminative advantage (i) in &sect;5.8.3 &mdash; &ldquo;more robust&rdquo; &mdash; is a theorem and not a hunch. Many generative assumptions, one functional form: so committing to a specific generative model buys you faster training and nothing else, unless that specific model is actually correct.",
+    "math": "p(x|y=c) = h(x)exp(&eta;<sub>c</sub><sup>T</sup>x &minus; A<sub>c</sub>(&eta;<sub>c</sub>)) &rArr; p(y=c|x) = softmax(&eta;<sub>c</sub><sup>T</sup>x + &gamma;<sub>c</sub>), &gamma;<sub>c</sub> = log&pi;<sub>c</sub> &minus; A<sub>c</sub>(&eta;<sub>c</sub>)."
+   }
+  }
+ ],
+ "exMarks": [
+  {
+   "page": 341,
+   "y": 0.279
+  },
+  {
+   "page": 342,
+   "y": 0.899
+  },
+  {
+   "page": 343,
+   "y": 0.364
+  },
+  {
+   "page": 345,
+   "y": 0.113
+  },
+  {
+   "page": 345,
+   "y": 0.616
+  },
+  {
+   "page": 347,
+   "y": 0.296
+  },
+  {
+   "page": 350,
+   "y": 0.528
+  },
+  {
+   "page": 351,
+   "y": 0.456
+  },
+  {
+   "page": 352,
+   "y": 0.746
+  }
+ ]
+}

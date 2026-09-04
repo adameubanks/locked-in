@@ -1,0 +1,273 @@
+{
+ "volume": "vol3",
+ "chapter": "6",
+ "file": "vol3-ch6.json",
+ "title": "Hypothesis Testing",
+ "epigraph": {
+  "text": "What a weak barrier is truth when it stands in the way of an hypothesis!",
+  "by": "Mary Wollstonecraft"
+ },
+ "sections": [
+  {
+   "id": "6.1",
+   "name": "Null Hypothesis Significance Testing",
+   "from": 353,
+   "to": 360,
+   "exFrom": {
+    "page": 373,
+    "y": 0.279
+   },
+   "exTo": {
+    "page": 374,
+    "y": 0.39
+   }
+  },
+  {
+   "id": "6.2",
+   "name": "Power",
+   "from": 361,
+   "to": 364,
+   "exFrom": {
+    "page": 374,
+    "y": 0.39
+   },
+   "exTo": {
+    "page": 375,
+    "y": 0.5
+   }
+  },
+  {
+   "id": "6.3",
+   "name": "Pitfalls of Null Hypothesis Significance Testing",
+   "from": 365,
+   "to": 372,
+   "exFrom": {
+    "page": 375,
+    "y": 0.5
+   },
+   "exTo": {
+    "page": 377,
+    "y": 0.679
+   }
+  }
+ ],
+ "exercises": {
+  "from": 372,
+  "to": 380
+ },
+ "cards": [
+  {
+   "id": "v3c6a1",
+   "s": "6.1",
+   "page": 353,
+   "q": "Define the null hypothesis and the p-value using the hot-sauce experiment.",
+   "a": "Andrew claims he can taste which brand of hot sauce is in the chili. Two identical batches; a coin flip decides which he tastes; repeat 30 times. Each test X<sub>i</sub> is i.i.d. Bernoulli(&theta;), so T = &sum;X<sub>i</sub> is binomial.<p style='margin-top:8px'><b>The null hypothesis H&#8320;</b> is that he <b>cannot</b> tell &mdash; &theta; = &frac12;, so T ~ Binomial(30, &frac12;).</p><p>He gets 21 right. Better than chance, but maybe luck. Note the right question: not <i>what is P(T = 21)</i> &mdash; that's tiny even under a true effect, and so is P(T = 15) &mdash; but</p><div class='eq'>p = P(T &ge; 21 | H&#8320;) = 2<sup>&minus;30</sup> &sum;<sub>t=21</sub><sup>30</sup> C(30,t) &asymp; 0.0213</div><b>That number is the p-value:</b> the probability of the observed result <b>or something more extreme</b>, given the null hypothesis. About 2%, which looks like reason to reject the claim that he was guessing.",
+   "r": {
+    "rot": "you claim you can taste the difference; i claim you can't. <b>my</b> claim is the null hypothesis &mdash; the boring one, the &ldquo;nothing is happening&rdquo; one. under it your guesses are coin flips. you get 21 out of 30. the p-value asks: if you really were just flipping a coin, how often would you do <b>this well or better</b>? answer, about 2%. note the &ldquo;or better&rdquo; &mdash; asking for exactly 21 is meaningless, because every exact count is unlikely, including exactly 15.",
+    "ex": "The one-sample t-test of &sect;6.1.2 is the same shape: leafhoppers on grape leaves, H&#8320; that spraying soap changes nothing, and a p-value that turns out to be 0.137 &mdash; too big to reject, so the null is retained and the soap is not worth spraying.",
+    "why": "The &ldquo;or more extreme&rdquo; clause is where all the subtlety lives. What counts as more extreme depends on the direction you care about &mdash; one-sided for the leafhoppers (you don't think soap <i>increases</i> them), two-sided for the two-sample t-test, and in the A/B testing example it means <i>less likely</i> in either direction.",
+    "math": "H&#8320;: &theta; = &frac12;, T ~ Binomial(30,&frac12;). p = P(T &ge; t<sub>obs</sub> | H&#8320;). Not P(T = t<sub>obs</sub>)."
+   }
+  },
+  {
+   "id": "v3c6a2",
+   "s": "6.1",
+   "page": 354,
+   "q": "Give the five steps of null hypothesis significance testing.",
+   "a": "A researcher proposes H&#8321;, that something has an effect. The default H&#8320; &mdash; the <b>null hypothesis</b> &mdash; is that H&#8321; is false.<div class='eq'>(i) <b>Design an experiment</b> producing data X&#8321;,&hellip;,X<sub>n</sub> that can be modelled statistically under H&#8320;.<br><br>(ii) <b>Pick a statistic</b> T(X&#8321;,&hellip;,X<sub>n</sub>) whose distribution is known when H&#8320; is true &mdash; i.e. you can compute P(T &le; t | H&#8320;).<br><br>(iii) <b>Choose &alpha;</b>, the significance level, such that p &lt; &alpha; means reject. <b>Choose it before looking at the data</b>, or you will be tempted to pick the one that gives the conclusion you want.<br><br>(iv) <b>Run the experiment</b>; the p-value is the probability of that result or something more extreme, given H&#8320;.<br><br>(v) <b>If p &lt; &alpha;, reject H&#8320;. Otherwise retain it.</b></div><b>Reading the outcome.</b> Retaining (p &ge; &alpha;) means H&#8321; is <b>unnecessary</b> to explain the results. Rejecting (p &lt; &alpha;) means something interesting <i>might</i> be going on &mdash; and if the experiment was well designed and the model fits, the data <i>might</i> support H&#8321;.<p style='margin-top:8px'>Statisticians have built many test statistics &mdash; chi-squared, t, F, z &mdash; and researchers often name the whole procedure after the statistic. <b>The process is the same regardless.</b></p>",
+   "r": {
+    "rot": "five steps. design an experiment you can model when nothing's happening. pick a number computed from the data whose distribution you know when nothing's happening. pick your threshold &alpha; <b>before you look</b> &mdash; this one is not optional, and it's the difference between science and choosing your own grade. run it, compute how surprising your result would be if nothing were happening, and compare to the threshold. the t-test, the chi-squared test, the z-test: all the same five steps with a different statistic plugged into step 2.",
+    "ex": "The two footnotes on this page are worth reading. When H&#8320; is rejected people say the results are &ldquo;statistically significant,&rdquo; which misleadingly suggests the result is meaningful, useful, or important &mdash; it means none of those, and the book says the phrase should generally be avoided.",
+    "why": "Step (iii) is what &sect;6.3.4 is about: p-hacking is choosing &alpha; (or the analysis, or the subgroup) after seeing the data, and the garden of forking paths is the same thing happening to an honest researcher who never consciously fishes for anything.",
+    "math": "Reject &hArr; p &lt; &alpha;. p = P(T at least as extreme as t<sub>obs</sub> | H&#8320;). Fix &alpha; before collecting data."
+   }
+  },
+  {
+   "id": "v3c6a3",
+   "s": "6.1",
+   "page": 356,
+   "q": "Set up the one-sample t-test. Why is the test statistic a t rather than a z?",
+   "a": "Leafhoppers on grape leaves: before spraying, the count per leaf is roughly N(20, &sigma;&sup2;) with <b>&sigma;&sup2; unknown</b>. H&#8321; is that after spraying soap the mean is below 20; H&#8320; is that it is still 20.<p style='margin-top:8px'>The obvious statistic is the sample mean &mu;&#770;<sub>5</sub>, which under H&#8320; is N(20, &sigma;&sup2;/5). <b>But &sigma;&sup2; is unknown, so its distribution can't be written down.</b> Estimate &sigma;&sup2; from the data and standardize:</p><div class='eq'>T<sub>n</sub> = (&mu;&#770;<sub>n</sub> &minus; &mu;) / (s/&radic;n),&nbsp;&nbsp;s&sup2; = (1/(n&minus;1)) &sum;<sub>i</sub>(X<sub>i</sub> &minus; &mu;&#770;<sub>n</sub>)&sup2;</div><b>If s&sup2; were the true &sigma;&sup2;, T<sub>n</sub> would be standard normal.</b> It isn't &mdash; s&sup2; is itself random &mdash; and the correction is exactly that T<sub>n</sub> follows a <b>Student t-distribution with &nu; = n &minus; 1</b> degrees of freedom. With n = 5, T&#8325; ~ T(4).<p style='margin-top:8px'><b>The run.</b> Counts 9, 13, 24, 16, 21 give &mu;&#770; = 16.6 and s = 6.025, so</p><div class='eq'>T<sub>x</sub> = (16.6 &minus; 20)/(6.025/&radic;5) = &minus;1.261<br>p = P(T&#8325; &le; &minus;1.261) = F<sub>T</sub>(&minus;1.261) = 0.137</div>p is far above &alpha; = 0.05, so <b>retain H&#8320;</b>: no reason to assume the soap did anything, and no reason to keep spraying it.",
+   "r": {
+    "rot": "you want to test a mean but you don't know the variance, so you can't use the normal distribution &mdash; you don't know how wide it is. so you estimate the variance from the same five data points and divide by that instead. that extra estimation adds wobble, and the t-distribution is exactly the normal <b>widened</b> to account for it. fewer data points, fatter tails, harder to reject. &nu; = n &minus; 1 because one degree of freedom got spent estimating the mean.",
+    "ex": "The direction matters. Since soap plausibly cannot <i>increase</i> leafhoppers, &ldquo;more extreme&rdquo; means <i>smaller</i>, making this one-sided: p = P(T&#8325; &le; t). A two-sided version would roughly double it.",
+    "why": "This is the pattern behind most t-tests in the wild: an unknown nuisance parameter, estimated from the data, paid for with a slightly fatter-tailed reference distribution. Notice too that retaining H&#8320; here is a genuinely useful conclusion &mdash; it saves the time and money of spraying.",
+    "math": "T<sub>n</sub> = (&mu;&#770;<sub>n</sub>&minus;&mu;)/(s/&radic;n) ~ T(n&minus;1) with s&sup2; the unbiased sample variance. z would need &sigma; known."
+   }
+  },
+  {
+   "id": "v3c6a4",
+   "s": "6.1",
+   "page": 357,
+   "q": "State Nota Bene 6.1.2 and 6.1.3 &mdash; what does a p-value <b>not</b> tell you?",
+   "a": "<b>Nota Bene 6.1.2.</b> p &lt; &alpha; does <b>not</b> imply H&#8321; is true. It only suggests that H&#8320; <b>alone might not be adequate</b> to explain the data.<p style='margin-top:6px'>The hot-sauce case is unusually forgiving &mdash; the only reasonable alternative to &theta; = &frac12; is &theta; &gt; &frac12;, so rejecting H&#8320; really does support Andrew. <b>In general it says little or nothing about the probability that H&#8321; is true.</b> Had the leafhopper p come out below &alpha;, it would not have meant the soap worked, only that chance and H&#8320; together were not enough.</p><p style='margin-top:10px'><b>Nota Bene 6.1.3.</b> The p-value is the probability of results as extreme or more extreme <b>given the null hypothesis</b>. It is:</p><div class='eq'>(i) <b>Not</b> the probability that the null hypothesis is correct.<br>(ii) <b>Not</b> the probability that the alternative hypothesis is wrong.<br>(iii) <b>Not</b> the probability that the experiment cannot be replicated.</div><p>Many people believe one or more of these. And even among those who know better, many still <b>use</b> p in their decision making as if the fallacies were true.</p>",
+   "r": {
+    "rot": "the p-value is P(data | H&#8320;). it is not P(H&#8320; | data). those are different numbers and swapping them is the whole disease. p = 0.02 does <b>not</b> mean &ldquo;2% chance the null is true,&rdquo; it does not mean &ldquo;98% chance my theory is right,&rdquo; and it says nothing about whether anyone could replicate you. all it says is: if nothing were going on, data this extreme would be uncommon. that leaves open every other explanation &mdash; bad instruments, a biased sample, the wrong noise model &mdash; and there are a lot of those.",
+    "ex": "Compare the hot sauce with the leafhoppers. The hot-sauce test <i>can</i> support H&#8321;, but only because the alternative space is a single ordered parameter &theta; &gt; &frac12; with nothing else plausible in it. The leafhopper test cannot, because the alternatives include measurement error, weather, the wrong distribution, and a dozen more.",
+    "why": "This is the single most consequential idea in the chapter, and &sect;6.3.1 turns it into arithmetic: by Bayes' rule P(H&#8320;|T&ge;t) = p&middot;P(H&#8320;)/P(T&ge;t), so a small p can sit alongside a large posterior probability that H&#8320; is true. Confusing the two directions is the prosecutor's fallacy.",
+    "math": "p = P(T &ge; t | H&#8320;) &ne; P(H&#8320; | T &ge; t). Rejecting H&#8320; identifies a problem with H&#8320;, not a winner among alternatives."
+   }
+  },
+  {
+   "id": "v3c6a5",
+   "s": "6.1",
+   "page": 358,
+   "q": "Give the two-sample t-test and the Pearson chi-squared test. What makes a result &ldquo;more extreme&rdquo; in each?",
+   "a": "<b>Two-sample t-test.</b> Two treatments X and Y &mdash; spray half the vines, leave half unsprayed. H&#8320; is that the difference is normally distributed around 0.<div class='eq'>T = (&mu;&#770;<sub>X</sub> &minus; &mu;&#770;<sub>Y</sub>) / &radic;(s<sub>X</sub>&sup2;/n<sub>X</sub> + s<sub>Y</sub>&sup2;/n<sub>Y</sub>) ~ T(&nu;)<br><br>&nu; = (s<sub>X</sub>&sup2;/n<sub>X</sub> + s<sub>Y</sub>&sup2;/n<sub>Y</sub>)&sup2; / [ (s<sub>X</sub>&sup2;/n<sub>X</sub>)&sup2;/(n<sub>X</sub>&minus;1) + (s<sub>Y</sub>&sup2;/n<sub>Y</sub>)&sup2;/(n<sub>Y</sub>&minus;1) ]</div>and &nu; = 2n &minus; 2 when n<sub>X</sub> = n<sub>Y</sub> = n. <b>More extreme means farther from 0 in either direction</b>, so by symmetry of the t density<div class='eq'>p = P(|T| &ge; |t|) = 2 F<sub>T</sub>(&minus;|t|)</div>This is what marketers call <b>A/B testing</b>.<p style='margin-top:10px'><b>Pearson chi-squared test.</b> Tests whether data came from a given distribution &mdash; e.g. is a die fair? H&#8320;: X uniform on {1,&hellip;,6}. With N<sub>j</sub> the count of outcome j, Pearson showed that as n &rarr; &infin;</p><div class='eq'>T = (6/n) &sum;<sub>j=1</sub><sup>6</sup> (N<sub>j</sub> &minus; n/6)&sup2;&nbsp;&nbsp;&rarr;<sub>d</sub>&nbsp;&nbsp;Gamma(5/2, 1/2)</div>&mdash; the chi-squared distribution with 5 degrees of freedom. A perfect fit gives N<sub>j</sub> = n/6 and T = 0, so <b>more extreme means larger</b>: p = P(T &ge; T<sub>x</sub> | H&#8320;), one-sided by construction.",
+   "r": {
+    "rot": "two-sample t: compare two groups instead of one group against a fixed number. the statistic is the difference of means divided by the combined noise. &ldquo;more extreme&rdquo; means further from zero <b>in either direction</b>, so you double the tail &mdash; either group could be the better one. chi-squared: compare observed counts to expected counts. perfect agreement gives exactly zero, and any disagreement makes it bigger, so only the <b>upper</b> tail is extreme. the direction of &ldquo;extreme&rdquo; falls out of the statistic's own geometry, not out of taste.",
+    "ex": "The A/B conversion-rate example in &sect;6.1.5 shows a third convention. There, &ldquo;more extreme&rdquo; is defined as <b>less likely</b>, which for the hypergeometric statistic means T &le; 7 <b>or</b> T &ge; 13 &mdash; a two-sided region that isn't symmetric.",
+    "why": "Choosing the extremity region is a modelling decision, not a formula, and it can change the p-value by a factor of two or more. Comparing these three tests is the fastest way to see that it follows from the statistic's shape and from what alternatives you consider plausible.",
+    "math": "Two-sample t: p = 2F<sub>T</sub>(&minus;|t|), &nu; = 2n&minus;2 for equal sizes. Chi-squared: T &rarr;<sub>d</sub> Gamma(5/2,1/2), upper tail only."
+   }
+  },
+  {
+   "id": "v3c6b1",
+   "s": "6.2",
+   "page": 361,
+   "q": "Define the two types of error. Why isn't the probability of one determined by the other?",
+   "a": "<b>Falsely rejecting the null</b> (type I error): p &lt; &alpha; leads you to reject, but H&#8320; actually holds and the data came up by chance. Write<div class='eq'>a = P(reject H&#8320; | H&#8320;)</div><b>Falsely retaining the null</b> (type II error): p &ge; &alpha; leads you to retain, but H&#8320; is false. Write &beta; for its probability, so<div class='eq'>P(reject H&#8320; | H&#8321;) = 1 &minus; &beta;</div><p style='margin-top:10px'><b>Nota Bene 6.2.1 &mdash; the two are not cleanly related.</b> 1 &minus; &beta; is not a function of a. They are conditioned on <b>different hypotheses</b>: a conditions on H&#8320;, &beta; conditions on H&#8321;. Tightening &alpha; drives a down and &beta; up, but by how much depends entirely on how far apart H&#8320; and H&#8321; are &mdash; which a says nothing about.</p><p>The book prefers the plain names: it notes that <i>type I</i> and <i>type II</i> carry no information about what's happening and confuse everybody, so say <b>falsely reject the null</b> and <b>falsely retain the null</b> instead.</p>",
+   "r": {
+    "rot": "two ways to be wrong. cry wolf when there's no wolf &mdash; falsely reject. miss the actual wolf &mdash; falsely retain. you control the first directly with &alpha;. you do <b>not</b> control the second, and you can't compute it from the first, because they're asking about different worlds: one assumes nothing is happening, the other assumes something is. how bad the miss rate is depends on how big the real effect is, and &alpha; never heard of the real effect. and yes, call them &ldquo;falsely reject&rdquo; and &ldquo;falsely retain&rdquo; &mdash; &ldquo;type I&rdquo; and &ldquo;type II&rdquo; are just harder to remember.",
+    "ex": "Example 6.2.2, the degenerate case: two coins, one fair and one 66% heads, tested with a <b>single flip</b>. For any &alpha; &lt; &frac12; you can never reject, so a = 0 &mdash; a perfect false-rejection rate &mdash; and &beta; = 1, you always miss. The best possible score on one error with the worst possible score on the other.",
+    "why": "It is why reporting &alpha; alone is not enough to describe a test. Two studies at &alpha; = 0.05 can have wildly different miss rates, and &sect;6.3.5 argues that thresholding on p actively <b>rewards</b> the ones with the worse miss rate, because noisy low-power studies are cheaper to run.",
+    "math": "a = P(reject H&#8320; | H&#8320;) &le; &alpha;. &beta; = P(retain H&#8320; | H&#8321;). 1 &minus; &beta; is not determined by a."
+   }
+  },
+  {
+   "id": "v3c6b2",
+   "s": "6.2",
+   "page": 363,
+   "q": "Define the power of a test. Show how it improves with sample size.",
+   "a": "With just two hypotheses, the <b>power</b> is<div class='eq'>&pi; = P(reject H&#8320; | H&#8321;) = 1 &minus; &beta;</div>also called the <b>true positive rate</b>. It measures how good the test is at detecting a real effect.<p style='margin-top:8px'><b>Three tests on the same question</b> &mdash; a fair coin (H&#8320;) versus a 66%-heads coin (H&#8321;):</p><div class='eq'>n = 1&nbsp;&nbsp;&mdash;&nbsp;&nbsp;can never reject for &alpha; &lt; &frac12;.&nbsp;&nbsp;a = 0, &beta; = 1, &pi; = 0<br><br>n = 3, &alpha; = 0.2&nbsp;&nbsp;&mdash;&nbsp;&nbsp;reject only if x = 3.&nbsp;&nbsp;a = 0.125, &beta; = 0.732, &pi; = 0.268<br><br>n = 100, &alpha; = 0.01&nbsp;&nbsp;&mdash;&nbsp;&nbsp;reject if x &ge; 63.&nbsp;&nbsp;a = 0.006, &beta; = 0.229, &pi; = 0.771</div><b>Both error probabilities fall together as n grows.</b> The n = 100 test is simultaneously stricter about false rejection (0.006 vs 0.125) and far better at detection (0.771 vs 0.268).<p style='margin-top:8px'>That's the point: with n = 1 or n = 3 there is no threshold that makes the test useful, because the data simply doesn't contain enough information. More data is what buys you both at once.</p>",
+   "r": {
+    "rot": "power = the chance you actually catch a real effect. it's the number nobody reports and everybody should. a test with power 0.27 misses three out of four real effects &mdash; running it and getting nothing tells you almost nothing. the fix is sample size. one flip: hopeless. three flips: still bad. a hundred flips: now you can be <b>both</b> pickier about false alarms and much better at detection. you can't trade your way out of a small sample by fiddling with &alpha;; you have to go get more data.",
+    "ex": "The numbers are worth holding onto. Going from n = 3 to n = 100 cuts a from 0.125 to 0.006 <i>and</i> cuts &beta; from 0.732 to 0.229. Nothing was traded &mdash; both improved, because the information in the sample grew.",
+    "why": "Power is the quantity a study should be designed around, and it is exactly what &sect;6.3.5 says thresholding punishes: a cheap, noisy, low-power study can still stumble past &alpha; occasionally, so tightening &alpha; can perversely fill the literature with worse studies rather than better ones.",
+    "math": "&pi; = 1 &minus; &beta; = P(reject H&#8320; | H&#8321;), the true positive rate. Both a and &beta; decrease as n increases."
+   }
+  },
+  {
+   "id": "v3c6b3",
+   "s": "6.2",
+   "page": 364,
+   "q": "How do you compute power when the alternative isn't a single value?",
+   "a": "With H&#8321; a single &theta;, power is one number. But often H&#8321; is composite &mdash; e.g. &mu; = &theta; &gt; &mu;&#8320; in a one-sample t-test. Then you compute &beta;(&theta;) = P(reject H&#8320; | &mu; = &theta;) for every &theta; &gt; &mu;&#8320;, and<div class='eq'>1 &minus; a = sup<sub>&theta;&gt;&mu;&#8320;</sub> &beta;(&theta;)</div>&mdash; i.e. the supremum is attained in the limit as &theta; approaches &mu;&#8320;, which is useless. <b>Values of &mu; near &mu;&#8320; are neither useful nor interesting to detect.</b><p style='margin-top:8px'><b>The fix: restrict the alternative to effects worth finding.</b> If soap only cuts leafhoppers from 20 to 19 it isn't worth spraying no matter how small p is. So limit the alternative to, say, &mu; &isin; [0,15], compute</p><div class='eq'>&beta;<sub>max</sub> = sup<sub>&theta;&isin;[0,15]</sub> &beta;(&theta;),&nbsp;&nbsp;&nbsp;&pi; = 1 &minus; &beta;<sub>max</sub></div><p><b>The hot sauce, done properly (Example 6.2.6).</b> With &alpha; = 0.05, a numerical search shows H&#8320; is retained for every x &le; 20. Then &beta;(&theta;) = P(X &le; 20 | X ~ Binomial(30,&theta;)) is <b>monotonically decreasing in &theta;</b>, so the worst case sits at the smallest &theta; you care about. Agreeing that &theta; = 0.65 is the cutoff for &ldquo;he can really tell&rdquo;:</p><div class='eq'>&beta;(0.65) &asymp; 0.6424,&nbsp;&nbsp;&nbsp;&pi; = 0.3576</div>The original test had power about <b>36%</b> &mdash; it would have missed a genuine 65% taster nearly two times in three.",
+   "r": {
+    "rot": "when the alternative is &ldquo;the effect is anything but zero,&rdquo; power is undefined in a useless way: a microscopic effect is basically indistinguishable from none, so the worst-case miss rate is always terrible. so you have to say out loud <b>how big an effect you'd care about</b>, and compute the worst case over effects at least that big. that's a scientific judgement, not a statistical one. do it for the hot sauce with a 0.65 cutoff and the power is 36% &mdash; the original experiment would have missed a real taster most of the time.",
+    "ex": "Example 6.2.5, the leafhoppers with H&#8320;: &mu; = 20 against H&#8321;: &mu; = 15, gives &beta; &asymp; 0.602 and power &asymp; 0.398 &mdash; also poor, from a sample of five leaves.",
+    "why": "It reframes what a non-significant result means. Retaining H&#8320; in a test with 36% power is barely evidence of anything, and you can only know that by computing power &mdash; which requires committing in advance to the smallest effect worth detecting.",
+    "math": "Composite H&#8321;: &beta;(&theta;) = P(retain H&#8320; | H<sub>&theta;</sub>); &pi; = 1 &minus; sup&beta;(&theta;) over the effect range you care about. sup over all &theta; &gt; &mu;&#8320; gives the vacuous 1 &minus; a."
+   }
+  },
+  {
+   "id": "v3c6b4",
+   "s": "6.2",
+   "page": 363,
+   "q": "Work out the power of the leafhopper t-test (Example 6.2.5). Where does the shift come from?",
+   "a": "Setup: the one-sample t-test of &sect;6.1.2 with n = 5 and &alpha; = 0.05, testing <b>H&#8320;: &mu; = 20</b> against the single alternative <b>H&#8321;: &mu; = 15</b>.<p style='margin-top:8px'><b>Step 1 &mdash; find the rejection region.</b> Reject when p = F<sub>T</sub>(t) &lt; 0.05, i.e. when</p><div class='eq'>t &lt; F<sub>T</sub><sup>&minus;1</sup>(0.05) = &minus;2.1318</div>Treating t as a random variable, a = P(t &lt; &minus;2.1318 | H&#8320;) = 0.05 = &alpha;, as it must be.<p style='margin-top:10px'><b>Step 2 &mdash; recentre under H&#8321;.</b> The statistic was standardized around 20, but under H&#8321; the true mean is 15. Add and subtract:</p><div class='eq'>&beta; = P( (&mu;&#770;&#8325; &minus; 20)/(s&#8325;/&radic;5) &ge; &minus;2.1318 | &mu; = 15 )<br><br>= P( (&mu;&#770;&#8325; &minus; 15)/(s&#8325;/&radic;5) &minus; 5/(s&#8325;/&radic;5) &ge; &minus;2.1318 | &mu; = 15 )<br><br>= P( Z &ge; 5/(s&#8325;/&radic;5) &minus; 2.1318 ),&nbsp;&nbsp;Z ~ T(4)</div><b>The 5 is the effect size</b> (20 &minus; 15), and dividing by the standard error turns it into a <b>shift of the reference distribution</b>.<p style='margin-top:10px'><b>Step 3 &mdash; plug in.</b> s<sub>x</sub> = 6.025 from the observed draw, so</p><div class='eq'>&beta; &asymp; 1 &minus; F<sub>T</sub>(&minus;0.2762) = <b>0.6020</b>&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&pi; = 1 &minus; &beta; &asymp; <b>0.3980</b></div><b>Under 40% power</b> &mdash; this test misses a genuine five-leafhopper effect three times in five.",
+   "r": {
+    "rot": "computing power is a two-step recentring. first find where the cutoff is under the null &mdash; that's just the &alpha; quantile, t &lt; &minus;2.13. then ask how often you'd land past that cutoff <b>if the alternative were true</b>. under the alternative the mean has moved by 5, so you rewrite the statistic around 15 instead of 20 and the difference shows up as a shift of 5/(s/&radic;n). big effect or small noise pushes the whole distribution past the cutoff and power goes up. here it doesn't: power is 40%, so the test would miss a real effect most of the time.",
+    "ex": "The quantity 5/(s&#8325;/&radic;5) is the effect size in standard-error units, and it is the <b>only</b> thing that moves power once &alpha; and n are fixed. Bigger true effect, smaller noise, or larger n all act through it.",
+    "why": "This is what &ldquo;the study was underpowered&rdquo; means concretely. The leafhopper experiment retained H&#8320; with p = 0.137 &mdash; but with 40% power, retaining tells you very little, because the test would probably have failed to detect a real effect anyway.",
+    "math": "Reject iff t &lt; F<sub>T</sub><sup>&minus;1</sup>(&alpha;). &beta; = P(Z &ge; &delta;/(s/&radic;n) &minus; |F<sub>T</sub><sup>&minus;1</sup>(&alpha;)|), Z ~ T(n&minus;1), &delta; the effect size. Here &pi; &asymp; 0.398."
+   }
+  },
+  {
+   "id": "v3c6b5",
+   "s": "6.2",
+   "page": 362,
+   "q": "Why should power be computed <i>before</i> the experiment, and what goes wrong when it isn't?",
+   "a": "Power is the only quantity that says <b>what a non-significant result means</b>. Consider the two ways an experiment can end:<div class='eq'>p &lt; &alpha; &mdash; reject. The false-rejection rate a is controlled by design; you chose &alpha;.<br><br>p &ge; &alpha; &mdash; retain. <b>Nothing about &alpha; tells you how often you would have missed a real effect.</b> That is &beta;, and it depends on the effect size, the noise, and n &mdash; none of which &alpha; knows.</div><b>So a non-significant result from a low-power test is nearly uninformative.</b> The leafhopper test (&pi; &asymp; 0.398) and the hot-sauce test (&pi; = 0.3576) both retained H&#8320; while missing a genuine effect roughly three times in five.<p style='margin-top:10px'><b>Computing it in advance forces two commitments</b> you cannot make honestly afterwards:</p><div class='eq'>(1) <b>How big an effect is worth detecting</b> &mdash; &sect;6.2.2's &beta;<sub>max</sub> is meaningless without it, since values of &mu; arbitrarily near &mu;&#8320; drive the power to 1 &minus; a.<br><br>(2) <b>How much data you need</b> &mdash; the n = 1, 3, 100 sequence shows both error rates falling together only as n grows.</div><p style='margin-top:8px'><b>And the literature-level consequence (&sect;6.3.5(iii)):</b> thresholding p-values <b>rewards running many noisy, badly designed, low-power studies</b> instead of a few low-noise well-designed ones &mdash; because noisy studies are cheaper and the noise itself often pushes p below the threshold.</p>",
+   "r": {
+    "rot": "&alpha; protects you from crying wolf. <b>nothing</b> protects you from missing the wolf unless you compute power, and you can only compute it if you say in advance how big an effect you'd care about. do that and you learn how much data you need, before you spend the money. skip it and a null result is uninterpretable &mdash; was there nothing there, or was your test just too weak to see it? the leafhoppers and the hot sauce both came back &ldquo;no effect&rdquo; from tests that would have missed a real one about 60% of the time.",
+    "ex": "Both the book's worked power calculations land near 0.4, on experiments that look perfectly reasonable &mdash; five leaves, thirty taste tests. Underpowered is the default, not the exception.",
+    "why": "It connects &sect;6.2 to the critique in &sect;6.3. Nota Bene 6.2.1 says &alpha; and &beta; are not cleanly related, so controlling one tells you nothing about the other; and &sect;6.3.5 argues that tightening &alpha; without regard to power can make the published literature <b>less</b> reliable, not more.",
+    "math": "&alpha; bounds a = P(reject|H&#8320;) by design. &beta; = P(retain|H&#8321;) needs the effect size, &sigma; and n. Retaining H&#8320; at low &pi; is weak evidence for H&#8320;."
+   }
+  },
+  {
+   "id": "v3c6c1",
+   "s": "6.3",
+   "page": 365,
+   "q": "Why is p the wrong measure? Give the Bayes-rule argument and the two ways a small p can still leave H&#8320; probable.",
+   "a": "Using p to decide whether to reject H&#8320; commits the <b>prosecutor's fallacy</b>. What you want is P(H&#8320;|x) or P(H&#8320;|T&ge;t); what p gives you is P(T&ge;t|H&#8320;). Bayes' rule connects them:<div class='eq'>P(H&#8320; | T &ge; t) = P(T &ge; t | H&#8320;)P(H&#8320;) / P(T &ge; t) = p &middot; P(H&#8320;) / P(T &ge; t)</div><b>So even a very small p leaves two ways for P(H&#8320;|T&ge;t) to stay large:</b><div class='eq'>(1) <b>Strong prior belief in H&#8320;</b> makes P(H&#8320;) large, pushing the ratio up.<br><br>(2) <b>The denominator P(T &ge; t) can be very small.</b> With only two hypotheses, total probability gives P(T&ge;t) = P(T&ge;t|H&#8320;)P(H&#8320;) + P(T&ge;t|H&#8321;)P(H&#8321;) &mdash; so if P(H&#8321;) is small, or P(T&ge;t|H&#8321;) is small, the ratio approaches 1.</div><p style='margin-top:8px'>And in the common case of <b>several</b> plausible alternatives H&#8321;,&hellip;,H<sub>k</sub>, you need the priors on <i>all</i> of them and every P(T&ge;t|H<sub>i</sub>).</p><p><b>Conclusion.</b> A small p by itself provides <b>little justification</b> for rejecting or retaining H&#8320;. It is meaningful only alongside the priors and the conditional probabilities for every alternative &mdash; which most practitioners of NHST never consider.</p>",
+   "r": {
+    "rot": "you have P(data | boring) and you want P(boring | data). those are related by bayes, and the conversion needs two things p doesn't have: how plausible &ldquo;boring&rdquo; was to begin with, and how well the <b>alternatives</b> would have predicted your data. if the null was very likely beforehand, or if no alternative explains your result any better, then a tiny p still leaves the null standing. this is the prosecutor's fallacy with a lab coat on &mdash; and it's why p alone can't do the job people ask of it.",
+    "ex": "Compare a claim of telepathy at p = 0.01 against a claim that a new fertilizer raises yield at p = 0.01. Identical p, wildly different P(H&#8320;) &mdash; and therefore wildly different posteriors. The p-value cannot see the difference.",
+    "why": "It is the same error that &sect;5.4.4 identified in the frequentist MLE: maximizing P(D|&beta;) rather than P(&beta;|D). There the fix was a prior, giving regularization. Here the fix is also a prior &mdash; and it's the whole argument for Bayesian estimation over NHST.",
+    "math": "P(H&#8320;|T&ge;t) = p&middot;P(H&#8320;)/P(T&ge;t). Small p &nrArr; small posterior when P(H&#8320;) is large or P(T&ge;t) is small."
+   }
+  },
+  {
+   "id": "v3c6c2",
+   "s": "6.3",
+   "page": 366,
+   "q": "Why is the null hypothesis usually obviously false before you start? What does a small p actually indicate then?",
+   "a": "In a two-sample t-test H&#8320; says the difference X &minus; Y is normal with mean <b>precisely 0</b> &mdash; extremely unlikely for real quantities. Tukey: &ldquo;All we know about the world teaches us that the effects of A and B are always different&mdash;in some decimal place&mdash;for any A and B. Thus asking &lsquo;are the effects different?&rsquo; is foolish.&rdquo;<p style='margin-top:8px'>The distributional half fails too. Leafhopper counts are <b>nonnegative integers</b>, but a normal distribution gives positive probability to negatives and zero probability to any integer &mdash; so N(&mu;,&sigma;&sup2;) cannot possibly be exactly right. Poisson would be better and still not perfect.</p><p><b>And H&#8320; also requires no systematic error at all:</b> a perfectly correct statistical model including the noise; no measurement error; no reliability or validity problems; no sampling bias; no failure to randomize treatment; no missing data; no survey nonresponse; no noncompliant participants; no confounding variables; no double-blinding errors. <b>If any one of these is imperfect, H&#8320; is already known to be false</b> &mdash; and that supports H&#8321; not at all, because every one of those failures is itself an alternative hypothesis.</p><div class='eq'><b>Nota Bene 6.3.1.</b> A small p indicates there may be a problem with <b>one of the many assumptions</b> &mdash; the model, the experimental design, anything &mdash; but it does <b>not identify which one</b>.<br><br>A large p indicates only that <b>this one test</b> found no problem. Maybe there is no difference; maybe the biases and noise cancelled; maybe the test is insensitive to the actual problem.</div>",
+   "r": {
+    "rot": "the null hypothesis is never literally true. two treatments never have <b>exactly</b> the same effect &mdash; they differ somewhere in the fifteenth decimal place. and the distributional assumption is always slightly wrong too: leafhopper counts are whole numbers, and the normal distribution says whole numbers have probability zero. plus the null quietly assumes ten other things &mdash; no measurement error, no bias, no missing data, nobody dropping out. break any one and the null is already false. so a small p means &ldquo;something in this pile is wrong&rdquo; and refuses to tell you which. it could be your theory. it's more often your thermometer.",
+    "ex": "The ten-item list is the useful part. Read a small p as pointing at that list rather than at H&#8321;, and the natural next question becomes <i>which assumption broke</i> rather than <i>my hypothesis is confirmed</i>.",
+    "why": "It reframes rejection completely. Because H&#8320; is a conjunction of an effect claim and a long list of methodological claims, rejecting it says one conjunct failed &mdash; and the effect claim is usually the least likely candidate, since the others fail routinely.",
+    "math": "H&#8320; = (effect exactly 0) &and; (model exactly right) &and; (no systematic error, &times;10). Rejecting a conjunction identifies no particular conjunct."
+   }
+  },
+  {
+   "id": "v3c6c3",
+   "s": "6.3",
+   "page": 367,
+   "q": "State the multiple comparison problem and the Bonferroni correction, and prove Theorem 6.3.2.",
+   "a": "Run the soap t-test on <b>two</b> pest species instead of one. Each test still has a 5% false-rejection rate, but the chance that <b>at least one</b> of them falsely rejects is higher. With R<sub>i</sub> the event of false rejection in test i and R = R&#8321; &#8746; R&#8322;, independence gives<div class='eq'>P(R) = P(R&#8321;) + P(R&#8322;) &minus; P(R&#8321;&#8745;R&#8322;) = 2&alpha; &minus; &alpha;&sup2; &gt; &alpha;</div>and for m independent tests<div class='eq'>P(R) = 1 &minus; (1 &minus; &alpha;)<sup>m</sup>&nbsp;&nbsp;&rarr;&nbsp;&nbsp;1 as m &rarr; &infin;</div><p style='margin-top:10px'><b>The Bonferroni method:</b> replace &alpha; by &alpha;/m &mdash; reject the ith null only if its p-value is below &alpha;/m.</p><p><b>Theorem 6.3.2.</b> Under Bonferroni, P(at least one false rejection in m tests) &le; &alpha;.</p><p><b>Proof.</b> Note (6.5) is unavailable because the R<sub>i</sub> need not be independent. But <b>subadditivity needs no independence at all</b>:</p><div class='eq'>P(R) = P(&#8746;<sub>i=1</sub><sup>m</sup> R<sub>i</sub>) &le; &sum;<sub>i=1</sub><sup>m</sup> P(R<sub>i</sub>) = &sum;<sub>i=1</sub><sup>m</sup> &alpha;/m = &alpha;</div><p style='margin-top:8px'>There are more sophisticated corrections; the essential point is that <b>multiple comparisons must be thought about as a whole</b> and the tests adjusted to compensate.</p>",
+   "r": {
+    "rot": "run twenty tests at 5% and you expect one false alarm even if nothing whatsoever is going on. that's not a subtlety, it's arithmetic: 1 &minus; 0.95<sup>20</sup> is about 64%. bonferroni's fix is blunt and correct &mdash; divide your threshold by the number of tests. the proof is one line and it's beautiful, because it uses the union bound instead of independence: P(any of them) &le; sum of the individual probabilities, always, no assumptions. so it works even when your tests are tangled up with each other.",
+    "ex": "Figure 6.1 is xkcd 882 &mdash; the jelly bean comic. Twenty colours tested for a link to acne, one comes up green at p &lt; 0.05, and the newspaper headline reports the green one.",
+    "why": "The union-bound proof is the point worth keeping. Independence is exactly what you don't have when several tests share a dataset, so any correction that assumed it would be useless in practice. Bonferroni is conservative precisely because it assumes nothing.",
+    "math": "m independent tests: P(&ge;1 false rejection) = 1 &minus; (1&minus;&alpha;)<sup>m</sup>. Bonferroni: use &alpha;/m; P(R) &le; &sum;P(R<sub>i</sub>) = &alpha; by subadditivity, no independence needed."
+   }
+  },
+  {
+   "id": "v3c6c4",
+   "s": "6.3",
+   "page": 369,
+   "q": "What is p-hacking, and what is the garden of forking paths? Why is the second one harder to avoid?",
+   "a": "<b>p-hacking</b> is deliberate: run many tests on a dataset, find the one where H&#8320; is rejected, don't correct for multiple comparisons, and report that one as if it were an isolated test. Unethical, and clear enough to name.<p style='margin-top:8px'><b>The career-scale version needs no ill intent at all.</b> A scientist running 1,000 experiments in a lifetime at &alpha; = 0.05 gets roughly <b>50 false null rejections</b>. Retained nulls are considered uninteresting and go unpublished; rejections look like support for H&#8321; and get published. So about 50 of that scientist's published papers are expected to be false &mdash; by pure chance, using standard accepted practice.</p><p style='margin-top:10px'><b>The garden of forking paths</b> (Gelman and Loken), also called <b>researcher degrees of freedom</b>. A scientist performs a <b>single</b> analysis &mdash; apparently no multiple comparison &mdash; but <b>uses the data to decide which analysis to perform</b>. At many points a decision must be made about what to compare or how to analyze; each is a fork, and forks multiply.</p><div class='eq'>Letting the data choose the path &asymp; running every path and reporting one</div><p>&mdash; even though the researcher never looked at the other p-values and never consciously fished for anything. That is what makes it hard to avoid: <b>there is no moment at which you notice you are doing it.</b></p>",
+   "r": {
+    "rot": "p-hacking is cheating: try everything, report the one that worked. the forking paths problem is the same statistical crime committed by someone doing their honest best. you only ran one analysis &mdash; but you decided <b>which</b> analysis after seeing the data. which subgroup to look at, whether to drop the outlier, which covariate to include. every one of those is a fork, and letting the data pick the branch is mathematically the same as trying every branch and reporting the winner. you never saw the other p-values, so there's nothing to feel guilty about and nothing to correct.",
+    "ex": "The arithmetic on a career is the part that lands: 1,000 experiments, &alpha; = 0.05, roughly 50 false rejections, all of them publishable and none of the retained nulls publishable. No misconduct anywhere in that story.",
+    "why": "It's the strongest argument for preregistration &mdash; deciding the hypothesis and the full analysis before seeing the data, which is exactly partial solution (i) in &sect;6.3.7. Nothing else closes the forking-paths gap, because you cannot correct for comparisons you never consciously made.",
+    "math": "m implicit analyses behave like m comparisons even when only one is run, because the selection is data-dependent. Career-scale: E[false rejections] &asymp; &alpha; &times; (number of experiments)."
+   }
+  },
+  {
+   "id": "v3c6c5",
+   "s": "6.3",
+   "page": 370,
+   "q": "Why is thresholding p problematic at any &alpha;? Summarize the fallacies and the partial solutions.",
+   "a": "Some propose tightening &alpha; from 0.05 to 0.005; particle physics uses 0.003 for &ldquo;evidence&rdquo; and 0.0000003 for &ldquo;discovery.&rdquo; <b>But any threshold has three problems:</b><div class='eq'>(i) <b>p is continuous.</b> A threshold embraces values just under and rejects values just over, falsely dichotomizing evidence &mdash; two near-identical results labelled &ldquo;significant&rdquo; and &ldquo;not significant.&rdquo;<br><br>(ii) <b>The choice is arbitrary.</b> Fisher advocated 5% because it was about two standard deviations and therefore &ldquo;convenient.&rdquo; Convenience is a poor basis for accepting a hypothesis.<br><br>(iii) <b>It rewards bad studies.</b> Noisy, low-power studies are cheap, and the noise often pushes p under the threshold. Tightening &alpha; can therefore <b>reduce</b> the reliability of the literature &mdash; well-designed studies may just miss, while many more cheap noisy ones are run and some always squeak through.</div><p style='margin-top:8px'><b>&sect;6.3.6 &mdash; six standard fallacies:</b> taking low p as support for H&#8321;; dichotomizing reality; confusing statistical with practical significance (ignoring effect size); taking low p as evidence of causality; ignoring the cost of a wrong decision; ignoring prior knowledge.</p><p><b>&sect;6.3.7 &mdash; five partial solutions:</b> decide the hypothesis before examining the data; account for the other explanations of small or large p; consider prior knowledge, mathematical and common-sense; remember p is continuous; <b>report all the data</b>, not only the significant results.</p><p style='margin-top:8px'>Gossett &mdash; who discovered the t-distribution &mdash; objected to Fisher's use of p-values as a decision procedure, holding that such decisions must weigh &ldquo;the advantage to be gained by following the result of the experiment&rdquo; against the cost of the new method and of each experiment.</p>",
+   "r": {
+    "rot": "any cutoff is a lie about a continuous number: p = 0.049 and p = 0.051 are the same result and get opposite labels. the cutoff is also arbitrary &mdash; fisher picked 5% because it was roughly two standard deviations and convenient. and the perverse bit: making the threshold <b>stricter</b> can make published science <b>worse</b>, because careful expensive studies land just outside while cheap noisy ones are run in bulk and some always get lucky. the fixes are unglamorous &mdash; decide your hypothesis first, weigh the priors, remember p is a number and not a verdict, and publish everything.",
+    "ex": "The effect-size fallacy is the one that shows up most in practice: a tiny effect measured on a huge sample gives a tiny p and no importance whatsoever. Statistical significance says an effect is detectable, never that it matters.",
+    "why": "Gossett's framing is what the whole chapter has been circling. The right question was never &ldquo;is p below a line&rdquo; but &ldquo;what does acting on this buy me, and what does it cost&rdquo; &mdash; which is a decision-theory question with a loss function, exactly the framing Chapter 0 set up.",
+    "math": "Fisher's 5% &asymp; 2&sigma;, chosen for convenience. Smaller &alpha; does not imply a more reliable literature, because study quality and &alpha; are not independent."
+   }
+  }
+ ],
+ "exMarks": [
+  {
+   "page": 373,
+   "y": 0.279
+  },
+  {
+   "page": 374,
+   "y": 0.39
+  },
+  {
+   "page": 375,
+   "y": 0.5
+  },
+  {
+   "page": 377,
+   "y": 0.679
+  }
+ ]
+}

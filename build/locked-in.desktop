@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=LOCKED IN
+Comment=Study environment for ACME Volumes 3 and 4
+Exec=/home/adam/Projects/locked-in/node_modules/.bin/electron /home/adam/Projects/locked-in
+Path=/home/adam/Projects/locked-in
+Icon=/home/adam/Projects/locked-in/build/icon-512.png
+Terminal=false
+Categories=Education;Science;Math;
+StartupWMClass=locked-in

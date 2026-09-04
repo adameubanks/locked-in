@@ -1,0 +1,536 @@
+{
+ "_comment": "Hand-checked headwords. Keys are glossary entry ids; values are the terms that should link to that entry. Auto-derived headwords are replaced by these when present.",
+ "vol3-1.1.7": [
+  "axioms of probability",
+  "finite additivity"
+ ],
+ "vol3-1.1.10": [
+  "addition rule"
+ ],
+ "vol3-1.1.11": [
+  "law of total probability",
+  "total probability"
+ ],
+ "vol3-1.2.1": [
+  "conditional probability"
+ ],
+ "vol3-1.2.2": [
+  "product rule",
+  "Bayes' theorem",
+  "Bayes theorem",
+  "Bayes' rule"
+ ],
+ "vol3-1.2.3": [
+  "conditioning update",
+  "conditioning update rule"
+ ],
+ "vol3-1.3.1": [
+  "Jeffrey's rule",
+  "invariance"
+ ],
+ "vol3-1.3.5": [
+  "Dutch book"
+ ],
+ "vol3-1.3.6": [
+  "Ramsey",
+  "de Finetti"
+ ],
+ "vol3-1.4.2": [
+  "discrete probability space",
+  "probability space"
+ ],
+ "vol3-1.4.11": [
+  "uniformly distributed"
+ ],
+ "vol3-1.4.19": [
+  "independent",
+  "independence"
+ ],
+ "vol3-1.4.23": [
+  "conditionally independent",
+  "conditional independence"
+ ],
+ "vol3-1.5.1": [
+  "random variable"
+ ],
+ "vol3-1.5.6": [
+  "p.m.f.",
+  "probability mass function",
+  "distribution"
+ ],
+ "vol3-1.5.11": [
+  "Bernoulli"
+ ],
+ "vol3-1.5.16": [
+  "categorical"
+ ],
+ "vol3-1.6.1": [
+  "expected value",
+  "expectation"
+ ],
+ "vol3-1.6.9": [
+  "independent"
+ ],
+ "vol3-1.6.12": [
+  "indicator random variable",
+  "indicator"
+ ],
+ "vol3-1.7.3": [
+  "conditional p.m.f."
+ ],
+ "vol3-1.7.10": [
+  "conditional expectation"
+ ],
+ "vol3-1.7.16": [
+  "law of total expectation",
+  "tower property"
+ ],
+ "vol3-1.7.21": [
+  "conditionally independent"
+ ],
+ "vol3-1.8.1": [
+  "variance"
+ ],
+ "vol3-1.8.5": [
+  "covariance"
+ ],
+ "vol3-1.8.10": [
+  "covariance matrix"
+ ],
+ "vol3-1.8.19": [
+  "conditional variance"
+ ],
+ "vol3-1.8.21": [
+  "law of total variance"
+ ],
+ "vol3-1.9.2": [
+  "Markov's inequality",
+  "Markov inequality"
+ ],
+ "vol3-1.9.5": [
+  "Chebyshev's inequality",
+  "Chebyshev"
+ ],
+ "vol3-2.1.1": [
+  "average codeword length",
+  "codeword length"
+ ],
+ "vol3-2.1.4": [
+  "Kraft's inequality",
+  "Kraft"
+ ],
+ "vol3-2.1.5": [
+  "Kraft-McMillan"
+ ],
+ "vol3-2.1.8": [
+  "entropy",
+  "information content"
+ ],
+ "vol3-2.1.13": [
+  "source coding theorem",
+  "Shannon's source coding theorem"
+ ],
+ "vol3-2.2.1": [
+  "cross entropy"
+ ],
+ "vol3-2.2.5": [
+  "Gibbs' inequality",
+  "Gibbs inequality"
+ ],
+ "vol3-2.2.6": [
+  "relative entropy",
+  "KL divergence",
+  "Kullback-Leibler"
+ ],
+ "vol3-2.2.14": [
+  "mutual information"
+ ],
+ "vol3-2.5.3": [
+  "c.d.f.",
+  "cumulative distribution function"
+ ],
+ "vol3-2.5.6": [
+  "continuous random variable",
+  "p.d.f.",
+  "probability density function"
+ ],
+ "vol3-2.6.6": [
+  "differential entropy"
+ ],
+ "vol3-2.6.10": [
+  "Gibbs' inequality"
+ ],
+ "vol3-2.7.6": [
+  "beta distribution",
+  "Beta"
+ ],
+ "vol3-2.7.11": [
+  "Dirichlet distribution",
+  "Dirichlet"
+ ],
+ "vol3-2.7.14": [
+  "gamma distribution",
+  "Gamma"
+ ],
+ "vol3-2.8.1": [
+  "hypergeometric distribution",
+  "hypergeometric"
+ ],
+ "vol3-2.9.3": [
+  "universality of the uniform",
+  "inverse transform sampling"
+ ],
+ "vol4-1.3.1": [
+  "commensurable",
+  "incommensurable"
+ ],
+ "vol4-1.3.3": [
+  "dimensionless"
+ ],
+ "vol4-1.4.1": [
+  "Buckingham",
+  "Buckingham theorem"
+ ],
+ "vol4-1.4.2": [
+  "locally constant"
+ ],
+ "vol4-2.1.1": [
+  "ordinary differential equation",
+  "ODE"
+ ],
+ "vol4-2.1.3": [
+  "system of ODEs"
+ ],
+ "vol4-2.1.9": [
+  "autonomous",
+  "nonautonomous",
+  "vector field",
+  "homogeneous"
+ ],
+ "vol4-2.1.11": [
+  "initial value problem",
+  "IVP"
+ ],
+ "vol4-2.2.1": [
+  "Banach space"
+ ],
+ "vol4-2.2.4": [
+  "uniformly Lipschitz",
+  "Lipschitz",
+  "Lipschitz constant"
+ ],
+ "vol4-2.3.1": [
+  "Picard-Lindelof",
+  "Picard",
+  "Cauchy-Lipschitz"
+ ],
+ "vol4-2.3.6": [
+  "unique extension"
+ ],
+ "vol4-2.3.7": [
+  "well posed",
+  "well-posed"
+ ],
+ "vol4-2.3.8": [
+  "finite time blowup",
+  "finite-time blowup",
+  "blowup"
+ ],
+ "vol4-2.3.10": [
+  "Gronwall's inequality",
+  "Gronwall"
+ ],
+ "vol4-3.1.1": [
+  "global existence for linear systems"
+ ],
+ "vol4-3.1.3": [
+  "fundamental matrix",
+  "principal fundamental matrix"
+ ],
+ "vol4-3.1.4": [
+  "independence of the fundamental matrix columns"
+ ],
+ "vol4-3.1.8": [
+  "matrix exponential"
+ ],
+ "vol4-3.1.9": [
+  "principal fundamental solution of an autonomous system"
+ ],
+ "vol4-3.2.2": [
+  "spectral resolution formula",
+  "resolvent"
+ ],
+ "vol4-3.2.4": [
+  "eigenprojection",
+  "eigennilpotent"
+ ],
+ "vol4-3.2.5": [
+  "properties of eigenprojections"
+ ],
+ "vol4-3.2.6": [
+  "spectral decomposition"
+ ],
+ "vol4-3.2.7": [
+  "spectral mapping theorem"
+ ],
+ "vol4-3.2.8": [
+  "mapping the spectral decomposition"
+ ],
+ "vol4-3.2.9": [
+  "spectral formula for the matrix exponential"
+ ],
+ "vol4-3.3.1": [
+  "commuting coefficient matrices"
+ ],
+ "vol4-3.3.3": [
+  "Abel-Jacobi-Liouville formula",
+  "AJL formula",
+  "Wronskian"
+ ],
+ "vol4-3.3.9": [
+  "Jacobi's formula"
+ ],
+ "vol4-3.4.1": [
+  "global existence for inhomogeneous linear systems"
+ ],
+ "vol4-3.4.2": [
+  "Duhamel's principle",
+  "Duhamel"
+ ],
+ "vol4-3.4.3": [
+  "variation of parameters"
+ ],
+ "vol4-4.2.5": [
+  "global error",
+  "local truncation error",
+  "LTE",
+  "one-step error",
+  "order of a method"
+ ],
+ "vol4-4.2.11": [
+  "order of backward Euler and leapfrog"
+ ],
+ "vol4-4.2.12": [
+  "global error recursions"
+ ],
+ "vol4-4.3.1": [
+  "convergence of a finite difference method"
+ ],
+ "vol4-4.3.2": [
+  "convergence of forward Euler"
+ ],
+ "vol4-4.3.4": [
+  "convergence of the trapezoidal method"
+ ],
+ "vol4-4.3.5": [
+  "convergence of backward Euler"
+ ],
+ "vol4-4.3.10": [
+  "absolute stability region of backward Euler"
+ ],
+ "vol4-4.4.5": [
+  "absolute stability of Taylor series methods"
+ ],
+ "vol3-3.1.1": [
+  "sample mode",
+  "sample median",
+  "quantile function",
+  "interquartile range",
+  "IQR"
+ ],
+ "vol3-3.1.2": [
+  "histogram",
+  "bin width"
+ ],
+ "vol3-3.1.4": [
+  "kernel"
+ ],
+ "vol3-3.1.7": [
+  "kernel density estimator",
+  "KDE",
+  "bandwidth"
+ ],
+ "vol3-3.2.2": [
+  "Hoeffding",
+  "Hoeffding's inequality"
+ ],
+ "vol3-3.2.3": [
+  "Cramér's theorem",
+  "Cramer's theorem"
+ ],
+ "vol3-3.2.6": [
+  "Bernstein"
+ ],
+ "vol3-3.3.1": [
+  "Condorcet",
+  "Condorcet's theorem"
+ ],
+ "vol3-3.3.4": [
+  "Cramér"
+ ],
+ "vol3-3.3.5": [
+  "strength",
+  "average correlation"
+ ],
+ "vol3-3.3.6": [
+  "Breiman",
+  "generalization error"
+ ],
+ "vol3-3.7.2": [
+  "leaf weights",
+  "optimal leaf weight"
+ ],
+ "vol3-4.1.1": [
+  "converges in probability",
+  "convergence in probability"
+ ],
+ "vol3-4.1.5": [
+  "continuous mapping theorem"
+ ],
+ "vol3-4.1.6": [
+  "almost surely",
+  "pointwise almost surely",
+  "almost sure convergence"
+ ],
+ "vol3-4.1.9": [
+  "strong law of large numbers"
+ ],
+ "vol3-4.1.12": [
+  "converges in distribution",
+  "convergence in distribution"
+ ],
+ "vol3-4.1.18": [
+  "Slutsky",
+  "Slutsky's theorem"
+ ],
+ "vol3-4.2.1": [
+  "moment",
+  "central moments",
+  "skew"
+ ],
+ "vol3-4.2.2": [
+  "characteristic function"
+ ],
+ "vol3-4.2.14": [
+  "Fourier inversion"
+ ],
+ "vol3-4.2.16": [
+  "Lévy continuity",
+  "Levy continuity"
+ ],
+ "vol3-4.3.1": [
+  "central limit theorem"
+ ],
+ "vol3-4.4.1": [
+  "sample mean",
+  "biased sample variance"
+ ],
+ "vol3-4.4.3": [
+  "bias",
+  "unbiased",
+  "asymptotically unbiased"
+ ],
+ "vol3-4.4.6": [
+  "unbiased sample variance"
+ ],
+ "vol3-4.4.8": [
+  "standard error"
+ ],
+ "vol3-4.4.11": [
+  "mean squared error",
+  "MSE"
+ ],
+ "vol3-4.4.13": [
+  "consistent",
+  "consistency"
+ ],
+ "vol3-4.5.1": [
+  "method of moments"
+ ],
+ "vol3-4.5.5": [
+  "likelihood",
+  "maximum likelihood estimate",
+  "MLE",
+  "maximum likelihood estimator"
+ ],
+ "vol3-4.5.10": [
+  "invariance property"
+ ],
+ "vol3-4.5.11": [
+  "asymptotically normal"
+ ],
+ "vol3-4.6.8": [
+  "MAP",
+  "maximum a posteriori"
+ ],
+ "vol3-5.1.1": [
+  "fitted values",
+  "predicted values",
+  "residuals",
+  "residual sum of squares"
+ ],
+ "vol3-5.2.1": [
+  "residual properties"
+ ],
+ "vol3-5.2.3": [
+  "unbiased estimator",
+  "unbiasedness of OLS"
+ ],
+ "vol3-5.2.4": [
+  "Gauss-Markov",
+  "Gauss–Markov",
+  "MVLUE",
+  "BLUE",
+  "best linear unbiased estimator",
+  "generalized least squares"
+ ],
+ "vol3-5.2.5": [
+  "minimum mean squared error"
+ ],
+ "vol3-5.2.6": [
+  "OLS is the MLE"
+ ],
+ "vol3-5.2.7": [
+  "consistency of OLS"
+ ],
+ "vol3-5.3.2": [
+  "coefficient of determination",
+  "R2",
+  "R²"
+ ],
+ "vol3-5.3.4": [
+  "Akaike information criterion",
+  "AIC"
+ ],
+ "vol3-5.3.7": [
+  "Bayesian information criterion",
+  "BIC"
+ ],
+ "vol3-5.4.7": [
+  "rank-deficient regularization"
+ ],
+ "vol3-5.6.2": [
+  "softmax",
+  "softmax function"
+ ],
+ "vol3-5.6.4": [
+  "categorical cross entropy",
+  "categorical cross-entropy loss"
+ ],
+ "vol3-5.6.6": [
+  "MLE for multinomial logistic regression"
+ ],
+ "vol3-5.6.9": [
+  "AIC and BIC for logistic regression"
+ ],
+ "vol3-5.6.10": [
+  "AIC and BIC for binary logistic regression"
+ ],
+ "vol3-5.8.1": [
+  "exponential family classifier"
+ ],
+ "vol3-6.3.2": [
+  "Bonferroni method",
+  "Bonferroni correction"
+ ]
+}

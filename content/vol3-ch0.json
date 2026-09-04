@@ -1,0 +1,129 @@
+{
+ "volume": "vol3",
+ "chapter": "0",
+ "file": "vol3-ch0.json",
+ "title": "Modeling With Uncertainty and Data",
+ "epigraph": {
+  "text": "All models are wrong. Some are useful.",
+  "by": "George Box"
+ },
+ "sections": [
+  {
+   "id": "0.1",
+   "name": "Modeling With Uncertainty and Data",
+   "from": 1,
+   "to": 8,
+   "exFrom": {
+    "page": 8,
+    "y": 0.6379
+   },
+   "exTo": {
+    "page": 10,
+    "y": 1.0
+   }
+  }
+ ],
+ "exercises": {
+  "from": 8,
+  "to": 10
+ },
+ "cards": [
+  {
+   "id": "v3c0a1",
+   "s": "0.1",
+   "page": 1,
+   "q": "What is the difference between deductive and inductive reasoning, and what does Nota Bene 0.1.1 claim about the relation between them?",
+   "a": "<b>Deductive</b> reasoning is the logic of formal proof. It is powerful but it demands <b>perfect knowledge of every part of the argument</b> &mdash; the syllogism <i>all men are mortal; Socrates is a man; therefore Socrates is mortal</i> only works if you are sure of both premises.<p style='margin-top:8px'><b>Inductive</b> reasoning is what you need when you are <i>not</i> sure &mdash; when most men seem to be mortal rather than all. It uses probability to quantify how sure you are of each fact and then draws conclusions from that.</p><div class='eq'>Nota Bene 0.1.1 &mdash; Any deductive reasoning argument can be expressed in terms of probabilistic inductive reasoning.</div>So the containment goes one way: deduction sits <b>inside</b> induction as the special case where every probability is 0 or 1. Induction is the larger system, not a degraded substitute for the smaller one.",
+   "r": {
+    "rot": "deduction is the math-class kind of arguing: if the premises are perfectly true, the conclusion is perfectly true. problem &mdash; you almost never have perfectly true premises. induction is arguing with numbers attached: <i>probably</i> true, and here's how probably. the punchline of the whole book is that deduction isn't a <i>different</i> thing from induction. it's just induction with all the probabilities pinned at 0 and 1. so you never lose anything by switching to probability, and you gain every case where you're not certain.",
+    "ex": "Chapter 1 makes this concrete: &sect;1.1 shows the deductive syllogisms (modus ponens, modus tollens) reappearing as limiting cases of probabilistic rules, and the weak syllogisms &mdash; the ones deduction has to throw away &mdash; still carry information once you have probability.",
+    "why": "It is the reason the book opens with probability rather than statistics. If deduction were a separate tool you would need both; because it is a special case, you can develop <b>one</b> system and get the certain case for free. It also tells you where to look when an argument fails &mdash; usually a premise you treated as certain that wasn't.",
+    "math": "Deduction = induction restricted to P &isin; {0,1}. The containment is strict: induction covers cases deduction cannot express."
+   }
+  },
+  {
+   "id": "v3c0a2",
+   "s": "0.1",
+   "page": 2,
+   "q": "Why is every model necessarily incomplete, and why is that not entirely a bad thing?",
+   "a": "<b>Two reasons no model can be complete.</b><div class='eq'>(1) Our information about the universe is incomplete.<br>(2) Even with perfect information, the world is too complex to describe in full detail.</div>The book's footnotes make both concrete: Heisenberg forbids knowing a particle's position and velocity together, and every electron's field touches every other electron, so tracking all of them is not merely hard but impossible. Every model must therefore <b>approximate</b> some aspects of reality rather than track them all.<p style='margin-top:10px'><b>The map argument.</b> A city map is a very rough approximation &mdash; and the fact that it omits the buildings, cars, people, noise, and lights is exactly what makes it useful when you are lost. The full reality would overwhelm you and <i>interfere</i> with navigating. The imperfection is part of the utility.</p>",
+   "r": {
+    "rot": "no model is ever the whole truth, for two reasons: you can't know everything, and even if you could you couldn't write it all down. so approximation isn't a failure mode, it's the only mode. and here's the part people miss &mdash; leaving stuff out is often <i>why</i> the model works. a map that showed every pedestrian and every traffic light would be useless for finding your way. you want the thing that drops the right details, not the thing that drops the fewest.",
+    "ex": "The map of a city. Also the flight simulator from the Preface: gravity, aerodynamics, and thrust are mimicked well enough that pilots learn to fly and make their mistakes without paying with their lives. It is nowhere near reality, and it saves lives anyway.",
+    "why": "It sets the standard by which you judge a model: not <i>is it true</i> &mdash; nothing is &mdash; but <b>is it useful for this purpose</b>. That is Box's epigraph, and it is the question every later criterion in the book (test error, AIC, BIC, cross validation) is a computable proxy for.",
+    "math": "Incompleteness is structural, not a defect of effort. Useful &ne; complete; sometimes useful <i>requires</i> incomplete."
+   }
+  },
+  {
+   "id": "v3c0a3",
+   "s": "0.1",
+   "page": 3,
+   "q": "What five things does modeling with probability let you do, even with imperfect information?",
+   "a": "<b>(i) Decide whether something is true or false</b>, and how confident to be. <i>Is Socrates mortal? Is this photo a dog? Given these tests, do I have pancreatic cancer?</i><p style='margin-top:6px'><b>(ii) Predict or estimate values and functions</b> &mdash; the future (<i>tomorrow's temperature</i>), a dependence (<i>how salary depends on education</i>), or a counterfactual (<i>would more vegetables have prevented my heart attack?</i>).</p><p><b>(iii) Identify the optimal decision or action</b>. <i>Should I take chemotherapy? How much fertilizer maximizes crop value?</i></p><p><b>(iv) Generate new examples</b> that represent the randomness in a system &mdash; coin-flip sequences, an economy's response to a tariff, or generative AI producing images and text.</p><p><b>(v) Make optimal meta-decisions</b> &mdash; given several candidate models for the same data, choose the one that best explains it.</p>",
+   "r": {
+    "rot": "five jobs probability does for you. <b>decide</b> if something's true and how sure you are. <b>predict</b> a number you haven't seen. <b>choose</b> the best action. <b>generate</b> fake-but-realistic examples. and <b>pick between models</b> &mdash; the meta one, choosing which model to even use. that last one is sneaky-important: it's the only one that's about your own reasoning rather than about the world, and it's the whole of chapter 5's model selection.",
+    "ex": "Item (v) is what &sect;5.3 spends sixteen pages on: cross validation, AIC, and BIC are three different computable answers to <i>which of these models should I use</i>. Item (ii)'s counterfactual clause is what causal inference exists for &mdash; conditioning alone can't answer it.",
+    "why": "It's a map of the book. (i) and (ii) are chapters 1&ndash;2 and 5, (iii) is decision theory and optimization, (iv) is sampling and simulation, (v) is model selection. If you can say which of the five a problem is asking for, you know which machinery to reach for.",
+    "math": "Decide &middot; predict &middot; act &middot; generate &middot; choose-a-model. The fifth is one level up from the other four."
+   }
+  },
+  {
+   "id": "v3c0a4",
+   "s": "0.1",
+   "page": 4,
+   "q": "Distinguish supervised, unsupervised, and reinforcement learning. What separates a classification problem from a regression problem?",
+   "a": "<b>Supervised.</b> Start with labelled pairs D = {(x&#8321;,y&#8321;),&hellip;,(x<sub>N</sub>,y<sub>N</sub>)}, inputs x<sub>i</sub> &isin; X and labels y<sub>i</sub> &isin; Y. Assume some f : X &rarr; Y exists and find an approximation f&#770;, judged by comparing f(x<sub>i</sub>) = y<sub>i</sub> to f&#770;(x<sub>i</sub>).<div class='eq'>Y discrete &rarr; <b>classification</b><br>Y = R<sup>n</sup> (image of f&#770; not discrete) &rarr; <b>regression</b></div><p><b>Unsupervised</b> (pattern recognition). Data {x&#8321;,&hellip;,x<sub>N</sub>} with <b>no labels</b>; the goal is structure. Clustering, dimension reduction, imputing missing data (recommender systems), training LLMs to continue text.</p><p><b>Reinforcement.</b> An actor makes consecutive decisions where each choice constrains the next, with partial rewards along the way. The goal is an optimal <b>policy</b>, not a single answer. Markov decision processes are the underlying probabilistic model.</p>",
+   "r": {
+    "rot": "three flavours. <b>supervised</b>: you have the answers for your training data, learn to reproduce them. discrete answers = classification (spam / not spam), continuous answers = regression (what price?). <b>unsupervised</b>: no answers at all, just find structure &mdash; group these, compress these, fill in the holes. <b>reinforcement</b>: you act, the world reacts, you act again, and you only find out later whether it worked. you're learning a strategy, not a label.",
+    "ex": "Classification: spam filtering, image recognition, fraud detection. Regression: predicting ER admissions in a period, the cost of a policy change, webpage visitors. Unsupervised: filling in movie ratings a person never gave, then recommending the ones it estimates highly.",
+    "why": "It tells you what you are even allowed to optimize. Without labels, you cannot compute a loss against the truth, so the whole apparatus of &sect;0.1.6 &mdash; loss, expected loss, test set &mdash; only applies to the supervised case. Chapter 5 is entirely supervised: regression for continuous Y, logistic regression and naïve Bayes for discrete Y.",
+    "math": "Supervised needs (x,y); unsupervised needs only x; reinforcement needs a sequence of (state, action, reward). Classification vs regression is a statement about Y, not about the method."
+   }
+  },
+  {
+   "id": "v3c0a5",
+   "s": "0.1",
+   "page": 5,
+   "q": "Why is conditioning not enough to answer a causal question? Use the yellow-fingernails example.",
+   "a": "Conditioning answers <i>how would my probability for X change if I <b>observed</b> Y?</i> Blitzstein: &ldquo;conditioning is the soul of statistics.&rdquo; But two other questions look similar and are not the same:<div class='eq'>What if I <b>DO</b> Y, rather than merely observe it?<br>What <b>would have happened</b> if I had done Y?</div><p><b>The example.</b> People with yellow fingernails are far more likely to develop lung cancer &mdash; a true statement about conditional probability. But dyeing someone's nails yellow does not raise their cancer risk. Yellow nails are not a cause; smoking causes both the nails and the cancer.</p><p style='margin-top:8px'>You can <b>predict</b> cancer from nail colour with conditioning alone. You cannot <b>act</b> on it, and you cannot understand it. Causal inference requires extra structure &mdash; explicit assumptions about which things could be causes of X and which cannot &mdash; layered on top of probability.</p>",
+   "r": {
+    "rot": "conditioning tells you what to expect when you <i>see</i> something. it does not tell you what happens when you <i>do</i> something. yellow fingernails predict lung cancer, no argument. paint someone's nails yellow and their lungs don't care. the nails and the cancer share a parent &mdash; smoking &mdash; and seeing the kid tells you about the parent, but repainting the kid doesn't change the parent. probability alone can't tell those two situations apart; you have to hand it extra assumptions about what could possibly cause what.",
+    "ex": "Yellow fingernails and lung cancer, with smoking as the common cause. Exercise 0.4 is a whole page of these: ice cream sales and crime rates, margarine consumption and the Maine divorce rate &mdash; sort each into <i>A causes B</i>, <i>B causes A</i>, <i>C causes both</i>, or pure chance.",
+    "why": "It is the reason &ldquo;correlation is not causation&rdquo; is a mathematical claim and not just a slogan. &sect;5.3.7 shows the same trap inside a fitted regression: &beta;<sub>i</sub> &ne; 0 licenses prediction from X<sub>i</sub>, never intervention on it &mdash; and the equation can be rearranged to put any variable on the left.",
+    "math": "P(X | Y) &ne; P(X | do(Y)). Conditioning is symmetric in a way causation is not; you need a causal model to break the symmetry."
+   }
+  },
+  {
+   "id": "v3c0a6",
+   "s": "0.1",
+   "page": 6,
+   "q": "How do we evaluate a model? Define the loss function, the two common choices, and explain why we need a test set.",
+   "a": "Evaluate a model by the <b>consequences of using it</b> &mdash; financial cost, health impact, or information gained. For supervised learning with training data D = {(x<sub>i</sub>,y<sub>i</sub>)}, minimize a loss L over D:<div class='eq'>f&#770; = argmin<sub>f</sub> (1/N) &sum;<sub>i</sub> L(f(x<sub>i</sub>), y<sub>i</sub>)</div><b>Classification</b> &mdash; the 0/1 loss L(f,x,y) = &delta;<sub>f(x)&ne;y</sub>, whose average is the <b>misclassification rate</b>.<br><b>Regression</b> &mdash; the squared error L(f,x,y) = |f(x) &minus; y|&sup2;, whose average is the <b>mean squared error</b>.<p style='margin-top:10px'><b>Why a test set.</b> The real goal is the <b>expected loss</b> E[L(f&#770;,x,y)] on new data, which is uncomputable. A classifier can have zero training misclassifications and misclassify every x outside the training set. So partition D into disjoint D<sub>train</sub> and D<sub>test</sub>, fit on the first, and estimate expected loss on the second.</p>",
+   "r": {
+    "rot": "you score a model by what it costs you to be wrong &mdash; that's the loss function. two standard ones: for classification, count the mistakes; for regression, square the misses. then the trap: the score on the data you trained on is meaningless, because a model can memorize. so you hold some data back, never let the model see it, and score on that. the number you care about is the score on data the model has never met.",
+    "ex": "The scientific analogue of a test set is a <b>replication study</b> &mdash; reproducing the original experiment. Those are expensive and journals don't like publishing them, so they happen far less than they should; in machine learning, testing on held-out data has become simply expected. That difference is responsible for much of ML's success over the last thirty years.",
+    "why": "It's the foundation for everything in &sect;5.3. Cross validation is this idea stretched to reuse scarce data; AIC and BIC are what you fall back on when you can't afford the split at all; and Nota Bene 5.3.3 is this same warning about R&sup2; reported on a training set.",
+    "math": "Want E<sub>X,Y</sub>[L(Y, f&#770;(X))]; can only compute (1/m)&sum; L(y'<sub>i</sub>, f&#770;(x'<sub>i</sub>)) on held-out data. Training loss is a <b>biased</b> estimate of it."
+   }
+  },
+  {
+   "id": "v3c0a7",
+   "s": "0.1",
+   "page": 7,
+   "q": "State the no-free-lunch theorem. Why isn't it fatal for machine learning?",
+   "a": "<b>Wolpert and Macready.</b> No matter how you measure performance, an algorithm that does well on one set of optimization problems must do correspondingly <b>poorly</b> on others.<div class='eq'>Let PRS = purely random search (sample the next point at random).<br>For any set S on which algorithm A beats PRS in expectation,<br>A is correspondingly <b>worse</b> than PRS on the complement S<sup>c</sup>.</div><b>Why it doesn't sink the field.</b> We don't care about <i>all</i> optimization problems &mdash; only the tiny, interesting subset that corresponds to real questions.<p style='margin-top:8px'>The book counts them. Grayscale images with m pixels and v values give v<sup>m</sup> images, and each binary classification is a partition, so there are 2<sup>v<sup>m</sup></sup> classification problems. For a 28&times;28 image with 256 grey levels that is 2<sup>256<sup>784</sup></sup> &ge; 10<sup>10<sup>1887</sup></sup> problems &mdash; against roughly 10<sup>80</sup> particles in the observable universe. Almost all of them are questions nobody would ever ask (<i>does this image have exactly 747 black and 37 white pixels?</i>). It is entirely reasonable that a method can be bad on the random ones and good on the ones humans care about.</p>",
+   "r": {
+    "rot": "there is no best algorithm. any method that wins somewhere loses somewhere else by exactly as much &mdash; that's the theorem, and it's not a maybe. so why does anything work? because the space of <i>possible</i> problems is unimaginably bigger than the space of problems anyone would ever pose. almost every conceivable image-classification question is gibberish. your method is allowed to be terrible at all of those. it only has to be good at <i>is this a tumour</i> and <i>is this a cat</i>.",
+    "ex": "The hype cycle it explains: methods get promoted as best, fail to live up to it, and funding collapses &mdash; there have been at least two AI winters on exactly this pattern. No-free-lunch says the cycle is structural, not bad luck.",
+    "why": "It changes what a benchmark result means. &ldquo;This method is state of the art&rdquo; is never a claim about all problems, only about the distribution the benchmark samples. It is also the honest reason to care about assumptions: a method earns its performance by encoding something true about your problem class, which is exactly what &sect;5.8.3 says about generative vs discriminative models.",
+    "math": "For all S: E[perf(A) | S] &gt; E[perf(PRS) | S] &rArr; E[perf(A) | S<sup>c</sup>] &lt; E[perf(PRS) | S<sup>c</sup>]. Averaged over all problems, every algorithm ties."
+   }
+  }
+ ],
+ "exMarks": [
+  {
+   "page": 8,
+   "y": 0.6379
+  }
+ ]
+}

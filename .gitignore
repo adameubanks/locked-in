@@ -1,0 +1,17 @@
+# Electron + deps: 500 MB, all reproducible from package-lock.json
+node_modules/
+
+# Editor and OS noise
+.DS_Store
+*.swp
+*~
+
+# Never commit a key. The app reads ~/.locked-in/config.json, which lives
+# outside the repo, but keep a stray copy from sneaking in.
+config.json
+state.json
+*.tmp
+
+# The book's own text: definitions/theorems extracted from the PDFs.
+# Rebuild locally with `python3 build/extract_glossary.py`.
+content/glossary.json

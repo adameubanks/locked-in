@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self' file:; worker-src 'self' blob:;">
+<title>LOCKED IN</title>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<div id="bar">
+  <img id="mark" src="mark.svg" alt="" width="17" height="17">
+  <span class="wordmark">LOCKED<span class="i">&nbsp;IN</span></span>
+  <span id="context" class="context">&mdash;</span>
+
+  <span class="bar-right">
+    <button id="btn-search" class="chip" title="Search both volumes (/)">search</button>
+    <button id="btn-ex" class="chip" title="Exercises pane, follows your section (E)">exercises</button>
+    <button id="btn-noise" class="chip" title="Brown noise (N)"><span class="wave"></span>noise</button>
+    <button id="btn-dim"   class="chip" title="Dim the page (D)">dim</button>
+    <button id="btn-zen" class="lock" aria-pressed="false" title="Fullscreen (L, Esc to exit)">lock in</button>
+  </span>
+</div>
+
+<div id="split">
+  <section id="pane-pdf">
+    <div id="readers"></div>
+    <div id="sel-pop" hidden><button id="sel-ask">ask ai</button></div>
+  </section>
+
+  <div id="grip" title="Drag to resize"></div>
+
+  <section id="pane-study">
+    <nav id="modes"></nav>
+    <div id="study"></div>
+    <div id="exgrip" hidden title="Drag to resize"></div>
+    <div id="expane" hidden></div>
+  </section>
+</div>
+
+<div id="termpop" hidden>
+  <div class="tp-head">
+    <span id="tp-kind" class="tp-kind"></span>
+    <span id="tp-loc" class="tp-loc"></span>
+    <button id="tp-close" class="tp-x" title="Close">&times;</button>
+  </div>
+  <div id="tp-body" class="tp-body"></div>
+  <div class="tp-foot">
+    <button id="tp-goto" class="tp-goto">Open in reader</button>
+  </div>
+</div>
+
+<div id="ask" hidden>
+  <div class="ak-box">
+    <div class="ak-head">
+      <span class="ak-title">Ask about this passage</span>
+      <span id="ak-loc" class="ak-loc"></span>
+      <button id="ak-close" class="ak-x" title="Close (Esc)">&times;</button>
+    </div>
+    <div id="ak-warn" class="ak-warn" hidden></div>
+    <div id="ak-src" class="ak-src"></div>
+    <div id="ak-thread" class="ak-thread"></div>
+    <div class="ak-foot">
+      <textarea id="ak-q" rows="2" placeholder="What don't you get about this?"
+                aria-label="Your question"></textarea>
+      <button id="ak-send" class="btn">Ask</button>
+      <button id="ak-stop" class="btn ghost" hidden>Stop</button>
+    </div>
+  </div>
+</div>
+
+<div id="search" hidden>
+  <div class="sb-box">
+    <div class="sb-head">
+      <input id="sb-q" type="text" placeholder="Search both volumes…"
+             autocomplete="off" spellcheck="false" aria-label="Search the textbooks">
+      <span id="sb-stat" class="sb-stat"></span>
+      <button id="sb-close" class="sb-x" title="Close (Esc)">&times;</button>
+    </div>
+    <div id="sb-results" class="sb-results"></div>
+  </div>
+</div>
+
+
+<script src="../vendor/pdf.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
