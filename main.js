@@ -120,10 +120,13 @@ ipcMain.handle("title", (_e, t) => {
 });
 
 /* ---------------- ask ai ----------------
-   The key lives in the main process only; the renderer never sees it, and the
-   page CSP still blocks every outbound request from the renderer. */
+   DeepSeek, reached through its Anthropic-compatible endpoint — same wire
+   format, so the Anthropic SDK stays the client and only the base URL and the
+   key change. The key lives in the main process only; the renderer never sees
+   it, and the page CSP still blocks every outbound request from the renderer. */
 
 const CONFIG_FILE = path.join(STORE_DIR, "config.json");
+const BASE_URL = "https://api.deepseek.com/anthropic";
 
 function readConfig() {
   try { return JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8")); } catch (e) { return {}; }
@@ -131,17 +134,18 @@ function readConfig() {
 
 let sdk = null, askStream = null;
 
-function haveExplicitKey() {
-  return !!(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || readConfig().apiKey);
+// Resolved here rather than left to the SDK's own environment lookup, which
+// would hand an exported ANTHROPIC_API_KEY to api.deepseek.com. A .desktop
+// launcher inherits no shell environment, so config.json is the primary path
+// and an exported key is the override.
+function apiKey() {
+  return process.env.DEEPSEEK_API_KEY || readConfig().apiKey || null;
 }
 
-function anthropic() {
+function deepseek() {
   if (sdk) return sdk;
   const Anthropic = require("@anthropic-ai/sdk");
-  // A .desktop launcher inherits no shell environment, so config.json is the
-  // primary path here and an exported key is the override.
-  const apiKey = process.env.ANTHROPIC_API_KEY || readConfig().apiKey;
-  sdk = apiKey ? new Anthropic({ apiKey }) : new Anthropic();
+  sdk = new Anthropic({ apiKey: apiKey(), baseURL: BASE_URL });
   return sdk;
 }
 
@@ -151,9 +155,6 @@ function askError(e) {
   if (e instanceof A.RateLimitError) return "Rate limited — give it a moment and ask again.";
   if (e instanceof A.APIConnectionError) return "Can't reach the API. Check your connection.";
   if (e instanceof A.APIError) return "API error " + e.status + ": " + e.message;
-  // Not an API error: the client constructs fine with no credentials and only
-  // fails later, while resolving them — before any request leaves the machine.
-  if (!haveExplicitKey()) return "no-key";
   return (e && e.message) || String(e);
 }
 
@@ -170,17 +171,34 @@ Be direct and reasonably brief — this is a study aid, not a lecture. No preamb
 ipcMain.handle("ask", async (_e, req) => {
   if (askStream) { try { askStream.abort(); } catch (e) {} askStream = null; }
   const cfg = readConfig();
+  const key = apiKey();
+  if (!key) return { error: "no-key" };
+  // config.json kept the same `apiKey` field across the move to DeepSeek, so a
+  // stale Anthropic key would otherwise be handed to a third party.
+  if (key.startsWith("sk-ant-")) {
+    return { error: "That is an Anthropic key, and ask ai runs on DeepSeek now. " +
+                    "Put your DeepSeek key in ~/.locked-in/config.json instead." };
+  }
   try {
-    const stream = anthropic().messages.stream({
-      model: cfg.model || "claude-opus-5",
-      max_tokens: 32000,
+    const stream = deepseek().messages.stream({
+      model: cfg.model || "deepseek-v4-pro",
+      // Reasoning tokens count against this, so it needs real headroom; the
+      // documented ceiling is 384K, so this is nowhere near it.
+      max_tokens: cfg.maxTokens || 32000,
       system: ASK_SYSTEM,
-      thinking: { type: "adaptive" },
+      // The compat layer lists `thinking` as supported and ignores
+      // budget_tokens; "thinking": false in config.json drops it entirely if
+      // the adaptive enum is ever rejected. `effort` is the real knob.
+      ...(cfg.thinking === false ? {} : { thinking: { type: "adaptive" } }),
       output_config: { effort: cfg.effort || "medium" },
       messages: req.messages
     });
     askStream = stream;
-    stream.on("text", (t) => { if (win && !win.isDestroyed()) win.webContents.send("ask:delta", t); });
+    const send = (ch, t) => { if (win && !win.isDestroyed()) win.webContents.send(ch, t); };
+    stream.on("text", (t) => send("ask:delta", t));
+    // The model reasons before it answers, and on a dense page that runs past
+    // half a minute. The renderer shows this so the wait doesn't look like a hang.
+    stream.on("thinking", (t) => send("ask:think", t));
     const final = await stream.finalMessage();
     askStream = null;
     if (final.stop_reason === "refusal") {

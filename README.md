@@ -19,7 +19,9 @@ From the project directory:
     npm install
 
 That pulls Electron 32, pdf.js and the Anthropic SDK — about 500 MB, nearly all
-of it the Electron binary.
+of it the Electron binary. The Anthropic SDK is the client for `ask ai`, which
+talks to DeepSeek over its Anthropic-compatible endpoint; no Anthropic account
+is involved.
 
 Then point the app at the books. Each volume in `content/manifest.json` carries
 an absolute path and a page offset, and those paths are the only thing you have
@@ -69,11 +71,18 @@ Disables hardware acceleration, which some GPU and driver combinations need.
 
 ## Ask ai
 
-Optional, and the only part of the app that touches the network. It needs a key:
+Optional, and the only part of the app that touches the network. It runs on
+DeepSeek, through the Anthropic-compatible endpoint at
+`https://api.deepseek.com/anthropic`, so it needs a DeepSeek key:
 
-    ~/.locked-in/config.json     { "apiKey": "sk-ant-…" }
+    ~/.locked-in/config.json     { "apiKey": "sk-…" }
 
-or an exported `ANTHROPIC_API_KEY` before `npm start`. The config file is the
+or an exported `DEEPSEEK_API_KEY` before `npm start`. The config file is the
 primary path because a `.desktop` launcher inherits no shell environment. The key
-is read in the main process and never crosses into the renderer. `config.json`
-also takes `model` (default `claude-opus-5`) and `effort` (default `medium`).
+is read in the main process and never crosses into the renderer, and it is the
+only key consulted — an exported `ANTHROPIC_API_KEY` is ignored rather than sent
+to DeepSeek.
+
+`config.json` also takes `model` (default `deepseek-v4-pro`; `deepseek-v4-flash`
+is the cheaper one), `effort` (default `medium`), `maxTokens` (default 32000) and
+`thinking` (set it to `false` to send no reasoning parameter at all).
