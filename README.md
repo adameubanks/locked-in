@@ -3,10 +3,11 @@
 A study environment for ACME Volumes 3 and 4. The textbook and the study
 scaffolding live in one window, so reading and retrieval aren't in separate apps.
 
-Pick a section and you get three modes over it: **Read** (questions through the
-text), **Explain** (the book's definitions, which you write in your own words
-first), and **Brain rot** (the same concepts at the lowest cognitive load).
-Plus full-text search across both volumes and an exercises pane.
+Pick a section and you get two modes over it: **Read** (questions through the
+text) and **Explain** (the book's definitions, which you write in your own words
+first). Every revealed answer also carries alternate registers &mdash; brain rot,
+an example, why you'd care, just the math. Plus full-text search across both
+volumes and an exercises pane.
 
 ## Install
 

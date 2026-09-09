@@ -29,7 +29,7 @@ function save() {
 /* ---------------- content helpers ---------------- */
 function volOf(id) { return MANIFEST.volumes.find(v => v.id === id); }
 function loadedChapters() { return Object.values(CHAPTERS); }
-function withCh(c, ch) { return Object.assign({}, c, { vol: ch.volume, ch: ch.chapter, chTitle: ch.title }); }
+function withCh(c, ch) { return Object.assign({}, c, { vol: ch.volume }); }
 /* The Explain deck is the book's own definitions and theorems, grouped into the
    section whose pages they fall in. */
 let GLOSS_CARDS = [];
@@ -52,12 +52,18 @@ function glossForSection(volId, secId) {
 }
 
 
+/* Flattened once and kept: sectionForBookPage runs on every scroll tick and
+   once per glossary entry, and rebuilding this list was the bulk of that work.
+   Chapters all load during boot and nothing adds one later. */
+let SECS = null;
 function sectionsOf(volId) {
-  const out = [];
-  loadedChapters().filter(c => c.volume === volId).forEach(ch => {
-    ch.sections.forEach(s => out.push(Object.assign({}, s, { chapter: ch.chapter, chTitle: ch.title })));
-  });
-  return out;
+  if (!SECS) {
+    const chs = loadedChapters();
+    if (!chs.length) return [];
+    SECS = {};
+    chs.forEach(ch => { (SECS[ch.volume] = SECS[ch.volume] || []).push(...ch.sections); });
+  }
+  return SECS[volId] || [];
 }
 function sectionForBookPage(volId, p) {
   return sectionsOf(volId).find(s => p >= s.from && p <= s.to) || null;
@@ -521,7 +527,7 @@ function normTerm(t) {
   return String(t).toLowerCase().replace(/[‘’]/g, "'").replace(/[–—]/g, "-").trim();
 }
 
-const SKIP_IN = ".eq, .syl, button, a, .term, .q-head, .eyebrow, .why, code, textarea, input, label";
+const SKIP_IN = "button, a, .term, .q-head, .why, code, textarea, input, label";
 
 function linkTerms(root) {
   if (!TERM_RE) return;
@@ -699,7 +705,8 @@ function toggleNoise() {
    goes along as context. Streams from the main process, which is
    the only side that holds a key or touches the network.
    ============================================================ */
-const ASK = { ctx: null, turns: [], busy: false, cur: "", err: null };
+const ASK = { ctx: null, turns: [], busy: false, cur: "", err: null,
+               think: "", t0: 0, tick: 0 };
 
 async function pageTextFor(volId, pdfPage) {
   if (INDEX) {
@@ -754,20 +761,42 @@ async function openAsk() {
 
 function closeAsk() {
   if (ASK.busy) window.api.askCancel().catch(() => {});
+  askClock(false);
   ASK.busy = false;
   $("#ask").hidden = true;
   blurAway();
+}
+
+/* The model reasons before it answers, and on a dense page that reasoning runs
+   past half a minute. Show the clock and the reasoning itself, or the pane is
+   indistinguishable from a hang. Both are replaced by the answer. */
+function askWaiting() {
+  const secs = ASK.t0 ? Math.round((Date.now() - ASK.t0) / 1000) : 0;
+  const tail = ASK.think.replace(/\s+/g, " ").trim().slice(-200);
+  return `<span class="ak-wait">thinking… ${secs}s</span>` +
+         (tail ? `<div class="ak-think">${esc(tail)}</div>` : "");
+}
+
+function askRepaintWait() {
+  if (!ASK.busy || ASK.cur) return;              // real text has taken over
+  const live = $("#ak-live");
+  if (live) live.innerHTML = askWaiting();
+}
+
+function askClock(on) {
+  clearInterval(ASK.tick);
+  ASK.tick = on ? setInterval(askRepaintWait, 1000) : 0;
 }
 
 function askRender() {
   const host = $("#ak-thread");
   let h = ASK.turns.map(t =>
     `<div class="ak-turn ${t.role === "user" ? "me" : "ai"}">
-       <div class="ak-who">${t.role === "user" ? "you" : "claude"}</div>
+       <div class="ak-who">${t.role === "user" ? "you" : "deepseek"}</div>
        <div class="ak-body">${mdLite(t.text)}</div></div>`).join("");
   if (ASK.busy) {
-    h += `<div class="ak-turn ai"><div class="ak-who">claude</div>
-      <div class="ak-body" id="ak-live">${ASK.cur ? mdLite(ASK.cur) : `<span class="ak-wait">thinking…</span>`}</div></div>`;
+    h += `<div class="ak-turn ai"><div class="ak-who">deepseek</div>
+      <div class="ak-body" id="ak-live">${ASK.cur ? mdLite(ASK.cur) : askWaiting()}</div></div>`;
   }
   if (ASK.err) h += `<div class="ak-turn"><div class="ak-body ak-err">${ASK.err}</div></div>`;
   if (!h) h += `<div class="ak-turn"><div class="ak-body ak-wait">
@@ -805,15 +834,18 @@ async function askSend() {
   ASK.turns.push({ role: "user", text: q, api: msgs[msgs.length - 1].content });
   $("#ak-q").value = "";
   ASK.busy = true; ASK.cur = ""; ASK.err = null;
+  ASK.think = ""; ASK.t0 = Date.now();
   askRender();
+  askClock(true);
 
-  const res = await window.api.ask({ messages: msgs });
+  const res = await window.api.ask({ messages: msgs }).catch(e => ({ error: String(e && e.message || e) }));
   const answer = ASK.cur;
+  askClock(false);
   ASK.busy = false; ASK.cur = "";
 
   if (res && res.error === "no-key") {
-    ASK.err = "No API key. Put one in <code>~/.locked-in/config.json</code> as " +
-      `<code>{ "apiKey": "sk-ant-…" }</code>, or export <code>ANTHROPIC_API_KEY</code> ` +
+    ASK.err = "No API key. Put your DeepSeek key in <code>~/.locked-in/config.json</code> as " +
+      `<code>{ "apiKey": "sk-…" }</code>, or export <code>DEEPSEEK_API_KEY</code> ` +
       "before <code>npm start</code>. Nothing else in the app needs the network.";
   } else if (res && res.error) {
     ASK.err = esc(res.error);
@@ -829,6 +861,11 @@ async function askSend() {
 }
 
 function wireAsk() {
+  window.api.onAskThink(t => {
+    if (!ASK.busy || ASK.cur) return;
+    ASK.think += t;
+    askRepaintWait();
+  });
   window.api.onAskDelta(t => {
     if (!ASK.busy) return;
     ASK.cur += t;
@@ -1013,7 +1050,7 @@ function wireSearch() {
    STUDY PANE — pick a section once, then read / explain it.
    Exercises live in their own pane and follow the section.
    ============================================================ */
-const MODES = [["read","Read"],["explain","Explain"],["rot","Brain rot"]];
+const MODES = [["read","Read"],["explain","Explain"]];
 
 function render() {
   const nav = $("#modes");
@@ -1028,7 +1065,7 @@ function render() {
     MODE = b.dataset.m; render(); $("#study").scrollTop = 0;
   });
 
-  const views = { read: vRead, explain: vExplain, rot: vRot };
+  const views = { read: vRead, explain: vExplain };
   if (!views[MODE]) MODE = "read";
   const host = $("#study");
   host.innerHTML = sectionBar() + views[MODE]();
@@ -1056,7 +1093,6 @@ function sectionBar() {
 
 function modeCount(k) {
   if (!CURSEC) return 0;
-  if (k === "rot") return curList("read").filter(c => c.r && c.r.rot).length;
   return curList(k).length;
 }
 
@@ -1093,20 +1129,6 @@ function vExplain() {
     <p>This section states no formal definitions or theorems.</p></div>`;
   return listBar(list.length, "definition") +
     list.map((c, i) => card(c, i, "explain")).join("");
-}
-
-function vRot() {
-  if (!CURSEC) return `<p class="tiny muted">Pick a section above.</p>`;
-  const list = curList("read").filter(c => c.r && c.r.rot);
-  if (!list.length) return `<div class="empty"><h3>No brain rot for &sect;${esc(CURSEC.id)} yet</h3>
-    <p>Only sections with authored cards have it so far.</p></div>`;
-  return `<p class="tiny muted" style="margin-bottom:14px">Everything in &sect;${esc(CURSEC.id)}, at the lowest cognitive load I can write it. For when you're too fried for the real thing.</p>` +
-    list.map(c => `<div class="card rotcard">
-      <div class="q-head">
-        ${c.page ? `<button class="pg-ref" data-page="${c.vol}|${c.page}">p.${c.page}</button>` : ""}
-      </div>
-      <div class="rot-q">${c.q}</div>
-      <div class="rot-a">${c.r.rot}</div></div>`).join("");
 }
 
 const REGISTERS = [["rot", "brain rot", "lower the load"],

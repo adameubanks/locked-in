@@ -13,8 +13,6 @@
   --lamp-bg:#2A2110;
   --indigo:#7C88EC;
   --indigo-bg:#1B1F33;
-  --good:#4ADE80;
-  --good-bg:#12251A;
   --miss:#F87171;
   --miss-bg:#2A1618;
   --bar-h:38px;
@@ -192,11 +190,9 @@ body.dim .pg .num{filter:invert(1) hue-rotate(180deg)}
 }
 #exgrip:hover,#exgrip.dragging{background:var(--lamp)}
 
-.eyebrow{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; margin-bottom:9px}
 .muted{color:var(--ink-soft)}
 .tiny{font-size:12.5px; line-height:1.55}
 p{margin:0 0 13px} p:last-child{margin-bottom:0}
-hr.rule{border:none; border-top:1px solid var(--rule-soft); margin:20px 0}
 .card{background:var(--raised); border:1px solid var(--rule-soft); border-radius:9px; padding:18px 19px; margin-bottom:13px}
 
 .sec-tag{
@@ -224,22 +220,6 @@ hr.rule{border:none; border-top:1px solid var(--rule-soft); margin:20px 0}
 .answer{border-top:1px solid var(--rule); margin-top:17px; padding-top:17px; user-select:text}
 .answer h4{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; margin-bottom:9px}
 .answer .body{font-size:14.5px; line-height:1.68}
-
-.eq{
-  display:block; margin:14px 0; padding:11px 14px; overflow-x:auto;
-  background:var(--sunk); border-left:2px solid var(--indigo); border-radius:0 5px 5px 0;
-  font-family:"IBM Plex Mono",monospace; font-size:13px; line-height:1.85; user-select:text;
-}
-.syl{
-  display:grid; grid-template-columns:auto 1fr; gap:3px 14px; margin:14px 0;
-  padding:12px 14px; background:var(--sunk); border-radius:5px;
-  font-family:"IBM Plex Mono",monospace; font-size:12.5px; overflow-x:auto; user-select:text;
-}
-.syl .lbl{color:var(--ink-faint); white-space:nowrap}
-.syl .bar{grid-column:1/-1; border-top:1px solid var(--rule); margin:3px 0}
-.frac{display:inline-flex; flex-direction:column; vertical-align:-.55em; text-align:center; margin:0 .18em; font-size:.86em; line-height:1.25}
-.frac>span:first-child{border-bottom:1px solid currentColor; padding:0 .3em}
-.frac>span:last-child{padding:0 .3em}
 
 .registers{display:flex; gap:5px; flex-wrap:wrap; margin-top:15px}
 .registers button{
@@ -270,7 +250,6 @@ textarea{
   font-family:inherit; font-size:14px; line-height:1.55; resize:vertical; user-select:text;
 }
 textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)}
-.saved{font-size:12px; color:var(--good); opacity:0; transition:opacity .3s}
 .saved.on{opacity:1}
 
 .empty{text-align:center; padding:40px 16px; color:var(--ink-soft)}
@@ -332,6 +311,8 @@ textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)
 .ak-body p:last-child{margin-bottom:0}
 .ak-body code{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--lamp)}
 .ak-wait{color:var(--ink-faint); font-size:13px; font-style:italic}
+.ak-think{margin-top:7px; padding-left:9px; border-left:1px solid var(--rule);
+          color:var(--ink-faint); font-size:12px; line-height:1.5; opacity:.72}
 .ak-err{color:var(--miss); font-size:13px; line-height:1.55}
 .ak-err code{font-family:"IBM Plex Mono",monospace; font-size:12px}
 .ak-foot{
@@ -420,9 +401,5 @@ textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)
 }
 #secpick:focus{outline:none; border-color:var(--indigo)}
 
-/* brain rot mode */
-.rotcard{border-left:2px solid var(--lamp)}
-.rot-q{font-family:Newsreader,serif; font-size:16px; color:var(--ink-soft); margin-bottom:10px; line-height:1.35}
-.rot-a{font-size:15px; line-height:1.72; user-select:text}
 #termpop.hovering{pointer-events:none}
 #termpop.hovering .tp-foot{display:none}
