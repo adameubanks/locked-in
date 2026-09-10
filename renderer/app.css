@@ -149,6 +149,15 @@ body.dim .pg .num{filter:invert(1) hue-rotate(180deg)}
 .textLayer ::selection{background:rgba(242,176,30,.42)}
 .textLayer span.markedContent{top:0; height:0}
 
+/* find hits — boxes laid over the page rather than spans cut into the text
+   layer, so selection and the hover lookup keep reading whole text nodes.
+   The page is filtered when dimmed; undo it here the way .num does, or the
+   lamp yellow comes back inverted. */
+.hlLayer{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:2}
+body.dim .pg .hlLayer{filter:invert(1) hue-rotate(180deg)}
+.hl{position:absolute; background:rgba(242,176,30,.30); border-radius:2px}
+.hl.cur{background:rgba(242,176,30,.60); box-shadow:0 0 0 1.5px rgba(242,176,30,.95)}
+
 #sel-pop{
   position:fixed; z-index:60; display:flex; gap:4px; padding:4px;
   background:var(--raised); border:1px solid var(--rule); border-radius:7px;
@@ -328,45 +337,53 @@ textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)
 #ak-q::placeholder{color:var(--ink-faint)}
 .ak-foot .btn{flex:0 0 auto; padding:8px 15px; font-size:13px}
 
-/* ---------------- search ---------------- */
-#search{
-  position:fixed; inset:0; z-index:85; background:rgba(6,8,12,.66);
-  display:flex; align-items:flex-start; justify-content:center; padding:58px 24px 24px;
+/* ---------------- find bar ---------------- */
+/* Docked above the reader, not over it: a modal that covers the page can't
+   show you the thing it just found. The page list drops out of the bar. */
+#find{
+  position:relative; z-index:30; flex:0 0 auto;
+  background:var(--panel); border-bottom:1px solid var(--rule);
 }
-.sb-box{
-  width:min(700px,100%); max-height:80vh; display:flex; flex-direction:column;
-  background:var(--panel); border:1px solid var(--rule); border-radius:11px;
-  box-shadow:0 24px 60px rgba(0,0,0,.7); overflow:hidden;
+.fb-bar{display:flex; align-items:center; gap:6px; padding:6px 9px}
+#fb-q{
+  flex:1; min-width:0; background:var(--raised); color:var(--ink);
+  border:1px solid var(--rule); border-radius:6px;
+  font-family:inherit; font-size:13.5px; padding:4px 9px;
 }
-.sb-head{
-  display:flex; align-items:center; gap:10px; flex:0 0 auto;
-  padding:11px 13px; background:var(--sunk); border-bottom:1px solid var(--rule);
+#fb-q:focus{outline:none; border-color:var(--indigo)}
+#fb-q::placeholder{color:var(--ink-faint)}
+.fb-count{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint);
+  white-space:nowrap; font-variant-numeric:tabular-nums; text-align:right;
+  min-width:58px;   /* the arrows shouldn't shuffle as the count changes width */
 }
-#sb-q{
-  flex:1; min-width:0; background:transparent; border:none; color:var(--ink);
-  font-family:inherit; font-size:15px; padding:2px 0;
+.fb-nav{padding:2px 8px; border-radius:4px; color:var(--ink-soft); font-size:14px; line-height:1.4}
+.fb-nav:hover{background:var(--raised); color:var(--ink)}
+.fb-nav[disabled]{opacity:.3; background:none; cursor:default}
+.fb-toggle{font-size:11px}
+.fb-toggle[aria-pressed="true"]{color:var(--lamp); background:var(--lamp-bg)}
+.fb-x{color:var(--ink-faint); font-size:18px; line-height:1; padding:0 3px}
+.fb-x:hover{color:var(--ink)}
+.fb-results{
+  position:absolute; top:100%; left:0; right:0; max-height:44vh; overflow-y:auto;
+  background:var(--panel); border-bottom:1px solid var(--rule);
+  box-shadow:0 22px 46px rgba(0,0,0,.62);
 }
-#sb-q:focus{outline:none}
-#sb-q::placeholder{color:var(--ink-faint)}
-.sb-stat{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint); white-space:nowrap}
-.sb-x{color:var(--ink-faint); font-size:18px; line-height:1; padding:0 3px}
-.sb-x:hover{color:var(--ink)}
-.sb-results{flex:1 1 auto; min-height:0; overflow-y:auto}
-.sb-hit{
+.fb-hit{
   display:block; width:100%; text-align:left; padding:9px 14px;
   border-bottom:1px solid var(--rule-soft);
 }
-.sb-hit:hover,.sb-hit.on{background:var(--raised)}
-.sb-loc{
+.fb-hit:hover,.fb-hit.on{background:var(--raised)}
+.fb-loc{
   display:flex; align-items:baseline; gap:8px; margin-bottom:3px;
   font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-faint);
 }
-.sb-loc .v{color:var(--lamp)}
-.sb-loc .sec{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.sb-more{margin-left:auto; flex:0 0 auto}
-.sb-snip{display:block; font-size:13px; color:var(--ink-soft); line-height:1.5}
-.sb-snip mark{background:var(--lamp-bg); color:var(--lamp); border-radius:2px; padding:0 1px}
-.sb-note{padding:12px 14px; font-size:12.5px; color:var(--ink-faint); line-height:1.5}
+.fb-loc .v{color:var(--lamp)}
+.fb-loc .sec{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.fb-more{margin-left:auto; flex:0 0 auto}
+.fb-snip{display:block; font-size:13px; color:var(--ink-soft); line-height:1.5}
+.fb-snip mark{background:var(--lamp-bg); color:var(--lamp); border-radius:2px; padding:0 1px}
+.fb-note{padding:12px 14px; font-size:12.5px; color:var(--ink-faint); line-height:1.5}
 
 #termpop{
   position:fixed; z-index:90; background:var(--panel);

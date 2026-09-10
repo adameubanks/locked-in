@@ -16,7 +16,8 @@
   <span id="context" class="context">&mdash;</span>
 
   <span class="bar-right">
-    <button id="btn-search" class="chip" title="Search both volumes (/)">search</button>
+    <button id="btn-search" class="chip" aria-pressed="false"
+            title="Find in both volumes (/ or Ctrl+F)">search</button>
     <button id="btn-ex" class="chip" title="Exercises pane, follows your section (E)">exercises</button>
     <button id="btn-noise" class="chip" title="Brown noise (N)"><span class="wave"></span>noise</button>
     <button id="btn-dim"   class="chip" title="Dim the page (D)">dim</button>
@@ -26,6 +27,19 @@
 
 <div id="split">
   <section id="pane-pdf">
+    <div id="find" hidden>
+      <div class="fb-bar">
+        <input id="fb-q" type="text" placeholder="Find in both volumes…"
+               autocomplete="off" spellcheck="false" aria-label="Find in the textbooks">
+        <span id="fb-count" class="fb-count"></span>
+        <button id="fb-prev" class="fb-nav" title="Previous match (Shift+Enter)">&#8249;</button>
+        <button id="fb-next" class="fb-nav" title="Next match (Enter)">&#8250;</button>
+        <button id="fb-list" class="fb-nav fb-toggle" aria-pressed="false"
+                title="Every page with a match">list</button>
+        <button id="fb-close" class="fb-x" title="Close (Esc)">&times;</button>
+      </div>
+      <div id="fb-results" class="fb-results" hidden></div>
+    </div>
     <div id="readers"></div>
     <div id="sel-pop" hidden><button id="sel-ask">ask ai</button></div>
   </section>
@@ -70,19 +84,6 @@
     </div>
   </div>
 </div>
-
-<div id="search" hidden>
-  <div class="sb-box">
-    <div class="sb-head">
-      <input id="sb-q" type="text" placeholder="Search both volumes…"
-             autocomplete="off" spellcheck="false" aria-label="Search the textbooks">
-      <span id="sb-stat" class="sb-stat"></span>
-      <button id="sb-close" class="sb-x" title="Close (Esc)">&times;</button>
-    </div>
-    <div id="sb-results" class="sb-results"></div>
-  </div>
-</div>
-
 
 <script src="../vendor/pdf.js"></script>
 <script src="app.js"></script>

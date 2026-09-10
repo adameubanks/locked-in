@@ -6,8 +6,8 @@ scaffolding live in one window, so reading and retrieval aren't in separate apps
 Pick a section and you get two modes over it: **Read** (questions through the
 text) and **Explain** (the book's definitions, which you write in your own words
 first). Every revealed answer also carries alternate registers &mdash; brain rot,
-an example, why you'd care, just the math. Plus full-text search across both
-volumes and an exercises pane.
+an example, why you'd care, just the math. Plus a find bar over both volumes
+that steps through the hits and draws them on the page, and an exercises pane.
 
 ## Install
 

@@ -102,7 +102,8 @@ class Reader {
     this.doc = null;
     this.vol = null;
     this.pageEls = [];
-    this.rendered = new Set();
+    this.jobs = new Map();     // page -> in-flight/finished draw, so a jump can await one
+    this.tl = new Map();       // page -> text layer bookkeeping, for find highlights
     this.cur = 1;
     this.zoom = 1.0;
     this.base = 1.0;
@@ -156,7 +157,7 @@ class Reader {
     if (!v) return;
     this.vol = v;
     this.pages.innerHTML = "";
-    this.pageEls = []; this.rendered = new Set();
+    this.pageEls = []; this.jobs = new Map(); this.tl = new Map();
     if (this.io) { this.io.disconnect(); this.io = null; }
 
     if (!docCache[volId]) {
@@ -214,37 +215,129 @@ class Reader {
     return b >= 1 ? String(b) : "–";
   }
 
-  async render(n) {
-    if (this.rendered.has(n) || !this.doc) return;
-    this.rendered.add(n);
-    const host = this.pageEls[n - 1];
-    if (!host) return;
-    try {
-      const page = await this.doc.getPage(n);
-      const vp = page.getViewport({ scale: this.base * this.zoom });
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const canvas = document.createElement("canvas");
-      canvas.width = Math.round(vp.width * dpr);
-      canvas.height = Math.round(vp.height * dpr);
-      canvas.style.width = Math.round(vp.width) + "px";
-      canvas.style.height = Math.round(vp.height) + "px";
-      const c = canvas.getContext("2d", { alpha: false });
-      c.setTransform(dpr, 0, 0, dpr, 0, 0);
-      host.insertBefore(canvas, host.firstChild);
-      await page.render({ canvasContext: c, viewport: vp }).promise;
+  /* One draw per page, kept as a promise: landing on a find hit has to wait
+     for the page it is on, and the observer may already be drawing it. */
+  render(n) {
+    if (!this.doc || !this.pageEls[n - 1]) return Promise.resolve();
+    let job = this.jobs.get(n);
+    if (!job) this.jobs.set(n, job = this.draw(n).catch(() => this.jobs.delete(n)));
+    return job;
+  }
 
-      const tl = document.createElement("div");
-      tl.className = "textLayer";
-      tl.style.width = Math.round(vp.width) + "px";
-      tl.style.height = Math.round(vp.height) + "px";
-      host.appendChild(tl);
-      // Set after insertion (pdf.js reads it via getComputedStyle, which is
-      // empty for a detached node) and taken from vp.scale rather than
-      // recomputed, since fit() can change base during the await below.
-      tl.style.setProperty("--scale-factor", String(vp.scale));
-      const tc = await page.getTextContent();
-      await pdfjsLib.renderTextLayer({ textContentSource: tc, container: tl, viewport: vp, textDivs: [] }).promise;
-    } catch (e) { this.rendered.delete(n); }
+  async draw(n) {
+    const host = this.pageEls[n - 1], v = this.vol;
+    const page = await this.doc.getPage(n);
+    const vp = page.getViewport({ scale: this.base * this.zoom });
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(vp.width * dpr);
+    canvas.height = Math.round(vp.height * dpr);
+    canvas.style.width = Math.round(vp.width) + "px";
+    canvas.style.height = Math.round(vp.height) + "px";
+    const c = canvas.getContext("2d", { alpha: false });
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    host.insertBefore(canvas, host.firstChild);
+    await page.render({ canvasContext: c, viewport: vp }).promise;
+
+    const tl = document.createElement("div");
+    tl.className = "textLayer";
+    tl.style.width = Math.round(vp.width) + "px";
+    tl.style.height = Math.round(vp.height) + "px";
+    host.appendChild(tl);
+    // Set after insertion (pdf.js reads it via getComputedStyle, which is
+    // empty for a detached node) and taken from vp.scale rather than
+    // recomputed, since fit() can change base during the await below.
+    tl.style.setProperty("--scale-factor", String(vp.scale));
+    const tc = await page.getTextContent();
+    const divs = [];
+    await pdfjsLib.renderTextLayer({ textContentSource: tc, container: tl, viewport: vp, textDivs: divs }).promise;
+    if (this.vol !== v) return;          // the volume changed under this draw
+
+    const hl = document.createElement("div");
+    hl.className = "hlLayer";
+    host.appendChild(hl);
+    const m = pageMap(tc, v);
+    this.tl.set(n, { hl, divs, low: m.low, mk: m.mk, mj: m.mj });
+    this.paintFind(n);
+  }
+
+  /* A hit is a character offset in the page's text; the map turns that back
+     into text layer spans, and the browser measures them for us.
+
+     One box per line, not per span: a word runs through several spans (pdf.js
+     splits at every kern, and reports some of them twice), and a box each
+     leaves a notch wherever two abut and doubles the tint wherever they
+     overlap. Same line if a rectangle's middle falls inside one already
+     collected — that is what puts a mended hyphen on two boxes. */
+  boxesFor(n, from, to) {
+    const L = this.tl.get(n);
+    let rects;
+    try {
+      const a = L.divs[L.mk[from]], b = L.divs[L.mk[to - 1]];
+      if (!a || !b || !a.firstChild || !b.firstChild) return [];
+      const r = document.createRange();
+      r.setStart(a.firstChild, Math.min(L.mj[from], a.firstChild.length));
+      r.setEnd(b.firstChild, Math.min(L.mj[to - 1] + 1, b.firstChild.length));
+      rects = r.getClientRects();
+    } catch (e) { return []; }
+    const rows = [];
+    for (const q of rects) {
+      if (q.width < 0.5 || q.height < 0.5) continue;
+      const mid = q.top + q.height / 2;
+      const row = rows.find(w => mid > w.top && mid < w.bottom);
+      if (!row) { rows.push({ top: q.top, bottom: q.bottom, left: q.left, right: q.right }); continue; }
+      row.top = Math.min(row.top, q.top);
+      row.bottom = Math.max(row.bottom, q.bottom);
+      row.left = Math.min(row.left, q.left);
+      row.right = Math.max(row.right, q.right);
+    }
+    return rows;
+  }
+
+  paintFind(n) {
+    const L = this.tl.get(n);
+    if (!L) return;
+    L.hl.textContent = "";
+    const q = FIND.on ? FIND.needle : "";
+    if (q.length < 2) return;
+    const base = L.hl.getBoundingClientRect();
+    if (!base.width) return;                       // pane hidden: nothing to measure against
+    const cur = FIND.hits[FIND.h];
+    const here = cur && this.vol && cur.vol === this.vol.id && cur.page === n;
+    let k = 0;
+    for (let at = L.low.indexOf(q); at >= 0; at = L.low.indexOf(q, at + q.length), k++) {
+      const on = here && k === FIND.k;
+      for (const w of this.boxesFor(n, at, at + q.length)) {
+        const d = document.createElement("div");
+        d.className = on ? "hl cur" : "hl";
+        d.style.left = (w.left - base.left) + "px";
+        d.style.top = (w.top - base.top) + "px";
+        d.style.width = (w.right - w.left) + "px";
+        d.style.height = (w.bottom - w.top) + "px";
+        L.hl.appendChild(d);
+      }
+    }
+  }
+
+  repaintFind() { for (const n of this.tl.keys()) this.paintFind(n); }
+
+  /* Bring the current hit into view, and leave the page alone when it already
+     is — stepping through hits on one page shouldn't jog it. */
+  showMatch(n, keep) {
+    const L = this.tl.get(n);
+    const el = L && $(".hl.cur", L.hl);
+    if (!el) { if (!keep) { this.setCur(n); this.goto(n); } return; }
+    this.setCur(n);
+    const r = el.getBoundingClientRect(), box = this.scroll.getBoundingClientRect();
+    const pg = this.pageEls[n - 1].getBoundingClientRect();
+    this.want = { page: n, y: (r.top - pg.top) / (pg.height || 1) };   // survives a zoom
+    const list = $("#fb-results");
+    const lip = list && !list.hidden ? list.getBoundingClientRect().bottom - box.top + 14 : 0;
+    const top = box.top + Math.min(Math.max(lip, Math.min(box.height * 0.28, 170)), box.height * 0.55);
+    if (r.top >= top && r.bottom <= box.bottom - 24) return;
+    this.scroll.scrollTo({ top: this.scroll.scrollTop + (r.top - top), behavior: "smooth" });
+    clearTimeout(this._st);
+    this._st = setTimeout(() => this.dominant(), 420);
   }
 
   reflow() {
@@ -260,7 +353,7 @@ class Reader {
         keepFrac = Math.max(0, Math.min(1, (this.scroll.scrollTop - cel.offsetTop) / cel.offsetHeight));
       }
     }
-    this.rendered = new Set();
+    this.jobs = new Map(); this.tl = new Map();
     const s = this.base * this.zoom;
     this.pageEls.forEach(el => {
       el.innerHTML = "";
@@ -278,6 +371,8 @@ class Reader {
       this.scroll.scrollTo({ top: el.offsetTop + keepFrac * el.offsetHeight, behavior: "auto" });
       this.setCur(at);
       this.renderVisible();
+      // the redraw took the boxes with it; put the hit you were on back in view
+      if (FIND.on) this.render(at).then(() => this.showMatch(at, true));
     }, 40);
   }
 
@@ -886,34 +981,80 @@ function wireAsk() {
 }
 
 /* ============================================================
-   SEARCH — the whole corpus, both volumes at once. The index is
-   built on first use (~3s for 532 pages) and kept for the session.
+   FIND — the whole corpus, both volumes at once, and the hits
+   drawn on the page you land on. The index is built on first use
+   (~3s for 532 pages) and kept for the session.
    ============================================================ */
 let INDEX = null;          // [{vol, page, text, low}] — page is the PDF page
 let indexing = null;       // in-flight build, so two opens don't build twice
-const SB = { q: "", hits: [], sel: 0, cut: false, status: null };
-const SB_CAP = 400;        // pages listed; anything past this is reported, not dropped silently
+const FIND = {
+  on: false,               // is the bar up — closing it takes the highlights with it
+  q: "", needle: "",
+  hits: [],                // one entry per page that matches
+  total: 0,                // matches across all of them
+  h: 0, k: 0,              // where you are: page hits[h], its kth match
+  cut: false, status: null
+};
+const FB_CAP = 400;        // pages listed; anything past this is reported, not dropped silently
+let fbT = null;            // pending jump, so typing doesn't drag the page along behind it
+let fbLandN = 0;           // only the newest jump gets to move the reader
 
-/* Vol 4's font drops the ff/ffi ligatures, so most of its pages carry
-   "di!erent" for "different". Repair between letters only: elsewhere those
-   glyphs are real, and in Vol 3 they are large math delimiters. Same rule the
-   glossary extractor uses, and same per-volume flag. */
-function fixLig(t) {
-  return t.replace(/([A-Za-z])!(?=[a-z])/g, "$1ff")
-          .replace(/([A-Za-z])"(?=[a-z])/g, "$1ffi");
+/* The string the index searches, plus a map from every character in it back to
+   the text layer span it came from.
+
+   Keep the line breaks: without them the last word of a line fuses to the
+   first of the next ("phase\nin" -> "phasein"), and a running head fuses to
+   the body. Then undo LaTeX's end-of-line hyphenation, which splits ~600 words
+   across the two volumes ("under-\nstanding"); anchoring on the break means a
+   real inline compound like "two-dimensional" is left alone. Vol 4's font
+   drops the ff/ffi ligatures, so most of its pages carry "di!erent" for
+   "different" — repair between letters only, since elsewhere those glyphs are
+   real, and in Vol 3 they are large math delimiters. Same rules the glossary
+   extractor uses, and the same per-volume flag.
+
+   None of that preserves the length, which is the whole reason for the map:
+   it is what turns a hit's character offset into a box on the page. */
+function pageMap(tc, v) {
+  const SP = /\s/, LT = /[A-Za-z]/, LO = /[a-z]/;
+  const lig = !!(v && v.fixLigatures);
+  // every raw character, tagged with the span it belongs to. pdf.js makes one
+  // span per item, in this order, and sets its text to the item's own string.
+  const ch = [], ci = [], co = [];
+  let d = 0;
+  for (const it of tc.items) {
+    if (typeof it.str !== "string") continue;        // marked content, no span of its own
+    for (let j = 0; j < it.str.length; j++) { ch.push(it.str[j]); ci.push(d); co.push(j); }
+    if (it.hasEOL) { ch.push("\n"); ci.push(d); co.push(it.str.length); }
+    d++;
+  }
+  const out = [], mk = [], mj = [];
+  const put = (c, i) => { out.push(c); mk.push(ci[i]); mj.push(co[i]); };
+  const last = () => (out.length ? out[out.length - 1] : "");
+  let mended = false;        // the character just emitted came off a mended hyphen
+  for (let i = 0; i < ch.length; i++) {
+    const c = ch[i];
+    if (c === "-" && !mended && LT.test(last()) && ch[i + 1] === "\n") {
+      let k = i + 2;
+      while (k < ch.length && SP.test(ch[k])) k++;
+      if (k < ch.length && LO.test(ch[k])) { put(ch[k], k); i = k; mended = true; continue; }
+    }
+    mended = false;
+    if (SP.test(c)) {                                // runs collapse to one space, edges to none
+      if (out.length && last() !== " ") put(" ", i);
+      continue;
+    }
+    if (lig && (c === "!" || c === '"') && LT.test(last()) && ch[i + 1] && LO.test(ch[i + 1])) {
+      for (const r of (c === "!" ? "ff" : "ffi")) put(r, i);   // both halves point at the one glyph
+      continue;
+    }
+    put(c, i);
+  }
+  if (last() === " ") { out.pop(); mk.pop(); mj.pop(); }
+  const text = out.join("");
+  return { text, low: text.toLowerCase(), mk, mj };
 }
 
-/* Keep the line breaks: without them the last word of a line fuses to the first
-   of the next ("phase\nin" -> "phasein"), and a running head fuses to the body.
-   Then undo LaTeX's end-of-line hyphenation, which splits ~600 words across the
-   two volumes ("under-\nstanding"). Anchoring on the break means a real inline
-   compound like "two-dimensional" is left alone. */
-function pageString(tc, v) {
-  let t = tc.items.map(it => it.str + (it.hasEOL ? "\n" : "")).join("")
-    .replace(/([A-Za-z])-\n\s*([a-z])/g, "$1$2")
-    .replace(/\s+/g, " ").trim();
-  return v && v.fixLigatures ? fixLig(t) : t;
-}
+function pageString(tc, v) { return pageMap(tc, v).text; }
 
 async function buildIndex(onProgress) {
   const out = [];
@@ -925,27 +1066,71 @@ async function buildIndex(onProgress) {
       doc = docCache[v.id] = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
     }
     for (let i = 1; i <= doc.numPages; i++) {
-      const t = pageString(await (await doc.getPage(i)).getTextContent(), v);
-      out.push({ vol: v.id, page: i, text: t, low: t.toLowerCase() });
+      const m = pageMap(await (await doc.getPage(i)).getTextContent(), v);
+      out.push({ vol: v.id, page: i, text: m.text, low: m.low });
       if (onProgress && i % 25 === 0) onProgress(v.short, i, doc.numPages);
     }
   }
   return out;
 }
 
-function runSearch(q) {
-  SB.q = q;
-  SB.hits = []; SB.sel = 0; SB.cut = false;
-  const needle = q.trim().toLowerCase();
+/* One hit per matching page, carrying how many matches sit on it and how many
+   came before it, so the bar can count "17 of 233" without a list of every
+   single one. The offsets themselves are found again per page, at paint time. */
+function runFind(q) {
+  FIND.q = q;
+  FIND.needle = q.trim().toLowerCase();
+  FIND.hits = []; FIND.total = 0; FIND.h = 0; FIND.k = 0; FIND.cut = false;
+  const needle = FIND.needle;
   if (needle.length < 2 || !INDEX) return;
   for (const pg of INDEX) {
     const at = pg.low.indexOf(needle);
     if (at < 0) continue;
-    if (SB.hits.length >= SB_CAP) { SB.cut = true; break; }
+    if (FIND.hits.length >= FB_CAP) { FIND.cut = true; break; }
     let count = 0;
     for (let i = at; i >= 0; i = pg.low.indexOf(needle, i + needle.length)) count++;
-    SB.hits.push({ vol: pg.vol, page: pg.page, at, count, text: pg.text });
+    FIND.hits.push({ vol: pg.vol, page: pg.page, at, count, text: pg.text, n0: FIND.total });
+    FIND.total += count;
   }
+}
+
+/* Start from where you are, the way a browser does, and wrap around. */
+function fbNearest() {
+  const r = READERS[0];
+  if (!r || !r.vol) return 0;
+  const rank = id => MANIFEST.volumes.findIndex(v => v.id === id);
+  const rv = rank(r.vol.id);
+  for (let i = 0; i < FIND.hits.length; i++) {
+    const h = FIND.hits[i], hv = rank(h.vol);
+    if (hv > rv || (hv === rv && h.page >= r.cur)) return i;
+  }
+  return 0;
+}
+
+function fbStep(d) {
+  const n = FIND.hits.length;
+  if (!n) return;
+  let h = FIND.h, k = FIND.k + d;
+  if (k < 0) { h = (h - 1 + n) % n; k = FIND.hits[h].count - 1; }
+  else if (k >= FIND.hits[h].count) { h = (h + 1) % n; k = 0; }
+  FIND.h = h; FIND.k = k;
+  fbLand();
+}
+
+/* Land on the current hit: draw it wherever it is on screen, then bring it
+   into view in the main reader. */
+async function fbLand() {
+  const h = FIND.hits[FIND.h];
+  if (!h) return;
+  const t = ++fbLandN;
+  fbRender();
+  const r = READERS[0];
+  if (!r) return;
+  if (!r.vol || r.vol.id !== h.vol) await r.open(h.vol, h.page);
+  await r.render(h.page);
+  if (t !== fbLandN) return;            // a newer jump got there first
+  READERS.forEach(x => x.repaintFind());
+  r.showMatch(h.page);
 }
 
 function snippet(h, len) {
@@ -956,93 +1141,114 @@ function snippet(h, len) {
          esc(t.slice(h.at + len, b)) + (b < t.length ? "…" : "");
 }
 
-function sbRender() {
-  const stat = $("#sb-stat"), host = $("#sb-results");
-  const needle = SB.q.trim().toLowerCase();
+function fbRender() {
+  const cnt = $("#fb-count"), list = $("#fb-results");
+  const needle = FIND.needle, none = !FIND.hits.length;
+  $("#fb-prev").disabled = $("#fb-next").disabled = none;
+  $("#fb-list").title = none ? "Every page with a match"
+    : `${FIND.hits.length} page${FIND.hits.length === 1 ? "" : "s"} with a match`;
+  cnt.textContent =
+    !INDEX ? (FIND.status || "indexing") :
+    needle.length < 2 ? "" :
+    none ? "no match" :
+    `${FIND.hits[FIND.h].n0 + FIND.k + 1}/${FIND.total}`;
+  if (list.hidden) return;
+
   if (!INDEX) {
-    stat.textContent = "indexing";
-    host.innerHTML = `<div class="sb-note">${esc(SB.status || "Reading both volumes…")}<br>
+    list.innerHTML = `<div class="fb-note">${esc(FIND.status || "Reading both volumes…")}<br>
       Once built it stays for the session.</div>`;
     return;
   }
   if (needle.length < 2) {
-    stat.textContent = INDEX.length + " pages";
-    host.innerHTML = `<div class="sb-note">Two characters or more. Searches every page of both
+    list.innerHTML = `<div class="fb-note">Two characters or more. Searches every page of both
       volumes &mdash; body text, theorems, and exercises.</div>`;
     return;
   }
-  const total = SB.hits.reduce((a, h) => a + h.count, 0);
-  stat.textContent = SB.hits.length
-    ? `${total} on ${SB.hits.length} page${SB.hits.length === 1 ? "" : "s"}`
-    : "no match";
-  if (!SB.hits.length) {
-    host.innerHTML = `<div class="sb-note">Nothing for &ldquo;${esc(SB.q.trim())}&rdquo;.</div>`;
+  if (none) {
+    list.innerHTML = `<div class="fb-note">Nothing for &ldquo;${esc(FIND.q.trim())}&rdquo;.</div>`;
     return;
   }
-  host.innerHTML = SB.hits.map((h, i) => {
+  list.innerHTML = FIND.hits.map((h, i) => {
     const v = volOf(h.vol) || {};
     const book = h.page - (v.pageOffset || 0);
     const sec = sectionForBookPage(h.vol, book);
-    return `<button class="sb-hit${i === SB.sel ? " on" : ""}" data-i="${i}">
-      <span class="sb-loc"><span class="v">${esc(v.short || h.vol)}</span> p.${book}` +
+    return `<button class="fb-hit${i === FIND.h ? " on" : ""}" data-i="${i}">
+      <span class="fb-loc"><span class="v">${esc(v.short || h.vol)}</span> p.${book}` +
       (sec ? `<span class="sec">&sect;${esc(sec.id)} ${esc(sec.name)}</span>` : "") +
-      (h.count > 1 ? `<span class="sb-more">${h.count} here</span>` : "") +
-      `</span><span class="sb-snip">${snippet(h, needle.length)}</span></button>`;
+      (h.count > 1 ? `<span class="fb-more">${h.count} here</span>` : "") +
+      `</span><span class="fb-snip">${snippet(h, needle.length)}</span></button>`;
   }).join("") +
-  (SB.cut ? `<div class="sb-note">Listed the first ${SB_CAP} pages and stopped &mdash;
+  (FIND.cut ? `<div class="fb-note">Listed the first ${FB_CAP} pages and stopped &mdash;
      there are more. Narrow the search.</div>` : "");
-  $$(".sb-hit", host).forEach(b => b.onclick = () => sbGo(+b.dataset.i));
+  $$(".fb-hit", list).forEach(b => b.onclick = () => {
+    FIND.h = +b.dataset.i; FIND.k = 0;
+    fbLand();
+  });
+  const on = $(`.fb-hit[data-i="${FIND.h}"]`, list);
+  if (on) on.scrollIntoView({ block: "nearest" });
 }
 
-function sbSelect(d) {
-  if (!SB.hits.length) return;
-  SB.sel = Math.max(0, Math.min(SB.hits.length - 1, SB.sel + d));
-  sbRender();
-  const el = $(`.sb-hit[data-i="${SB.sel}"]`);
-  if (el) el.scrollIntoView({ block: "nearest" });
-}
-
-/* Jump and get out of the way. The query and the result list survive, so
-   reopening search puts you back in the same list where you left it. */
-function sbGo(i) {
-  const h = SB.hits[i];
-  if (!h) return;
-  SB.sel = i;
-  const v = volOf(h.vol) || {};
-  READERS[0].gotoVolBook(h.vol, h.page - (v.pageOffset || 0));
-  closeSearch();
-}
-
-async function openSearch() {
-  $("#search").hidden = false;
-  const inp = $("#sb-q");
-  inp.value = SB.q || "";
-  sbRender();
+async function openFind() {
+  FIND.on = true;
+  $("#find").hidden = false;
+  $("#btn-search").setAttribute("aria-pressed", "true");
+  const inp = $("#fb-q");
+  inp.value = FIND.q || "";
+  fbRender();
   inp.focus(); inp.select();
+  READERS.forEach(r => r.repaintFind());     // the query outlives a close
   if (INDEX) return;
   if (!indexing) {
     indexing = buildIndex((short, i, n) => {
-      SB.status = `Indexing ${short} — page ${i} of ${n}…`;
-      if (!$("#search").hidden) sbRender();
+      FIND.status = `indexing ${short} ${i}/${n}`;
+      if (FIND.on) fbRender();
     });
   }
   INDEX = await indexing;
-  SB.status = null;
-  runSearch($("#sb-q").value);
-  if (!$("#search").hidden) sbRender();
+  FIND.status = null;
+  if (!FIND.on) return;
+  runFind($("#fb-q").value);
+  FIND.h = fbNearest();
+  fbRender();
+  if (FIND.hits.length) fbLand();
 }
 
-function closeSearch() { $("#search").hidden = true; blurAway(); }
+function closeFind() {
+  FIND.on = false;
+  $("#find").hidden = true;
+  $("#btn-search").setAttribute("aria-pressed", "false");
+  clearTimeout(fbT); fbT = null;
+  READERS.forEach(r => r.repaintFind());
+  blurAway();
+}
 
-function wireSearch() {
-  $("#btn-search").onclick = openSearch;
-  $("#sb-close").onclick = closeSearch;
-  $("#search").onclick = e => { if (e.target.id === "search") closeSearch(); };
-  $("#sb-q").oninput = e => { runSearch(e.target.value); sbRender(); };
-  $("#sb-q").onkeydown = e => {
-    if (e.key === "ArrowDown")    { sbSelect(1);  e.preventDefault(); }
-    else if (e.key === "ArrowUp") { sbSelect(-1); e.preventDefault(); }
-    else if (e.key === "Enter")   { sbGo(SB.sel); e.preventDefault(); }
+function wireFind() {
+  $("#btn-search").onclick = () => { if (FIND.on) closeFind(); else openFind(); };
+  $("#fb-close").onclick = closeFind;
+  $("#fb-prev").onclick = () => fbStep(-1);
+  $("#fb-next").onclick = () => fbStep(1);
+  $("#fb-list").onclick = () => {
+    const list = $("#fb-results");
+    list.hidden = !list.hidden;
+    $("#fb-list").setAttribute("aria-pressed", String(!list.hidden));
+    fbRender();
+  };
+  $("#fb-q").oninput = e => {
+    runFind(e.target.value);
+    FIND.h = fbNearest();
+    fbRender();
+    READERS.forEach(r => r.repaintFind());
+    clearTimeout(fbT);
+    fbT = setTimeout(() => { fbT = null; if (FIND.hits.length) fbLand(); }, 170);
+  };
+  $("#fb-q").onkeydown = e => {
+    if (e.key === "Enter") {
+      // the first Enter after typing shows the match the pause hadn't reached
+      if (fbT) { clearTimeout(fbT); fbT = null; fbLand(); }
+      else fbStep(e.shiftKey ? -1 : 1);
+      e.preventDefault();
+    } else if (e.key === "ArrowDown") { fbStep(1);  e.preventDefault(); }
+    else if (e.key === "ArrowUp")     { fbStep(-1); e.preventDefault(); }
   };
 }
 
@@ -1270,17 +1476,19 @@ function wireChrome() {
 
   document.addEventListener("keydown", e => {
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
-    if ((e.ctrlKey || e.metaKey) && e.key === "f") { openSearch(); e.preventDefault(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === "f") { openFind(); e.preventDefault(); return; }
+    if (FIND.on && (e.key === "F3" || ((e.ctrlKey || e.metaKey) && e.key === "g"))) {
+      fbStep(e.shiftKey ? -1 : 1); e.preventDefault(); return;
+    }
     if (e.key === "Escape") {
       if (!$("#ask").hidden) { closeAsk(); return; }
-      if (!$("#search").hidden) { closeSearch(); return; }
+      if (FIND.on) { closeFind(); return; }
       if (!$("#termpop").hidden) { hideTerm(true); return; }
       if (document.body.classList.contains("zen")) { $("#btn-zen").click(); return; }
     }
     if (typing) return;
     if (!$("#ask").hidden) return;             // the overlay owns the keyboard
-    if (!$("#search").hidden) return;
-    if (e.key === "/") { openSearch(); e.preventDefault(); return; }
+    if (e.key === "/") { openFind(); e.preventDefault(); return; }
     const r = READERS[ACTIVE] || READERS[0];
     if (e.key === "n") toggleNoise();
     if (e.key === "d") $("#btn-dim").click();
@@ -1335,7 +1543,7 @@ async function boot() {
   r0.zoom = S.prefs.zoom || 1.0;
   $(".zoom-lvl", r0.el).textContent = Math.round(r0.zoom * 100) + "%";
 
-  wireSearch();
+  wireFind();
   wireAsk();
   wireExGrip($("#exgrip"));
   if (S.prefs.exH) $("#expane").style.height = S.prefs.exH + "px";
