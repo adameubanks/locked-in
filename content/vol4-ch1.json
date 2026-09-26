@@ -133,6 +133,45 @@
    }
   },
   {
+   "id": "v4c1a5",
+   "s": "1.1",
+   "page": 6,
+   "q": "Derive simple harmonic motion for Bob on a spring, and show how the initial conditions fix the two constants.",
+   "a": "<b>One law, one force.</b> Newton's second law says m&#255;&#776; = sum of forces. Frictionless, and the spring is the only force, so Hooke's Law gives F<sub>s</sub> = &minus;ky with k &gt; 0 and y = 0 the resting position:<div class='eq'>m&#255;&#776; = &minus;ky&nbsp;&nbsp;&rArr;&nbsp;&nbsp; m&#255;&#776; + ky = 0&nbsp;&nbsp;(1.4)</div>Divide by m and set <b>&omega;&sup2; = k/m</b>:<div class='eq'>&#255;&#776; + &omega;&sup2;y = 0&nbsp;&nbsp;(1.5)</div><b>Every solution has the form</b> y = a&#8201;cos(&omega;t) + b&#8201;sin(&omega;t) (1.6) &mdash; verifying this is straightforward; that these are <i>all</i> of them is proved in Ch 3.<p style='margin-top:8px'><b>The constants fall out by evaluating at 0:</b></p><div class='eq'>y&#8320; = y(0) = a&#8201;cos 0 + b&#8201;sin 0 = <b>a</b></div><div class='eq'>v&#8320; = y&#775;(0) = &minus;a&omega;&#8201;sin 0 + b&omega;&#8201;cos 0 = <b>b&omega;</b>, so b = v&#8320;/&omega;</div>Together with (1.5) these uniquely determine Bob's position at every subsequent moment. <b>&omega; = &radic;(k/m)</b> is the natural frequency: stiffer spring, faster; heavier Bob, slower.",
+   "r": {
+    "rot": "spring pulls back proportionally to how far you've stretched it. newton says force is mass times acceleration. put those together and you get an equation saying 'my second derivative is negative me' &mdash; and the functions that do that are sine and cosine. two unknowns, two facts you know at t = 0: where bob is, and how fast he's going. position picks the cosine's size, velocity picks the sine's.",
+    "ex": "Remark 1.1.2 checks all three corners against intuition. Release from y&#8320; at rest: a = y&#8320;, b = 0, so y = y&#8320;cos(&omega;t) &mdash; pulled in, overshoots, comes back. Struck at rest position: a = 0, y = (v&#8320;/&omega;)sin(&omega;t). At rest and not moving: a = b = 0, Bob never moves.",
+    "why": "It's the running example for the entire two volumes &mdash; it becomes the companion-form system in &sect;2.1, the stiff eigenvalue problem in &sect;3.1, and the resonance calculation in &sect;3.4. It also makes the point that <b>a differential equation alone is usually inadequate</b>: you need auxiliary conditions, and how many depends on the problem.",
+    "math": "&omega;&sup2; = k/m. Solution space is 2-dimensional, matching the second order. Equivalent amplitude-phase form: y = A&#8201;cos(&omega;t &minus; &phi;)."
+   }
+  },
+  {
+   "id": "v4c1a6",
+   "s": "1.1",
+   "page": 9,
+   "q": "Add air resistance to the spring. Give the equation and the <b>three</b> regimes its solutions fall into.",
+   "a": "Air resistance opposes motion, and at low speeds its magnitude is <b>proportional to speed</b> &mdash; experiments approximately confirm this. So F<sub>a</sub> = &minus;cy&#775;(t) with c &gt; 0 depending on Bob's shape. Total force F = F<sub>s</sub> + F<sub>a</sub>:<div class='eq'>m&#255;&#776; = &minus;cy&#775; &minus; ky&nbsp;&nbsp;(1.7)&nbsp;&nbsp;&rArr;&nbsp;&nbsp; &#255;&#776; + 2&epsilon;y&#775; + &omega;&sup2;y = 0&nbsp;&nbsp;(1.8)</div>with &omega;&sup2; = k/m and <b>&epsilon; = c/2m</b>. Everything now depends on <b>&epsilon;&sup2; versus &omega;&sup2;</b> &mdash; damping against stiffness.<div class='eq'><b>Underdamped</b> (&epsilon;&sup2; &lt; &omega;&sup2;): y = de<sup>&minus;&epsilon;t</sup>cos(&radic;(&omega;&sup2;&minus;&epsilon;&sup2;)&#8201;t &minus; &phi;) &mdash; oscillation inside a decaying envelope.</div><div class='eq'><b>Critically damped</b> (&epsilon;&sup2; = &omega;&sup2;): y = (a + bt)e<sup>&minus;&epsilon;t</sup> &mdash; damping and spring perfectly balanced, <b>at most one</b> oscillation before settling.</div><div class='eq'><b>Overdamped</b> (&epsilon;&sup2; &gt; &omega;&sup2;): y = ae<sup>&minus;(&epsilon;&minus;&radic;(&epsilon;&sup2;&minus;&omega;&sup2;))t</sup> + be<sup>&minus;(&epsilon;+&radic;(&epsilon;&sup2;&minus;&omega;&sup2;))t</sup> &mdash; damping dominates, Bob moves to 0 <b>with no oscillation</b>.</div>All three decay to 0. Remark 1.1.3 is candid that the fix is imperfect: the underdamped amplitude is <b>technically always nonzero</b>, but exponentially decaying, so <i>for all practical purposes effectively zero after some time</i>.",
+   "r": {
+    "rot": "one knob, three worlds. weak damping: it still swings, just the swings shrink. strong damping: it's like moving through honey, it creeps back to rest and never overshoots. exactly in between: the fastest possible settle without overshooting, which is why every door closer and car suspension is tuned near there. and 'it decays to practically zero' is the model being honest &mdash; the math never reaches zero, but nobody can tell.",
+    "ex": "The square roots explain themselves: &radic;(&omega;&sup2;&minus;&epsilon;&sup2;) is real when damping is weak, so you get a cosine; it goes imaginary when damping is strong, so the cosine turns into two real exponentials. The critical case is the double root where the second solution picks up a factor of t.",
+    "why": "This is the first time the book shows a <b>parameter changing the qualitative character</b> of the solutions, not just their size &mdash; the seed of bifurcation. It's also the concrete instance of Ch 3's theory: the three cases are complex, repeated, and distinct real eigenvalues of the companion matrix.",
+    "math": "Characteristic roots &minus;&epsilon; &plusmn; &radic;(&epsilon;&sup2;&minus;&omega;&sup2;). &epsilon; = c/2m, &omega;&sup2; = k/m. The critically damped te<sup>&minus;&epsilon;t</sup> is the defective-eigenvalue case of &sect;3.1."
+   }
+  },
+  {
+   "id": "v4c1a7",
+   "s": "1.1",
+   "page": 9,
+   "q": "For most systems you cannot write down the solution. What do you ask instead, and what does the book claim you often get?",
+   "a": "<b>You ask qualitative questions.</b> Even without a complete description, you can often understand the <b>qualitative properties</b> of solutions &mdash; and the book's claim is blunt: those <i>may be more important</i>.<div class='eq'>Does the solution oscillate back and forth forever, like Bob on the spring?<br>Does it eventually approach a fixed position?</div>These lead to <b>dynamical systems</b>, and to <b>stability and long-term behaviour</b>. And the payoff:<div class='eq'>In many cases it doesn't matter how the system begins &mdash; if we wait long enough we know where it will end up.</div>That is a striking amount of information to extract from an equation you cannot solve: the <b>initial condition washes out</b>, and the destination is a property of the system alone.<p style='margin-top:8px'><b>The N-body problem is the standing example.</b> Newton's equations have been researched since he wrote them down, and solving them &mdash; writing each q<sub>i</sub>(t) explicitly from q<sub>i</sub>(0) and q&#775;<sub>i</sub>(0) &mdash; <b>can only be done for N = 2, and that only implicitly</b>. Yet we understand orbits perfectly well.</p>",
+   "r": {
+    "rot": "you usually can't get a formula. so stop asking for one. ask instead: does it settle down, does it blow up, does it cycle forever, and does the answer depend on where it started? for a lot of systems the answer to that last one is <i>no</i> &mdash; everything ends up in the same place regardless, which means you can predict the outcome without ever solving anything.",
+    "ex": "The damped spring is the miniature version: all three regimes, every initial condition, same destination &mdash; y &rarr; 0. You don't need the formula to know that; you need the sign of &epsilon;.",
+    "why": "It's the manifesto for the rest of the book, and the reason Ch 2 proves existence and uniqueness rather than teaching solution tricks. If you can't write the answer down, you had better be able to prove there <i>is</i> one and reason about its shape.",
+    "math": "N-body: m<sub>i</sub>q&#776;<sub>i</sub> = &minus;&nabla;<sub>q<sub>i</sub></sub>U with U = &minus;&Sigma;<sub>j&lt;k</sub> Gm<sub>j</sub>m<sub>k</sub>/&#8214;q<sub>j</sub>&minus;q<sub>k</sub>&#8214;. Nonlinear; closed-form solution only for N = 2."
+   }
+  },
+  {
    "id": "v4c1b1",
    "s": "1.2",
    "page": 11,
@@ -143,6 +182,19 @@
     "ex": "Assumption (v) is the wild one: it says everyone in the population is in contact with everyone else. The book defends it for a large population in a small land mass &mdash; think Manhattan or Singapore. For a country with cities and countryside it's badly wrong, which is why real epidemiology uses networked or spatial models.",
     "why": "Compartmental models are the entry point to all of mathematical epidemiology, and this is also your SIR_Models lab. More importantly it shows how modeling assumptions get you a tractable system &mdash; and exactly where that system will lie to you.",
     "math": "Sum the three equations: S&#775; + I&#775; + R&#775; = &minus;bSI + bSI &minus; kI + kI = 0, so S + I + R is constant, confirming the closed-population assumption. (That's Exercise 1.6.)"
+   }
+  },
+  {
+   "id": "v4c1b7",
+   "s": "1.2",
+   "page": 11,
+   "q": "Rabbits come in whole numbers and arrive at instants. Why is a <b>continuous</b> differential equation the right tool anyway?",
+   "a": "Because of what you choose to track. Biological populations change <b>discretely</b> &mdash; by &plusmn;1 at instants in time &mdash; but the modeling move is:<div class='eq'>Rather than counting actual numbers of biological entities, <b>we track percentages or some other ratio</b>.</div>Two things follow. It <b>makes the discrete changes in time seem more continuous</b> &mdash; one rabbit out of ten thousand is a step of 0.0001, invisible at the scale you care about. And it <b>lends itself to better numerical simulations</b>, since the methods of Ch 4 all assume a smooth right-hand side.<p style='margin-top:8px'>The SIR model shows the same device used structurally: the populations are <b>normalized so that S(t) + I(t) + R(t) = 1</b>, so they are proportions by construction, not counts.</p><p><b>This is the chapter's philosophy in miniature.</b> The continuous model is <i>known</i> to be wrong about the microscopic mechanism, and it is adopted because the error is negligible at the scale of interest and it buys an enormous amount of machinery. The same trade the book makes when it says mathematical modeling <b>sacrifices detail for the sake of simplicity and practicality</b>.</p>",
+   "r": {
+    "rot": "a population is a staircase, not a curve. but if the staircase has ten thousand steps, a curve through it is indistinguishable &mdash; and a curve you can differentiate, while a staircase you can't. so you switch from counting animals to tracking the fraction of the environment they occupy, and the steps shrink until the fiction is harmless. you're not claiming there are 3.7 rabbits. you're claiming the fraction is 0.00037.",
+    "ex": "The approximation degrades exactly where you'd expect: with 5 individuals, a &plusmn;1 change is 20% of the population, and the smooth model's prediction of 'the population declines to 0.3' means nothing. Small populations need discrete or stochastic models.",
+    "why": "It is the first modeling decision in the chapter and it's made silently. Naming it tells you where these models are trustworthy &mdash; large populations, aggregate quantities &mdash; and where the whole framework quietly stops applying.",
+    "math": "Normalization S + I + R = 1 makes the SIR variables proportions. The continuum limit is justified when the population is large and per-step changes are small relative to it."
    }
   },
   {
@@ -185,6 +237,19 @@
    }
   },
   {
+   "id": "v4c1b9",
+   "s": "1.2",
+   "page": 15,
+   "q": "Remark 1.2.4 lists things the logistic model misses. What are they, and what is the uncomfortable conclusion?",
+   "a": "The logistic equation treats the carrying capacity <b>k</b> as a single fixed number. Reality doesn't.<div class='eq'><b>Timescale mismatch.</b> Rabbits' reproductive cycle is <b>much faster than a calendar year</b>, so the population responds within a season.</div><div class='eq'><b>Seasonal k.</b> The carrying capacity <b>is lower in winter than in summer</b> &mdash; k should be a periodic function of t, not a constant.</div><div class='eq'><b>Multi-year cycles.</b> Capacity may be tied to patterns like El Ni&ntilde;o &mdash; some semi-arid regions in Nevada and New Mexico blossom on <b>roughly seven year cycles</b>.</div><div class='eq'><b>Species interaction.</b> A predator in the environment &mdash; taken up immediately in Lotka&ndash;Volterra.</div><p style='margin-top:8px'><b>The uncomfortable conclusion:</b> <i>Each of these variants needs a new model.</i></p>There is no master population equation with enough parameters to cover all of them. Each effect changes the <b>structure</b> &mdash; a constant becomes a periodic function, a scalar equation becomes a system &mdash; and structural changes are not parameter changes.",
+   "r": {
+    "rot": "logistic says there's a ceiling and populations settle at it. but the ceiling moves &mdash; it's lower in winter, and in some places it swings on a seven-year weather cycle, and if something is eating you the ceiling isn't even the right idea. you can't patch this with a better value of k. each of those is a different equation. that's the honest answer and it's why the section keeps building new models instead of one big one.",
+    "ex": "Making k periodic, k(t) = k&#8320;(1 + &epsilon;cos&omega;t), turns an autonomous scalar equation into a nonautonomous one &mdash; and everything in Ch 3 about the difficulty of nonautonomous systems now applies.",
+    "why": "It's the modeling loop of &sect;1.1 stated for a specific model: build the simplest thing, understand it completely, notice what it omits, add <b>one or two</b> details at a time. Lotka&ndash;Volterra is the very next iteration, and &sect;1.2.5 shows even that one isn't finished.",
+    "math": "Logistic: x&#775; = rx(1 &minus; x/k), solution x(t) = k/(1 + Ce<sup>&minus;rt</sup>) with C = (k &minus; x(0))/x(0). Every listed variation breaks either autonomy or one-dimensionality."
+   }
+  },
+  {
    "id": "v4c1b5",
    "s": "1.2",
    "page": 16,
@@ -195,6 +260,19 @@
     "ex": "Instead of solving the system for every combination of four biological constants, you solve it once for each value of b. Every real ecosystem with the same b has the same dynamics after rescaling.",
     "why": "This is why &sect;1.3 and &sect;1.4 exist and why they come right after. Nondimensionalization isn't cosmetic &mdash; it collapses a four-dimensional parameter study into a one-dimensional one, and it tells you which combination of physical constants actually governs the behavior.",
     "math": "Parameter count drops from 4 to 1. Buckingham &pi; (&sect;1.4) explains why: nullity of the exponent matrix."
+   }
+  },
+  {
+   "id": "v4c1b8",
+   "s": "1.2",
+   "page": 17,
+   "q": "Define <b>phase space</b> and read the two Lotka&ndash;Volterra figures against each other. What does each one show that the other can't?",
+   "a": "<b>Phase space is the space of all possible states.</b> For predator-prey that is &Ropf;&sup2;, the pairs (prey, predator). A <b>phase plot</b> draws (x(t), y(t)) as a single point for every t &mdash; <b>time is not an axis</b>, it is the parameter tracing the curve.<div class='eq'><b>Figure 1.4 (phase plot):</b> the trajectory is a <b>closed curve</b>. That single geometric fact says the same values of x and y recur, forever &mdash; the system is periodic. You read the <i>relationship</i> between the two populations directly.</div><div class='eq'><b>Figure 1.5 (time series):</b> x and y plotted separately against t. You read <i>when</i> things happen &mdash; the period, the lag between prey crash and predator crash, the actual amplitudes.</div>From x&#8320; = 3, y&#8322; = 2 the prey decreases and the predator increases (x&#775; &lt; 0, y&#775; &gt; 0), which is how you know the phase plot runs <b>counterclockwise</b> &mdash; a direction the closed curve alone doesn't tell you.<p style='margin-top:8px'><b>A terminology warning the book flags explicitly:</b> the <i>phase</i> in <b>phase space</b> has <b>nothing to do</b> with the phase &phi; of a periodic function f(t + &phi;), which is a horizontal offset. Both meanings are needed in this book.</p>",
+   "r": {
+    "rot": "throw away the time axis and plot predator against prey. you lose the clock but you gain the shape &mdash; and a closed loop instantly means 'this repeats forever', which you'd have to squint at a time series to believe. the two plots are the same solution seen two ways: one tells you the pattern, the other tells you the schedule. and the word 'phase' here means 'state', not 'offset' &mdash; unrelated, unfortunately collided.",
+    "ex": "The loop's mechanism reads straight off the geometry: predators up &rarr; prey eaten &rarr; prey down &rarr; predators starve &rarr; predators down &rarr; prey recover. Four quarters of the circuit, in that order, counterclockwise.",
+    "why": "Phase space is how the rest of the subject thinks. Equilibria are points, periodic solutions are closed curves, stability is whether nearby curves come in or go out &mdash; all of it visible without solving anything, which is the qualitative program of &sect;1.1 made concrete.",
+    "math": "Phase space = state space, here &Ropf;&sup2;. A closed orbit &hArr; a periodic solution. Direction of travel comes from the sign of the vector field, not from the curve."
    }
   },
   {
@@ -263,6 +341,32 @@
    }
   },
   {
+   "id": "v4c1c6",
+   "s": "1.3",
+   "page": 24,
+   "q": "A physical law is supposed to hold in any units. Show that v<sub>i</sub> = &radic;(gh)/&radic;2 survives the switch from metres and seconds to inches and minutes.",
+   "a": "<b>Separate the numbers from the units.</b> Write h = &alpha; m, g = &beta; m/s&sup2;, v<sub>i</sub> = &gamma; m/s with &alpha;, &beta;, &gamma; <b>dimensionless</b>. The law becomes<div class='eq'>&gamma;(m/s) = (1/&radic;2)&radic;(&alpha;&beta;&#8901;m&sup2;/s&sup2;) = (1/&radic;2)&radic;(&alpha;&beta;)&#8901;(m/s)&nbsp;&nbsp;(1.24)</div><b>The units on both sides are the same &mdash; as expected when the dimensions are comparable</b> &mdash; so they divide out, leaving a relation among pure numbers:<div class='eq'>&gamma; = (1/&radic;2)&radic;(&alpha;&beta;)&nbsp;&nbsp;(1.25)</div>Now convert, using 1 m = 39.3701 in and 1 min = 60 s:<div class='eq'>h: &alpha; m = <b>39.3701&alpha;</b> in</div><div class='eq'>g: &beta; m/s&sup2; = <b>39.3701&#8901;60&sup2;&beta;</b> in/min&sup2;&nbsp;&nbsp;(the time conversion is <b>squared</b>)</div><div class='eq'>v: &gamma; m/s = <b>39.3701&#8901;60&gamma;</b> in/min</div>Substituting into the right-hand side, the conversion factors come back out through the square root as 39.3701&#8901;60 &mdash; exactly the factor on the left. <b>The law is unchanged.</b><p style='margin-top:8px'>Because (1.25) is a statement about numbers alone, and the conversion factors always cancel for a dimensionally homogeneous law.</p>",
+   "r": {
+    "rot": "a real law can't care whether you measure in metres or inches. the way to see that: pull the units out, leaving a relation between bare numbers. change units and every quantity picks up a conversion factor &mdash; but they enter the formula in exactly the pattern that cancels them. note the time factor gets <b>squared</b> in g because g has s&#8315;&sup2; in it. that squaring is where people actually make the mistake.",
+    "ex": "The check is mechanical: a law is safe under unit change precisely when it is dimensionally homogeneous. Write it as f = 0 and confirm every term carries the same dimension &mdash; here every term is LT<sup>&minus;1</sup>.",
+    "why": "It's what 'dimensionally homogeneous' is <i>for</i>. A formula that fails this test is not a law; it is a law plus a hidden dependence on the measuring stick, and it will silently give wrong answers to anyone using different units.",
+    "math": "Change of units L &#8614; &lambda;&#8321;L, T &#8614; &lambda;&#8322;T rescales a quantity of dimension L<sup>a</sup>T<sup>b</sup> by &lambda;&#8321;<sup>a</sup>&lambda;&#8322;<sup>b</sup>. Homogeneity means f rescales by a single such factor, which then divides out of f = 0."
+   }
+  },
+  {
+   "id": "v4c1c7",
+   "s": "1.3",
+   "page": 26,
+   "q": "You know &int;dx/(1+x&sup2;) = arctan x + C. Get &int;dx/(a&sup2;+x&sup2;) <b>without</b> a substitution.",
+   "a": "<b>Give x a dimension and follow the bookkeeping.</b><p style='margin-top:8px'>Set [x] = L. For a&sup2; + x&sup2; to make sense, a must be <b>commensurable</b> with x, so [a] = L. Writing the answer as F(x,a) with dF/dx = 1/(a&sup2;+x&sup2;):</p><div class='eq'>[dF/dx] = [F]/L = L<sup>&minus;2</sup>&nbsp;&nbsp;&rArr;&nbsp;&nbsp;[F] = <b>L<sup>&minus;1</sup></b></div>So <b>aF(x,a) is dimensionless</b>. And x/a is dimensionless. A dimensionless quantity can only depend on dimensionless quantities, which gives the <b>ansatz</b>:<div class='eq'>aF(x,a) = f(x/a) for some unknown f</div>Now use the case you already know. At a = 1:<div class='eq'>arctan(x) + C = F(x,1) = f(x/1) = f(x)</div><b>The unknown f is identified.</b> Therefore f(x/a) = arctan(x/a) + C, and<div class='eq'>F(x,a) = (1/a)&#8901;arctan(x/a) + C</div>A direct check confirms it's an antiderivative, and the Fundamental Theorem says every other one differs by a constant &mdash; so this is the general solution.",
+   "r": {
+    "rot": "no u-substitution. just ask what units everything would have to have. x is a length, so a is a length, and the answer turns out to have units of 1/length &mdash; meaning a&#8901;(answer) is a pure number. pure numbers can only be functions of pure numbers, and the only one around is x/a. so the answer is (1/a)&#8901;f(x/a) for some f. now set a = 1, where you already know the answer, and f is pinned down. the shape came from dimensions, the content from one special case.",
+    "ex": "The pattern generalizes: dimensional analysis reduces an unknown function of n variables to an unknown function of fewer dimensionless combinations. Buckingham &pi; in &sect;1.4 is the general theorem behind exactly this move.",
+    "why": "It's the clearest demonstration of the section's claim that dimensional analysis works even where no physics is present. Here the 'dimension' of x is pure fiction &mdash; assigned by choice &mdash; and it still determines the answer's structure, because the structure was a consequence of consistency, not of physics.",
+    "math": "Ansatz: an inspired guess at the form of a solution. If it produces a solution you're done; if it fails, that doesn't mean no solution exists &mdash; only that the guess was poor."
+   }
+  },
+  {
    "id": "v4c1c5",
    "s": "1.3",
    "page": 27,
@@ -302,6 +406,19 @@
    }
   },
   {
+   "id": "v4c1d6",
+   "s": "1.4",
+   "page": 29,
+   "q": "Prove Buckingham &pi; in the monomial case. Where exactly does the <b>kernel</b> enter, and why does the theorem reduce to linear algebra?",
+   "a": "<b>Because exponents add.</b> Write q<sup>x</sup> = q&#8321;<sup>x&#8321;</sup>&hellip;q<sub>n</sub><sup>x<sub>n</sub></sup>, so q<sup>x+y</sup> = q<sup>x</sup>q<sup>y</sup> &mdash; multiplying quantities becomes <i>adding</i> exponent vectors. Dimensional analysis is now vector algebra.<p style='margin-top:8px'><b>Setup.</b> Homogeneity gives a b with f scaling by &lambda;&#8321;<sup>b&#8321;</sup>&hellip;&lambda;<sub>m</sub><sup>b<sub>m</sub></sup>. Assume f is a sum of monomials q<sup>x</sup>. Each surviving term must have <b>the same dimension as f</b>, which says exactly:</p><div class='eq'>Ax = b&nbsp;&nbsp;for every exponent vector x appearing in f</div><b>Now the standard solution structure.</b> Fix one solution x&#8320;. Every other is x = x&#8320; + v with <b>v &isin; N(A)</b>. Take a basis v&#8321;,&hellip;,v<sub>s</sub> of the kernel and define<div class='eq'>&pi;<sub>k</sub> = q<sup>v<sub>k</sub></sup>&nbsp;&mdash; dimensionless, because Av<sub>k</sub> = 0</div>Then x = x&#8320; + &Sigma;c<sub>k</sub>v<sub>k</sub> gives q<sup>x</sup> = q<sup>x&#8320;</sup>&prod;&pi;<sub>k</sub><sup>c<sub>k</sub></sup>. <b>Every term of f carries the same factor q<sup>x&#8320;</sup></b>, so<div class='eq'>0 = f(q&#8321;,&hellip;,q<sub>n</sub>) = q<sup>x&#8320;</sup>&#8901;g(&pi;&#8321;,&hellip;,&pi;<sub>s</sub>)</div>Divide it out. <b>The &pi;'s are a basis for the kernel of the exponent matrix</b> &mdash; that is the whole content of the theorem.",
+   "r": {
+    "rot": "take logs, basically. a product of powers becomes a sum of exponents, so 'what combinations are dimensionless' becomes 'what vectors does the exponent matrix send to zero' &mdash; the null space. every term in the law has to have the same dimension, so they all differ by something in the kernel, so they all share one common factor you can divide away. what's left involves only the kernel directions, and those are dimensionless by definition.",
+    "ex": "The count falls out too: s = nullity = n &minus; rank(A), and rank(A) &le; m, so you get at least n &minus; m dimensionless groups. In Example 1.4.4, n = 4 quantities, rank 3, so s = 1.",
+    "why": "It turns an intimidating physical principle into a routine computation: build the matrix of dimension exponents, compute its null space, read off the &pi;'s. The general proof at the end of the section drops the monomial assumption, but the mechanism is this one.",
+    "math": "A = [a<sub>ij</sub>] &isin; M<sub>m&times;n</sub>, [q<sub>j</sub>] = &prod;<sub>i</sub>L<sub>i</sub><sup>a<sub>ij</sub></sup>. s = nullity(A) = n &minus; rank(A). &pi;<sub>k</sub> = q<sup>v<sub>k</sub></sup> for a kernel basis {v<sub>k</sub>}; any other basis gives an equally valid set of &pi;'s."
+   }
+  },
+  {
    "id": "v4c1d3",
    "s": "1.4",
    "page": 30,
@@ -312,6 +429,19 @@
     "ex": "&pi; = m&#8304;v<sup>&minus;2</sup>h&sup1;g&sup1; = gh/v&sup2;. Setting it constant and solving gives h = cv&sup2;/g. Double the launch speed, quadruple the height.",
     "why": "This is the cleanest demonstration of what dimensional analysis buys you: a genuine physical insight (mass-independence) falling out of a nullspace computation, before any physics is done. Getting c requires actual physics; getting the <i>structure</i> did not.",
     "math": "Av = 0 with v = (0,&minus;2,1,1): M row 0 = 0 &#10003;; L row &minus;2+1+1 = 0 &#10003;; T row 2+0&minus;2 = 0 &#10003;."
+   }
+  },
+  {
+   "id": "v4c1d7",
+   "s": "1.4",
+   "page": 30,
+   "q": "Nullity 1 gives you a constant. What do you get when s &gt; 1, and what is <b>arbitrary</b> about it?",
+   "a": "<b>Remark 1.4.3.</b> With s &gt; 1, g(&pi;&#8321;,&hellip;,&pi;<sub>s</sub>) = 0 <b>does not imply the &pi;<sub>i</sub> are constant</b>. The counting argument behind Corollary 1.4.2 &mdash; a polynomial has finitely many roots, so a single &pi; can only take discrete values, so continuity pins it &mdash; simply does not apply to a relation among several unknowns.<p style='margin-top:8px'>What you get instead, by the <b>implicit function theorem</b>:</p><div class='eq'>&pi;<sub>s</sub> = h(&pi;&#8321;,&hellip;,&pi;<sub>s&minus;1</sub>) for some function h</div>An unknown function of s&minus;1 arguments rather than a number.<p><b>And the arbitrariness:</b> <i>the choice of which of the &pi;<sub>i</sub> to put last and label as &pi;<sub>s</sub> is arbitrary.</i> The theorem gives you a relation among the dimensionless groups, not a distinguished dependent variable &mdash; you can solve for whichever one you like.</p><p style='margin-top:8px'><b>This is why s = 1 is such a windfall.</b> At s = 1 dimensional analysis alone delivers the law up to a single number. At s = 2 it delivers only the <i>arguments</i> of an unknown function, and you still need experiment or theory to find the function.</p>",
+   "r": {
+    "rot": "one dimensionless group: it has to be constant, so you've basically derived the law from nothing. two or more: all you learn is that they're related by <i>some</i> function &mdash; which is still a big win, because you've cut the number of variables you need to experiment over, but it isn't the answer. and there's no natural 'output' among them; which one you solve for is your choice, not the physics'.",
+    "ex": "It's still enormously useful in practice: an experimenter facing 6 variables that collapse to 2 dimensionless groups plots one against the other and gets a <b>single curve</b> instead of a multi-dimensional sweep. That's why fluid dynamics is organized around Reynolds and Mach numbers.",
+    "why": "It marks the boundary of what dimensional analysis can do alone. Examples 1.4.4 and 1.4.5 both land at s = 1, which is why they look almost magical; the honest general case is a reduction in dimensionality, not a free answer.",
+    "math": "Cor 1.4.2 (s = 1): &pi; satisfies a polynomial in &pi;<sup>1/d</sup>, so its values are discrete; the implicit function theorem makes it continuous in the q's, hence locally constant. For s &gt; 1 the level set g = 0 is a hypersurface, not a discrete set."
    }
   },
   {
@@ -354,29 +484,16 @@
    }
   },
   {
-   "id": "v4c1e2",
+   "id": "v4c1e6",
    "s": "1.5",
-   "page": 41,
-   "q": "The pendulum equation is nonlinear. What assumption linearizes it, and what does that assumption cost you?",
-   "a": "The pendulum satisfies &theta;&#776; + (g/L)sin&theta; = 0 &mdash; nonlinear because of sin&theta;. For <b>small oscillations</b>, sin&theta; &asymp; &theta;, giving the <b>simple harmonic oscillator</b>:<div class='eq'>&theta;&#776; + (g/L)&theta; = 0,&nbsp;&nbsp; &theta;(t) = A cos(&omega;t + &phi;),&nbsp; &omega; = &radic;(g/L)</div><b>The cost:</b> the linearized period is independent of amplitude, but the true nonlinear pendulum's period <i>grows</i> with amplitude. The approximation is excellent for small swings and progressively wrong for large ones &mdash; and it destroys the large-angle behavior entirely (a real pendulum can go over the top; the linear one never can).",
+   "page": 36,
+   "q": "Generalize work to a vector force along a path. Show that the energy gained depends <b>only on the endpoints</b>.",
+   "a": "Along a path C parametrized by x(t) from x(&alpha;) = a to x(&beta;) = b, the infinitesimal work is F&#8901;dx with dx = x&#775;(t)dt:<div class='eq'>K = &int;<sub>C</sub>F(x)&#8901;dx = &int;<sub>&alpha;</sub><sup>&beta;</sup>F(x(t))&#8901;x&#775;(t) dt&nbsp;&nbsp;(1.31)</div><b>The key identity is the product rule for dot products:</b><div class='eq'>d/dt(v&#8901;v) = v&#775;&#8901;v + v&#8901;v&#775; = 2v&#8901;v&#775;</div>Now substitute Newton's second law F = ma with v = x&#775;, a = v&#775;:<div class='eq'>K = (m/2)&int;<sub>&alpha;</sub><sup>&beta;</sup> 2v&#8901;a dt = (m/2)&int;<sub>&alpha;</sub><sup>&beta;</sup> d/dt(v&#8901;v) dt</div>and the integrand is now an <b>exact derivative</b>, so the Fundamental Theorem collapses the whole integral:<div class='eq'>K = &frac12;m(&#8214;v(&beta;)&#8214;&sup2; &minus; &#8214;v(&alpha;)&#8214;&sup2;) = &frac12;m(&#8214;v&#8322;&#8214;&sup2; &minus; &#8214;v&#8321;&#8214;&sup2;)</div><b>The kinetic energy depends only on these velocities, and not on the actual path.</b> However complicated the route, only the initial and final speeds matter.",
    "r": {
-    "rot": "sin&theta; &asymp; &theta; for small &theta;. that one substitution turns an unsolvable equation into the most solvable equation in physics. but you paid for it: the real pendulum swings slower when you pull it further back, and the linearized one stubbornly insists the period never changes. for a grandfather clock, fine. for a pendulum swinging wildly, you deleted the physics you cared about. same trap as first-order lotka&ndash;volterra in &sect;1.2.",
-    "ex": "&sect;1.5.2 shows the reduction explicitly. Oscillators then show up everywhere &mdash; bridges, buildings, quantum mechanics, thermodynamics, biological rhythms, and financial markets (&sect;1.1.5, 'Oscillators Abound').",
-    "why": "Linearization is the single most-used move in the whole volume, and this is the cleanest example of both its power and its price. The recurring question &mdash; <i>does my conclusion survive the simplification I made for convenience?</i> &mdash; is exactly the structural-stability question from &sect;1.2.5.",
-    "math": "Small-angle: sin&theta; = &theta; &minus; &theta;&sup3;/6 + O(&theta;&#8309;). Truncating at first order gives constant period 2&pi;&radic;(L/g); the exact period involves a complete elliptic integral of the first kind and increases with amplitude."
-   }
-  },
-  {
-   "id": "v4c1e3",
-   "s": "1.5",
-   "page": 38,
-   "q": "What does conservation of energy give you that solving the ODE does not?",
-   "a": "For a conservative system, total energy E = K + U (kinetic plus potential) is <b>constant along every trajectory</b>. That is a <b>first integral</b>: one algebraic relation between position and velocity that holds for all time, obtained without ever solving the differential equation.<p style='margin-top:10px'>What it buys you:</p><ul style='margin:0;padding-left:19px'><li>It reduces the order of the system by one.</li><li>Level sets of E <b>are</b> the trajectories in phase space &mdash; you can draw the phase portrait without integrating anything.</li><li>It's a correctness check on any numerical solver: if computed energy drifts, your integrator is wrong (or needs to be symplectic).</li></ul>",
-   "r": {
-    "rot": "instead of solving for where the thing is at every instant, you find one number that never changes no matter where it goes. that constraint alone pins the trajectory to a curve. you get the whole phase portrait for free &mdash; every orbit is just a level set of the energy. and when you write a numerical solver in ch 4, watching the energy drift is how you catch that your method is garbage.",
-    "ex": "Example 1.4.4's constant: at launch all energy is kinetic (&frac12;mv&sup2;), at apex all potential (mgh). Conservation sets them equal, giving h = v&sup2;/(2g), which is exactly the c = &frac12; that Buckingham &pi; could not determine.",
-    "why": "Conserved quantities are the most valuable structure a dynamical system can have. They come from symmetries (Noether), they constrain trajectories without integration, and preserving them is the entire design goal of symplectic integrators. This idea recurs constantly through the rest of the volume.",
-    "math": "E(x, x&#775;) = &frac12;m&#8214;x&#775;&#8214;&sup2; + U(x), dE/dt = mx&#775;&middot;x&#776; + &nabla;U&middot;x&#775; = x&#775;&middot;(mx&#776; + &nabla;U) = 0 by Newton's second law with F = &minus;&nabla;U."
+    "rot": "work is force dotted into displacement, added up along the route. looks like you'd have to know the route. but the product rule turns the integrand into the derivative of &#8214;v&#8214;&sup2;, and an integral of a derivative only cares about the endpoints. so all the complexity of the path cancels &mdash; only how fast you started and how fast you finished survive.",
+    "ex": "This is the work&ndash;energy theorem, and it's why energy arguments beat force arguments so often: Example 1.4.4 gets a projectile's maximum height from &frac12;mv&sup2; = mgh in one line, with no trajectory computed at all.",
+    "why": "Path independence is what makes a <b>potential</b> possible. If work depended on the route, there'd be no well-defined U(x) and no F = &minus;&nabla;U, so no conserved total energy &mdash; the entire apparatus of the next subsection rests on this cancellation.",
+    "math": "&int;<sub>C</sub>F&#8901;dx = &Delta;K always (Newton's second law). &int;<sub>C</sub>F&#8901;dx = &minus;&Delta;U only for conservative F, i.e. F = &minus;&nabla;U."
    }
   },
   {
@@ -393,6 +510,19 @@
    }
   },
   {
+   "id": "v4c1e3",
+   "s": "1.5",
+   "page": 38,
+   "q": "What does conservation of energy give you that solving the ODE does not?",
+   "a": "For a conservative system, total energy E = K + U (kinetic plus potential) is <b>constant along every trajectory</b>. That is a <b>first integral</b>: one algebraic relation between position and velocity that holds for all time, obtained without ever solving the differential equation.<p style='margin-top:10px'>What it buys you:</p><ul style='margin:0;padding-left:19px'><li>It reduces the order of the system by one.</li><li>Level sets of E <b>are</b> the trajectories in phase space &mdash; you can draw the phase portrait without integrating anything.</li><li>It's a correctness check on any numerical solver: if computed energy drifts, your integrator is wrong (or needs to be symplectic).</li></ul>",
+   "r": {
+    "rot": "instead of solving for where the thing is at every instant, you find one number that never changes no matter where it goes. that constraint alone pins the trajectory to a curve. you get the whole phase portrait for free &mdash; every orbit is just a level set of the energy. and when you write a numerical solver in ch 4, watching the energy drift is how you catch that your method is garbage.",
+    "ex": "Example 1.4.4's constant: at launch all energy is kinetic (&frac12;mv&sup2;), at apex all potential (mgh). Conservation sets them equal, giving h = v&sup2;/(2g), which is exactly the c = &frac12; that Buckingham &pi; could not determine.",
+    "why": "Conserved quantities are the most valuable structure a dynamical system can have. They come from symmetries (Noether), they constrain trajectories without integration, and preserving them is the entire design goal of symplectic integrators. This idea recurs constantly through the rest of the volume.",
+    "math": "E(x, x&#775;) = &frac12;m&#8214;x&#775;&#8214;&sup2; + U(x), dE/dt = mx&#775;&middot;x&#776; + &nabla;U&middot;x&#775; = x&#775;&middot;(mx&#776; + &nabla;U) = 0 by Newton's second law with F = &minus;&nabla;U."
+   }
+  },
+  {
    "id": "v4c1e5",
    "s": "1.5",
    "page": 38,
@@ -403,6 +533,45 @@
     "ex": "The nonnegativity is the sanity check: y&#775;&sup2; &ge; 0, so dE<sub>h</sub>/dt &ge; 0. Heat never spontaneously converts back into Bob's motion, which is what you would demand of any physically sensible damping model.",
     "why": "It shows conservation laws working in two directions. Examples 1.5.1&ndash;1.5.2 use them to <b>verify</b> a model; this one uses them to <b>discover</b> a missing term. That is the same move as dimensional analysis in &sect;1.3 &mdash; a consistency requirement that constrains the answer before you solve anything.",
     "math": "Damped: dE/dt = &minus;cy&#775;&sup2; + dE<sub>h</sub>/dt. Setting dE/dt = 0 gives dE<sub>h</sub>/dt = cy&#775;&sup2; &ge; 0."
+   }
+  },
+  {
+   "id": "v4c1e7",
+   "s": "1.5",
+   "page": 38,
+   "q": "Derive the pendulum equation from the free-body diagram. Which force does the work, and where does &omega; come from?",
+   "a": "<b>Two forces on Bob:</b> gravity, straight down with magnitude mg, and the string <b>tension T</b>, pointing from Bob toward the fixed point &mdash; a centripetal force.<p style='margin-top:8px'><b>Decompose gravity along the string and across it.</b> The radial component is exactly cancelled by the tension (it equals &minus;T), so it moves Bob nowhere. What is left is the <b>tangential</b> component, and by similar triangles in the diagram:</p><div class='eq'>F = &minus;mg&#8201;sin(&theta;)</div><b>F is the only thing contributing to a change in arc length s</b>, and with a string of fixed length L the arc is s = L&theta;, so s&#776; = L&theta;&#776;. Newton's second law:<div class='eq'>&minus;mg&#8201;sin(&theta;) = ms&#776; = mL&theta;&#776;</div>Mass cancels &mdash; <b>the period doesn't depend on Bob's weight</b>:<div class='eq'>&theta;&#776; = &minus;(g/L)&#8201;sin(&theta;)&nbsp;&nbsp;(1.32)</div>Both g and L are positive, so set <b>&omega; = &radic;(g/L)</b>:<div class='eq'>&theta;&#776; + &omega;&sup2;sin(&theta;) = 0&nbsp;&nbsp;(1.33)</div>Compare the spring's &omega; = &radic;(k/m): in both cases &omega;&sup2; is <i>restoring strength over inertia</i>.",
+   "r": {
+    "rot": "gravity pulls straight down, but bob is on a string so he can only move along an arc. split gravity into the part the string cancels and the part that's left over &mdash; that leftover, mg&#8201;sin&theta;, is the only force doing anything. write newton's law along the arc, note the arc is L&theta;, and the mass cancels out. that cancellation is why a heavy and a light pendulum of the same length swing at the same rate.",
+    "ex": "The sin&theta; is what makes it nonlinear and hard. Replace it by &theta; for small angles and you're back at the harmonic oscillator &mdash; which is why &sect;1.1.5 says oscillators show up everywhere: half the time they're something else, linearized.",
+    "why": "It's the book's cleanest worked example of turning a physical picture into an ODE: identify the forces, project onto the direction motion can actually happen, apply F = ma, and pick coordinates that make the constraint (fixed string length) automatic.",
+    "math": "&omega; = &radic;(g/L), dimensions T<sup>&minus;1</sup> as required. Equation (1.33) is autonomous, second order, nonlinear; it has no elementary closed-form solution (the exact period involves elliptic integrals)."
+   }
+  },
+  {
+   "id": "v4c1e8",
+   "s": "1.5",
+   "page": 40,
+   "q": "Write the pendulum's total energy in terms of &theta;. Then read off where Bob is fastest and slowest &mdash; without solving anything.",
+   "a": "<b>Convert both energies to &theta;.</b> With Bob's height at rest taken as 0, trigonometry gives h = L &minus; L&#8201;cos&theta; and &#8214;v&#8214; = L&theta;&#775;:<div class='eq'>U = mgL(1 &minus; cos&theta;),&nbsp;&nbsp; K = &frac12;mL&sup2;&theta;&#775;&sup2;</div><div class='eq'>E = mgL(1 &minus; cos&theta;) + &frac12;mL&sup2;&theta;&#775;&sup2; + C</div><b>Check that it's conserved</b> by differentiating and using (1.32):<div class='eq'>dE/dt = mgL&#8201;sin(&theta;)&theta;&#775; + mL&sup2;&theta;&#775;&theta;&#776; = mL&theta;&#775;(g&#8201;sin&theta; + L&theta;&#776;) = <b>0</b></div>The bracket is exactly the equation of motion. <b>Now read the extremes off the algebra:</b><div class='eq'><b>&theta; extremal &rArr; &theta;&#775; = 0 &rArr; K = 0 &rArr; U maximal.</b> At the top of the swing Bob is momentarily still, and all the energy is potential.</div><div class='eq'><b>&theta; = 0 &rArr; U = mgL(1 &minus; cos 0) = 0, its minimum &rArr; K maximal.</b> At the bottom, all the energy is kinetic &mdash; Bob is fastest.</div>Since E is fixed, K and U trade off exactly: <b>one is maximal precisely where the other is minimal</b>, and you get the qualitative motion from one conservation law and no integration.",
+   "r": {
+    "rot": "energy is a fixed budget split between height and speed. at the ends of the swing you've spent it all on height, so you're momentarily motionless. at the bottom you've spent it all on speed, so you're flying. that's the entire behaviour of a pendulum, derived by noticing that two things add to a constant &mdash; no solving the equation, which is good, because that equation has no elementary solution.",
+    "ex": "Differentiating E and getting the equation of motion back is not a coincidence: dE/dt = 0 <i>is</i> the ODE, dressed differently. Same for the spring in Example 1.5.2, where dE/dt = y&#775;(ky + m&#255;&#776;) = 0 by (1.4).",
+    "why": "It's the payoff for &sect;1.5's whole build-up, and the argument xkcd 2539 is joking about &mdash; you can trust a pendulum not to swing back higher than it started, because the energy isn't there. It's also the concrete example of a first integral reducing a second-order problem to a first-order one.",
+    "math": "E = mgL(1&minus;cos&theta;) + &frac12;mL&sup2;&theta;&#775;&sup2;. Level sets of E are the phase-plane trajectories; closed level sets are oscillations, unbounded ones are full rotations over the top."
+   }
+  },
+  {
+   "id": "v4c1e2",
+   "s": "1.5",
+   "page": 41,
+   "q": "The pendulum equation is nonlinear. What assumption linearizes it, and what does that assumption cost you?",
+   "a": "The pendulum satisfies &theta;&#776; + (g/L)sin&theta; = 0 &mdash; nonlinear because of sin&theta;. For <b>small oscillations</b>, sin&theta; &asymp; &theta;, giving the <b>simple harmonic oscillator</b>:<div class='eq'>&theta;&#776; + (g/L)&theta; = 0,&nbsp;&nbsp; &theta;(t) = A cos(&omega;t + &phi;),&nbsp; &omega; = &radic;(g/L)</div><b>The cost:</b> the linearized period is independent of amplitude, but the true nonlinear pendulum's period <i>grows</i> with amplitude. The approximation is excellent for small swings and progressively wrong for large ones &mdash; and it destroys the large-angle behavior entirely (a real pendulum can go over the top; the linear one never can).",
+   "r": {
+    "rot": "sin&theta; &asymp; &theta; for small &theta;. that one substitution turns an unsolvable equation into the most solvable equation in physics. but you paid for it: the real pendulum swings slower when you pull it further back, and the linearized one stubbornly insists the period never changes. for a grandfather clock, fine. for a pendulum swinging wildly, you deleted the physics you cared about. same trap as first-order lotka&ndash;volterra in &sect;1.2.",
+    "ex": "&sect;1.5.2 shows the reduction explicitly. Oscillators then show up everywhere &mdash; bridges, buildings, quantum mechanics, thermodynamics, biological rhythms, and financial markets (&sect;1.1.5, 'Oscillators Abound').",
+    "why": "Linearization is the single most-used move in the whole volume, and this is the cleanest example of both its power and its price. The recurring question &mdash; <i>does my conclusion survive the simplification I made for convenience?</i> &mdash; is exactly the structural-stability question from &sect;1.2.5.",
+    "math": "Small-angle: sin&theta; = &theta; &minus; &theta;&sup3;/6 + O(&theta;&#8309;). Truncating at first order gives constant period 2&pi;&radic;(L/g); the exact period involves a complete elliptic integral of the first kind and increases with amplitude."
    }
   }
  ],
