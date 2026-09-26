@@ -113,6 +113,32 @@
  },
  "cards": [
   {
+   "id": "v3c3a3",
+   "s": "3.1",
+   "page": 176,
+   "q": "Name the four data types and say what operations are legal for each.",
+   "a": "<div class='eq'><b>Nominal</b> &mdash; finite support, values have <b>no numerical meaning</b>. Zip codes, gender, political party, eye colour, species.<br>Legal: <b>counting</b>, hence the <b>mode</b>. Not the median (needs a ranking) or the mean (needs addition).<br><br><b>Ordinal</b> &mdash; a rank ordering. Star ratings, preference lists, agree/disagree scales. <b>Only the order matters; distances are meaningless.</b><br>Legal: anything derived from <b>sorting</b> &mdash; median, quartiles. <b>Not the mean.</b><br><br><b>Interval</b> &mdash; order <b>and</b> distance are meaningful, but zero is arbitrary. Celsius and Fahrenheit.<br>Legal: addition, subtraction, average. <b>Not ratios.</b><br><br><b>Ratio</b> &mdash; order, distance, <b>and ratios</b> meaningful, because 0 really means none. Weight, counts, time, Kelvin.<br>Legal: everything.</div><b>Why interval fails at ratios:</b> 20&deg;C is not twice as hot as 10&deg;C &mdash; convert to Fahrenheit and you get 68 and 50, and 68 is not twice 50. Nor is &minus;10&deg;C &ldquo;as cold as 10&deg;C is warm,&rdquo; because 0&deg;C doesn't mean <i>no temperature</i>. 20K genuinely is twice 10K.<p style='margin-top:8px'><b>Nominal data with more than two values should not be numbered.</b> Sums and averages become computable but meaningless. Use one-hot encoding instead &mdash; and note that a one-hot column sum <b>is</b> meaningful: it counts the members of that class. Dichotomous nominal data is the safe exception: encode as 0/1, and the average is the proportion of 1s.</p>",
+   "r": {
+    "rot": "four kinds of data and each one licenses different arithmetic. <b>nominal</b>: labels. you can count them, that's it &mdash; mode only. <b>ordinal</b>: ranked but unevenly spaced. star ratings: 4 is better than 3, but the gap 3&rarr;4 isn't the same as 1&rarr;2, so a median is fine and an <b>average is nonsense</b> (people compute it anyway). <b>interval</b>: even spacing but an arbitrary zero &mdash; celsius. differences are fine, ratios are not. <b>ratio</b>: real zero, everything works. zip codes look like numbers and are not; 00611 is a zip code, 611 isn't.",
+    "ex": "The iris table in the book makes the one-hot point concretely: three species become three columns, each row sums to 1 (every plant is exactly one species), and each <b>column</b> sum counts the plants of that species. Numbers with real meaning, unlike species = 1, 2, 3.",
+    "why": "The type determines which of Definition 3.1.1's descriptors you may even compute, which is why the section leads with it. It's the same warning as Nota Bene 1.5.20 about scalar-categorical encodings, now sharpened into a taxonomy &mdash; and the temptation to average ordinal data is the one people actually give in to.",
+    "math": "Mode: all four. Median/quartiles/IQR: ordinal, interval, ratio. Mean: interval and ratio. Ratios: ratio only."
+   }
+  },
+  {
+   "id": "v3c3a6",
+   "s": "3.1",
+   "page": 177,
+   "q": "Nominal data with more than two values: why is a numeric code dangerous, and what is the fix?",
+   "a": "<b>The danger is that nothing stops you.</b> Code species as 1, 2, 3 and averages and sums <i>can be computed but are meaningless</i> &mdash; and <i>it is easy to accidentally apply a function to such data and unthinkingly assume that the result is meaningful when it is not.</i> The arithmetic succeeds silently; only the interpretation is broken.<p style='margin-top:8px'><b>The fix: one-hot (dummy) encoding.</b> With k possible values, map value i to the k-dimensional vector with a 1 in slot i and zeros elsewhere.</p><div class='eq'>setosa &rarr; (1,0,0)&nbsp;&middot;&nbsp;virginica &rarr; (0,1,0)&nbsp;&middot;&nbsp;versicolor &rarr; (0,0,1)</div><b>Now the arithmetic means something.</b> Each <b>row sums to 1</b> &mdash; every plant is exactly one species. Each <b>column sums to the count</b> of plants of that species. <i>The numerical values in the one-hot encodings are actually numerically meaningful.</i><p style='margin-top:8px'><b>The dichotomous case is the exception.</b> With only two values, code them 0 and 1: the sum is the <b>count</b> of the 1s, and the average is the <b>proportion</b>. Both meaningful &mdash; which is why indicator random variables work at all.</p>",
+   "r": {
+    "rot": "if you number the categories 1, 2, 3, your code will happily compute an average species of 1.7 and never complain. the problem isn't that it's hard, it's that it's easy and wrong. give each category its own column instead, with a 1 in exactly one slot. now adding things up gives you counts, which is a real answer to a real question. two categories are the special case where numbering works &mdash; 0/1 averages to a percentage.",
+    "ex": "The columns are exactly the indicator random variables of &sect;1.6.4, so their means are probabilities by Proposition 1.6.13. And their joint law is Cat(p), whose mean is p itself and whose covariance matrix is diag(p) &minus; pp<sup>T</sup>.",
+    "why": "It is the practical face of Nota Bene 1.5.20's warning about scalar categorical variables, and it's why every modern data pipeline has a one-hot utility built in. The same encoding is what makes cross-entropy loss, softmax outputs, and multinomial regression expressible.",
+    "math": "Nominal admits only the <b>mode</b> &mdash; counting is the only legal operation, since a median needs a ranking and a mean needs addition. One-hot converts a nominal variable into k dichotomous ones, each of which does admit a mean."
+   }
+  },
+  {
    "id": "v3c3a1",
    "s": "3.1",
    "page": 178,
@@ -136,19 +162,6 @@
     "ex": "Bandwidth is the whole ballgame. Small h gives narrow spikes and a lumpy overfit estimate; large h smears everything into one blob. Figure 3.5 shows h = 0.1 against h = 0.5 on the same data.",
     "why": "Bandwidth choice is the bias&ndash;variance tradeoff in its purest visible form, and you'll meet the same tension as model complexity in &sect;3.4 and as regularization in Ch 5. It's also why two people can plot &lsquo;the same data&rsquo; and see different distributions.",
     "math": "Kernel (Def 3.1.4): K &ge; 0 integrable with &int;K = 1, &int;xK = 0, &int;x&sup2;K &gt; 0. Common kernels: rectangular &frac12;1<sub>[&minus;1,1]</sub>, Gaussian, Epanechnikov &frac34;(1&minus;x&sup2;)1<sub>[&minus;1,1]</sub>, triangular (1&minus;|x|)1<sub>[&minus;1,1]</sub>."
-   }
-  },
-  {
-   "id": "v3c3a3",
-   "s": "3.1",
-   "page": 176,
-   "q": "Name the four data types and say what operations are legal for each.",
-   "a": "<div class='eq'><b>Nominal</b> &mdash; finite support, values have <b>no numerical meaning</b>. Zip codes, gender, political party, eye colour, species.<br>Legal: <b>counting</b>, hence the <b>mode</b>. Not the median (needs a ranking) or the mean (needs addition).<br><br><b>Ordinal</b> &mdash; a rank ordering. Star ratings, preference lists, agree/disagree scales. <b>Only the order matters; distances are meaningless.</b><br>Legal: anything derived from <b>sorting</b> &mdash; median, quartiles. <b>Not the mean.</b><br><br><b>Interval</b> &mdash; order <b>and</b> distance are meaningful, but zero is arbitrary. Celsius and Fahrenheit.<br>Legal: addition, subtraction, average. <b>Not ratios.</b><br><br><b>Ratio</b> &mdash; order, distance, <b>and ratios</b> meaningful, because 0 really means none. Weight, counts, time, Kelvin.<br>Legal: everything.</div><b>Why interval fails at ratios:</b> 20&deg;C is not twice as hot as 10&deg;C &mdash; convert to Fahrenheit and you get 68 and 50, and 68 is not twice 50. Nor is &minus;10&deg;C &ldquo;as cold as 10&deg;C is warm,&rdquo; because 0&deg;C doesn't mean <i>no temperature</i>. 20K genuinely is twice 10K.<p style='margin-top:8px'><b>Nominal data with more than two values should not be numbered.</b> Sums and averages become computable but meaningless. Use one-hot encoding instead &mdash; and note that a one-hot column sum <b>is</b> meaningful: it counts the members of that class. Dichotomous nominal data is the safe exception: encode as 0/1, and the average is the proportion of 1s.</p>",
-   "r": {
-    "rot": "four kinds of data and each one licenses different arithmetic. <b>nominal</b>: labels. you can count them, that's it &mdash; mode only. <b>ordinal</b>: ranked but unevenly spaced. star ratings: 4 is better than 3, but the gap 3&rarr;4 isn't the same as 1&rarr;2, so a median is fine and an <b>average is nonsense</b> (people compute it anyway). <b>interval</b>: even spacing but an arbitrary zero &mdash; celsius. differences are fine, ratios are not. <b>ratio</b>: real zero, everything works. zip codes look like numbers and are not; 00611 is a zip code, 611 isn't.",
-    "ex": "The iris table in the book makes the one-hot point concretely: three species become three columns, each row sums to 1 (every plant is exactly one species), and each <b>column</b> sum counts the plants of that species. Numbers with real meaning, unlike species = 1, 2, 3.",
-    "why": "The type determines which of Definition 3.1.1's descriptors you may even compute, which is why the section leads with it. It's the same warning as Nota Bene 1.5.20 about scalar-categorical encodings, now sharpened into a taxonomy &mdash; and the temptation to average ordinal data is the one people actually give in to.",
-    "math": "Mode: all four. Median/quartiles/IQR: ordinal, interval, ratio. Mean: interval and ratio. Ratios: ratio only."
    }
   },
   {
@@ -178,6 +191,19 @@
    }
   },
   {
+   "id": "v3c3b3",
+   "s": "3.2",
+   "page": 185,
+   "q": "State the Chernoff bound, and the lemma that makes it usable.",
+   "a": "<b>Chernoff's bound.</b> For any random variable X and constants a, t &gt; 0:<div class='eq'>P(X &ge; a) &le; E[e<sup>tX</sup>] / e<sup>ta</sup>,&nbsp;&nbsp;so&nbsp;&nbsp;P(X &ge; a) &le; inf<sub>t&gt;0</sub> e<sup>&minus;ta</sup>E[e<sup>tX</sup>]</div>It is Markov's inequality applied to e<sup>tX</sup> &mdash; and because it holds for <b>every</b> t, you get to <b>optimize over t</b>. That free parameter is where all the sharpness comes from.<p style='margin-top:10px'><b>To use it you must bound E[e<sup>tX</sup>], which is what Lemma 3.2.1 does.</b> If a &le; X &le; b and E[X] = 0, then for any t &isin; R:</p><div class='eq'>E[e<sup>tX</sup>] &le; e<sup>t&sup2;(b&minus;a)&sup2;/8</sup></div><b>The proof mechanism.</b> Write X = &lambda;b + (1&minus;&lambda;)a with &lambda; = (X&minus;a)/(b&minus;a). Since y &#8614; e<sup>ty</sup> is <b>convex</b>, e<sup>tX</sup> &le; &lambda;e<sup>tb</sup> + (1&minus;&lambda;)e<sup>ta</sup>. Taking expectations and using E[X] = 0 gives E[e<sup>tX</sup>] &le; e<sup>g(u)</sup> with u = t(b&minus;a); one checks g(0) = g&prime;(0) = 0 and g&Prime;(u) &le; &frac14;, so Taylor's theorem gives g(u) &le; u&sup2;/8.<p style='margin-top:8px'>Everything hinges on <b>boundedness</b> &mdash; that is the extra information Hoeffding has and Chebyshev doesn't.</p>",
+   "r": {
+    "rot": "markov's inequality is weak because it only knows the mean. chernoff's trick: don't bound X, bound e<sup>tX</sup> &mdash; exponentials punish large values hard, so the bound gets much tighter, and you can tune t to make it as tight as possible. the catch is you now need to control E[e<sup>tX</sup>], the moment generating function. the lemma does that for <b>bounded</b> variables: convexity lets you replace e<sup>tX</sup> by a straight line between the endpoints, and after some taylor bookkeeping you get e<sup>t&sup2;(b&minus;a)&sup2;/8</sup>. that's the whole engine behind hoeffding.",
+    "ex": "The choice of t is not decorative. In Hoeffding's proof, setting t = 4&epsilon;n/(b&minus;a)&sup2; is exactly what turns the generic bound into e<sup>&minus;2n&epsilon;&sup2;/(b&minus;a)&sup2;</sup> &mdash; picking the wrong t gives a valid but useless bound.",
+    "why": "It's why exponential concentration is possible at all. Chebyshev decays like 1/n because it works with variance; Chernoff decays like e<sup>&minus;n</sup> because the exponential moment carries far more information. The price is that you need enough control on the distribution to bound that moment.",
+    "math": "P(X &ge; a) &le; inf<sub>t&gt;0</sub>e<sup>&minus;ta</sup>E[e<sup>tX</sup>] (Markov applied to e<sup>tX</sup>). Bounded X with mean 0: E[e<sup>tX</sup>] &le; e<sup>t&sup2;(b&minus;a)&sup2;/8</sup>."
+   }
+  },
+  {
    "id": "v3c3b1",
    "s": "3.2",
    "page": 186,
@@ -188,6 +214,19 @@
     "ex": "&sect;3.2 also gives <b>Bernstein</b> (Thm 3.2.6), which additionally uses the variance and beats Hoeffding when the variance is small relative to the range.",
     "why": "This is why ensemble methods provably work. Chebyshev's 1/n would say you need impractically many weak classifiers; Hoeffding says a few hundred suffices. The whole quantitative story of &sect;3.3 rests on having an exponential bound.",
     "math": "Chernoff: P(X &gt; &epsilon;) &le; inf<sub>t&ge;0</sub> e<sup>&minus;t&epsilon;</sup>E[e<sup>tX</sup>]. Hoeffding's lemma bounds the m.g.f. of a bounded mean-zero variable."
+   }
+  },
+  {
+   "id": "v3c3b6",
+   "s": "3.2",
+   "page": 186,
+   "q": "Assemble the proof of Hoeffding's inequality. Where does the <b>exponential</b> in n come from?",
+   "a": "<b>Four moves, each doing one job.</b><div class='eq'><b>1. Normalize.</b> Assume &mu; = 0 without loss of generality.</div><div class='eq'><b>2. Chernoff.</b> P(&mu;&#770;<sub>n</sub> &gt; &epsilon;) &le; inf<sub>t&ge;0</sub> e<sup>&minus;t&epsilon;</sup>E[e<sup>t&mu;&#770;<sub>n</sub></sup>] &mdash; trade a tail probability for a moment generating function.</div><div class='eq'><b>3. Independence.</b> E[e<sup>(t/n)&Sigma;X<sub>i</sub></sup>] = &prod;<sub>i</sub>E[e<sup>(t/n)X<sub>i</sub></sup>] &mdash; <b>this is where n enters</b>, as a product of n factors.</div><div class='eq'><b>4. Hoeffding's lemma</b> (3.5): each factor &le; e<sup>t&sup2;(b&minus;a)&sup2;/8n&sup2;</sup>, so the product is e<sup>t&sup2;(b&minus;a)&sup2;/8n</sup>.</div>Now optimize. Setting <b>t = 4&epsilon;n/(b&minus;a)&sup2;</b> minimizes e<sup>&minus;t&epsilon;</sup>e<sup>t&sup2;(b&minus;a)&sup2;/8n</sup> and gives<div class='eq'>P(&mu;&#770;<sub>n</sub> &gt; &epsilon;) &le; e<sup>&minus;2n&epsilon;&sup2;/(b&minus;a)&sup2;</sup></div>Double it for the other tail. <b>The exponential in n comes from step 3</b> &mdash; n independent factors multiply, and a product of n things below 1 decays geometrically, whereas Chebyshev only ever adds up variances and gets 1/n.<p style='margin-top:8px'><b>What each hypothesis buys:</b> <b>boundedness</b> (a &le; X<sub>i</sub> &le; b) makes the lemma work and sets the rate; <b>independence</b> makes the m.g.f. factor. Drop either and the exponential is gone.</p>",
+   "r": {
+    "rot": "chebyshev gives you 1/n. hoeffding gives you e<sup>&minus;n</sup>. the difference is one step: exponentiate first, <i>then</i> use independence, because expectations of products of independent things factor &mdash; and n factors each slightly under 1 collapse fast. variances only add, which is why the variance route can never do better than 1/n. the price is that you need the variables to be bounded.",
+    "ex": "The free parameter t is doing real work: Chernoff holds for <i>every</i> t &gt; 0, so you get a whole family of bounds and pick the best. The optimization over t is what converts a loose inequality into a sharp one.",
+    "why": "It's the workhorse for finite-sample guarantees in machine learning. Exponential concentration means a modest sample pins a probability down tightly, which is what makes out-of-bag estimates and ensemble analyses (Cram&eacute;r, Breiman) give usable numbers rather than asymptotic promises.",
+    "math": "Hoeffding's lemma: a &le; X &le; b, E[X] = 0 &rArr; E[e<sup>tX</sup>] &le; e<sup>t&sup2;(b&minus;a)&sup2;/8</sup>. Proved by convexity of e<sup>ty</sup>, then Taylor with g&Prime; &le; 1/4. Rate depends on the <b>range</b> b&minus;a, not the variance &mdash; which is why Bernstein beats it when the variance is small."
    }
   },
   {
@@ -204,16 +243,16 @@
    }
   },
   {
-   "id": "v3c3b3",
+   "id": "v3c3b5",
    "s": "3.2",
-   "page": 185,
-   "q": "State the Chernoff bound, and the lemma that makes it usable.",
-   "a": "<b>Chernoff's bound.</b> For any random variable X and constants a, t &gt; 0:<div class='eq'>P(X &ge; a) &le; E[e<sup>tX</sup>] / e<sup>ta</sup>,&nbsp;&nbsp;so&nbsp;&nbsp;P(X &ge; a) &le; inf<sub>t&gt;0</sub> e<sup>&minus;ta</sup>E[e<sup>tX</sup>]</div>It is Markov's inequality applied to e<sup>tX</sup> &mdash; and because it holds for <b>every</b> t, you get to <b>optimize over t</b>. That free parameter is where all the sharpness comes from.<p style='margin-top:10px'><b>To use it you must bound E[e<sup>tX</sup>], which is what Lemma 3.2.1 does.</b> If a &le; X &le; b and E[X] = 0, then for any t &isin; R:</p><div class='eq'>E[e<sup>tX</sup>] &le; e<sup>t&sup2;(b&minus;a)&sup2;/8</sup></div><b>The proof mechanism.</b> Write X = &lambda;b + (1&minus;&lambda;)a with &lambda; = (X&minus;a)/(b&minus;a). Since y &#8614; e<sup>ty</sup> is <b>convex</b>, e<sup>tX</sup> &le; &lambda;e<sup>tb</sup> + (1&minus;&lambda;)e<sup>ta</sup>. Taking expectations and using E[X] = 0 gives E[e<sup>tX</sup>] &le; e<sup>g(u)</sup> with u = t(b&minus;a); one checks g(0) = g&prime;(0) = 0 and g&Prime;(u) &le; &frac14;, so Taylor's theorem gives g(u) &le; u&sup2;/8.<p style='margin-top:8px'>Everything hinges on <b>boundedness</b> &mdash; that is the extra information Hoeffding has and Chebyshev doesn't.</p>",
+   "page": 187,
+   "q": "What is a concentration inequality for, and how does Example 3.2.5 apply one to a classifier?",
+   "a": "A <b>concentration inequality</b> has the shape<div class='eq'>P( |f(X&#8321;,&hellip;,X<sub>n</sub>) &minus; E[f]| &gt; &epsilon; ) &le; g(n)</div>&mdash; a bound on the chance that a function of many random variables strays from its mean. Chebyshev and the weak law are the basic examples; this is the general phenomenon of <b>concentration of measure</b>, and such inequalities are &ldquo;very useful for quantifying the performance of machine learning algorithms.&rdquo;<p style='margin-top:10px'><b>Example 3.2.5 &mdash; the payoff.</b> For a classifier h : X &rarr; {0,1}, the <b>misclassification rate</b> is the quantity you care about and cannot compute:</p><div class='eq'>R(h) = P(h(x) &ne; y) = E<sub>(x,y)</sub>[1<sub>h(x)&ne;y</sub>]</div>The <b>training error</b> R&#770;<sub>n</sub>(h) = (1/n)&sum;<sub>i</sub>1<sub>h(X<sub>i</sub>)&ne;Y<sub>i</sub></sub> is the quantity you <b>can</b> compute. Cramér's theorem connects them:<div class='eq'>|R(h) &minus; R&#770;<sub>n</sub>(h)| &le; &radic;( (1/2n) log(2/&delta;) )&nbsp;&nbsp;with probability at least 1 &minus; &delta;</div><b>This does two things at once.</b> It shows the training error converges in probability to the true misclassification rate as n &rarr; &infin;, and it gives an <b>explicit bound on how fast</b>.",
    "r": {
-    "rot": "markov's inequality is weak because it only knows the mean. chernoff's trick: don't bound X, bound e<sup>tX</sup> &mdash; exponentials punish large values hard, so the bound gets much tighter, and you can tune t to make it as tight as possible. the catch is you now need to control E[e<sup>tX</sup>], the moment generating function. the lemma does that for <b>bounded</b> variables: convexity lets you replace e<sup>tX</sup> by a straight line between the endpoints, and after some taylor bookkeeping you get e<sup>t&sup2;(b&minus;a)&sup2;/8</sup>. that's the whole engine behind hoeffding.",
-    "ex": "The choice of t is not decorative. In Hoeffding's proof, setting t = 4&epsilon;n/(b&minus;a)&sup2; is exactly what turns the generic bound into e<sup>&minus;2n&epsilon;&sup2;/(b&minus;a)&sup2;</sup> &mdash; picking the wrong t gives a valid but useless bound.",
-    "why": "It's why exponential concentration is possible at all. Chebyshev decays like 1/n because it works with variance; Chernoff decays like e<sup>&minus;n</sup> because the exponential moment carries far more information. The price is that you need enough control on the distribution to bound that moment.",
-    "math": "P(X &ge; a) &le; inf<sub>t&gt;0</sub>e<sup>&minus;ta</sup>E[e<sup>tX</sup>] (Markov applied to e<sup>tX</sup>). Bounded X with mean 0: E[e<sup>tX</sup>] &le; e<sup>t&sup2;(b&minus;a)&sup2;/8</sup>."
+    "rot": "the whole point of these inequalities is to bound something you can't measure by something you can. you want to know how often your classifier is wrong <b>on the whole world</b>. you can only measure how often it's wrong on your training set. cramér says those two numbers are within &radic;(log(2/&delta;)/2n) of each other with probability 1&minus;&delta; &mdash; not just &ldquo;they converge eventually,&rdquo; but a concrete number you can compute before you collect the data. that's what makes it a sample-size calculator rather than a reassurance.",
+    "ex": "Note the shape: error &prop; 1/&radic;n but confidence enters only through log(1/&delta;). <b>Certainty is cheap, precision is expensive</b> &mdash; going from 95% to 99.9% confidence costs almost nothing, while halving the error bar needs four times the data.",
+    "why": "This is the theoretical justification for the entire test-set methodology of &sect;5.3.1. It is also what Chapter 3 needs for ensembles: Condorcet and Breiman are statements about how a vote concentrates, and Cramér is what turns them into bounds on how many weak classifiers you actually need.",
+    "math": "P(|f &minus; E[f]| &gt; &epsilon;) &le; g(n). Cramér: |R(h) &minus; R&#770;<sub>n</sub>(h)| &le; &radic;(log(2/&delta;)/2n) w.p. &ge; 1&minus;&delta;."
    }
   },
   {
@@ -230,19 +269,6 @@
    }
   },
   {
-   "id": "v3c3b5",
-   "s": "3.2",
-   "page": 187,
-   "q": "What is a concentration inequality for, and how does Example 3.2.5 apply one to a classifier?",
-   "a": "A <b>concentration inequality</b> has the shape<div class='eq'>P( |f(X&#8321;,&hellip;,X<sub>n</sub>) &minus; E[f]| &gt; &epsilon; ) &le; g(n)</div>&mdash; a bound on the chance that a function of many random variables strays from its mean. Chebyshev and the weak law are the basic examples; this is the general phenomenon of <b>concentration of measure</b>, and such inequalities are &ldquo;very useful for quantifying the performance of machine learning algorithms.&rdquo;<p style='margin-top:10px'><b>Example 3.2.5 &mdash; the payoff.</b> For a classifier h : X &rarr; {0,1}, the <b>misclassification rate</b> is the quantity you care about and cannot compute:</p><div class='eq'>R(h) = P(h(x) &ne; y) = E<sub>(x,y)</sub>[1<sub>h(x)&ne;y</sub>]</div>The <b>training error</b> R&#770;<sub>n</sub>(h) = (1/n)&sum;<sub>i</sub>1<sub>h(X<sub>i</sub>)&ne;Y<sub>i</sub></sub> is the quantity you <b>can</b> compute. Cramér's theorem connects them:<div class='eq'>|R(h) &minus; R&#770;<sub>n</sub>(h)| &le; &radic;( (1/2n) log(2/&delta;) )&nbsp;&nbsp;with probability at least 1 &minus; &delta;</div><b>This does two things at once.</b> It shows the training error converges in probability to the true misclassification rate as n &rarr; &infin;, and it gives an <b>explicit bound on how fast</b>.",
-   "r": {
-    "rot": "the whole point of these inequalities is to bound something you can't measure by something you can. you want to know how often your classifier is wrong <b>on the whole world</b>. you can only measure how often it's wrong on your training set. cramér says those two numbers are within &radic;(log(2/&delta;)/2n) of each other with probability 1&minus;&delta; &mdash; not just &ldquo;they converge eventually,&rdquo; but a concrete number you can compute before you collect the data. that's what makes it a sample-size calculator rather than a reassurance.",
-    "ex": "Note the shape: error &prop; 1/&radic;n but confidence enters only through log(1/&delta;). <b>Certainty is cheap, precision is expensive</b> &mdash; going from 95% to 99.9% confidence costs almost nothing, while halving the error bar needs four times the data.",
-    "why": "This is the theoretical justification for the entire test-set methodology of &sect;5.3.1. It is also what Chapter 3 needs for ensembles: Condorcet and Breiman are statements about how a vote concentrates, and Cramér is what turns them into bounds on how many weak classifiers you actually need.",
-    "math": "P(|f &minus; E[f]| &gt; &epsilon;) &le; g(n). Cramér: |R(h) &minus; R&#770;<sub>n</sub>(h)| &le; &radic;(log(2/&delta;)/2n) w.p. &ge; 1&minus;&delta;."
-   }
-  },
-  {
    "id": "v3c3c1",
    "s": "3.3",
    "page": 191,
@@ -253,19 +279,6 @@
     "ex": "51% accurate voters: a single one is nearly useless. Ten thousand independent ones get the majority right essentially always. That gap is why you'd rather build 500 bad trees than one good one.",
     "why": "This is the theoretical licence for every ensemble method in the chapter. It's also the reason &sect;3.5 spends all its effort on <b>decorrelating</b> trees rather than improving them &mdash; condition (ii) is the fragile one, and Breiman's theorem quantifies exactly what it costs when it fails.",
     "math": "Prop 3.3.3 (via Chebyshev): P(&Sigma;Z<sub>i</sub> &gt; 0) &ge; 1 &minus; (1&minus;4a&sup2;)/(4na&sup2;). Cram&eacute;r sharpens this to &gt; 1 &minus; 2e<sup>&minus;2a&sup2;n</sup>."
-   }
-  },
-  {
-   "id": "v3c3c2",
-   "s": "3.3",
-   "page": 193,
-   "q": "State Breiman's theorem. What does it say about correlated ensembles?",
-   "a": "Drop independence entirely. Assume only that each Z<sub>i</sub> has support {&minus;1,1}. <b>Definition 3.3.5:</b> the <b>strength</b> is s = E[Z], and the <b>average correlation</b> is<div class='eq'>&rho; = <span class='frac'><span>&Sigma;<sub>i,j</sub> Cov(Z<sub>i</sub>,Z<sub>j</sub>)</span><span>&Sigma;<sub>i,j</sub> &radic;(Var(Z<sub>i</sub>)Var(Z<sub>j</sub>))</span></span></div><b>Theorem 3.3.6 (Breiman).</b><div class='eq'>P(F(X) &ne; Y) &le; &rho; &middot; <span class='frac'><span>1 &minus; s&sup2;</span><span>s&sup2;</span></span></div><b>Two dials.</b> Generalization error is small if the average correlation <b>&rho; is small</b>, or if the strength <b>s is large</b>. Notably n has vanished &mdash; adding more <i>correlated</i> trees buys you nothing.",
-   "r": {
-    "rot": "condorcet needed independence, which you never actually have. breiman says fine &mdash; here's the bill. error &le; &rho;(1&minus;s&sup2;)/s&sup2;: correlation hurts you linearly, strength helps you. and look what's <b>missing</b> from the formula: n. throwing more trees at a correlated forest does nothing. that's why random forests work so hard to make trees <i>different</i> rather than <i>good</i>.",
-    "ex": "Proof is Chebyshev plus Jensen used twice: P(F &ne; Y) &le; Var(Z)/s&sup2;, and Var(Z) = &rho;((1/n)&Sigma;&radic;Var(Z<sub>i</sub>))&sup2; &le; &rho;(1&minus;s&sup2;).",
-    "why": "This bound <i>is</i> the design brief for random forests, and Breiman wrote both. Every trick in &sect;3.5 &mdash; bagging, attribute bagging, random subspaces &mdash; exists to push &rho; down without pushing s down too far. The two dials trade off against each other.",
-    "math": "s = E[Z], &rho; = average pairwise correlation. Error &le; &rho;(1&minus;s&sup2;)/s&sup2;. Independent case &rho; &rarr; 0 recovers Condorcet."
    }
   },
   {
@@ -282,6 +295,19 @@
    }
   },
   {
+   "id": "v3c3c6",
+   "s": "3.3",
+   "page": 191,
+   "q": "Nota Bene 3.3.2 draws a conclusion about <b>democracy</b> from Condorcet. What is it, and which hypothesis is doing the work?",
+   "a": "<b>The advice:</b> <i>you might not want to get all your news from the same source, and differences of opinion might be a good thing.</i><p style='margin-top:8px'><b>The hypothesis being defended is independence.</b> Condorcet's three conditions are:</p><div class='eq'>(i) the voters must be <b>better than random</b><br>(ii) the voters must be <b>independent of one another</b><br>(iii) the more such voters, the better</div><b>(i) and (iii) are the ones people notice; (ii) is the one that actually fails.</b> A million voters who all read the same source are not a million voters &mdash; they are close to <b>one</b> voter, repeated. Their errors are the same errors, so averaging doesn't cancel anything.<p style='margin-top:8px'><b>And the conclusion inverts the usual intuition.</b> Disagreement isn't a defect in a group to be engineered away; it is <i>evidence that the voters are independent</i>, which is what makes the aggregate reliable. A group that agrees unanimously has given you one opinion's worth of information.</p><p><b>Same lesson, same chapter, different words:</b> this is exactly why &sect;3.5 goes to such lengths &mdash; bootstrap resampling, attribute bagging, random subspaces &mdash; to force the trees in a forest to be different from one another.</p>",
+   "r": {
+    "rot": "a big group beats an expert only if the members are wrong in <i>different</i> ways. if everyone gets their information from the same place, their mistakes line up and averaging them changes nothing &mdash; you've got one voter with a loud voice. so disagreement inside a group isn't noise you should want to eliminate; it's the thing that makes the group's answer worth more than any individual's.",
+    "ex": "Breiman's theorem (&sect;3.3.2) puts a number on the damage: the ensemble's error bound degrades with the correlation &rho; between members, and correlated ensembles stop improving no matter how many you add.",
+    "why": "It's the conceptual centre of the whole chapter. Every ensembling technique that follows &mdash; bagging, random subspaces, boosting's reweighting &mdash; is a mechanism for manufacturing condition (ii), because (i) and (iii) are easy and (ii) is not.",
+    "math": "Condorcet needs the Z<sub>i</sub> i.i.d. with P(Z<sub>i</sub> = 1) = &frac12; + a, a &gt; 0. Cram&eacute;r relaxes the constant a: a<sub>i</sub> may decrease, and the conclusion survives provided a<sub>n</sub>&radic;n &rarr; &infin; &mdash; so a<sub>n</sub> = 1/log n or n<sup>&minus;1/3</sup> still works."
+   }
+  },
+  {
    "id": "v3c3c4",
    "s": "3.3",
    "page": 192,
@@ -292,6 +318,19 @@
     "ex": "Notice what Z<sub>i</sub> is a function of: <b>both</b> X and Y. Correctness isn't a property of the classifier alone, it's a property of the classifier at a labelled point &mdash; which is why the randomness is over X &times; Y and why P(F(X) &ne; Y) is an expectation over the whole space, not over a training set.",
     "why": "This reduction is what makes the whole chapter possible. Once ensemble error is a sample-mean tail, Condorcet, Cramér and Breiman all apply, and the design question becomes concrete: make the votes better than chance, and make them as independent as you can.",
     "math": "Z<sub>i</sub> = &plusmn;1 by correctness; Z&#772; = (1/n)&sum;Z<sub>i</sub>; F = majority vote. P(F(X) &ne; Y) = P(Z&#772; &lt; 0)."
+   }
+  },
+  {
+   "id": "v3c3c2",
+   "s": "3.3",
+   "page": 193,
+   "q": "State Breiman's theorem. What does it say about correlated ensembles?",
+   "a": "Drop independence entirely. Assume only that each Z<sub>i</sub> has support {&minus;1,1}. <b>Definition 3.3.5:</b> the <b>strength</b> is s = E[Z], and the <b>average correlation</b> is<div class='eq'>&rho; = <span class='frac'><span>&Sigma;<sub>i,j</sub> Cov(Z<sub>i</sub>,Z<sub>j</sub>)</span><span>&Sigma;<sub>i,j</sub> &radic;(Var(Z<sub>i</sub>)Var(Z<sub>j</sub>))</span></span></div><b>Theorem 3.3.6 (Breiman).</b><div class='eq'>P(F(X) &ne; Y) &le; &rho; &middot; <span class='frac'><span>1 &minus; s&sup2;</span><span>s&sup2;</span></span></div><b>Two dials.</b> Generalization error is small if the average correlation <b>&rho; is small</b>, or if the strength <b>s is large</b>. Notably n has vanished &mdash; adding more <i>correlated</i> trees buys you nothing.",
+   "r": {
+    "rot": "condorcet needed independence, which you never actually have. breiman says fine &mdash; here's the bill. error &le; &rho;(1&minus;s&sup2;)/s&sup2;: correlation hurts you linearly, strength helps you. and look what's <b>missing</b> from the formula: n. throwing more trees at a correlated forest does nothing. that's why random forests work so hard to make trees <i>different</i> rather than <i>good</i>.",
+    "ex": "Proof is Chebyshev plus Jensen used twice: P(F &ne; Y) &le; Var(Z)/s&sup2;, and Var(Z) = &rho;((1/n)&Sigma;&radic;Var(Z<sub>i</sub>))&sup2; &le; &rho;(1&minus;s&sup2;).",
+    "why": "This bound <i>is</i> the design brief for random forests, and Breiman wrote both. Every trick in &sect;3.5 &mdash; bagging, attribute bagging, random subspaces &mdash; exists to push &rho; down without pushing s down too far. The two dials trade off against each other.",
+    "math": "s = E[Z], &rho; = average pairwise correlation. Error &le; &rho;(1&minus;s&sup2;)/s&sup2;. Independent case &rho; &rarr; 0 recovers Condorcet."
    }
   },
   {
@@ -334,19 +373,6 @@
    }
   },
   {
-   "id": "v3c3d3",
-   "s": "3.4",
-   "page": 200,
-   "q": "State the bias&ndash;variance tradeoff. What do underfitting and overfitting look like?",
-   "a": "<div class='eq'>MSE(&beta;&#771;) = bias(&beta;&#771;)&sup2; + Var(&beta;&#771;)</div><b>Underfit:</b> the model lacks the expressive power to capture the data &mdash; fitting a line to quadratic data. High bias. The fix is <b>more features</b>.<p style='margin-top:8px'><b>Overfit:</b> too many features drives up the estimator's <b>variance</b>. The curve passes near every training point but bears little resemblance to the truth, and predicts new points badly.</p><p style='margin-top:10px'><b>Both increase MSE</b>, from opposite directions. That's the tradeoff.</p>",
-   "r": {
-    "rot": "two ways to be wrong and they pull against each other. too simple: your model literally can't bend the right way, so it's wrong the same way every time &mdash; that's bias. too complex: your model bends to fit the noise, so it's wrong a <i>different</i> way on every dataset &mdash; that's variance. MSE = bias&sup2; + variance, so pushing one down usually shoves the other up. the whole game is finding the bottom of that sum.",
-    "ex": "Fit a degree-d polynomial to data from a line. Residuals shrink as d grows, and the curve looks worse and worse &mdash; predicting a fresh point (x&#8320;,y&#8320;) fails badly. Small training error, big generalization error.",
-    "why": "This is the tradeoff the whole chapter exists to beat. &sect;3.5's insight: build many <b>high-variance, low-bias</b> trees and average them &mdash; averaging kills variance while leaving bias alone, so you get both. That's why the tradeoff appears here rather than in a regression chapter.",
-    "math": "MSE = E[(&beta;&#771;&minus;&beta;)&sup2;] = (E[&beta;&#771;]&minus;&beta;)&sup2; + Var(&beta;&#771;). Same decomposition shape as the law of total variance in &sect;1.8."
-   }
-  },
-  {
    "id": "v3c3d4",
    "s": "3.4",
    "page": 197,
@@ -360,6 +386,19 @@
    }
   },
   {
+   "id": "v3c3d6",
+   "s": "3.4",
+   "page": 197,
+   "q": "Read an ROC curve off the underlying scores. What do the two extremes look like, and what if the curve falls <b>below</b> the diagonal?",
+   "a": "<b>The curve is traced by sliding the threshold &tau; from 1 to 0</b>, and the endpoints are fixed for any classifier whatsoever:<div class='eq'>&tau; = 1 &rarr; everything predicted 0 &rarr; FPR = TPR = <b>0</b> (lower left)<br>&tau; = 0 &rarr; everything predicted 1 &rarr; FPR = TPR = <b>1</b> (upper right)</div><b>What happens between them is determined by how the scores p&#770;(y=1|x) separate the classes.</b><div class='eq'><b>Perfectly separated scores</b> &mdash; all the positives score above all the negatives. At &tau; = 0.5 there are no misclassifications: TPR = 1, FPR = 0, the <b>upper left corner</b>. A perfect classifier.</div><div class='eq'><b>Completely mixed scores</b> &mdash; positives and negatives alternate along the line. Each step of &tau; drops FPR or TPR by the same small amount, so the curve hugs the <b>diagonal</b> TPR = FPR: no better than a random guesser.</div><b>The general rule:</b> the more the curve tends toward the upper left, the better.<p style='margin-top:8px'><b>And below the diagonal?</b> <i>This is not as bad a situation as it might seem</i> &mdash; a classifier reliably worse than random is reliably <i>informative</i>. <b>Predict the opposite of what it says</b> and you reflect the curve across the diagonal, landing above it.</p>",
+   "r": {
+    "rot": "slide the threshold from 'call everything negative' to 'call everything positive' and plot where you land. the two ends are the same for every classifier, so the shape in between is the whole story &mdash; and it's really a picture of how well the scores separate the two classes. perfectly separated scores hit the top-left corner. shuffled-together scores crawl up the diagonal. and a classifier that's consistently wrong is a gift: flip its answers and it's consistently right.",
+    "ex": "This is why the ROC is a <i>parametric</i> curve, not a function graph &mdash; it's indexed by &tau;, and the same (FPR, TPR) point can in principle be reached by more than one threshold.",
+    "why": "It separates two things people conflate: the quality of the model's <b>scores</b>, which is the shape of the whole curve, and the choice of <b>operating point</b>, which is picking one &tau; on it. &sect;3.4.4's isocost lines are how you choose the point once the curve is fixed.",
+    "math": "FPR = 1 &minus; TNR, FNR = 1 &minus; TPR. The curve is monotone: lowering &tau; can only increase both rates. Reflecting across the diagonal corresponds to swapping the predicted labels."
+   }
+  },
+  {
    "id": "v3c3d5",
    "s": "3.4",
    "page": 199,
@@ -370,6 +409,19 @@
     "ex": "This is the same imbalance trap as Nota Bene 5.6.8's rare-disease classifier &mdash; 100,000 healthy patients and 10 sick ones give a 0.0001 misclassification rate for a classifier that detects nothing. ROC hides it for the same reason accuracy does: the huge negative class dominates every denominator.",
     "why": "It completes the section's honest theme: every single-number summary of a classifier (misclassification rate, AUC, EER) throws away information, and each one has a regime where it actively misleads. The curve is more informative than the number, and which curve depends on the class balance.",
     "math": "EER: FPR where FPR = FNR, i.e. ROC &#8745; {FPR = 1 &minus; TPR}. PR curve: PPV vs TPR. Use PR when positives are rare; target the upper-right corner."
+   }
+  },
+  {
+   "id": "v3c3d3",
+   "s": "3.4",
+   "page": 200,
+   "q": "State the bias&ndash;variance tradeoff. What do underfitting and overfitting look like?",
+   "a": "<div class='eq'>MSE(&beta;&#771;) = bias(&beta;&#771;)&sup2; + Var(&beta;&#771;)</div><b>Underfit:</b> the model lacks the expressive power to capture the data &mdash; fitting a line to quadratic data. High bias. The fix is <b>more features</b>.<p style='margin-top:8px'><b>Overfit:</b> too many features drives up the estimator's <b>variance</b>. The curve passes near every training point but bears little resemblance to the truth, and predicts new points badly.</p><p style='margin-top:10px'><b>Both increase MSE</b>, from opposite directions. That's the tradeoff.</p>",
+   "r": {
+    "rot": "two ways to be wrong and they pull against each other. too simple: your model literally can't bend the right way, so it's wrong the same way every time &mdash; that's bias. too complex: your model bends to fit the noise, so it's wrong a <i>different</i> way on every dataset &mdash; that's variance. MSE = bias&sup2; + variance, so pushing one down usually shoves the other up. the whole game is finding the bottom of that sum.",
+    "ex": "Fit a degree-d polynomial to data from a line. Residuals shrink as d grows, and the curve looks worse and worse &mdash; predicting a fresh point (x&#8320;,y&#8320;) fails badly. Small training error, big generalization error.",
+    "why": "This is the tradeoff the whole chapter exists to beat. &sect;3.5's insight: build many <b>high-variance, low-bias</b> trees and average them &mdash; averaging kills variance while leaving bias alone, so you get both. That's why the tradeoff appears here rather than in a regression chapter.",
+    "math": "MSE = E[(&beta;&#771;&minus;&beta;)&sup2;] = (E[&beta;&#771;]&minus;&beta;)&sup2; + Var(&beta;&#771;). Same decomposition shape as the law of total variance in &sect;1.8."
    }
   },
   {
@@ -438,6 +490,19 @@
    }
   },
   {
+   "id": "v3c3e6",
+   "s": "3.5",
+   "page": 207,
+   "q": "A forest can measure <b>distance</b> between two data points. How, and what is it good for?",
+   "a": "<b>Let the trees vote on whether two points belong together.</b><div class='eq'>prox(x, x&prime;) = (1/B)&#8901;&Sigma;<sub>i=1</sub><sup>B</sup>&Sigma;<sub>&#8467;&isin;T<sub>i</sub></sub> &#120793;<sub>x, x&prime; &isin; &#8467;</sub></div>the average number of times x and x&prime; land in the <b>same leaf</b>, over all B trees. Then<div class='eq'>dist(x, x&prime;) = 1 &minus; prox(x, x&prime;)</div><b>Useful for clustering and outlier identification.</b><p style='margin-top:8px'><b>Why this is a better distance than Euclidean.</b> It is <i>learned</i>, not assumed. Two points are close if the forest's questions &mdash; the splits it chose because they predict the label &mdash; keep failing to separate them. Features that don't matter never get split on, so they contribute nothing to the distance. You get a metric that automatically ignores irrelevant coordinates and needs no scaling of units.</p><p><b>Outliers fall out</b> as points with low proximity to everything: no matter which tree, they get isolated into their own leaves.</p><p style='margin-top:8px'>This sits alongside <b>feature importance</b> (&sect;3.5.6) as the other thing a forest gives you despite being hard to interpret &mdash; permute a feature's values and see how much the out-of-bag vote degrades, or sum the Gini/entropy improvements attributable to it across all trees.</p>",
+   "r": {
+    "rot": "two points are similar if the forest keeps failing to tell them apart &mdash; count how often they end up in the same leaf. that's a distance you didn't have to design: it ignores features the trees never bothered splitting on, doesn't care what units anything is measured in, and it was built by a procedure that was trying to predict the label, so 'close' means 'close for the purpose you care about'.",
+    "ex": "Contrast plain Euclidean distance, which weights a feature measured in millimetres a thousand times more heavily than the same feature in metres, and weights a useless feature exactly as much as a decisive one.",
+    "why": "It makes a supervised model do unsupervised work. Once you have a distance matrix you can cluster, run multidimensional scaling to visualize, or flag outliers &mdash; all downstream of a forest you trained for classification.",
+    "math": "prox &isin; [0,1], symmetric, prox(x,x) = 1. B is the number of trees. Computed cheaply during prediction, since each point already traverses every tree."
+   }
+  },
+  {
    "id": "v3c3f1",
    "s": "3.6",
    "page": 208,
@@ -448,6 +513,19 @@
     "ex": "L2boosting (&sect;3.6.3): with &#8466; = &frac12;(y&minus;f(x))&sup2; and &alpha; = N, the gradient step is exactly &minus;&alpha;D<sub>z<sub>i</sub></sub>J = y<sub>i</sub> &minus; z<sub>i</sub> &mdash; the residual. So &lsquo;fit the residuals&rsquo; and &lsquo;take a gradient step&rsquo; are the same instruction. AdaBoost (&sect;3.6.4) is the classification analogue with a different loss.",
     "why": "This is the deep contrast with &sect;3.5. Forests build trees <b>in parallel and independent</b>, attacking variance. Boosting builds them <b>sequentially and dependent</b>, attacking bias. Same base learner, opposite philosophies &mdash; and boosting is why gradient-boosted trees win most tabular ML competitions.",
     "math": "f* = argmin<sub>f&isin;&Fscr;</sub> E[&#8466;(f(X),Y)] &asymp; argmin J(f) = (1/N)&Sigma;&#8466;(f(x<sub>i</sub>),y<sub>i</sub>). Step t<sub>k</sub> &asymp; &minus;&alpha;<sub>k</sub>DJ(f<sub>k</sub>)<sup>T</sup>."
+   }
+  },
+  {
+   "id": "v3c3f6",
+   "s": "3.6",
+   "page": 209,
+   "q": "Remark 3.6.1 draws the sharpest contrast between boosting and a random forest. What is it, and why doesn't Condorcet apply?",
+   "a": "<div class='eq'>Unlike in a random forest, the various approximations t<sub>k</sub> are <b>nowhere near independent</b>, since each one is constructed using the values of the previous one.</div><b>The two methods sit on opposite sides of Condorcet's condition (ii).</b><div class='eq'><b>Forest:</b> trees built in <b>parallel</b>, each from its own bootstrap sample and random feature subset, deliberately engineered toward independence &mdash; then they vote. Condorcet and Breiman are the governing theorems.</div><div class='eq'><b>Boosting:</b> trees built in <b>sequence</b>, each one fitted to what the previous ones got wrong. Maximal dependence, by design &mdash; and they are summed, not voted.</div><b>So boosting needs a different justification entirely</b>, and it has one: it is <b>gradient descent in function space</b>. Each t<sub>k</sub> approximates &minus;&alpha;<sub>k</sub>DJ(f<sub>k</sub>)<sup>T</sup>, a descent direction for the loss. Nothing about voting, nothing about independence &mdash; just a sequence of steps downhill.<p style='margin-top:8px'><b>What both share:</b> the individual t<sub>k</sub> can be <i>weak learners, only slightly better than random</i>, and easy to construct. Both turn weak models into a strong one; they just do it by unrelated mechanisms.</p>",
+   "r": {
+    "rot": "a forest grows a thousand trees that never speak to each other and then takes a vote &mdash; the whole design is about keeping them independent. boosting does the opposite: every tree is built specifically to fix the last one's mistakes, so they're as dependent as it's possible to be. that means condorcet has nothing to say here. the justification is different: each tree is a step downhill on the loss, and you're doing gradient descent where the thing you're descending on is a function.",
+    "ex": "The dependence is visible in L&sup2;boosting: the next tree is fitted to the <b>residuals</b> y<sub>i</sub> &minus; f<sub>k</sub>(x<sub>i</sub>), which is literally a function of the previous model's output. In AdaBoost (Remark 3.6.2), misclassified points get weighted much more heavily for the next round.",
+    "why": "It explains why boosting can't be parallelized the way bagging can, and why it is more prone to overfitting &mdash; nothing averages the errors away, so &sect;3.6.5 has to add explicit regularization. It also explains why the two combine well in practice: they exploit different mechanisms.",
+    "math": "Gradient boosting: f<sub>k+1</sub> = f<sub>k</sub> + t<sub>k</sub> with t<sub>k</sub> &asymp; &minus;&alpha;<sub>k</sub>DJ(f<sub>k</sub>)<sup>T</sup>. Bagging: F(x) = majority vote over independently trained f<sub>i</sub>."
    }
   },
   {
@@ -503,19 +581,6 @@
    }
   },
   {
-   "id": "v3c3g1",
-   "s": "3.7",
-   "page": 216,
-   "q": "How does XGBoost choose leaf weights, and where does regularization enter?",
-   "a": "Take a second-order (Taylor) expansion of the loss, with g<sub>i</sub> and h<sub>i</sub> the first and second derivatives at each point. A tree sends x<sub>i</sub> to leaf q(x<sub>i</sub>) with weight w. Grouping points by leaf, with I<sub>&#8467;</sub> = {i : q(x<sub>i</sub>) = &#8467;}, G<sub>&#8467;</sub> = &Sigma;<sub>i&isin;I<sub>&#8467;</sub></sub>g<sub>i</sub> and H<sub>&#8467;</sub> = &Sigma;<sub>i&isin;I<sub>&#8467;</sub></sub>h<sub>i</sub>:<div class='eq'>J&#771;(t) = &Sigma;<sub>&#8467;&isin;L</sub> [ G<sub>&#8467;</sub>w<sub>&#8467;</sub> + &frac12;(H<sub>&#8467;</sub> + &lambda;)w<sub>&#8467;</sub>&sup2; ] + &gamma;|L|</div><b>Proposition 3.7.2.</b> Minimizing gives<div class='eq'>w*<sub>&#8467;</sub> = &minus; <span class='frac'><span>G<sub>&#8467;</sub></span><span>H<sub>&#8467;</sub> + &lambda;</span></span>,&nbsp;&nbsp; J&#771;(w*) = &Sigma;<sub>&#8467;</sub>[ &gamma; &minus; <span class='frac'><span>G<sub>&#8467;</sub>&sup2;</span><span>2(H<sub>&#8467;</sub> + &lambda;)</span></span> ]</div><b>Two regularizers, two jobs.</b> &lambda; sits in the <b>denominator</b> and shrinks every leaf weight toward zero. &gamma; is a <b>per-leaf penalty</b>, so a split only survives if it improves the objective by more than &gamma; &mdash; that's the pruning rule.",
-   "r": {
-    "rot": "each leaf gets one number, and the closed form is &minus;G/(H+&lambda;): the gradient piled up in that leaf, divided by the curvature plus a fudge factor. the &lambda; in the denominator is the point &mdash; it drags every weight toward zero so no single leaf can go wild. and &gamma; charges rent per leaf: a split has to earn more than &gamma; or it doesn't happen. regularization isn't bolted on afterward here, it's <b>inside the formula that picks the weights</b>.",
-    "ex": "&lambda; = 0, &gamma; = 0 recovers the plain second-order Newton step w = &minus;G/H. Raising &lambda; shrinks weights; raising &gamma; grows shallower trees.",
-    "why": "This is why XGBoost and LightGBM beat hand-rolled gradient boosting: the objective already knows about overfitting, so tree size and leaf magnitude are chosen by optimization rather than by hyperparameter guessing. It closes the chapter's arc &mdash; the bias&ndash;variance tradeoff of &sect;3.4, handled analytically.",
-    "math": "Second-order expansion with g<sub>i</sub> = &part;&#8466;/&part;f, h<sub>i</sub> = &part;&sup2;&#8466;/&part;f&sup2;. Gain of a split = the drop in &Sigma;&minus;G&sup2;/(2(H+&lambda;)) minus &gamma;."
-   }
-  },
-  {
    "id": "v3c3g2",
    "s": "3.7",
    "page": 215,
@@ -526,6 +591,19 @@
     "ex": "Example 3.7.1, squared error L = &frac12;(f(x<sub>i</sub>)&minus;y<sub>i</sub>)&sup2;: g<sub>i</sub> = z<sub>i</sub><sup>k</sup> &minus; y<sub>i</sub> (the residual again) and h<sub>i</sub> = 1. So for squared error the quadratic term is trivial and Newton-boosting reduces to something very close to L&sup2;boosting &mdash; the difference shows up for other losses.",
     "why": "The separability is the whole reason this works, and it's structural: because a loss decomposes as a sum over data points and each term sees only one output value, the &ldquo;Hessian&rdquo; is diagonal. Recognizing that pattern is what turns an O(N&sup3;) method into a linear-time one.",
     "math": "g<sub>i</sub> = &part;L/&part;f, h<sub>i</sub> = &part;&sup2;L/&part;f&sup2; at f<sub>k</sub>(x<sub>i</sub>). J&#771; = &sum;g<sub>i</sub>s<sub>i</sub> + &frac12;&sum;h<sub>i</sub>s<sub>i</sub>&sup2; + R(t<sub>k+1</sub>). Hessian is diagonal, never formed."
+   }
+  },
+  {
+   "id": "v3c3g1",
+   "s": "3.7",
+   "page": 216,
+   "q": "How does XGBoost choose leaf weights, and where does regularization enter?",
+   "a": "Take a second-order (Taylor) expansion of the loss, with g<sub>i</sub> and h<sub>i</sub> the first and second derivatives at each point. A tree sends x<sub>i</sub> to leaf q(x<sub>i</sub>) with weight w. Grouping points by leaf, with I<sub>&#8467;</sub> = {i : q(x<sub>i</sub>) = &#8467;}, G<sub>&#8467;</sub> = &Sigma;<sub>i&isin;I<sub>&#8467;</sub></sub>g<sub>i</sub> and H<sub>&#8467;</sub> = &Sigma;<sub>i&isin;I<sub>&#8467;</sub></sub>h<sub>i</sub>:<div class='eq'>J&#771;(t) = &Sigma;<sub>&#8467;&isin;L</sub> [ G<sub>&#8467;</sub>w<sub>&#8467;</sub> + &frac12;(H<sub>&#8467;</sub> + &lambda;)w<sub>&#8467;</sub>&sup2; ] + &gamma;|L|</div><b>Proposition 3.7.2.</b> Minimizing gives<div class='eq'>w*<sub>&#8467;</sub> = &minus; <span class='frac'><span>G<sub>&#8467;</sub></span><span>H<sub>&#8467;</sub> + &lambda;</span></span>,&nbsp;&nbsp; J&#771;(w*) = &Sigma;<sub>&#8467;</sub>[ &gamma; &minus; <span class='frac'><span>G<sub>&#8467;</sub>&sup2;</span><span>2(H<sub>&#8467;</sub> + &lambda;)</span></span> ]</div><b>Two regularizers, two jobs.</b> &lambda; sits in the <b>denominator</b> and shrinks every leaf weight toward zero. &gamma; is a <b>per-leaf penalty</b>, so a split only survives if it improves the objective by more than &gamma; &mdash; that's the pruning rule.",
+   "r": {
+    "rot": "each leaf gets one number, and the closed form is &minus;G/(H+&lambda;): the gradient piled up in that leaf, divided by the curvature plus a fudge factor. the &lambda; in the denominator is the point &mdash; it drags every weight toward zero so no single leaf can go wild. and &gamma; charges rent per leaf: a split has to earn more than &gamma; or it doesn't happen. regularization isn't bolted on afterward here, it's <b>inside the formula that picks the weights</b>.",
+    "ex": "&lambda; = 0, &gamma; = 0 recovers the plain second-order Newton step w = &minus;G/H. Raising &lambda; shrinks weights; raising &gamma; grows shallower trees.",
+    "why": "This is why XGBoost and LightGBM beat hand-rolled gradient boosting: the objective already knows about overfitting, so tree size and leaf magnitude are chosen by optimization rather than by hyperparameter guessing. It closes the chapter's arc &mdash; the bias&ndash;variance tradeoff of &sect;3.4, handled analytically.",
+    "math": "Second-order expansion with g<sub>i</sub> = &part;&#8466;/&part;f, h<sub>i</sub> = &part;&sup2;&#8466;/&part;f&sup2;. Gain of a split = the drop in &Sigma;&minus;G&sup2;/(2(H+&lambda;)) minus &gamma;."
    }
   },
   {
