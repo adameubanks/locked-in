@@ -1048,6 +1048,45 @@
    }
   },
   {
+   "id": "v3c1i9",
+   "s": "1.9",
+   "page": 67,
+   "q": "Define conditional covariance and state the <b>law of total covariance</b>. How does it mirror total variance?",
+   "a": "<b>Definition 1.8.22.</b> Replace every expectation in the definition of covariance by a conditional one:<div class='eq'>Cov(X,Y|Z) = E[(X &minus; E[X|Z])(Y &minus; E[Y|Z]) | Z]</div>with the computational form (Prop 1.8.23)<div class='eq'>Cov(X,Y|Z) = E[XY|Z] &minus; E[X|Z]E[Y|Z]</div><b>Theorem 1.8.24 (Law of Total Covariance).</b><div class='eq'>Cov(X,Y) = E[Cov(X,Y|Z)] + Cov(E[X|Z], E[Y|Z])</div><b>The decomposition splits association into two sources:</b><div class='eq'><b>E[Cov(X,Y|Z)]</b> &mdash; how X and Y move together <i>within</i> each level of Z, averaged over Z. Association that survives holding Z fixed.</div><div class='eq'><b>Cov(E[X|Z], E[Y|Z])</b> &mdash; how the <i>group means</i> of X and Y move together <i>across</i> levels of Z. Association manufactured by Z.</div><b>It is the law of total variance with Y = X.</b> Set Y = X and Cov becomes Var in every slot, recovering Var(X) = E[Var(X|Z)] + Var(E[X|Z]) &mdash; within-group plus between-group.",
+   "r": {
+    "rot": "two variables move together for two different reasons: they really are linked, or they're both being pushed around by a third thing Z. this formula separates exactly those. first term: do they still move together once you hold Z fixed? second term: do their averages move together as Z changes? add them and you get the raw covariance you actually observe.",
+    "ex": "The second term is the shape of a <b>confounder</b>. If X and Y are unrelated given Z but both increase with Z, the first term is 0 and the second is positive &mdash; giving a real, reproducible, entirely spurious correlation. That's the yellow-fingernails situation of &sect;0.1.4, written as an identity.",
+    "why": "It's the algebraic skeleton of every 'controlling for Z' analysis, and it makes precise what controlling does: it deletes the second term. It also explains why the total variance law has two terms &mdash; same decomposition, X compared with itself.",
+    "math": "Cov(X,X|Z) = Var(X|Z), so Thm 1.8.24 &rArr; Thm 1.8.21. Both are the tower property applied to the computational forms."
+   }
+  },
+  {
+   "id": "v3c1i7",
+   "s": "1.9",
+   "page": 68,
+   "q": "Prove Markov's inequality in two lines. Then say when it tells you <b>nothing</b>, and why that's expected.",
+   "a": "<b>The whole proof is one pointwise inequality.</b> For X &ge; 0 and a &gt; 0:<div class='eq'>a&#8901;&#120793;<sub>X&ge;a</sub> &le; X&nbsp;&nbsp;(pointwise on &Omega;)</div>When X &ge; a the left side is a and the right is at least a; otherwise the left is 0 and the right is &ge; 0. Take expectations, using <b>Lemma 1.9.1</b> (X &le; Y pointwise &rArr; E[X] &le; E[Y]) and E[&#120793;<sub>E</sub>] = P(E):<div class='eq'>aP(X &ge; a) = E[a&#120793;<sub>X&ge;a</sub>] &le; E[X]&nbsp;&nbsp;&rArr;&nbsp;&nbsp;P(X &ge; a) &le; E[X]/a</div><b>Remark 1.9.3 &mdash; when it's vacuous.</b> For a &le; E[X] the bound is &ge; 1, which every probability already satisfies. Markov says nothing below the mean; at a = 2E[X] it gives the first real content, P &le; &frac12;.<p style='margin-top:8px'><b>Remark 1.9.4 &mdash; and it's loose.</b> <i>It should not be especially surprising that an inequality that holds for all random variables is not very tight for some specific random variable.</i> To get a close bound for a particular distribution, <b>you should expect to have to use properties of that distribution.</b></p>",
+   "r": {
+    "rot": "X is never negative, so the only way its average can be small is if it's rarely large. that's the whole content. the proof: the function that's a when X &ge; a and 0 otherwise sits below X everywhere, so its average sits below E[X] &mdash; and its average is a times the probability. note it's useless for a below the mean (it just says probability &le; something bigger than 1), and it's loose in general, because a bound that works for <i>every</i> distribution can't be sharp for <i>yours</i>.",
+    "ex": "The indicator identity E[&#120793;<sub>E</sub>] = P(E) is doing the load-bearing work &mdash; it's the bridge the book flagged in &sect;1.6.4, turning a statement about probabilities into one about expectations, where linearity and monotonicity are available.",
+    "why": "Markov needs only nonnegativity and a mean &mdash; no variance, no shape, no independence. That extreme generality is why everything else is built on it: Chebyshev is Markov applied to (X&minus;&mu;)&sup2;, and the weak law is Chebyshev applied to the sample mean.",
+    "math": "Requires X &ge; 0 and a &gt; 0. Tight for the two-point distribution putting mass E[X]/a at a and the rest at 0 &mdash; so it cannot be improved without further assumptions."
+   }
+  },
+  {
+   "id": "v3c1i8",
+   "s": "1.9",
+   "page": 68,
+   "q": "E[X] = 50, Var(X) = 25, nothing else known. Bound the probability that X lies between 40 and 60.",
+   "a": "Chebyshev bounds the <b>tail</b>, but you want the <b>middle</b> &mdash; so take complements.<div class='eq'>P(|X &minus; &mu;| &le; 10) = 1 &minus; P(|X &minus; &mu;| &ge; 10) &ge; 1 &minus; &sigma;&sup2;/&epsilon;&sup2; = 1 &minus; 25/100 = <b>3/4</b></div><b>At least 75%</b>, from two numbers and no assumption whatsoever about the shape of the distribution. Not normal, not symmetric, not even unimodal &mdash; just a mean and a variance.<p style='margin-top:8px'><b>Read &epsilon; in units of &sigma;.</b> Here &sigma; = 5 and &epsilon; = 10 = 2&sigma;, so this is the general statement</p><div class='eq'>P(|X &minus; &mu;| &ge; k&sigma;) &le; 1/k&sup2;</div>&mdash; at most 1/4 beyond 2&sigma;, at most 1/9 beyond 3&sigma;, and (Remark 1.9.3 again) <b>nothing at all for k &le; 1</b>.<p style='margin-top:8px'><b>How loose is loose?</b> For a normal distribution the true mass beyond 2&sigma; is about 0.046, not 0.25 &mdash; Chebyshev is off by a factor of five. That is the price of assuming nothing, and exactly what Remark 1.9.4 warned about.</p>",
+   "r": {
+    "rot": "you know the average and the spread and literally nothing else. chebyshev still hands you a guarantee: at least three quarters of the mass sits within two standard deviations. flip it around because the inequality talks about being far away and you asked about being close. the bound is generous &mdash; a bell curve would give you 95% &mdash; but you never had to assume a bell curve, and that's the point.",
+    "ex": "The universal version P(|X&minus;&mu;| &ge; k&sigma;) &le; 1/k&sup2; is why '3&sigma;' is a meaningful phrase for any distribution at all, not just a normal one.",
+    "why": "It is the quantitative content of 'variance measures spread'. And it's the engine of the weak law: apply it to the sample mean, whose variance is &sigma;&sup2;/n, and the bound &sigma;&sup2;/n&epsilon;&sup2; goes to zero &mdash; concentration from nothing but Chebyshev.",
+    "math": "P(|X&minus;&mu;| &ge; &epsilon;) &le; &sigma;&sup2;/&epsilon;&sup2;, from Markov applied to (X&minus;&mu;)&sup2; &ge; 0 at level &epsilon;&sup2;. Requires only that &sigma;&sup2; exist."
+   }
+  },
+  {
    "id": "v3c1i2",
    "s": "1.9",
    "page": 69,
@@ -1126,6 +1165,19 @@
    }
   },
   {
+   "id": "v3c1j6",
+   "s": "1.10",
+   "page": 74,
+   "q": "The sample mean <b>always</b> exists. Why is footnote 22 worried about that?",
+   "a": "Because existing and meaning something are different. <b>(1/n)&Sigma;x<sub>i</sub> is a finite sum of numbers &mdash; it always evaluates.</b> But if E[X] does not exist, then:<div class='eq'>the law of large numbers <b>does not apply</b>, and the value of the sample mean is <b>meaningless</b>.</div>Your code returns 43.7. It is estimating nothing. There is no &mu; for it to concentrate around, and drawing more samples will not settle it down &mdash; it will keep wandering, forever, with no limit.<p style='margin-top:8px'><b>This is a silent failure.</b> Nothing about the output announces it. The usual symptom is that the running average lurches whenever an extreme draw arrives, and never stops doing so.</p><p><b>And the healthy case looks disorderly too.</b> Figure 1.1 tracks x&#772;&#8321;,&hellip;,x&#772;<sub>1000</sub> for a fair coin: it <i>begins above &mu; = 0.5, rapidly approaches &mu;, then moves away again, then comes back and again moves away</i>. Convergence is not monotone. <b>&mu;&#770;<sub>n</sub> is not guaranteed to be close to &mu;</b> &mdash; only the <i>probability</i> of being far away shrinks, bounded by &sigma;&sup2;/n&epsilon;&sup2;.</p>",
+   "r": {
+    "rot": "averaging a list of numbers never fails &mdash; there's always an answer. that doesn't mean the answer is <i>of</i> anything. if the distribution has no mean, your average is a number chasing a target that doesn't exist, and more data makes it no better. and even when the mean does exist, the running average bounces around on its way there. it's not a ratchet. the guarantee is probabilistic, not a promise about any particular run.",
+    "ex": "The diagnostic in practice: plot the running average. If it converges, fine. If it keeps taking big steps no matter how large n gets, suspect the mean doesn't exist &mdash; and the fix is a different statistic, like the median, not more samples.",
+    "why": "It is the precondition for the entire section. Every estimator in &sect;1.10 &mdash; expectations, probabilities, E[k(X)] &mdash; is a sample mean of something, and every one inherits this caveat. It also connects back to the absolute-convergence clause in Definition 1.6.1: that fine print is what fails here.",
+    "math": "WLLN needs E[X] = &mu; and Var(X) = &sigma;&sup2; to exist. The bound is P(|&mu;&#770;<sub>n</sub> &minus; &mu;| &ge; &epsilon;) &le; &sigma;&sup2;/n&epsilon;&sup2;, which is a statement about probability, not about any realization x&#772;<sub>n</sub>."
+   }
+  },
+  {
    "id": "v3c1j3",
    "s": "1.10",
    "page": 75,
@@ -1175,6 +1227,19 @@
     "ex": "The fork is the yellow-fingernails story from Chapter 0 finally drawn as a graph, and the graph explains it in one line: no arrow Y &rarr; C, so the entire association was routed through S.",
     "why": "These three patterns are the vocabulary for reading any causal diagram, and they explain why &ldquo;controlling for&rdquo; a variable sometimes removes a spurious association and sometimes destroys a real one &mdash; it depends entirely on where the variable sits in the graph. Example 1.10.6 also makes the practical point: the p.m.f. of D would be painful in closed form and is trivial to estimate by sampling the process (Algorithm 1.2).",
     "math": "Chain X&rarr;Z&rarr;Y and fork X&larr;Z&rarr;Y: conditioning on Z gives X &perp;&perp; Y | Z. Conditioning on a node with no children, or on a common ancestor of everything, adds nothing."
+   }
+  },
+  {
+   "id": "v3c1j7",
+   "s": "1.10",
+   "page": 79,
+   "q": "Two dice sum to C; draw C cards; their values sum to D. <b>Read the conditional independences off the DAG</b> &mdash; including the ones that say nothing.",
+   "a": "The graph is A &rarr; C &rarr; D and B &rarr; C. Apply the rule: <b>conditioned on its parents, a node is independent of every non-descendant.</b><div class='eq'><b>A and B:</b> no parents. B is the only non-descendant of A, so A &#8869; B unconditionally &mdash; the two dice don't interact.</div><div class='eq'><b>D:</b> its only parent is C, and A, B are non-descendants of D. So <b>D &#8869; A | C</b> and <b>D &#8869; B | C</b>. Once you know how many cards to draw, it makes no difference which dice produced that number.</div><b>Now the two that yield nothing</b> &mdash; and knowing why is the point:<div class='eq'><b>Conditioning on C</b> gives no new relation, because <i>everything else is a descendant of C</i>, and the rule only constrains non-descendants.</div><div class='eq'><b>Conditioning on A's parents</b> (there are none) told you about B; conditioning on <b>D</b> gives nothing because D is nobody's parent.</div><b>The rule is one-directional by design.</b> It constrains a node against its non-descendants only &mdash; a descendant carries information <i>downstream from</i> the node, so conditioning on it can never be claimed to break the link.<p style='margin-top:8px'>And the practical payoff: <i>to find a closed form for the p.m.f. of D might be painful</i>, but the DAG tells you the generative recipe, so you can sample it in fifteen lines.</p>",
+   "r": {
+    "rot": "the arrows are a recipe: roll A, roll B, add them to get C, draw that many cards, add up their values to get D. read independences off it by asking, for each node, 'given my parents, what am I ignorant of?' &mdash; and the answer is always 'everything that isn't downstream of me'. D only ever sees C, so the dice stop mattering once C is known. and half the time the rule tells you nothing, because everything in sight is downstream.",
+    "ex": "Independence is symmetric, so D &#8869; A | C also reads A &#8869; D | C &mdash; knowing the final card total tells you nothing extra about the four-sided die, once you know how many cards were drawn.",
+    "why": "This is what makes a causal diagram <i>useful</i> rather than decorative: it is a compact encoding of a long list of conditional independences, and those are exactly the facts that let you factor a joint distribution, decide what to control for, and write a sampler. The DAG <i>is</i> the data generation process.",
+    "math": "Local Markov property: X &#8869; nondescendants(X) | parents(X). Joint factorization: P(A,B,C,D) = P(A)P(B)P(C|A,B)P(D|C). Cards are drawn <b>without</b> replacement, so the values within a draw are dependent &mdash; but that is all inside the C &rarr; D mechanism."
    }
   }
  ],
