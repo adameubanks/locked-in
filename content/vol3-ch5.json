@@ -153,19 +153,6 @@
    }
   },
   {
-   "id": "v3c5a3",
-   "s": "5.1",
-   "page": 284,
-   "q": "What goes wrong when <b>X</b> is rank deficient? Define the identifiability condition, and give the SVD solution.",
-   "a": "<b>Rank deficiency</b> means some feature columns are linearly dependent, so <b>X</b><sup>T</sup><b>X</b> is singular and (5.6) cannot be used. Exact singularity is rare; <b>near</b>-singularity is common, and it makes the condition number of <b>X</b><sup>T</sup><b>X</b> huge and the problem ill conditioned.<p style='margin-top:8px'><b>The real damage is to interpretation, not to solvability.</b> If a<sub>j&#8321;</sub>X<sub>j&#8321;</sub> + &hellip; + a<sub>j<sub>k</sub></sub>X<sub>j<sub>k</sub></sub> = 0, you can add any multiple of that relation to &beta;&#770; without changing a single prediction. The solution is no longer unique, so you cannot say how much each factor contributes. Requiring <b>X</b><sup>T</sup><b>X</b> to be invertible is therefore called the <b>identifiability condition</b>.</p><p><b>SVD fixes the computation.</b> With the compact SVD <b>X</b> = U&Sigma;V<sup>H</sup> of rank r, Vol 1 Thm 4.6.1 gives the unique solution in N(<b>X</b>)<sup>&perp;</sup>:</p><div class='eq'>&beta;&#770; = V&Sigma;<sup>&minus;1</sup>U<sup>T</sup>y</div>Multiplying <b>right to left</b> costs O(dr + rn), so the whole least-squares solve is O(r&sup2;n + dr) &mdash; O(r&sup2;n) when d &lt; n, O(dr) when n &lt; d (large images).<p style='margin-top:8px'><b>Nota Bene 5.1.5.</b> There are infinitely many solutions (add anything in the kernel), but exactly one orthogonal to N(<b>X</b>). That is the preferred one.</p>",
-   "r": {
-    "rot": "two of your columns say almost the same thing &mdash; SAT and ACT scores, say. the math still finds <i>an</i> answer, but not a unique one: you can shuffle weight between the two twin columns freely and every prediction stays identical. so <b>prediction is fine, blame is not</b>. you can't say &ldquo;SAT contributes this much&rdquo; when a different split of the same total fits equally well. that's identifiability. computationally, SVD saves you &mdash; it picks out the one solution perpendicular to the junk directions.",
-    "ex": "The book's example: SAT and ACT scores in a model predicting freshman GPA. Students who do well on one do well on the other, so if SAT is nearly a multiple of ACT, those two columns are nearly dependent and <b>X</b><sup>T</sup><b>X</b> is nearly singular. &sect;5.3.8 finds a live case &mdash; <code>US</code> and <code>const*US</code> are literally identical columns.",
-    "why": "This is the seam between prediction and causal claims that &sect;5.3.7 hammers on. Rank-deficient models stay perfectly useful for <b>predictive</b> modelling; they only fail when you want to control Y by changing X. It also motivates &sect;5.4: L&sup2;-regularization restores identifiability by making <b>X</b><sup>T</sup><b>X</b> + n&lambda;I invertible.",
-    "math": "&beta;&#770; = V&Sigma;<sup>&minus;1</sup>U<sup>T</sup>y, unique in N(<b>X</b>)<sup>&perp;</sup>. Complexity O(r&sup2;n + dr), r &le; min(d,n)."
-   }
-  },
-  {
    "id": "v3c5a4",
    "s": "5.1",
    "page": 283,
@@ -176,6 +163,19 @@
     "ex": "The &ldquo;holding the others fixed&rdquo; clause is the whole interpretation and it is fragile. If two features are nearly collinear you cannot hold one fixed while moving the other, which is exactly the identifiability failure of &sect;5.1.3.",
     "why": "Two threads start here. Omitted variables lead to bias (Exercise 5.10, and the underfitting discussion of &sect;3.4.7); and &ldquo;is &beta;<sub>i</sub> really zero?&rdquo; is the question that stepwise feature removal answers with p-values in &sect;5.3.6 and that Chapter 6 examines critically.",
     "math": "&beta;<sub>i</sub> = &part;E[Y|X]/&part;X<sub>i</sub>, the change in the conditional mean per unit of X<sub>i</sub> with the others held fixed. Binary feature &rarr; coefficient is a group offset."
+   }
+  },
+  {
+   "id": "v3c5a3",
+   "s": "5.1",
+   "page": 284,
+   "q": "What goes wrong when <b>X</b> is rank deficient? Define the identifiability condition, and give the SVD solution.",
+   "a": "<b>Rank deficiency</b> means some feature columns are linearly dependent, so <b>X</b><sup>T</sup><b>X</b> is singular and (5.6) cannot be used. Exact singularity is rare; <b>near</b>-singularity is common, and it makes the condition number of <b>X</b><sup>T</sup><b>X</b> huge and the problem ill conditioned.<p style='margin-top:8px'><b>The real damage is to interpretation, not to solvability.</b> If a<sub>j&#8321;</sub>X<sub>j&#8321;</sub> + &hellip; + a<sub>j<sub>k</sub></sub>X<sub>j<sub>k</sub></sub> = 0, you can add any multiple of that relation to &beta;&#770; without changing a single prediction. The solution is no longer unique, so you cannot say how much each factor contributes. Requiring <b>X</b><sup>T</sup><b>X</b> to be invertible is therefore called the <b>identifiability condition</b>.</p><p><b>SVD fixes the computation.</b> With the compact SVD <b>X</b> = U&Sigma;V<sup>H</sup> of rank r, Vol 1 Thm 4.6.1 gives the unique solution in N(<b>X</b>)<sup>&perp;</sup>:</p><div class='eq'>&beta;&#770; = V&Sigma;<sup>&minus;1</sup>U<sup>T</sup>y</div>Multiplying <b>right to left</b> costs O(dr + rn), so the whole least-squares solve is O(r&sup2;n + dr) &mdash; O(r&sup2;n) when d &lt; n, O(dr) when n &lt; d (large images).<p style='margin-top:8px'><b>Nota Bene 5.1.5.</b> There are infinitely many solutions (add anything in the kernel), but exactly one orthogonal to N(<b>X</b>). That is the preferred one.</p>",
+   "r": {
+    "rot": "two of your columns say almost the same thing &mdash; SAT and ACT scores, say. the math still finds <i>an</i> answer, but not a unique one: you can shuffle weight between the two twin columns freely and every prediction stays identical. so <b>prediction is fine, blame is not</b>. you can't say &ldquo;SAT contributes this much&rdquo; when a different split of the same total fits equally well. that's identifiability. computationally, SVD saves you &mdash; it picks out the one solution perpendicular to the junk directions.",
+    "ex": "The book's example: SAT and ACT scores in a model predicting freshman GPA. Students who do well on one do well on the other, so if SAT is nearly a multiple of ACT, those two columns are nearly dependent and <b>X</b><sup>T</sup><b>X</b> is nearly singular. &sect;5.3.8 finds a live case &mdash; <code>US</code> and <code>const*US</code> are literally identical columns.",
+    "why": "This is the seam between prediction and causal claims that &sect;5.3.7 hammers on. Rank-deficient models stay perfectly useful for <b>predictive</b> modelling; they only fail when you want to control Y by changing X. It also motivates &sect;5.4: L&sup2;-regularization restores identifiability by making <b>X</b><sup>T</sup><b>X</b> + n&lambda;I invertible.",
+    "math": "&beta;&#770; = V&Sigma;<sup>&minus;1</sup>U<sup>T</sup>y, unique in N(<b>X</b>)<sup>&perp;</sup>. Complexity O(r&sup2;n + dr), r &le; min(d,n)."
    }
   },
   {
@@ -387,6 +387,32 @@
    }
   },
   {
+   "id": "v3c5d6",
+   "s": "5.4",
+   "page": 314,
+   "q": "&sect;5.4.6 gives a decision rule. Which regularizer, when &mdash; and what should your default be?",
+   "a": "<div class='eq'><b>Models with regularization usually outperform unregularized models, so your default model should almost always have a regularization term included.</b></div>The choice among them <i>will depend on your goals</i>:<div class='eq'><b>L&sup1;</b> &mdash; if you want <b>interpretability</b> and a <b>minimal number of features</b>, <i>and you don't have identifiability problems</i>. It zeroes coefficients outright.</div><div class='eq'><b>L&sup2;</b> &mdash; if you are concerned about <b>identifiability</b>. It keeps the problem strictly convex, so the minimizer is unique even when X is rank deficient.</div><div class='eq'><b>Elastic net</b> &mdash; <i>a good compromise, often outperforming either L&sup1; or L&sup2; alone.</i></div><b>Notice the condition attached to L&sup1;.</b> Sparsity and identifiability pull in opposite directions: exactly when features are collinear &mdash; where you'd most want the model to pick a few &mdash; is where L&sup1;'s choice becomes arbitrary.<p style='margin-top:8px'><b>And the hyperparameters are not a fourth decision.</b> Choosing &lambda;&#8321; and &lambda;&#8322; <i>can usually be done with cross validation or a train-test split</i> &mdash; you don't reason about them, you measure them.</p>",
+   "r": {
+    "rot": "start with regularization on, always &mdash; that's the default, not the special case. then pick by what you want. want a short list of features you can explain? L&sup1;, but only if your features aren't tangled up with each other. worried they are? L&sup2;, which keeps the answer unique. can't decide? elastic net usually beats both. and don't agonize over the &lambda;s, just cross-validate them.",
+    "ex": "The Bayesian reading (&sect;5.4.4) says the same thing in other words: L&sup2; is a Gaussian prior on the coefficients, L&sup1; a Laplace prior. Choosing a regularizer is choosing what you believe about the coefficients before seeing data &mdash; and believing <i>nothing</i>, the unregularized case, is rarely the best belief.",
+    "why": "It's the actionable summary of an eleven-page section, and it corrects the usual framing: the question is not <i>whether</i> to regularize but <i>which</i>, and the answer follows from whether you care more about a short feature list or a stable one.",
+    "math": "Elastic net: (1/n)&#8214;y &minus; X&beta;&#8214;&sup2;&#8322; + &lambda;&#8321;&#8214;&beta;&#8214;&#8321; + &lambda;&#8322;&#8214;&beta;&#8214;&sup2;&#8322;. &lambda;&#8321; = 0 gives ridge, &lambda;&#8322; = 0 gives LASSO. The same sum-over-classes form regularizes multinomial logistic regression (5.35)."
+   }
+  },
+  {
+   "id": "v3c5d7",
+   "s": "5.4",
+   "page": 315,
+   "q": "Two features are duplicates. LASSO zeroes one of them. <b>Which one</b>, and why should that worry you?",
+   "a": "<b>The one with the smaller values &mdash; and that is an artifact, not a finding.</b><p style='margin-top:8px'><b>The mechanism.</b> Suppose x<sub>i</sub> = 2x<sub>j</sub>. Moving all the weight onto x<sub>j</sub> leaves the fit untouched but shrinks the 1-norm:</p><div class='eq'>&beta;<sub>i</sub>&prime; = 0, &beta;<sub>j</sub>&prime; = &beta;<sub>j</sub> + &frac12;&beta;<sub>i</sub>&nbsp;&rArr;&nbsp; |&beta;<sub>i</sub>&prime;| + |&beta;<sub>j</sub>&prime;| &le; |&beta;<sub>j</sub>| + &frac12;|&beta;<sub>i</sub>| <b>&lt;</b> |&beta;<sub>i</sub>| + |&beta;<sub>j</sub>|</div>So the minimizer <b>must</b> have &beta;&#770;<sub>i</sub> = 0. But <i>there is no special reason why x<sub>j</sub> is a more relevant feature than x<sub>i</sub> &mdash; they contain exactly the same information.</i> Larger values mean smaller coefficients mean a smaller penalty. <b>That is the entire criterion.</b><div class='eq'>Measure x<sub>j</sub> in <b>kilometres</b> instead of metres and it becomes x<sub>j</sub>/1000 &mdash; now &beta;&#770;<sub><b>j</b></sub> = 0 instead.</div><b>Changing units flips which feature the model reports as important.</b><p style='margin-top:8px'><b>And there may be no unique answer at all.</b> When X is rank deficient the L&sup1; loss is convex but <b>not strictly convex</b>: with x<sub>i</sub> = x<sub>j</sub>, every split &beta;<sub>i</sub>&prime; = &beta;<sub>i</sub> + &alpha;&beta;<sub>j</sub>, &beta;<sub>j</sub>&prime; = (1&minus;&alpha;)&beta;<sub>j</sub> for &alpha; &isin; [0,1] is equally optimal &mdash; <b>infinitely many minimizers</b>.</p>",
+   "r": {
+    "rot": "two columns carrying identical information, and LASSO keeps one and kills the other. which one? whichever happens to be recorded in bigger numbers, because bigger numbers need smaller coefficients and smaller coefficients cost less penalty. switch that column from metres to kilometres and the model changes its mind about which feature matters. that's a unit conversion deciding your scientific conclusion.",
+    "ex": "This is why you standardize features before regularizing. The penalty &#8214;&beta;&#8214;&#8321; treats all coefficients alike, which only makes sense if the columns are on comparable scales &mdash; otherwise the penalty is secretly measuring your choice of units.",
+    "why": "It's the sharp limit on reading LASSO's sparsity as feature selection. A zero coefficient means 'this feature was redundant <i>and</i> lost a tiebreak', not 'this feature is irrelevant' &mdash; which is exactly the identifiability caveat attached to L&sup1; in the summary, made concrete.",
+    "math": "L&sup1; loss is convex but not strictly convex when rank(X) &lt; d, so minimizers need not be unique. L&sup2; is strictly convex regardless, giving a unique &beta;&#770; &mdash; it splits the weight evenly between duplicates instead of choosing."
+   }
+  },
+  {
    "id": "v3c5e1",
    "s": "5.5",
    "page": 317,
@@ -478,6 +504,19 @@
    }
   },
   {
+   "id": "v3c5f5",
+   "s": "5.6",
+   "page": 328,
+   "q": "How do you regularize <b>multinomial</b> logistic regression? What is the one structural difference from the binary case?",
+   "a": "<b>There are now k coefficient vectors instead of one, so the penalty is a sum over classes.</b><div class='eq'>&#8467;(&theta;|D) + &Sigma;<sub>j=1</sub><sup>k</sup> [ &lambda;&#8321;&#8214;&beta;<sub>j</sub>&#8214;&#8321; + &lambda;&#8322;&#8214;&beta;<sub>j</sub>&#8214;&sup2;&#8322; ]&nbsp;&nbsp;(5.35)</div>added to the softmax objective, with &lambda;&#8321;, &lambda;&#8322; &ge; 0. <b>Everything else is unchanged</b> &mdash; <i>very similar to regularization for binary logistic regression and has similar benefits.</i><div class='eq'>&lambda;&#8321; = 0 &rarr; <b>L&sup2;</b>&nbsp;&middot;&nbsp;&lambda;&#8322; = 0 &rarr; <b>L&sup1;</b>&nbsp;&middot;&nbsp;both &gt; 0 &rarr; <b>elastic net</b></div>the same three-way choice as &sect;5.4, with the same criteria for picking among them.<p style='margin-top:8px'><b>And the property that makes it usable survives:</b> <i>as with linear and logistic regularization, these are all convex and reasonably computable.</i> Adding &#8214;&#8901;&#8214;&#8321; or &#8214;&#8901;&#8214;&sup2;&#8322; to a convex objective leaves it convex, so there is still a single global optimum and standard solvers still reach it.</p><p><b>One &lambda; pair, shared across all k classes.</b> The penalty treats every class's coefficient vector alike, which is what keeps the hyperparameter search two-dimensional instead of 2k-dimensional.</p>",
+   "r": {
+    "rot": "binary logistic had one vector &beta; to shrink. multinomial has k of them, one per class. so shrink all of them &mdash; add up the penalties, same two knobs &lambda;&#8321; and &lambda;&#8322; for everybody. set one knob to zero and you get ridge or lasso, turn both on and you get elastic net, exactly as before. and it stays convex, which is the only reason any of this is practical.",
+    "ex": "This is where the linear-separability cure of &sect;5.5.3 carries over: with separable classes the unregularized MLE sends coefficients to infinity, and any &lambda;&#8322; &gt; 0 makes the objective coercive, pinning the optimum down at a finite &beta;.",
+    "why": "It's the piece that makes softmax regression deployable, and it's the template every neural network classifier follows &mdash; cross-entropy loss plus a weight penalty summed over parameters. The multiclass case introduced no new ideas, which is itself the point worth remembering.",
+    "math": "Convexity is preserved because both norms are convex and a sum of convex functions is convex. The softmax parameterization is over-determined (adding a constant to every &beta;<sub>j</sub> leaves predictions unchanged), and regularization also removes that degeneracy by selecting the smallest-norm representative."
+   }
+  },
+  {
    "id": "v3c5f4",
    "s": "5.6",
    "page": 329,
@@ -504,6 +543,32 @@
    }
   },
   {
+   "id": "v3c5g5",
+   "s": "5.7",
+   "page": 330,
+   "q": "Walk a spam filter through end to end: from an email to a classification.",
+   "a": "<b>1. Fix a vocabulary and encode.</b> Bag of words maps each document to a binary vector of length d. With the ten-word list (acai, viagra, weight, deal, bargain, loss, probability, mathematics, exponential, school), the email<div class='eq'>&ldquo;This year's Rocky Mountain Mathematics Consortium summer school is on Free Probability, Random Matrices, and Applications&hellip;&rdquo;</div>becomes <b>(0,0,0,0,0,0,1,1,0,1)</b> &mdash; probability, mathematics, school. (A real filter needs thousands of words, not ten.)<p style='margin-top:10px'><b>2. Train by counting.</b> Over a labelled corpus with N<sub>c</sub> documents in class c and N<sub>j,c</sub> of those containing word j:</p><div class='eq'>&pi;&#770;<sub>c</sub> = N<sub>c</sub>/N&nbsp;&nbsp;(how much mail is spam)<br>&theta;&#770;<sub>j,c</sub> = N<sub>j,c</sub>/N<sub>c</sub>&nbsp;&nbsp;(how often word j appears in class c)</div><b>3. Smooth.</b> A word never seen in class c gives &theta;&#770;<sub>j,c</sub> = 0, which zeroes the entire product for that class. Laplace add-one smoothing &mdash; (N<sub>j,c</sub>+1)/(N<sub>c</sub>+2) &mdash; prevents it.<p style='margin-top:8px'><b>4. Classify in logs</b>, to avoid underflow across thousands of factors:</p><div class='eq'>f&#770;(x) = argmax<sub>c</sub> [ log &pi;&#770;<sub>c</sub> + &sum;<sub>j=1</sub><sup>d</sup> log p(x<sub>j</sub> | &theta;&#770;<sub>j,c</sub>) ]</div>where each term is log &theta;&#770;<sub>j,c</sub> if word j is present and log(1 &minus; &theta;&#770;<sub>j,c</sub>) if absent &mdash; <b>the absent words carry evidence too</b>.<p style='margin-top:8px'>The whole classifier is a table of counts and one dot product's worth of arithmetic per email.</p>",
+   "r": {
+    "rot": "the full pipeline. pick a vocabulary, turn each email into a yes/no vector over those words. count: what fraction of mail is spam, and for each word, what fraction of spam contains it. add one to every count so nothing is ever exactly zero. then to classify a new email, add up log-probabilities &mdash; the prior for the class plus one term per word &mdash; and take the bigger total. two things people forget: the words that are <b>absent</b> contribute too, via log(1&minus;&theta;), and you must work in logs or a thousand small factors underflow to zero.",
+    "ex": "The book's own example is a false positive waiting to happen &mdash; a legitimate summer-school announcement about &ldquo;Free Probability&rdquo; contains <i>free</i>, a classic spam word. That is precisely the case where the class prior and the other words have to outvote one misleading feature.",
+    "why": "Seeing it end to end shows why the pieces of &sect;5.7.2 and &sect;5.7.3 are not optional extras: without smoothing one unseen word breaks the classifier outright, and without logs the arithmetic underflows. The theory and the numerical safeguards are the same result.",
+    "math": "Encode &rarr; count &pi;&#770;<sub>c</sub> = N<sub>c</sub>/N and &theta;&#770;<sub>j,c</sub> = (N<sub>j,c</sub>+1)/(N<sub>c</sub>+2) &rarr; classify by argmax<sub>c</sub>[log&pi;&#770;<sub>c</sub> + &sum;<sub>j</sub>log p(x<sub>j</sub>|&theta;&#770;<sub>j,c</sub>)]."
+   }
+  },
+  {
+   "id": "v3c5g4",
+   "s": "5.7",
+   "page": 331,
+   "q": "Naïve Bayes is a generative classifier. What does that buy it, and why does a false assumption still work?",
+   "a": "The model f&#770;(x) = argmax<sub>c</sub> p(x|y=c,&theta;)p(y=c|&theta;) describes classification through the <b>generating probabilities</b> p(x, y=c|&theta;) &mdash; making naïve Bayes a <b>generative</b> classifier (&sect;5.8.3), unlike logistic regression, which models only p(y|x).<p style='margin-top:8px'><b>What the naïve assumption buys.</b> Without it, p(x|y=c,&theta;) is one <b>d-dimensional joint</b> distribution &mdash; hopeless to estimate when d is in the thousands. With it:</p><div class='eq'>one d-dimensional joint&nbsp;&nbsp;&rarr;&nbsp;&nbsp;<b>d decoupled univariate distributions</b></div><b>&ldquo;This makes the problem much more tractable if the number d of features is large.&rdquo;</b><p style='margin-top:10px'><b>Why a knowingly false assumption still performs.</b> Independence of the coordinates <b>rarely holds</b> &mdash; hence <i>naïve</i> &mdash; and yet the classifier performs well in many situations. The book's reason:</p><div class='eq'>It has <b>few parameters</b>, which makes it <b>less computationally expensive</b> and <b>less likely to overfit</b> than more sophisticated models.</div><p style='margin-top:6px'>It is a deliberate bias&ndash;variance trade: you accept a wrong model (high bias) in exchange for a huge cut in variance, and on d &gg; N problems that trade is a bargain. Training is <b>counting</b> rather than optimization, so it is also far faster than minimizing a cross-entropy loss.</p>",
+   "r": {
+    "rot": "the assumption is false and everyone knows it &mdash; words in an email are obviously not independent. so why does it work? because the alternative is worse. modelling the true joint over a thousand binary features means estimating 2<sup>1000</sup> numbers from a few thousand emails; you'd be fitting noise with both hands. the naïve version needs about 2d numbers and you get them by <b>counting</b>. wrong-but-cheap beats right-but-unestimable. that's the bias&ndash;variance tradeoff being exploited on purpose rather than merely balanced.",
+    "ex": "Compare the parameter counts directly. A full joint over d binary features per class needs 2<sup>d</sup>&minus;1 parameters; naïve Bayes needs d. For a thousand-word vocabulary that is the difference between impossible and a single pass over the data.",
+    "why": "It's the clearest instance in the book of a model whose assumptions you should <b>not</b> try to fix. &sect;5.8 shows what dropping the assumption costs &mdash; Gaussian discriminant analysis must estimate a full &Sigma;<sub>c</sub> per class &mdash; and &sect;5.8.3 lists exactly when that extra realism pays and when it doesn't.",
+    "math": "Generative: models p(x,y|&theta;). Naïve step turns one d-dimensional estimation problem into d univariate ones. Parameters O(d) instead of O(2<sup>d</sup>)."
+   }
+  },
+  {
    "id": "v3c5g2",
    "s": "5.7",
    "page": 332,
@@ -527,32 +592,6 @@
     "ex": "Add-one smoothing is exactly a Beta(1,1) prior on each Bernoulli parameter, updated by the counts &mdash; which is the conjugacy relation of &sect;4.7.1 doing quiet work inside what looks like a numerical patch.",
     "why": "Both failures come from a single training-set peculiarity generalizing catastrophically, which is overfitting in an unusually literal form: one never-seen word makes the classifier undefined. It's a good reminder that regularization and priors show up as numerical safeguards, not only as accuracy improvements.",
     "math": "log turns &prod; into &sum;, preserving argmax. Smoothing: &theta;&#770;<sub>j,c</sub> = (N<sub>j,c</sub>+1)/(N<sub>c</sub>+2). Variance floor: &sigma;&#770;&sup2;<sub>j,c</sub> &ge; &sigma;&sup2;<sub>min</sub> &gt; 0."
-   }
-  },
-  {
-   "id": "v3c5g4",
-   "s": "5.7",
-   "page": 331,
-   "q": "Naïve Bayes is a generative classifier. What does that buy it, and why does a false assumption still work?",
-   "a": "The model f&#770;(x) = argmax<sub>c</sub> p(x|y=c,&theta;)p(y=c|&theta;) describes classification through the <b>generating probabilities</b> p(x, y=c|&theta;) &mdash; making naïve Bayes a <b>generative</b> classifier (&sect;5.8.3), unlike logistic regression, which models only p(y|x).<p style='margin-top:8px'><b>What the naïve assumption buys.</b> Without it, p(x|y=c,&theta;) is one <b>d-dimensional joint</b> distribution &mdash; hopeless to estimate when d is in the thousands. With it:</p><div class='eq'>one d-dimensional joint&nbsp;&nbsp;&rarr;&nbsp;&nbsp;<b>d decoupled univariate distributions</b></div><b>&ldquo;This makes the problem much more tractable if the number d of features is large.&rdquo;</b><p style='margin-top:10px'><b>Why a knowingly false assumption still performs.</b> Independence of the coordinates <b>rarely holds</b> &mdash; hence <i>naïve</i> &mdash; and yet the classifier performs well in many situations. The book's reason:</p><div class='eq'>It has <b>few parameters</b>, which makes it <b>less computationally expensive</b> and <b>less likely to overfit</b> than more sophisticated models.</div><p style='margin-top:6px'>It is a deliberate bias&ndash;variance trade: you accept a wrong model (high bias) in exchange for a huge cut in variance, and on d &gg; N problems that trade is a bargain. Training is <b>counting</b> rather than optimization, so it is also far faster than minimizing a cross-entropy loss.</p>",
-   "r": {
-    "rot": "the assumption is false and everyone knows it &mdash; words in an email are obviously not independent. so why does it work? because the alternative is worse. modelling the true joint over a thousand binary features means estimating 2<sup>1000</sup> numbers from a few thousand emails; you'd be fitting noise with both hands. the naïve version needs about 2d numbers and you get them by <b>counting</b>. wrong-but-cheap beats right-but-unestimable. that's the bias&ndash;variance tradeoff being exploited on purpose rather than merely balanced.",
-    "ex": "Compare the parameter counts directly. A full joint over d binary features per class needs 2<sup>d</sup>&minus;1 parameters; naïve Bayes needs d. For a thousand-word vocabulary that is the difference between impossible and a single pass over the data.",
-    "why": "It's the clearest instance in the book of a model whose assumptions you should <b>not</b> try to fix. &sect;5.8 shows what dropping the assumption costs &mdash; Gaussian discriminant analysis must estimate a full &Sigma;<sub>c</sub> per class &mdash; and &sect;5.8.3 lists exactly when that extra realism pays and when it doesn't.",
-    "math": "Generative: models p(x,y|&theta;). Naïve step turns one d-dimensional estimation problem into d univariate ones. Parameters O(d) instead of O(2<sup>d</sup>)."
-   }
-  },
-  {
-   "id": "v3c5g5",
-   "s": "5.7",
-   "page": 330,
-   "q": "Walk a spam filter through end to end: from an email to a classification.",
-   "a": "<b>1. Fix a vocabulary and encode.</b> Bag of words maps each document to a binary vector of length d. With the ten-word list (acai, viagra, weight, deal, bargain, loss, probability, mathematics, exponential, school), the email<div class='eq'>&ldquo;This year's Rocky Mountain Mathematics Consortium summer school is on Free Probability, Random Matrices, and Applications&hellip;&rdquo;</div>becomes <b>(0,0,0,0,0,0,1,1,0,1)</b> &mdash; probability, mathematics, school. (A real filter needs thousands of words, not ten.)<p style='margin-top:10px'><b>2. Train by counting.</b> Over a labelled corpus with N<sub>c</sub> documents in class c and N<sub>j,c</sub> of those containing word j:</p><div class='eq'>&pi;&#770;<sub>c</sub> = N<sub>c</sub>/N&nbsp;&nbsp;(how much mail is spam)<br>&theta;&#770;<sub>j,c</sub> = N<sub>j,c</sub>/N<sub>c</sub>&nbsp;&nbsp;(how often word j appears in class c)</div><b>3. Smooth.</b> A word never seen in class c gives &theta;&#770;<sub>j,c</sub> = 0, which zeroes the entire product for that class. Laplace add-one smoothing &mdash; (N<sub>j,c</sub>+1)/(N<sub>c</sub>+2) &mdash; prevents it.<p style='margin-top:8px'><b>4. Classify in logs</b>, to avoid underflow across thousands of factors:</p><div class='eq'>f&#770;(x) = argmax<sub>c</sub> [ log &pi;&#770;<sub>c</sub> + &sum;<sub>j=1</sub><sup>d</sup> log p(x<sub>j</sub> | &theta;&#770;<sub>j,c</sub>) ]</div>where each term is log &theta;&#770;<sub>j,c</sub> if word j is present and log(1 &minus; &theta;&#770;<sub>j,c</sub>) if absent &mdash; <b>the absent words carry evidence too</b>.<p style='margin-top:8px'>The whole classifier is a table of counts and one dot product's worth of arithmetic per email.</p>",
-   "r": {
-    "rot": "the full pipeline. pick a vocabulary, turn each email into a yes/no vector over those words. count: what fraction of mail is spam, and for each word, what fraction of spam contains it. add one to every count so nothing is ever exactly zero. then to classify a new email, add up log-probabilities &mdash; the prior for the class plus one term per word &mdash; and take the bigger total. two things people forget: the words that are <b>absent</b> contribute too, via log(1&minus;&theta;), and you must work in logs or a thousand small factors underflow to zero.",
-    "ex": "The book's own example is a false positive waiting to happen &mdash; a legitimate summer-school announcement about &ldquo;Free Probability&rdquo; contains <i>free</i>, a classic spam word. That is precisely the case where the class prior and the other words have to outvote one misleading feature.",
-    "why": "Seeing it end to end shows why the pieces of &sect;5.7.2 and &sect;5.7.3 are not optional extras: without smoothing one unseen word breaks the classifier outright, and without logs the arithmetic underflows. The theory and the numerical safeguards are the same result.",
-    "math": "Encode &rarr; count &pi;&#770;<sub>c</sub> = N<sub>c</sub>/N and &theta;&#770;<sub>j,c</sub> = (N<sub>j,c</sub>+1)/(N<sub>c</sub>+2) &rarr; classify by argmax<sub>c</sub>[log&pi;&#770;<sub>c</sub> + &sum;<sub>j</sub>log p(x<sub>j</sub>|&theta;&#770;<sub>j,c</sub>)]."
    }
   },
   {

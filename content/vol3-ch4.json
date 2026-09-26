@@ -126,19 +126,6 @@
    }
   },
   {
-   "id": "v3c4a2",
-   "s": "4.1",
-   "page": 232,
-   "q": "State Slutsky's theorem and the continuous mapping theorems. What's the trap in Theorem 4.1.16?",
-   "a": "<b>Continuous mapping (Thms 4.1.5, 4.1.11, 4.1.15).</b> For g continuous, X<sub>n</sub> &rarr; X in any of the three modes implies g(X<sub>n</sub>) &rarr; g(X) in that same mode. Convergence survives continuous functions.<p style='margin-top:8px'><b>Theorem 4.1.16.</b> If X<sub>n</sub> &rarr; X in distribution, then E[g(X<sub>n</sub>)] &rarr; E[g(X)] for every <b>bounded</b> continuous g.</p><p><b>Nota Bene 4.1.17 &mdash; the trap:</b> this does <b>not</b> give E[X<sub>n</sub>] &rarr; E[X], because g(x) = x is <b>not bounded</b>. Convergence in distribution does not imply convergence of means.</p><p style='margin-top:8px'><b>Slutsky (Thm 4.1.18).</b> If X<sub>n</sub> &rarr; X in distribution and Y<sub>n</sub> &rarr; c (a constant) in distribution, then X<sub>n</sub> + Y<sub>n</sub> &rarr; X + c and X<sub>n</sub>Y<sub>n</sub> &rarr; Xc.</p>",
-   "r": {
-    "rot": "continuous functions don't break convergence &mdash; squeeze a converging sequence through a continuous map and it still converges, same mode. the trap: convergence in distribution does <b>not</b> mean the means converge. the identity function isn't bounded, so theorem 4.1.16 doesn't cover it. a sequence can converge in distribution while its expectations run off to infinity. slutsky is the practical one: you can mix a converging sequence with something converging to a <i>constant</i> and the algebra works.",
-    "ex": "Slutsky is what licenses replacing an unknown &sigma; with a consistent estimate &sigma;&#770; in a CLT-based confidence interval: (&mu;&#770; &minus; &mu;)/(&sigma;&#770;/&radic;n) still converges to N(0,1) because &sigma;&#770; &rarr; &sigma;, a constant.",
-    "why": "Slutsky is why applied confidence intervals are legal at all &mdash; you never know &sigma;, and this says plugging in an estimate is asymptotically harmless. Note it requires the second limit to be a <b>constant</b>; it fails for a general random limit.",
-    "math": "Requires P(Y = c) = 1. Continuous mapping holds in all three modes; Thm 4.1.16 needs g bounded and continuous."
-   }
-  },
-  {
    "id": "v3c4a3",
    "s": "4.1",
    "page": 228,
@@ -178,16 +165,16 @@
    }
   },
   {
-   "id": "v3c4b1",
-   "s": "4.2",
-   "page": 234,
-   "q": "Define the characteristic function. What two theorems make it powerful?",
-   "a": "<div class='eq'>&phi;<sub>X</sub>(t) = E[e<sup>i&langle;t,X&rangle;</sup>]</div><b>Prop 4.2.3:</b> it <b>always exists</b>, for every random variable and every t &mdash; because |e<sup>i&langle;t,x&rangle;</sup>| = 1, so the integral is absolutely convergent, giving &int;f<sub>X</sub> = 1. (The moment generating function, its real cousin, can fail to exist.)<p style='margin-top:10px'><b>Thm 4.2.14 (Fourier inversion):</b> the characteristic function <b>uniquely determines the distribution</b> &mdash; &phi;<sub>X</sub> = &phi;<sub>Y</sub> &rArr; F<sub>X</sub> = F<sub>Y</sub>. And when &phi;<sub>X</sub> is integrable, f<sub>X</sub>(x) = (2&pi;)<sup>&minus;n</sup>&int;e<sup>&minus;i&langle;x,t&rangle;</sup>&phi;<sub>X</sub>(t)dt recovers the density.</p><p><b>Thm 4.2.16 (L&eacute;vy continuity):</b> &phi;<sub>X<sub>n</sub></sub> &rarr; &phi;<sub>X</sub> pointwise <b>if and only if</b> X<sub>n</sub> &rarr; X in distribution.</p>",
+   "id": "v3c4a2",
+   "s": "4.1",
+   "page": 232,
+   "q": "State Slutsky's theorem and the continuous mapping theorems. What's the trap in Theorem 4.1.16?",
+   "a": "<b>Continuous mapping (Thms 4.1.5, 4.1.11, 4.1.15).</b> For g continuous, X<sub>n</sub> &rarr; X in any of the three modes implies g(X<sub>n</sub>) &rarr; g(X) in that same mode. Convergence survives continuous functions.<p style='margin-top:8px'><b>Theorem 4.1.16.</b> If X<sub>n</sub> &rarr; X in distribution, then E[g(X<sub>n</sub>)] &rarr; E[g(X)] for every <b>bounded</b> continuous g.</p><p><b>Nota Bene 4.1.17 &mdash; the trap:</b> this does <b>not</b> give E[X<sub>n</sub>] &rarr; E[X], because g(x) = x is <b>not bounded</b>. Convergence in distribution does not imply convergence of means.</p><p style='margin-top:8px'><b>Slutsky (Thm 4.1.18).</b> If X<sub>n</sub> &rarr; X in distribution and Y<sub>n</sub> &rarr; c (a constant) in distribution, then X<sub>n</sub> + Y<sub>n</sub> &rarr; X + c and X<sub>n</sub>Y<sub>n</sub> &rarr; Xc.</p>",
    "r": {
-    "rot": "it's the fourier transform of your distribution, and it's a total fingerprint &mdash; two distributions with the same &phi; are the same distribution, full stop. the mean and variance don't pin down a distribution, but this does. and the <i>reason</i> it's the CLT's weapon: convergence in distribution is annoying to work with directly, but L&eacute;vy says it's <b>exactly the same as</b> pointwise convergence of these functions. so you stop chasing c.d.f.s and just take a limit of ordinary functions.",
-    "ex": "The standard normal is its own transform: f(x) = e<sup>&minus;x&sup2;/2</sup>/&radic;(2&pi;) gives &phi;(t) = e<sup>&minus;t&sup2;/2</sup> (Ex 4.2.15). Also &phi;<sub>X+Y</sub> = &phi;<sub>X</sub>&phi;<sub>Y</sub> for independent X, Y &mdash; sums of independent variables become <i>products</i>, which is why it handles S<sub>n</sub> so well.",
-    "why": "Moments (Def 4.2.1) reveal properties one at a time &mdash; first is the mean, second builds variance, third scaled is <b>skew</b> = &mu;&#8323;/&sigma;&sup3;. The characteristic function packages them <b>all at once</b> (Prop 4.2.10) and turns convolution into multiplication. Those two facts are the entire proof of the CLT.",
-    "math": "&phi;<sub>X</sub>(t) = E[e<sup>i&langle;t,X&rangle;</sup>]. Central moments &mu;<sub>k</sub> = E[(X&minus;&mu;)<sup>k</sup>], &mu;&#8322; = &sigma;&sup2;, skew = &mu;&#8323;/&sigma;&sup3;."
+    "rot": "continuous functions don't break convergence &mdash; squeeze a converging sequence through a continuous map and it still converges, same mode. the trap: convergence in distribution does <b>not</b> mean the means converge. the identity function isn't bounded, so theorem 4.1.16 doesn't cover it. a sequence can converge in distribution while its expectations run off to infinity. slutsky is the practical one: you can mix a converging sequence with something converging to a <i>constant</i> and the algebra works.",
+    "ex": "Slutsky is what licenses replacing an unknown &sigma; with a consistent estimate &sigma;&#770; in a CLT-based confidence interval: (&mu;&#770; &minus; &mu;)/(&sigma;&#770;/&radic;n) still converges to N(0,1) because &sigma;&#770; &rarr; &sigma;, a constant.",
+    "why": "Slutsky is why applied confidence intervals are legal at all &mdash; you never know &sigma;, and this says plugging in an estimate is asymptotically harmless. Note it requires the second limit to be a <b>constant</b>; it fails for a general random limit.",
+    "math": "Requires P(Y = c) = 1. Continuous mapping holds in all three modes; Thm 4.1.16 needs g bounded and continuous."
    }
   },
   {
@@ -201,6 +188,19 @@
     "ex": "The scaling in skew(X) = &mu;&#8323;/&sigma;&sup3; is what makes it comparable across distributions: dividing by &sigma;&sup3; makes it dimensionless, so it measures shape rather than size. The same trick gives kurtosis at &mu;&#8324;/&sigma;&#8308;.",
     "why": "This is what motivates the characteristic function two subsections later. Computing E[X<sup>k</sup>] one integral at a time is painful; the characteristic function collects them all and hands them back as derivatives at 0 (Prop 4.2.10). Skew also shows up in practice &mdash; the regression output in &sect;5.3.8 reports it as a diagnostic on the residuals.",
     "math": "E[X<sup>k</sup>] = &int;x<sup>k</sup>f<sub>X</sub>. Central: &mu;<sub>k</sub> = E[(X&minus;&mu;)<sup>k</sup>], &mu;&#8322; = &sigma;&sup2;, skew = &mu;&#8323;/&sigma;&sup3;."
+   }
+  },
+  {
+   "id": "v3c4b1",
+   "s": "4.2",
+   "page": 234,
+   "q": "Define the characteristic function. What two theorems make it powerful?",
+   "a": "<div class='eq'>&phi;<sub>X</sub>(t) = E[e<sup>i&langle;t,X&rangle;</sup>]</div><b>Prop 4.2.3:</b> it <b>always exists</b>, for every random variable and every t &mdash; because |e<sup>i&langle;t,x&rangle;</sup>| = 1, so the integral is absolutely convergent, giving &int;f<sub>X</sub> = 1. (The moment generating function, its real cousin, can fail to exist.)<p style='margin-top:10px'><b>Thm 4.2.14 (Fourier inversion):</b> the characteristic function <b>uniquely determines the distribution</b> &mdash; &phi;<sub>X</sub> = &phi;<sub>Y</sub> &rArr; F<sub>X</sub> = F<sub>Y</sub>. And when &phi;<sub>X</sub> is integrable, f<sub>X</sub>(x) = (2&pi;)<sup>&minus;n</sup>&int;e<sup>&minus;i&langle;x,t&rangle;</sup>&phi;<sub>X</sub>(t)dt recovers the density.</p><p><b>Thm 4.2.16 (L&eacute;vy continuity):</b> &phi;<sub>X<sub>n</sub></sub> &rarr; &phi;<sub>X</sub> pointwise <b>if and only if</b> X<sub>n</sub> &rarr; X in distribution.</p>",
+   "r": {
+    "rot": "it's the fourier transform of your distribution, and it's a total fingerprint &mdash; two distributions with the same &phi; are the same distribution, full stop. the mean and variance don't pin down a distribution, but this does. and the <i>reason</i> it's the CLT's weapon: convergence in distribution is annoying to work with directly, but L&eacute;vy says it's <b>exactly the same as</b> pointwise convergence of these functions. so you stop chasing c.d.f.s and just take a limit of ordinary functions.",
+    "ex": "The standard normal is its own transform: f(x) = e<sup>&minus;x&sup2;/2</sup>/&radic;(2&pi;) gives &phi;(t) = e<sup>&minus;t&sup2;/2</sup> (Ex 4.2.15). Also &phi;<sub>X+Y</sub> = &phi;<sub>X</sub>&phi;<sub>Y</sub> for independent X, Y &mdash; sums of independent variables become <i>products</i>, which is why it handles S<sub>n</sub> so well.",
+    "why": "Moments (Def 4.2.1) reveal properties one at a time &mdash; first is the mean, second builds variance, third scaled is <b>skew</b> = &mu;&#8323;/&sigma;&sup3;. The characteristic function packages them <b>all at once</b> (Prop 4.2.10) and turns convolution into multiplication. Those two facts are the entire proof of the CLT.",
+    "math": "&phi;<sub>X</sub>(t) = E[e<sup>i&langle;t,X&rangle;</sup>]. Central moments &mu;<sub>k</sub> = E[(X&minus;&mu;)<sup>k</sup>], &mu;&#8322; = &sigma;&sup2;, skew = &mu;&#8323;/&sigma;&sup3;."
    }
   },
   {
@@ -308,32 +308,6 @@
    }
   },
   {
-   "id": "v3c4d1",
-   "s": "4.4",
-   "page": 245,
-   "q": "Define bias, and show the sample mean and sample variance estimators differ in it.",
-   "a": "<b>Definition 4.4.3.</b> bias(&Theta;&#770;) = E[&Theta;&#770;] &minus; &theta;. Zero means <b>unbiased</b>; E[&Theta;&#770;<sub>n</sub>] &rarr; &theta; means <b>asymptotically unbiased</b>.<p style='margin-top:8px'><b>Sample mean is unbiased:</b> E[&mu;&#770;] = (1/n)&Sigma;E[X<sub>i</sub>] = &mu;. &#10003;</p><p><b>Biased sample variance is not:</b> for &sigma;&#770;<sub>n</sub>&sup2; = (1/n)&Sigma;(X<sub>i</sub> &minus; &mu;&#770;)&sup2;,</p><div class='eq'>E[&sigma;&#770;<sub>n</sub>&sup2;] = <span class='frac'><span>n &minus; 1</span><span>n</span></span>&sigma;&sup2; &ne; &sigma;&sup2;</div>though it is asymptotically unbiased. <b>Prop 4.4.6:</b> dividing by n&minus;1 instead fixes it &mdash; s&#770;&sup2; = (1/(n&minus;1))&Sigma;(X<sub>i</sub> &minus; &mu;&#770;)&sup2; is the <b>unbiased sample variance</b>.<p style='margin-top:8px'><b>Remark 4.4.2:</b> estimators are <b>random variables</b> &mdash; functions of X&#8321;,&hellip;,X<sub>n</sub>, not of the data x&#8321;,&hellip;,x<sub>n</sub>. An <i>estimate</i> is the number you get from one draw.</p>",
-   "r": {
-    "rot": "bias = on average, how far off is your estimator. sample mean: dead on. sample variance dividing by n: systematically <b>too small</b>, by a factor (n&minus;1)/n. why? you measured spread around the <i>estimated</i> mean, which by construction sits closer to your data than the true mean does. so you undercount. dividing by n&minus;1 pays that back. that's the whole reason for the weird n&minus;1 you were told to use and never told why.",
-    "ex": "The estimator/estimate distinction matters: &mu;&#770; is a random variable with its own distribution (Figure 4.3 plots many draws of it), while &mu;&#770;<sub>x</sub> = 1.934 is one number from one draw.",
-    "why": "Unbiased is <b>not</b> the same as good, which &sect;4.4.3 makes precise. An unbiased estimator can have enormous variance and be worse in practice than a slightly biased one with small variance.",
-    "math": "bias(&Theta;&#770;) = E[&Theta;&#770;] &minus; &theta;. E[&sigma;&#770;<sub>n</sub>&sup2;] = ((n&minus;1)/n)&sigma;&sup2;. Unbiased: s&#770;&sup2; = &Sigma;(X<sub>i</sub>&minus;&mu;&#770;)&sup2;/(n&minus;1)."
-   }
-  },
-  {
-   "id": "v3c4d2",
-   "s": "4.4",
-   "page": 248,
-   "q": "Define MSE and consistency. Why isn't the minimum-variance unbiased estimator always the right target?",
-   "a": "<b>Def 4.4.11:</b> MSE(Y) = E[(Y &minus; &theta;)&sup2;]. <b>Prop 4.4.12:</b><div class='eq'>MSE(Y) = bias(Y)&sup2; + Var(Y) = bias(Y)&sup2; + se(Y)&sup2;</div><b>Def 4.4.13 (consistency):</b> the sequence (&Theta;&#770;<sub>n</sub>) is <b>consistent</b> if &Theta;&#770;<sub>n</sub> &rarr; &theta; <b>in probability</b>. <b>Prop 4.4.14:</b> bias &rarr; 0 and se &rarr; 0 together imply consistency.<p style='margin-top:10px'><b>Why MVUE isn't always right:</b> restricting to unbiased estimators makes MSE = Var, and the best such is the <b>minimum-variance unbiased estimator</b>. But <b>there can be biased estimators with smaller MSE</b>. If you truly want to minimize MSE, you may have to accept some bias. That's the <b>bias&ndash;variance tradeoff</b> again.</p>",
-   "r": {
-    "rot": "MSE = bias&sup2; + variance. third time you've seen this decomposition &mdash; law of total variance in &sect;1.8, under/overfitting in &sect;3.4, now estimators. and the punchline: chasing unbiasedness is a <b>constraint</b>, and constraints cost you. deliberately accepting a little bias can shrink the variance so much that you end up closer on average. that's what every regularized estimator in ch 5 is doing on purpose.",
-    "ex": "Consistency is about the sequence, not any single estimator: bias and standard error both vanishing as n grows is enough (Prop 4.4.14).",
-    "why": "This reframes &lsquo;unbiased = good&rsquo; as a mistake. What you actually want is small MSE, and unbiasedness is a side condition that sometimes helps and sometimes hurts. Ridge regression in &sect;5.4 is the canonical example of trading bias for a big variance reduction.",
-    "math": "MSE = bias&sup2; + Var. Consistent &hArr; &Theta;&#770;<sub>n</sub> &rarr; &theta; in probability. se(&Theta;&#770;) = &radic;Var(&Theta;&#770;) (Def 4.4.8)."
-   }
-  },
-  {
    "id": "v3c4d3",
    "s": "4.4",
    "page": 244,
@@ -347,6 +321,19 @@
    }
   },
   {
+   "id": "v3c4d1",
+   "s": "4.4",
+   "page": 245,
+   "q": "Define bias, and show the sample mean and sample variance estimators differ in it.",
+   "a": "<b>Definition 4.4.3.</b> bias(&Theta;&#770;) = E[&Theta;&#770;] &minus; &theta;. Zero means <b>unbiased</b>; E[&Theta;&#770;<sub>n</sub>] &rarr; &theta; means <b>asymptotically unbiased</b>.<p style='margin-top:8px'><b>Sample mean is unbiased:</b> E[&mu;&#770;] = (1/n)&Sigma;E[X<sub>i</sub>] = &mu;. &#10003;</p><p><b>Biased sample variance is not:</b> for &sigma;&#770;<sub>n</sub>&sup2; = (1/n)&Sigma;(X<sub>i</sub> &minus; &mu;&#770;)&sup2;,</p><div class='eq'>E[&sigma;&#770;<sub>n</sub>&sup2;] = <span class='frac'><span>n &minus; 1</span><span>n</span></span>&sigma;&sup2; &ne; &sigma;&sup2;</div>though it is asymptotically unbiased. <b>Prop 4.4.6:</b> dividing by n&minus;1 instead fixes it &mdash; s&#770;&sup2; = (1/(n&minus;1))&Sigma;(X<sub>i</sub> &minus; &mu;&#770;)&sup2; is the <b>unbiased sample variance</b>.<p style='margin-top:8px'><b>Remark 4.4.2:</b> estimators are <b>random variables</b> &mdash; functions of X&#8321;,&hellip;,X<sub>n</sub>, not of the data x&#8321;,&hellip;,x<sub>n</sub>. An <i>estimate</i> is the number you get from one draw.</p>",
+   "r": {
+    "rot": "bias = on average, how far off is your estimator. sample mean: dead on. sample variance dividing by n: systematically <b>too small</b>, by a factor (n&minus;1)/n. why? you measured spread around the <i>estimated</i> mean, which by construction sits closer to your data than the true mean does. so you undercount. dividing by n&minus;1 pays that back. that's the whole reason for the weird n&minus;1 you were told to use and never told why.",
+    "ex": "The estimator/estimate distinction matters: &mu;&#770; is a random variable with its own distribution (Figure 4.3 plots many draws of it), while &mu;&#770;<sub>x</sub> = 1.934 is one number from one draw.",
+    "why": "Unbiased is <b>not</b> the same as good, which &sect;4.4.3 makes precise. An unbiased estimator can have enormous variance and be worse in practice than a slightly biased one with small variance.",
+    "math": "bias(&Theta;&#770;) = E[&Theta;&#770;] &minus; &theta;. E[&sigma;&#770;<sub>n</sub>&sup2;] = ((n&minus;1)/n)&sigma;&sup2;. Unbiased: s&#770;&sup2; = &Sigma;(X<sub>i</sub>&minus;&mu;&#770;)&sup2;/(n&minus;1)."
+   }
+  },
+  {
    "id": "v3c4d4",
    "s": "4.4",
    "page": 246,
@@ -357,6 +344,19 @@
     "ex": "Example 4.4.9 makes the sample mean's precision concrete: the CLT gives &mu;&#770;<sub>n</sub> &asymp; N(&mu;, &sigma;&sup2;/n), so se(&mu;&#770;<sub>n</sub>) &asymp; &sigma;/&radic;n. Figure 4.3 shows this for Gamma(2,1) with n = 200: the histogram of sample means from 1000 draws sits neatly under the N(2, se&sup2;) density.",
     "why": "It sets up the next subsection exactly. Since MSE = bias&sup2; + variance, accuracy and precision are the two terms of a single quantity &mdash; and the reason a <b>biased</b> estimator can beat the best unbiased one is that it may trade a little of the first for a lot of the second.",
     "math": "Accuracy = bias = E[&Theta;&#770;] &minus; &theta;. Precision = Var(&Theta;&#770;); se(&Theta;&#770;) = &radic;Var(&Theta;&#770;). Equal weights minimize &sum;a<sub>i</sub>&sup2; subject to &sum;a<sub>i</sub> = 1."
+   }
+  },
+  {
+   "id": "v3c4d2",
+   "s": "4.4",
+   "page": 248,
+   "q": "Define MSE and consistency. Why isn't the minimum-variance unbiased estimator always the right target?",
+   "a": "<b>Def 4.4.11:</b> MSE(Y) = E[(Y &minus; &theta;)&sup2;]. <b>Prop 4.4.12:</b><div class='eq'>MSE(Y) = bias(Y)&sup2; + Var(Y) = bias(Y)&sup2; + se(Y)&sup2;</div><b>Def 4.4.13 (consistency):</b> the sequence (&Theta;&#770;<sub>n</sub>) is <b>consistent</b> if &Theta;&#770;<sub>n</sub> &rarr; &theta; <b>in probability</b>. <b>Prop 4.4.14:</b> bias &rarr; 0 and se &rarr; 0 together imply consistency.<p style='margin-top:10px'><b>Why MVUE isn't always right:</b> restricting to unbiased estimators makes MSE = Var, and the best such is the <b>minimum-variance unbiased estimator</b>. But <b>there can be biased estimators with smaller MSE</b>. If you truly want to minimize MSE, you may have to accept some bias. That's the <b>bias&ndash;variance tradeoff</b> again.</p>",
+   "r": {
+    "rot": "MSE = bias&sup2; + variance. third time you've seen this decomposition &mdash; law of total variance in &sect;1.8, under/overfitting in &sect;3.4, now estimators. and the punchline: chasing unbiasedness is a <b>constraint</b>, and constraints cost you. deliberately accepting a little bias can shrink the variance so much that you end up closer on average. that's what every regularized estimator in ch 5 is doing on purpose.",
+    "ex": "Consistency is about the sequence, not any single estimator: bias and standard error both vanishing as n grows is enough (Prop 4.4.14).",
+    "why": "This reframes &lsquo;unbiased = good&rsquo; as a mistake. What you actually want is small MSE, and unbiasedness is a side condition that sometimes helps and sometimes hurts. Ridge regression in &sect;5.4 is the canonical example of trading bias for a big variance reduction.",
+    "math": "MSE = bias&sup2; + Var. Consistent &hArr; &Theta;&#770;<sub>n</sub> &rarr; &theta; in probability. se(&Theta;&#770;) = &radic;Var(&Theta;&#770;) (Def 4.4.8)."
    }
   },
   {
@@ -383,19 +383,6 @@
     "ex": "Binomial(m,&theta;) with m known: E[X] = m&theta;, so the method of moments gives &theta;&#770; = (1/mn)&Sigma;x<sub>i</sub>. For Bernoulli, the MLE also comes out to the sample proportion.",
     "why": "The density-vs-likelihood flip is the single most important idea here. As a <b>density</b>, f(x|&theta;) has &theta; fixed and integrates to 1 over x. As a <b>likelihood</b>, x is fixed and &theta; varies &mdash; and it does <i>not</i> integrate to 1 over &theta;. It is not a probability distribution over &theta;. That's exactly the gap &sect;4.6 fills with a prior.",
     "math": "MoM: k moment equations. MLE: argmax<sub>&theta;</sub> &Pi;f(x<sub>i</sub>|&theta;); in practice maximize the log-likelihood &Sigma;log f(x<sub>i</sub>|&theta;)."
-   }
-  },
-  {
-   "id": "v3c4e2",
-   "s": "4.5",
-   "page": 255,
-   "q": "State the invariance property of the MLE and its two asymptotic guarantees.",
-   "a": "<b>Prop 4.5.10 (invariance).</b> If &theta;&#770;<sub>x</sub> is the MLE of &theta; and g is a <b>bijection</b>, then g(&theta;&#770;<sub>x</sub>) is the MLE of &tau; = g(&theta;).<p style='margin-top:6px'>Proof: the distribution depends on &tau; only through &theta;, so L(&tau;) = L(g<sup>&minus;1</sup>(&tau;)), and the maximum simply transports.</p><p style='margin-top:10px'><b>Theorem 4.5.11.</b> Under mild conditions the MLE is:</p><ol style='margin:0;padding-left:19px'><li><b>Consistent:</b> &Theta;&#770;<sub>n</sub><sup>MLE</sup> &rarr; &theta; in probability.</li><li><b>Asymptotically normal:</b> &radic;n(&Theta;&#770;<sub>n</sub><sup>MLE</sup> &minus; &theta;) &rarr; N(0, &Sigma;) in distribution.</li></ol>",
-   "r": {
-    "rot": "invariance means you never have to redo the work. got the MLE for the variance? the MLE for the standard deviation is just its square root. reparametrize however you like and the estimate follows along. and asymptotically, the MLE is consistent (it lands on the truth) and normal (its error is a bell curve shrinking like 1/&radic;n) &mdash; which is what lets you put error bars on it.",
-    "ex": "Note the MLE is <b>not</b> generally unbiased &mdash; the MLE for the variance of a normal is the biased &sigma;&#770;<sub>n</sub>&sup2; from &sect;4.4. It's consistent, not unbiased, and &sect;4.4.3 already argued that's often the better trade.",
-    "why": "Asymptotic normality is what makes the MLE usable rather than merely principled: it hands you a limiting distribution, hence confidence intervals and hypothesis tests, for essentially any parametric model. That's why MLE is the default estimator across statistics.",
-    "math": "g bijective &rArr; &tau;&#770; = g(&theta;&#770;). &radic;n(&Theta;&#770;<sup>MLE</sup> &minus; &theta;) &rarr; N(0,&Sigma;), with &Sigma; the inverse Fisher information."
    }
   },
   {
@@ -438,16 +425,16 @@
    }
   },
   {
-   "id": "v3c4f1",
-   "s": "4.6",
-   "page": 258,
-   "q": "What is the MAP estimate, when does it coincide with the MLE, and what's wrong with it?",
-   "a": "The Bayesian posterior f(&theta;|x) is a whole distribution over the parameter. The <b>MAP</b> (maximum a posteriori) estimate collapses it to its <b>mode</b>.<p style='margin-top:8px'><b>Prop 4.6.8.</b> If &theta; is known to lie in [a,b] and the prior is <b>uniform</b> on [a,b], then the MAP <b>equals the MLE</b>. A flat prior contributes nothing to the argmax, so maximizing the posterior is maximizing the likelihood.</p><p style='margin-top:10px'><b>&sect;4.6.2 &mdash; the problem:</b> the MAP <b>need not be a typical point</b> of the posterior. It is the most likely single value, but it can sit nowhere near most samples. The mode of Gamma(1,b) is <b>0</b> for every b &mdash; the far left end of the support.</p>",
+   "id": "v3c4e2",
+   "s": "4.5",
+   "page": 255,
+   "q": "State the invariance property of the MLE and its two asymptotic guarantees.",
+   "a": "<b>Prop 4.5.10 (invariance).</b> If &theta;&#770;<sub>x</sub> is the MLE of &theta; and g is a <b>bijection</b>, then g(&theta;&#770;<sub>x</sub>) is the MLE of &tau; = g(&theta;).<p style='margin-top:6px'>Proof: the distribution depends on &tau; only through &theta;, so L(&tau;) = L(g<sup>&minus;1</sup>(&tau;)), and the maximum simply transports.</p><p style='margin-top:10px'><b>Theorem 4.5.11.</b> Under mild conditions the MLE is:</p><ol style='margin:0;padding-left:19px'><li><b>Consistent:</b> &Theta;&#770;<sub>n</sub><sup>MLE</sup> &rarr; &theta; in probability.</li><li><b>Asymptotically normal:</b> &radic;n(&Theta;&#770;<sub>n</sub><sup>MLE</sup> &minus; &theta;) &rarr; N(0, &Sigma;) in distribution.</li></ol>",
    "r": {
-    "rot": "bayes hands you an entire distribution over the parameter and then someone demands one number. take the peak &mdash; that's the MAP. and if your prior was flat, the peak is exactly the MLE, so MLE is secretly bayes-with-no-opinion. the catch: the tallest point is not the same as a <i>representative</i> point. an exponential distribution peaks at zero even though almost every sample from it is bigger than zero. the mode can be somewhere you'd basically never land.",
-    "ex": "Bernoulli with a uniform prior: the posterior is Beta(1+nx&#772;, 1+n(1&minus;x&#772;)) &mdash; the same conjugate update as &sect;2.7 &mdash; whose mode is x&#772;, precisely the MLE.",
-    "why": "This is the argument for keeping the whole posterior instead of collapsing it. Summarizing by the mode throws away the uncertainty that was the entire point of being Bayesian, and in skewed posteriors the mode isn't even a good summary of location.",
-    "math": "MAP = argmax<sub>&theta;</sub> f(&theta;|x) &prop; argmax<sub>&theta;</sub> f(x|&theta;)P(&theta;). Uniform P(&theta;) &rArr; MAP = MLE."
+    "rot": "invariance means you never have to redo the work. got the MLE for the variance? the MLE for the standard deviation is just its square root. reparametrize however you like and the estimate follows along. and asymptotically, the MLE is consistent (it lands on the truth) and normal (its error is a bell curve shrinking like 1/&radic;n) &mdash; which is what lets you put error bars on it.",
+    "ex": "Note the MLE is <b>not</b> generally unbiased &mdash; the MLE for the variance of a normal is the biased &sigma;&#770;<sub>n</sub>&sup2; from &sect;4.4. It's consistent, not unbiased, and &sect;4.4.3 already argued that's often the better trade.",
+    "why": "Asymptotic normality is what makes the MLE usable rather than merely principled: it hands you a limiting distribution, hence confidence intervals and hypothesis tests, for essentially any parametric model. That's why MLE is the default estimator across statistics.",
+    "math": "g bijective &rArr; &tau;&#770; = g(&theta;&#770;). &radic;n(&Theta;&#770;<sup>MLE</sup> &minus; &theta;) &rarr; N(0,&Sigma;), with &Sigma; the inverse Fisher information."
    }
   },
   {
@@ -474,6 +461,19 @@
     "ex": "The book is careful about the justification. Convenience does not make a prior right &mdash; but beta earns its place because it's what the maximum-entropy (uniform) prior <i>becomes</i> after data, not because the algebra is pleasant.",
     "why": "This is the conjugacy relation that &sect;4.7.1 generalizes into a whole table, and it's the same mechanism hiding inside Laplace add-one smoothing for na&iuml;ve Bayes (&sect;5.7.3) &mdash; adding 1 to a count and 2 to the total <b>is</b> a Beta(1,1) prior.",
     "math": "Beta(a,b) prior + k successes in n trials &rArr; Beta(a+k, b+n&minus;k). Equivalent to uniform plus a&minus;1 pseudo-successes and b&minus;1 pseudo-failures."
+   }
+  },
+  {
+   "id": "v3c4f1",
+   "s": "4.6",
+   "page": 258,
+   "q": "What is the MAP estimate, when does it coincide with the MLE, and what's wrong with it?",
+   "a": "The Bayesian posterior f(&theta;|x) is a whole distribution over the parameter. The <b>MAP</b> (maximum a posteriori) estimate collapses it to its <b>mode</b>.<p style='margin-top:8px'><b>Prop 4.6.8.</b> If &theta; is known to lie in [a,b] and the prior is <b>uniform</b> on [a,b], then the MAP <b>equals the MLE</b>. A flat prior contributes nothing to the argmax, so maximizing the posterior is maximizing the likelihood.</p><p style='margin-top:10px'><b>&sect;4.6.2 &mdash; the problem:</b> the MAP <b>need not be a typical point</b> of the posterior. It is the most likely single value, but it can sit nowhere near most samples. The mode of Gamma(1,b) is <b>0</b> for every b &mdash; the far left end of the support.</p>",
+   "r": {
+    "rot": "bayes hands you an entire distribution over the parameter and then someone demands one number. take the peak &mdash; that's the MAP. and if your prior was flat, the peak is exactly the MLE, so MLE is secretly bayes-with-no-opinion. the catch: the tallest point is not the same as a <i>representative</i> point. an exponential distribution peaks at zero even though almost every sample from it is bigger than zero. the mode can be somewhere you'd basically never land.",
+    "ex": "Bernoulli with a uniform prior: the posterior is Beta(1+nx&#772;, 1+n(1&minus;x&#772;)) &mdash; the same conjugate update as &sect;2.7 &mdash; whose mode is x&#772;, precisely the MLE.",
+    "why": "This is the argument for keeping the whole posterior instead of collapsing it. Summarizing by the mode throws away the uncertainty that was the entire point of being Bayesian, and in skewed posteriors the mode isn't even a good summary of location.",
+    "math": "MAP = argmax<sub>&theta;</sub> f(&theta;|x) &prop; argmax<sub>&theta;</sub> f(x|&theta;)P(&theta;). Uniform P(&theta;) &rArr; MAP = MLE."
    }
   },
   {
@@ -526,6 +526,19 @@
     "ex": "Example 4.7.3: projector bulbs with exponential lifespan &mdash; Gamma(1,&lambda;). Prior experience of 5 bulbs averaging 4 months suggests E[&lambda;] = &frac14;, so take Gamma(5,20) (5 failures in about 20 bulb-months). Four more bulbs totalling 26.93 bulb-months gives Gamma(9, 46.93), mean 0.19 and MAP 0.17. Sixteen more gives Gamma(25, 159.5), mean 0.16 and mode 0.15. Figure 4.5 shows the variance shrinking with each update.",
     "why": "&ldquo;The data swamps the prior&rdquo; is the standard answer to the standard objection that Bayesian conclusions are subjective: with enough data any reasonable prior lands in the same place. It also tells you when the prior <i>does</i> matter &mdash; small n, which is exactly when you most want to use the information you have.",
     "math": "Gamma(a,b) prior + Gamma(&tau;,&theta;) likelihood (&tau; fixed) &rarr; Gamma(a+n&tau;, b+nx&#772;). Mean (a+n&tau;)/(b+nx&#772;), mode (a+n&tau;&minus;1)/(b+nx&#772;) &rarr; MLE &tau;/x&#772;."
+   }
+  },
+  {
+   "id": "v3c4g7",
+   "s": "4.7",
+   "page": 264,
+   "q": "Conjugate priors are convenient. &sect;4.7.3 warns against that. What is the warning, and what changed?",
+   "a": "<div class='eq'><b>Just because something is convenient does not mean that it is the right choice.</b></div>Conjugacy buys you two real things &mdash; the posterior is <i>easy to compute</i>, and the closed form <i>gives insight into how the posterior will evolve with more data</i>. Neither is a reason to believe the prior is <b>true</b>.<p style='margin-top:8px'><b>The historical charge.</b> <i>Much of the past criticism of Bayesian statistics was focused on the choice of prior, and a concern that the choice was sometimes based on subjective arguments or on convenience rather than on a good mathematical or scientific foundation.</i> Notice the two separate accusations:</p><div class='eq'><b>Subjectivity</b> &mdash; the prior encodes someone's opinion.<br><b>Convenience</b> &mdash; the prior was chosen because the algebra worked out.</div><b>The second is the harder one to defend.</b> Subjectivity at least claims to represent information; convenience represents nothing but the tractability of an integral.<p style='margin-top:8px'><b>What changed:</b> <i>until relatively recently, computing posteriors for nonconjugate priors was difficult or impossible, but significant increases in computing power and recent developments in sampling theory have made these computations much more tractable.</i> The constraint that forced the convenience has largely lifted, so the excuse has too.</p>",
+   "r": {
+    "rot": "conjugate priors are the ones where the math closes nicely &mdash; beta with bernoulli, gamma with gamma. lovely, but 'my integral was easy' is not evidence about the world. that was the classic stick people beat bayesians with, and it partly landed. the defence used to be that nothing else was computable. now it is, thanks to faster machines and better sampling methods, so if you're still picking a prior for convenience you should be able to say why.",
+    "ex": "The rest of &sect;4.7 is the constructive answer: noninformative priors chosen by MAX ENT, transformation invariance as a criterion a rule must satisfy, Jeffreys and reference priors derived from Fisher information, and elicitation when you genuinely do have expert knowledge.",
+    "why": "It's an unusually candid moment about the book's own framework &mdash; and it sets up the section's real question, which is not <i>which prior is convenient</i> but <i>what principle selects a prior</i>. That principle turns out to be the same one from &sect;2.3: assume as little as the information permits.",
+    "math": "Conjugate: the posterior stays in the same family as the prior, so updating is parameter arithmetic. Nonconjugate posteriors are computed by MCMC or variational methods rather than in closed form."
    }
   },
   {
