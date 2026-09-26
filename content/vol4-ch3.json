@@ -84,6 +84,32 @@
    }
   },
   {
+   "id": "v4c3a4",
+   "s": "3.1",
+   "page": 71,
+   "q": "Why does the whole chapter open with the <i>homogeneous</i> case when the system of interest is x&#775; = A(t)x + b(t)?",
+   "a": "Because the inhomogeneous solution set is a <b>coset</b> of the homogeneous one. If x&#8321; and x&#8322; both solve the full system (3.1), their difference solves the homogeneous system (3.2):<div class='eq'>(x&#8321; &minus; x&#8322;)&#775; = A(t)x&#8321; + b(t) &minus; A(t)x&#8322; &minus; b(t) = A(t)(x&#8321; &minus; x&#8322;)</div>So <b>one particular solution + every homogeneous solution = every solution.</b> That splits the work in two: &sect;3.1&ndash;&sect;3.3 build the homogeneous theory, and &sect;3.4 supplies the one particular solution via Duhamel.<p style='margin-top:8px'>The chapter also justifies spending this long on linear systems at all: <b>linearization</b> is the main tool for nonlinear ODEs, so the linear theory is a prerequisite even for people who only care about nonlinear problems.</p>",
+   "r": {
+    "rot": "same trick as Ax = b in linear algebra. the general solution is one answer you found somehow, plus the entire null space. so you never have to solve the hard forced problem more than once &mdash; find a single particular solution and the homogeneous theory fills in the rest for free. that's why b(t) gets benched until &sect;3.4.",
+    "ex": "Concretely: the damped oscillator with no forcing is homogeneous. Push it with an external force b(t) and every possible response is <i>that</i> forced response plus whatever the unforced spring was already doing.",
+    "why": "It tells you what kind of object a solution set is &mdash; an affine subspace, not a vector space &mdash; and it means the fundamental matrix &Phi;(t) built in the homogeneous case does double duty in the inhomogeneous case. Without this, &sect;3.4 would need its own theory from scratch.",
+    "math": "Solutions of (3.1) = x<sub>p</sub> + ker, where ker is the n-dimensional solution space of (3.2). Affine, dimension n."
+   }
+  },
+  {
+   "id": "v4c3a5",
+   "s": "3.1",
+   "page": 72,
+   "q": "Theorem 3.1.1 leans on Existence and Uniqueness. Where exactly does f(x,t) = A(t)x + b(t) earn <i>locally Lipschitz</i>?",
+   "a": "Directly from the operator norm, with continuity doing the work:<div class='eq'>&#8214;f(x&#8321;,t) &minus; f(x&#8322;,t)&#8214; = &#8214;A(t)(x&#8321; &minus; x&#8322;)&#8214; &le; &#8214;A(t)&#8214;&#8901;&#8214;x&#8321; &minus; x&#8322;&#8214; &le; L&#8214;x&#8321; &minus; x&#8322;&#8214;</div>with L = sup<sub>t&isin;I</sub>&#8214;A(t)&#8214;, finite because A is <b>continuous</b> and I is <b>compact</b>. Note what drops out: b(t) cancels, so forcing never affects the Lipschitz constant.<p style='margin-top:8px'>Two things are worth noticing. First, the constant is <b>uniform in x</b> &mdash; a linear map has the same Lipschitz constant everywhere, which is exactly why the local theorem upgrades to a global one. Second, b(t) only needs to be continuous, not Lipschitz, because it is not a function of x.</p>",
+   "r": {
+    "rot": "locally lipschitz usually means 'don't go too far from where you started or the bound dies'. for a linear system the bound never dies &mdash; &#8214;A&#8214; is the slope and it's the same slope at every x. you get the local theorem's conclusion with a constant that works globally, which is the entire reason linear systems never blow up.",
+    "ex": "Compare f(x) = x&sup2;. Its Lipschitz constant on |x| &le; R is 2R, which grows without bound as you move out. That unboundedness is exactly the room x&#775; = x&sup2; needs to reach infinity in finite time.",
+    "why": "This is the hinge of the whole chapter. Everything downstream &mdash; global existence, the fundamental matrix being defined for all t, phase portraits &mdash; requires E&amp;U to apply at every point with no caveats, and this computation is what buys that.",
+    "math": "L = sup<sub>t&isin;I</sub>&#8214;A(t)&#8214; &lt; &infin; on compact I. Lipschitz in x, uniformly; b(t) cancels out of the difference."
+   }
+  },
+  {
    "id": "v4c3a2",
    "s": "3.1",
    "page": 73,
@@ -110,6 +136,71 @@
    }
   },
   {
+   "id": "v4c3a6",
+   "s": "3.1",
+   "page": 78,
+   "q": "A is <b>not</b> diagonalizable. What are your options for e<sup>tA</sup>, and what does the nilpotent case buy you?",
+   "a": "<b>Nilpotent A.</b> If A<sup>k</sup> = 0 the series (3.6) <b>terminates</b> &mdash; e<sup>tA</sup> is a polynomial you can write down exactly.<div class='eq'>A = [[&minus;1,1],[&minus;1,1]], A&sup2; = 0 &nbsp;&rArr;&nbsp; e<sup>tA</sup> = I + tA = [[1&minus;t, t],[&minus;t, 1+t]]</div><b>Splitting off a commuting piece.</b> Write A = &lambda;I + N. Since &lambda;I commutes with everything, Theorem 3.1.8(v) <b>applies</b>, so e<sup>tA</sup> = e<sup>&lambda;t</sup>e<sup>tN</sup>, and e<sup>tN</sup> is the terminating series above.<div class='eq'>A = [[1,2],[0,1]] = I + B, B&sup2; = 0 &nbsp;&rArr;&nbsp; e<sup>tA</sup> = e<sup>t</sup>(I + tB) = e<sup>t</sup>[[1,2t],[0,1]]</div>That <b>te<sup>t</sup></b> term is the fingerprint of a defective eigenvalue: polynomial growth multiplying the exponential.",
+   "r": {
+    "rot": "diagonalization failed, so you cheat differently. nilpotent matrices kill themselves after a few powers, so the infinite series is actually finite &mdash; just add up three terms and stop. and any jordan-ish matrix splits as (scalar)&#8901;I + nilpotent, where the scalar part commutes with everything so the forbidden product rule becomes legal. the t sitting next to e<sup>t</sup> in the answer is the defect showing up in the solution.",
+    "ex": "This is where repeated roots in a second-order ODE come from. y&#8243; &minus; 2y&prime; + y = 0 has solutions e<sup>t</sup> and te<sup>t</sup> &mdash; that second one is precisely the e<sup>&lambda;t</sup>(I + tN) above, viewed as a system.",
+    "why": "Remark 3.1.15 warns that defective matrices are not a pathology to route around: they are exactly where <b>bifurcations</b> happen as a model's parameters change, which is often the phenomenon you built the model to see. So you need a method that works there.",
+    "math": "A = &lambda;I + N, N<sup>k</sup> = 0, [&lambda;I, N] = 0 &rArr; e<sup>tA</sup> = e<sup>&lambda;t</sup>&Sigma;<sub>j&lt;k</sub> t<sup>j</sup>N<sup>j</sup>/j!. Cayley&ndash;Hamilton already bounds the degree at n&minus;1."
+   }
+  },
+  {
+   "id": "v4c3a7",
+   "s": "3.1",
+   "page": 78,
+   "q": "Diagonalization gives e<sup>tA</sup> = Pe<sup>t&Lambda;</sup>P<sup>&minus;1</sup>. When is that numerically a bad idea, and what replaces it?",
+   "a": "The formula is fine; <b>P<sup>&minus;1</sup></b> is the problem. If P is <b>ill conditioned</b> &mdash; its largest-to-smallest singular value ratio is huge, which happens when two eigenvectors are nearly parallel &mdash; then inverting it amplifies error, and tiny perturbations in A produce huge errors in e<sup>tA</sup>.<p style='margin-top:8px'><b>Best case: A normal.</b> Then A is <i>orthonormally</i> diagonalizable, P is as well conditioned as a matrix can be, and P<sup>&minus;1</sup> = P<sup>H</sup> &mdash; no inversion at all.</p><p><b>The general fix: Schur.</b> Schur's Lemma writes A = UTU<sup>H</sup> with T upper triangular and U <b>orthonormal</b>. Theorem 3.1.8(vi) then gives e<sup>tA</sup> = Ue<sup>tT</sup>U<sup>H</sup>, and U<sup>H</sup> = U<sup>&minus;1</sup> is free and perfectly conditioned. Separate algorithms handle e<sup>tT</sup> for triangular T.</p>",
+   "r": {
+    "rot": "P<sup>&minus;1</sup> is where the numerical pain lives. if two eigenvectors point almost the same direction, P is nearly singular, inverting it is a disaster, and your beautiful exact formula returns garbage. schur's move: give up on diagonal, settle for triangular, but insist the change of basis be orthonormal &mdash; then the inverse is the conjugate transpose, which costs nothing and loses nothing.",
+    "ex": "Nearly parallel eigenvectors happen precisely when eigenvalues are nearly repeated &mdash; a matrix close to a defective one. So the analytically awkward case and the numerically awkward case are the same case.",
+    "why": "It separates 'the formula is true' from 'the formula is computable'. Theorem 3.1.8(vi) holds for any similarity, so you get to <i>choose</i> the similarity, and the right criterion is conditioning, not diagonality.",
+    "math": "&kappa;(P) = &sigma;<sub>max</sub>/&sigma;<sub>min</sub>. Normal A &rArr; &kappa;(P) = 1. Schur: A = UTU<sup>H</sup>, &kappa;(U) = 1, e<sup>tA</sup> = Ue<sup>tT</sup>U<sup>H</sup>."
+   }
+  },
+  {
+   "id": "v4c3a8",
+   "s": "3.1",
+   "page": 79,
+   "q": "A is real but its eigenvalues are a + ib and a &minus; ib. How do you get a real-valued e<sup>tA</sup> out of that?",
+   "a": "Refuse to leave &Ropf;. Complex eigenvalues of a real matrix come in <b>conjugate pairs</b>, and the eigenvectors can be chosen as u &plusmn; iv with u, v real. Put those real parts side by side as Q = [u&nbsp;v] &isin; M&#8322;(&Ropf;); then<div class='eq'>Q<sup>&minus;1</sup>AQ = C = [[a, b],[&minus;b, a]]</div>a real 2&times;2 block, no complex numbers anywhere. Now split it:<div class='eq'>C = [[a,0],[0,a]] + [[0,b],[&minus;b,0]]</div>The first summand is a multiple of I, so it <b>commutes</b> with the second and Theorem 3.1.8(v) is legal:<div class='eq'>e<sup>tC</sup> = e<sup>at</sup>&#8901;[[cos bt, sin bt],[&minus;sin bt, cos bt]]</div><b>a is the growth rate, b is the rotation rate.</b> Spirals.",
+   "r": {
+    "rot": "complex eigenvalues don't mean complex answers &mdash; they mean <i>rotation</i>. take the real and imaginary parts of the eigenvector as your two basis vectors, and in that basis A is just 'scale by a, spin at rate b'. exponentiate: e<sup>at</sup> times a rotation matrix. the trajectory spirals out if a &gt; 0, in if a &lt; 0, and rides a closed circle if a = 0.",
+    "ex": "The underdamped oscillator. Complex pair with a &lt; 0 gives e<sup>at</sup>cos(bt) &mdash; oscillation inside a decaying envelope, which is exactly what a real spring with friction does.",
+    "why": "It keeps the whole real-variable theory closed: you never have to interpret a complex trajectory physically. It also gives the visual vocabulary for phase portraits &mdash; sign of the real part decides in/out, the imaginary part decides how fast it spins.",
+    "math": "&lambda; = a &plusmn; ib, eigenvectors u &plusmn; iv, Q = [u v]. Q<sup>&minus;1</sup>AQ = C; e<sup>tC</sup> = e<sup>at</sup>R(bt), R a rotation. The span of {u,v} is A-invariant."
+   }
+  },
+  {
+   "id": "v4c3b3",
+   "s": "3.2",
+   "page": 80,
+   "q": "Define the <b>resolvent</b> of A. What does Cramer's Rule tell you about its entries, and where are its poles?",
+   "a": "<div class='eq'>R<sub>A</sub>(z) = (zI &minus; A)<sup>&minus;1</sup></div>Cramer's Rule makes its structure explicit:<div class='eq'>R<sub>A</sub>(z) = adj(zI &minus; A) / det(zI &minus; A)</div><b>Every entry is a rational function</b> &mdash; a polynomial from the adjugate over the <b>characteristic polynomial</b>. So R(z) is defined and holomorphic on all of &Copf; <i>except</i> at the eigenvalues, where the denominator vanishes.<p style='margin-top:8px'>That is the point: <b>the poles of the resolvent are exactly &sigma;(A)</b>, and the order of the pole at &lambda; is bounded by its algebraic multiplicity. All of the spectral information about A is encoded as the singularity structure of one matrix-valued rational function, which is what lets contour integration extract it.</p>",
+   "r": {
+    "rot": "take zI &minus; A and invert it. by cramer that's (polynomial stuff) / (characteristic polynomial), so each entry is a ratio of polynomials. it blows up exactly at the eigenvalues and nowhere else. that's the whole trick: you've turned 'the eigenvalues of A' into 'the poles of this function', and complex analysis has an entire toolkit for poles.",
+    "ex": "For A = [[1,2],[0,1]]: det(zI &minus; A) = (z&minus;1)&sup2;, so R(z) = [[1/(z&minus;1), 2/(z&minus;1)&sup2;],[0, 1/(z&minus;1)]]. One eigenvalue, and the double pole in the corner is the defect showing itself.",
+    "why": "It converts linear algebra into complex analysis. Once eigenvalues are poles, residues give you projections and Cauchy's formula gives you f(A) &mdash; and none of it requires A to be diagonalizable, which is where ordinary eigenvector methods quit.",
+    "math": "R(z) = adj(zI&minus;A)/p(z), p the characteristic polynomial. Poles = &sigma;(A); pole order at &lambda; is m<sub>&lambda;</sub> &le; n<sub>&lambda;</sub> (the algebraic multiplicity)."
+   }
+  },
+  {
+   "id": "v4c3b4",
+   "s": "3.2",
+   "page": 81,
+   "q": "State the Spectral Resolution Formula. How does it define f(A) for a matrix?",
+   "a": "<b>Theorem 3.2.2.</b> If f has a power series at 0 with radius of convergence b &gt; r(A), then for <b>any</b> positively-oriented simple closed contour &Gamma; containing &sigma;(A),<div class='eq'>f(A) = (1/2&pi;i) &#8750;<sub>&Gamma;</sub> f(z)R(z) dz</div>This is Cauchy's integral formula with a matrix in the place of a number. The matrix exponential is the case f(z) = e<sup>tz</sup>:<div class='eq'>e<sup>tA</sup> = (1/2&pi;i) &#8750;<sub>&Gamma;</sub> e<sup>tz</sup>R(z) dz&nbsp;&nbsp;&nbsp;(3.13)</div><p style='margin-top:8px'>Two features earn their keep. <b>The contour doesn't matter</b> &mdash; any curve enclosing the spectrum gives the same answer, because the integrand is holomorphic off &sigma;(A). And <b>no diagonalization is required</b>: the formula never mentions eigenvectors, so it works for defective A where P<sup>&minus;1</sup>&Lambda;P does not exist.</p>",
+   "r": {
+    "rot": "you already know how to apply a function to a number. this says: to apply f to a <i>matrix</i>, integrate f(z) against the resolvent around a loop that fences in all the eigenvalues. by the residue theorem the answer only depends on what happens at the poles &mdash; i.e. at the eigenvalues &mdash; so the loop's exact shape is irrelevant. set f = e<sup>tz</sup> and you have the matrix exponential with no eigenvectors in sight.",
+    "ex": "Example 3.2.3 runs it on A = [[1,2],[0,1]]: e<sup>tz</sup>R(z) has a double pole at z = 1, residues e<sup>t</sup> and 2te<sup>t</sup>, giving e<sup>tA</sup> = [[e<sup>t</sup>, 2te<sup>t</sup>],[0, e<sup>t</sup>]] &mdash; the same answer the nilpotent split gave in Example 3.1.14.",
+    "why": "It is the definition that generalizes. Series definitions need convergence, diagonalization needs eigenvectors; the contour integral needs only holomorphy near the spectrum, and it extends verbatim to bounded operators on a Banach space.",
+    "math": "Requires f holomorphic on an open set containing &sigma;(A). &Gamma; positively oriented, simple, closed, encircling &sigma;(A). Also known as Riesz functional calculus."
+   }
+  },
+  {
    "id": "v4c3b1",
    "s": "3.2",
    "page": 82,
@@ -120,6 +211,32 @@
     "ex": "If A is semisimple (diagonalizable), every D<sub>&lambda;</sub> = 0 and the decomposition is just A = &Sigma;&lambda;P<sub>&lambda;</sub>. Remark 3.1.15 notes most matrices are semisimple, so the nilpotent parts are the exceptional case.",
     "why": "The book is explicit that the Jordan decomposition is <b>not well conditioned</b>, so in floating point it isn't really computable. Eigenprojections are the computable substitute, and they're what makes the next result work.",
     "math": "R<sub>A</sub>(z) = &Sigma;<sub>&lambda;</sub>[P<sub>&lambda;</sub>/(z&minus;&lambda;) + &Sigma;<sub>k=1</sub><sup>m<sub>&lambda;</sub>&minus;1</sup> D<sub>&lambda;</sub><sup>k</sup>/(z&minus;&lambda;)<sup>k+1</sup>]. Each resolvent entry is rational by Cramer's rule."
+   }
+  },
+  {
+   "id": "v4c3b5",
+   "s": "3.2",
+   "page": 82,
+   "q": "Proposition 3.2.5 lists seven properties of P<sub>&lambda;</sub> and D<sub>&lambda;</sub>. Which two let you skip the contour integrals entirely?",
+   "a": "<b>(i) &Sigma;<sub>&lambda;&isin;&sigma;(A)</sub> P<sub>&lambda;</sub> = I</b> and <b>(v) D<sub>&lambda;</sub> = (A &minus; &lambda;I)P<sub>&lambda;</sub></b>.<p style='margin-top:8px'>Together they mean you compute <b>one</b> eigenprojection by residue and get everything else by algebra. With two eigenvalues: find P&#8323; from the residue, then P&#8322; = I &minus; P&#8323;, then D&#8322; = (A &minus; 2I)P&#8322;. No second integral.</p><p>The rest describe the structure: <b>(ii)</b> P<sub>&lambda;</sub>&sup2; = P<sub>&lambda;</sub>, they are projections. <b>(iii)</b> AP<sub>&lambda;</sub> = P<sub>&lambda;</sub>A. <b>(iv)</b> P<sub>&lambda;</sub>P<sub>&lambda;&prime;</sub> = P<sub>&lambda;</sub>D<sub>&lambda;&prime;</sub> = 0 for &lambda; &ne; &lambda;&prime; &mdash; different eigenvalues live in <b>independent</b> pieces. <b>(vi)</b> P<sub>&lambda;</sub>D<sub>&lambda;</sub> = D<sub>&lambda;</sub>. <b>(vii)</b> D<sub>&lambda;</sub><sup>n<sub>&lambda;</sub></sup> = 0, so m<sub>&lambda;</sub> &le; n<sub>&lambda;</sub>: the nilpotent dies by the algebraic multiplicity.</p>",
+   "r": {
+    "rot": "(i) and (v) are the laziness properties. the P's add up to the identity, so the last one is just I minus the others &mdash; you never compute all of them. and D isn't a separate mystery object, it's literally (A &minus; &lambda;I) hitting P. so one honest residue calculation plus two subtractions gets you the entire spectral decomposition.",
+    "ex": "Example 3.2.10, A = [[1,2],[0,1]]: only one eigenvalue, so (i) forces P&#8321; = I outright, and (v) gives D&#8321; = A &minus; I = [[0,2],[0,0]]. Zero integrals computed, and e<sup>tA</sup> = e<sup>t</sup>(I + tD&#8321;).",
+    "why": "It turns a theoretical construction into something you can do by hand on an exam. (vii) is separately load-bearing: it caps the sum in Corollary 3.2.9 at n<sub>&lambda;</sub> terms, so the formula for e<sup>tA</sup> is always a finite sum.",
+    "math": "The P<sub>&lambda;</sub> are a complete set of mutually orthogonal idempotents commuting with A. Range P<sub>&lambda;</sub> = the generalized eigenspace, dim = n<sub>&lambda;</sub>."
+   }
+  },
+  {
+   "id": "v4c3b6",
+   "s": "3.2",
+   "page": 83,
+   "q": "State the Spectral Mapping Theorem. What does it predict about the eigenvalues of e<sup>tA</sup>?",
+   "a": "<b>Theorem 3.2.7.</b> If f is holomorphic on an open disk containing &sigma;(A), then<div class='eq'>&sigma;(f(A)) = f(&sigma;(A))</div>and moreover, an eigenvector x of A for &lambda; is an eigenvector of f(A) for f(&lambda;) &mdash; <b>the eigenvectors don't move.</b><p style='margin-top:8px'>For f(z) = e<sup>tz</sup>: the eigenvalues of e<sup>tA</sup> are exactly <b>e<sup>t&lambda;</sup></b> for &lambda; &isin; &sigma;(A). Read as dynamics, with &lambda; = a + ib:</p><div class='eq'>|e<sup>t&lambda;</sup>| = e<sup>at</sup></div>so <b>the real parts of the eigenvalues of A alone decide growth or decay</b>, and the imaginary parts contribute rotation of modulus 1. Note also that e<sup>t&lambda;</sup> is never 0, which re-proves that e<sup>tA</sup> is invertible.",
+   "r": {
+    "rot": "apply a function to a matrix, and the eigenvalues get the same function applied to them. nothing more complicated than that. so the eigenvalues of e<sup>tA</sup> are just e<sup>t&lambda;</sup>. take absolute values and the imaginary part vanishes &mdash; only Re(&lambda;) survives. that one line is why every stability criterion you will ever see is about the real parts of eigenvalues.",
+    "ex": "A with &sigma;(A) = {&minus;1, &minus;1000} (the stiff oscillator of Example 3.1.11): e<sup>tA</sup> has eigenvalues e<sup>&minus;t</sup> and e<sup>&minus;1000t</sup>. Both decay, but at wildly different rates &mdash; and that ratio is precisely the stiffness that wrecks explicit numerical methods in Ch 4.",
+    "why": "It is the bridge from a static algebraic quantity to long-run behaviour. Everything in stability theory &mdash; Re&lambda; &lt; 0 means the origin attracts, Re&lambda; &gt; 0 means it repels &mdash; is this theorem applied to f(z) = e<sup>tz</sup>.",
+    "math": "&sigma;(e<sup>tA</sup>) = e<sup>t&sigma;(A)</sup>. |e<sup>t(a+ib)</sup>| = e<sup>at</sup>. 0 &notin; &sigma;(e<sup>tA</sup>) &rArr; e<sup>tA</sup> invertible, matching Thm 3.1.8(iii)."
    }
   },
   {
@@ -136,6 +253,19 @@
    }
   },
   {
+   "id": "v4c3b7",
+   "s": "3.2",
+   "page": 86,
+   "q": "Remark 3.2.13 says not to compute this way. If spectral calculus is impractical, what is it <i>for</i>?",
+   "a": "<b>It is a proof tool, not an algorithm.</b> Computing R(z) = (zI &minus; A)<sup>&minus;1</sup> symbolically means an n&times;n adjugate &mdash; n&sup2; determinants of polynomial matrices &mdash; and the cost is prohibitive as n grows. Chapter 4's numerical methods are what you actually run.<p style='margin-top:8px'>What it gives you instead is the <b>exact form</b> of every solution. Corollary 3.2.9 says</p><div class='eq'>e<sup>tA</sup> = &Sigma;<sub>&lambda;</sub> e<sup>t&lambda;</sup>[P<sub>&lambda;</sub> + &Sigma;<sub>k&lt;m<sub>&lambda;</sub></sub> (t<sup>k</sup>/k!)D<sub>&lambda;</sub><sup>k</sup>]</div>so <b>every solution of x&#775; = Ax is a sum of terms t<sup>k</sup>e<sup>&lambda;t</sup></b> with k &lt; m<sub>&lambda;</sub>, for eigenvalues &lambda; of A. That single structural fact &mdash; exponentials, possibly multiplied by polynomials of degree less than the eigennilpotent order &mdash; is what you carry into every stability argument, and no amount of floating-point output would establish it.<p>There is a second, harder warning: the Jordan decomposition is always possible in <b>exact</b> arithmetic but is not a well-conditioned problem, so in floating point it is <i>not really computable</i>.</p>",
+   "r": {
+    "rot": "nobody actually computes a resolvent for a 50&times;50 matrix. the payoff isn't the number, it's the <i>shape</i> of the answer: every solution is exponentials times polynomials, full stop. polynomials only show up when an eigenvalue is defective, and they can't outrank its multiplicity. knowing that lets you argue about t &rarr; &infin; without ever computing anything &mdash; e<sup>&minus;t</sup> beats any power of t, so decay wins.",
+    "ex": "Example 3.2.12 shows the price: a 4&times;4 with one defective eigenvalue takes a page of adjugate work, three eigenprojection entries, and D&#8321;&sup2; &mdash; and the answer still has only e<sup>t</sup>, te<sup>t</sup>, t&sup2;e<sup>t</sup>/2 and e<sup>7t</sup> in it.",
+    "why": "It marks the line between theory and computation that Chapter 4 formalizes. And it explains the earlier numerical advice: since Jordan form is uncomputable in floating point, the practical routes are the well-conditioned ones &mdash; Schur, or a direct approximation of the exponential.",
+    "math": "Terms are t<sup>k</sup>e<sup>&lambda;t</sup>, 0 &le; k &lt; m<sub>&lambda;</sub> &le; n<sub>&lambda;</sub>. Growth is governed by Re&lambda;, since t<sup>k</sup>e<sup>at</sup> &rarr; 0 for any k when a &lt; 0."
+   }
+  },
+  {
    "id": "v4c3c1",
    "s": "3.3",
    "page": 87,
@@ -146,6 +276,19 @@
     "ex": "A(t) commutes with itself across time when, say, A(t) = f(t)M for a fixed matrix M &mdash; then everything is a scalar multiple of M and scalars commute. Mix two non-commuting matrices with t-dependent weights and it breaks.",
     "why": "This is why nonautonomous linear systems are genuinely harder than autonomous ones and generally have no closed-form fundamental matrix. Everything after this section is about what you <i>can</i> still compute without one &mdash; namely the determinant.",
     "math": "Needs d/dt e<sup>B(t)</sup> = B&#775;e<sup>B</sup>, valid when [B(t), B&#775;(t)] = 0."
+   }
+  },
+  {
+   "id": "v4c3c3",
+   "s": "3.3",
+   "page": 87,
+   "q": "Trace the failure all the way down: <i>why</i> can't you differentiate exp(&int;A(s)ds) the usual way?",
+   "a": "Because <b>the power rule is false for matrix-valued functions.</b> The product rule still holds, but it will not collapse:<div class='eq'>d/dt B&sup2; = d/dt (B&#8901;B) = B&#775;B + BB&#775;</div>and that equals 2B&#775;B <b>only if B commutes with B&#775;</b>. Since e<sup>B</sup> is built from all the powers B<sup>k</sup>, every term of the termwise derivative inherits the problem.<p style='margin-top:8px'>Proposition 3.3.1's proof is exactly the repair. Assume A(s)A(t) = A(t)A(s) for all s,t, and with B(t) = &int;<sub>t&#8320;</sub><sup>t</sup>A(s)ds you can pull A(t) through the integral:</p><div class='eq'>B(t)A(t) = &int;A(s)A(t)ds = A(t)&int;A(s)ds = A(t)B(t)&nbsp;&nbsp;(3.22)</div>Induction then gives <b>d/dt B<sup>k</sup> = kAB<sup>k&minus;1</sup></b>, the power rule is restored term by term, and summing the (uniformly convergent) series gives &Phi;&#775; = A&Phi;.",
+   "r": {
+    "rot": "scalars commute, so d/dt(b&sup2;) = 2b&#775;b and nobody thinks twice. matrices don't, so you get B&#775;B + BB&#775; and those two terms are different objects you cannot add into one. the exponential is an infinite pile of powers, so the bug propagates everywhere. assume A(s) and A(t) commute for every pair of times and the bug disappears &mdash; but that's a strong assumption almost nothing satisfies.",
+    "ex": "Where the induction actually bites: d/dt B<sup>k</sup> = (d/dt B<sup>k&minus;1</sup>)B + B<sup>k&minus;1</sup>B&#775; = (k&minus;1)AB<sup>k&minus;2</sup>B + B<sup>k&minus;1</sup>A. The last term is only AB<sup>k&minus;1</sup> because (3.22) lets A move left past every copy of B.",
+    "why": "Non-commutativity is the single obstruction that separates the autonomous case (where e<sup>(t&minus;t&#8320;)A</sup> settles everything) from the nonautonomous one. Naming it precisely tells you what to check before using any formula imported from scalar ODEs.",
+    "math": "Need [B(t), B&#775;(t)] = 0. Hypothesis [A(s), A(t)] = 0 &forall;s,t &rArr; [B(t), A(t)] = 0. Termwise differentiation is legal because the series converges uniformly on compacts."
    }
   },
   {
@@ -162,16 +305,42 @@
    }
   },
   {
-   "id": "v4c3d1",
-   "s": "3.4",
-   "page": 96,
-   "q": "State Duhamel's Principle and variation of parameters. What's the trick in the proof?",
-   "a": "<b>Theorem 3.4.2 (Duhamel).</b> For x&#775; = A(t)x + Q(x,t), x(t&#8320;) = x&#8320;, with &Phi; the principal fundamental matrix of the homogeneous system:<div class='eq'>x(t) = &Phi;(t)x&#8320; + &Phi;(t)&int;<sub>t&#8320;</sub><sup>t</sup> &Phi;(s)<sup>&minus;1</sup>Q(x(s),s) ds</div><b>Q need not be linear in x</b> &mdash; then it's an implicit equation. Taking Q = b(t) gives <b>Cor 3.4.3, variation of parameters</b>, an explicit solution.<p style='margin-top:10px'><b>The trick:</b> the ansatz x(t) = &Phi;(t)h(t) &mdash; treat the constant vector in the homogeneous solution as a <i>function</i>. Substituting, the &Phi;&#775;h terms cancel on both sides, leaving &Phi;(t)h&#775;(t) = Q, so h&#775; = &Phi;<sup>&minus;1</sup>Q. Integrate and substitute back.</p>",
+   "id": "v4c3c4",
+   "s": "3.3",
+   "page": 88,
+   "q": "Unexample 3.3.2 &mdash; how do you <i>show</i> a given A(t) fails the commuting hypothesis?",
+   "a": "You only need <b>two times</b>. Exhibit s and t with A(s)A(t) &ne; A(t)A(s) and the hypothesis is dead. For the nonautonomous matrix of Example 3.1.6, take t = 0 and t = &pi;/2:<div class='eq'>A(0) = [[&frac12;, 1],[&minus;1, &minus;1]],&nbsp;&nbsp; A(&pi;/2) = [[&minus;1, 1],[&minus;1, &frac12;]]</div><div class='eq'>A(0)A(&pi;/2) = [[&minus;3/2, 1],[2, &minus;3/2]] &ne; [[&minus;3/2, &minus;2],[&minus;1, &minus;3/2]] = A(&pi;/2)A(0)</div>Two products, one comparison, done &mdash; <b>disproving a universally quantified hypothesis takes a single counterexample</b>, and you never have to touch the general t.<p style='margin-top:8px'>What makes it a genuine <i>un</i>example rather than a broken system: this A(t) still has a perfectly good fundamental matrix, written out in Example 3.1.6. The system is fine. Only the shortcut exp(&int;A) is unavailable.</p>",
    "r": {
-    "rot": "homogeneous solution is &Phi;(t) times a constant. forcing shows up? let the constant stop being constant. plug &Phi;(t)h(t) in, and the terms that made &Phi; a solution cancel themselves out, leaving one clean equation for h&#775;. integrate, done. that's the whole method &mdash; and note it works even when the forcing is nonlinear, which is why it's a <i>principle</i> and not just a formula.",
-    "ex": "Remark 3.4.4 is pointed: intro ODE courses teach you to <i>guess</i> a particular solution shaped like b(t) &mdash; trig forcing, guess trig. The book declines, because Duhamel always works and needs no inspiration.",
-    "why": "It needs &Phi;(s)<sup>&minus;1</sup> to exist for every s, which is exactly Corollary 3.3.8 from AJL. That's the chapter's structure paying off: nonsingularity was proved two sections earlier precisely so this integral is defined.",
-    "math": "Ansatz x = &Phi;h &rArr; &Phi;&#775;h + &Phi;h&#775; = A&Phi;h + Q. Since A&Phi; = &Phi;&#775;, cancel to &Phi;h&#775; = Q. h(t&#8320;) = x&#8320; since &Phi;(t&#8320;) = I."
+    "rot": "the hypothesis says 'for all s and t'. so to kill it, pick two convenient times &mdash; 0 and &pi;/2, because sin and cos are 0 and 1 there &mdash; multiply the two matrices in both orders, and point at the difference. the system still has solutions. you just can't get them from the pretty formula.",
+    "ex": "This same A(t) reappears in Example 3.3.7, where AJL correctly predicts det&Phi;(t) = e<sup>&minus;t/2</sup> from tr A(s) = &minus;&frac12;. So the trace result survives non-commutativity even though the exponential formula doesn't.",
+    "why": "It stops you from treating Prop 3.3.1 as the general theory. Commuting families are a thin special case &mdash; essentially A(t) = f(t)A&#8320; and block-diagonal-in-a-fixed-basis situations &mdash; and a random time-dependent A almost never qualifies.",
+    "math": "Choose s,t where the entries simplify. Here cos&sup2;, sin&sup2;, sin&#8901;cos take values in {0, 1} at t = 0, &pi;/2."
+   }
+  },
+  {
+   "id": "v4c3c5",
+   "s": "3.3",
+   "page": 90,
+   "q": "AJL is usually stated as an integral. Give its <b>differential</b> form and say what the trace means geometrically.",
+   "a": "The proof of Theorem 3.3.3 actually establishes a differential equation for the Wronskian, and the stated formula is what you get by separating it:<div class='eq'>d/dt det&Phi;(t) = tr(A(t)) &#8901; det&Phi;(t)</div><b>det&Phi; obeys a scalar linear ODE with coefficient tr A(t).</b><p style='margin-top:8px'>Geometrically, &Phi;(t) carries the unit cube spanned by the initial conditions to a parallelepiped at time t, and det&Phi;(t) is its <b>signed volume</b>. So the equation says:</p><div class='eq'>(relative rate of volume change) = tr A(t)</div><b>tr A &gt; 0 expands phase-space volume, tr A &lt; 0 contracts it, tr A = 0 preserves it.</b> The proof is Jacobi's formula: differentiate the determinant one row at a time, recognize each term as det((I &minus; E<sub>jj</sub>)&Phi; + E<sub>jj</sub>&Phi;&#775;), substitute &Phi;&#775; = A&Phi;, and each factors to a<sub>jj</sub>det&Phi; &mdash; summing the diagonal gives the trace.",
+   "r": {
+    "rot": "determinant = volume. so tracking det&Phi; means tracking what the flow does to volumes, and the answer is embarrassingly simple: the volume grows at rate tr A. not the eigenvalues, not the determinant of A &mdash; the <i>trace</i>. positive trace, phase space inflates; negative, it collapses; zero, volume is conserved forever and the flow is incompressible.",
+    "ex": "Example 3.3.5: A = [[&minus;1,1],[&minus;1,1]] has trace 0, and sure enough det&Phi;(t) = 1 for all t. Example 3.3.4: A = [[1,4],[1,1]] has trace 2, and det&Phi;(t) = e<sup>2t</sup>.",
+    "why": "It gives you one exactly computable quantity in a setting where &Phi; itself is usually out of reach &mdash; and computing tr A(t) is free. It is also the linear ancestor of Liouville's theorem in Hamiltonian mechanics, where tr A = 0 is why phase-space volume is conserved.",
+    "math": "d/dt det&Phi; = tr(A)det&Phi;, separable. Constant A: det(e<sup>tA</sup>) = e<sup>t&#8901;tr A</sup>, Cor 3.3.9."
+   }
+  },
+  {
+   "id": "v4c3c6",
+   "s": "3.3",
+   "page": 90,
+   "q": "You already know <i>one</i> solution of a 2&times;2 nonautonomous system. How does AJL hand you the second?",
+   "a": "<b>Reduction of order.</b> The known solution is one column of some fundamental matrix; call the unknown column z(t) and let AJL constrain the determinant.<p style='margin-top:8px'><b>Example 3.3.6.</b> Given x = (1, t) solving x&#775; = [[1, &minus;1/t],[1+t, &minus;1]]x on (0,&infin;), write &Phi; = [[z&#8321;, 1],[z&#8322;, t]]. Here tr A(s) = 0, so AJL says det&Phi; is <b>constant</b>:</p><div class='eq'>c = t z&#8321;(t) &minus; z&#8322;(t)&nbsp;&nbsp;(3.25)</div>Now feed that back into the ODE for z. The first component gives z&#775;&#8321; = z&#8321; &minus; z&#8322;/t = (tz&#8321; &minus; z&#8322;)/t = <b>c/t</b> &mdash; a first-order scalar equation, because (3.25) collapsed the coupling. Integrate: z&#8321; = c&#8201;log t + d, and (3.25) returns z&#8322; = ct&#8201;log t + dt &minus; c.<p>Two unknown functions became one, and the system became a quadrature.</p>",
+   "r": {
+    "rot": "classic trick, new justification. you know one solution; the second is unknown. AJL pins down the determinant of the matrix holding both, which is one algebraic equation linking the two unknown components. use it to eliminate one, and the surviving equation is a single scalar ODE you can just integrate. n unknowns became n&minus;1.",
+    "ex": "Watch the collapse: z&#775;&#8321; = z&#8321; &minus; z&#8322;/t looks coupled, but rewriting it as (tz&#8321; &minus; z&#8322;)/t lets you substitute the constant c straight in. That rewriting is the entire step.",
+    "why": "It is the practical use of AJL. For nonautonomous systems you have no e<sup>tA</sup> and no general method, so 'guess or find one solution, get the rest' is often the only route open &mdash; and this is the same reduction-of-order you met for second-order scalar ODEs, now explained.",
+    "math": "Works for any n: AJL gives one relation among the n unknown entries of the new column, cutting the system to n&minus;1. Needs det&Phi;(t&#8320;) &ne; 0, i.e. the new column independent of the known one."
    }
   },
   {
@@ -185,6 +354,71 @@
     "ex": "A driven oscillator with continuous forcing runs forever. The only way to break it is a forcing term that itself blows up in finite time, which violates the hypothesis.",
     "why": "Together with Thm 3.1.1 this says linear systems with continuous data are <b>always</b> globally well posed &mdash; existence, uniqueness, continuous dependence, on all of &Ropf;. That is the strongest guarantee in the volume, and nothing nonlinear gets it.",
     "math": "Same proof as 3.1.1 with &#8214;x&#775;&#8214; &le; &#8214;A&#8214;&#8214;x&#8214; + &#8214;b&#8214;; Gronwall still yields an exponential bound."
+   }
+  },
+  {
+   "id": "v4c3d3",
+   "s": "3.4",
+   "page": 95,
+   "q": "Theorem 3.4.1's proof needs a <b>generalized</b> Gronwall. What changed, and where does b(t) go?",
+   "a": "b(t) is not a function of x, so it cannot join the Lipschitz term &mdash; it integrates to a <b>constant</b> instead. Continuity of b on the compact [t&#8320;,&beta;] gives<div class='eq'>C = &int;<sub>t&#8320;</sub><sup>&beta;</sup>&#8214;b(s)&#8214;ds &lt; &infin;</div><div class='eq'>&#8214;x(t)&#8214; &le; (&#8214;x&#8320;&#8214; + C) + &int;<sub>t&#8320;</sub><sup>t</sup>&#8214;A(s)&#8214;&#8901;&#8214;x(s)&#8214;ds&nbsp;&nbsp;(3.30)</div><b>The generalization:</b> ordinary Gronwall wants a <i>constant</i> out front; this version allows a function &alpha;(t), continuous, nonnegative, C&sup1; with <b>nonnegative derivative</b>. If &theta;(t) &le; &alpha;(t) + &int;&gamma;(s)&theta;(s)ds then<div class='eq'>&theta;(t) &le; &alpha;(t)&#8901;exp(&int;<sub>a</sub><sup>t</sup>&gamma;(s)ds)</div>Apply with &alpha; = &#8214;x&#8320;&#8214; + C, &theta; = &#8214;x&#8214;, &gamma; = &#8214;A&#8214;. The bound is finite at &beta;, contradicting blowup.",
+   "r": {
+    "rot": "forcing adds a lump you can't fold into the lipschitz part, because b doesn't depend on x at all. but b is continuous on a closed bounded interval, so its integral is just some finite number C. shove C in with the initial condition, apply gronwall, get an exponential bound again. the forcing changes the constant, not the conclusion.",
+    "ex": "The monotone-&alpha; hypothesis is what keeps the proof honest if you need a t-dependent bound &mdash; here &alpha; happens to be constant, so the plain version would also do, but the general statement is what gets reused later in the book.",
+    "why": "It completes the promise Remark 3.1.2 made in &sect;3.1: global existence is a property of <b>linear</b> systems, not just homogeneous ones. So the whole fundamental-matrix apparatus is safe to use on forced systems for all t.",
+    "math": "Requires A, b continuous on &Ropf;. &alpha; nonneg, C&sup1;, &alpha;&prime; &ge; 0. Conclusion: &#8214;x(t)&#8214; &le; (&#8214;x&#8320;&#8214;+C)exp(&int;&#8214;A&#8214;), bounded on bounded t."
+   }
+  },
+  {
+   "id": "v4c3d1",
+   "s": "3.4",
+   "page": 96,
+   "q": "State Duhamel's Principle and variation of parameters. What's the trick in the proof?",
+   "a": "<b>Theorem 3.4.2 (Duhamel).</b> For x&#775; = A(t)x + Q(x,t), x(t&#8320;) = x&#8320;, with &Phi; the principal fundamental matrix of the homogeneous system:<div class='eq'>x(t) = &Phi;(t)x&#8320; + &Phi;(t)&int;<sub>t&#8320;</sub><sup>t</sup> &Phi;(s)<sup>&minus;1</sup>Q(x(s),s) ds</div><b>Q need not be linear in x</b> &mdash; then it's an implicit equation. Taking Q = b(t) gives <b>Cor 3.4.3, variation of parameters</b>, an explicit solution.<p style='margin-top:10px'><b>The trick:</b> the ansatz x(t) = &Phi;(t)h(t) &mdash; treat the constant vector in the homogeneous solution as a <i>function</i>. Substituting, the &Phi;&#775;h terms cancel on both sides, leaving &Phi;(t)h&#775;(t) = Q, so h&#775; = &Phi;<sup>&minus;1</sup>Q. Integrate and substitute back.</p>",
+   "r": {
+    "rot": "homogeneous solution is &Phi;(t) times a constant. forcing shows up? let the constant stop being constant. plug &Phi;(t)h(t) in, and the terms that made &Phi; a solution cancel themselves out, leaving one clean equation for h&#775;. integrate, done. that's the whole method &mdash; and note it works even when the forcing is nonlinear, which is why it's a <i>principle</i> and not just a formula.",
+    "ex": "Remark 3.4.4 is pointed: intro ODE courses teach you to <i>guess</i> a particular solution shaped like b(t) &mdash; trig forcing, guess trig. The book declines, because Duhamel always works and needs no inspiration.",
+    "why": "It needs &Phi;(s)<sup>&minus;1</sup> to exist for every s, which is exactly Corollary 3.3.8 from AJL. That's the chapter's structure paying off: nonsingularity was proved two sections earlier precisely so this integral is defined.",
+    "math": "Ansatz x = &Phi;h &rArr; &Phi;&#775;h + &Phi;h&#775; = A&Phi;h + Q. Since A&Phi; = &Phi;&#775;, cancel to &Phi;h&#775; = Q. h(t&#8320;) = x&#8320; since &Phi;(t&#8320;) = I."
+   }
+  },
+  {
+   "id": "v4c3d4",
+   "s": "3.4",
+   "page": 97,
+   "q": "Remark 3.4.4 declines the standard undetermined-coefficients method. What is the objection, and what is given up?",
+   "a": "The objection is stated flatly: <b>Duhamel's Principle always suffices and requires no guessing.</b><p style='margin-top:8px'>The usual approach &mdash; guess a particular solution shaped like b(t), trigonometric forcing gets a trigonometric guess &mdash; is <i>inspired guessing</i>. It works only for the small catalogue of b(t) whose derivatives close back on themselves (polynomials, exponentials, sines and cosines, products of those), and it silently fails otherwise. Duhamel is an <b>algorithm</b>: compute &Phi;, invert it, integrate.</p><p>What you give up is honest. &sect;3.4.4 works the forced damped oscillator both ways and admits Duhamel <i>doesn't</i> necessarily come out better as a closed-form expression &mdash; the guessing method hands you the amplitude and phase directly. What Duhamel gives is <b>a clear algorithmic way of calculating the answer</b>, with the homogeneous problem solved first.</p>",
+   "r": {
+    "rot": "your intro ODE class taught you to guess the answer's shape and solve for the coefficients. it works, when it works. the complaint here is that it's a bag of special cases dressed up as a method &mdash; and it dies the moment b(t) isn't on the list. duhamel is one formula that eats any continuous b. the tradeoff: you trade a clever shortcut for an integral you might not be able to evaluate in closed form.",
+    "ex": "&sect;3.4.4 does the damped forced oscillator by guessing y<sub>p</sub> = A&#8201;cos(&omega;<sub>f</sub>t + &phi;) and burns a page on trig identities to extract A and &phi;. The text's own aside: memorizing trigonometric relations is not everyone's favorite pastime.",
+    "why": "It's a stance about what counts as a method. A procedure that terminates on every input beats a heuristic with a lookup table, even when the heuristic is faster on the examples in the textbook &mdash; that's the same reason the book built the fundamental matrix in the first place.",
+    "math": "Undetermined coefficients requires b in the span of a finite-dimensional space closed under d/dt. Duhamel requires only b continuous."
+   }
+  },
+  {
+   "id": "v4c3d5",
+   "s": "3.4",
+   "page": 97,
+   "q": "Specialize Duhamel to an autonomous system. What does the resulting formula say about the role of each piece?",
+   "a": "<b>Remark 3.4.5.</b> With &Phi;(t) = e<sup>(t&minus;t&#8320;)A</sup>, the product &Phi;(t)&Phi;(s)<sup>&minus;1</sup> collapses by Theorem 3.1.8(ii)&ndash;(iii) to e<sup>(t&minus;s)A</sup>, and the ugly &Phi;(t)&int;&Phi;(s)<sup>&minus;1</sup>&#8901; becomes a <b>convolution</b>:<div class='eq'>x(t) = e<sup>(t&minus;t&#8320;)A</sup>x&#8320; + &int;<sub>t&#8320;</sub><sup>t</sup> e<sup>(t&minus;s)A</sup>b(s) ds&nbsp;&nbsp;(3.33)</div>Read it as physics. <b>e<sup>(t&minus;s)A</sup> is the propagator</b>: it transports a state from time s to time t. The forcing b(s)ds is an impulse delivered at time s; the system then evolves it forward for the remaining t &minus; s.<p style='margin-top:8px'>So the solution is <b>the initial condition propagated forward, plus every infinitesimal kick propagated forward from when it landed.</b> Only the <i>elapsed</i> time t &minus; s appears, which is exactly the statement that an autonomous system doesn't care what o'clock it is.</p>",
+   "r": {
+    "rot": "e<sup>(t&minus;s)A</sup> is a time machine: hand it a state and a duration, it evolves the state. the formula then reads like a ledger &mdash; where you started, carried forward to now, plus every nudge the forcing gave you, each carried forward from the moment it happened. superposition doing all the work. and notice only t &minus; s shows up, never t and s separately: autonomous means the rules don't change over time.",
+    "ex": "Example 3.4.7 uses this directly, replacing &Phi;(t)&Phi;<sup>&minus;1</sup>(s) by &Phi;(t &minus; s) before integrating &mdash; which is what turns a messy product of matrix exponentials into scalar integrals of e<sup>3t&minus;2s</sup> and e<sup>&minus;t+2s</sup>.",
+    "why": "It is the finite-dimensional template for Duhamel throughout PDE and control theory, where the same formula holds with e<sup>(t&minus;s)A</sup> a semigroup. The convolution form is also what makes transfer functions and frequency response possible.",
+    "math": "&Phi;(t)&Phi;(s)<sup>&minus;1</sup> = e<sup>(t&minus;t&#8320;)A</sup>e<sup>&minus;(s&minus;t&#8320;)A</sup> = e<sup>(t&minus;s)A</sup>. Nonautonomous: no such collapse, keep &Phi;(t)&Phi;(s)<sup>&minus;1</sup>."
+   }
+  },
+  {
+   "id": "v4c3d6",
+   "s": "3.4",
+   "page": 99,
+   "q": "Force a damped oscillator periodically. What is the amplitude of the steady response, and what does it warn you about?",
+   "a": "For y&#8243; + (b/m)y&prime; + &omega;&#8320;&sup2;y = (F&#8320;/m)cos(&omega;<sub>f</sub>t), the particular solution y<sub>p</sub> = A&#8201;cos(&omega;<sub>f</sub>t + &phi;) has<div class='eq'>A = (F&#8320;/m) / &radic;[(&omega;&#8320;&sup2; &minus; &omega;<sub>f</sub>&sup2;)&sup2; + &omega;<sub>f</sub>&sup2;b&sup2;/m&sup2;]&nbsp;&nbsp;(3.37)</div><div class='eq'>tan &phi; = (&minus;&omega;<sub>f</sub>b/m) / (&omega;&#8320;&sup2; &minus; &omega;<sub>f</sub>&sup2;)&nbsp;&nbsp;(3.38)</div>The amplitude depends not just on the forcing strength F&#8320; but on <b>the forcing frequency, the natural frequency, the damping and the mass</b>.<p style='margin-top:8px'><b>Resonance.</b> Drive at &omega;<sub>f</sub> = &omega;&#8320; and the first term under the root vanishes, leaving A = F&#8320;/(&omega;<sub>f</sub>b). As damping b &rarr; 0 that <b>diverges</b>. Remark 3.4.8: the unforced dynamics converge to zero; forced, it oscillates; forcing near the natural frequency gives the highest amplitude, and <i>something very unpleasant will happen</i> if you force at it.</p><p>The full solution is y<sub>h</sub> + y<sub>p</sub>, and y<sub>h</sub> = Ce<sup>&minus;bt/2m</sup>cos(&omega;&#8320;t + &phi;&#8320;) <b>dies</b>. Only the forced part survives &mdash; the system forgets its initial condition and remembers only the driving.</p>",
+   "r": {
+    "rot": "push a swing at random times, nothing much. push it once per swing &mdash; at its own frequency &mdash; and the amplitude climbs and climbs. the only thing stopping it is friction, and (3.37) says the peak height is basically forcing over damping. remove the damping and the formula goes to infinity, which is the math's way of saying the bridge comes down. also: the transient decays, so after a while the system is doing what you're telling it to, not what it started doing.",
+    "ex": "The decaying homogeneous part is the transient, the y<sub>p</sub> part is the steady state. That split &mdash; transient forgotten, steady state dictated by the forcing &mdash; is why you can speak of 'the' frequency response of a stable linear system at all.",
+    "why": "This is the practical reason anyone studies inhomogeneous linear systems. Resonance is the design constraint in buildings, bridges, circuits and rotating machinery, and the formula tells you the two levers you have: move &omega;&#8320; away from the forcing, or add damping.",
+    "math": "A is maximized near &omega;<sub>f</sub> &asymp; &omega;&#8320;, peak &asymp; F&#8320;/(&omega;&#8320;b). At &omega;<sub>f</sub> = &omega;&#8320;, tan&phi; &rarr; &infin;, so &phi; = &minus;&pi;/2: the response lags the drive by a quarter period."
    }
   }
  ],
