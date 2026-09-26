@@ -243,6 +243,31 @@ p{margin:0 0 13px} p:last-child{margin-bottom:0}
 }
 .reg-out .rlabel{font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--lamp); font-weight:700; margin-bottom:6px}
 
+/* Card content markup. The decks have always written equations as
+   <div class='eq'>, fractions as <span class='frac'>, and the inference
+   syllogisms as a .syl grid; these are the styles for that vocabulary. */
+.eq{
+  margin:11px 0; padding:10px 14px; border-radius:6px;
+  background:var(--sunk); border-left:2px solid var(--indigo);
+  font-family:Newsreader,"Noto Serif",Georgia,serif; font-size:15px; line-height:1.85;
+}
+.eq sub,.eq sup{line-height:0}
+
+.frac{display:inline-flex; flex-direction:column; text-align:center; vertical-align:-0.55em; margin:0 .18em}
+.frac>span{padding:0 .35em}
+.frac>span:first-child{border-bottom:1px solid currentColor}
+
+.syl{
+  display:grid; grid-template-columns:max-content 1fr; gap:3px 16px;
+  margin:11px 0; padding:11px 15px; border-radius:6px;
+  background:var(--sunk); font-family:Newsreader,"Noto Serif",Georgia,serif; font-size:15px;
+}
+.syl .lbl{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); align-self:center;
+}
+.syl .bar{grid-column:1 / -1; border-top:1px solid var(--rule); margin:4px 0}
+
 
 .btn{padding:9px 16px; border-radius:6px; font-size:13.5px; font-weight:500; background:var(--indigo); color:#0A0C11}
 .btn:hover{filter:brightness(1.1)}
