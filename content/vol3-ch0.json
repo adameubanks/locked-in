@@ -68,6 +68,19 @@
    }
   },
   {
+   "id": "v3c0a8",
+   "s": "0.1",
+   "page": 3,
+   "q": "What is information theory for in this book, and what does &sect;0.1.3 mean by <b>learning</b>?",
+   "a": "<b>Information theory uses probability to study how information is stored and transmitted</b>, and it answers questions like <i>How much information did my last experiment give me?</i><p style='margin-top:8px'><b>Learning is just updating.</b> When new information arrives &mdash; data from an experiment, a new fact about the process, anything &mdash; you have to incorporate it into your model. <b>This process of updating is often called learning.</b> Note how wide that is: no mention of neural networks, gradients or training loops.</p><p><b>And here is the load-bearing claim:</b></p><div class='eq'>Information theory gives us a way to precisely specify how to incorporate that new information <b>without making additional, unjustified assumptions</b> &mdash; that is, information theory tells us how models <i>should</i> learn.</div>That is a <b>normative</b> statement, not a descriptive one. Updating is not a matter of taste among reasonable procedures; there is a correct way, and information theory identifies it &mdash; by pinning down the update that adds no information you did not actually receive.",
+   "r": {
+    "rot": "you have a model, new facts show up, you have to revise. that's learning &mdash; no machines required. the sharp claim is that there's a <i>right</i> way to revise, not just a bunch of reasonable options: the update that incorporates exactly what the data told you and smuggles in nothing extra. information theory is how you make 'nothing extra' precise, which is why it sits between probability and everything else in this book.",
+    "ex": "This is the thread that becomes Ch 2's relative entropy and reasoning from experience, and Ch 4's priors &mdash; where 'fewest additional assumptions' turns into maximum entropy and choosing a prior becomes a calculation rather than a preference.",
+    "why": "It explains the book's odd-looking table of contents. Information theory sits before statistics and machine learning because it supplies the <b>criterion</b> those fields are optimizing, rather than another technique alongside them.",
+    "math": "'Fewest additional assumptions' gets made precise by relative entropy / KL divergence: pick the distribution minimizing D(q&#8214;p) subject to the constraints the data imposes."
+   }
+  },
+  {
    "id": "v3c0a4",
    "s": "0.1",
    "page": 4,
@@ -78,6 +91,19 @@
     "ex": "Classification: spam filtering, image recognition, fraud detection. Regression: predicting ER admissions in a period, the cost of a policy change, webpage visitors. Unsupervised: filling in movie ratings a person never gave, then recommending the ones it estimates highly.",
     "why": "It tells you what you are even allowed to optimize. Without labels, you cannot compute a loss against the truth, so the whole apparatus of &sect;0.1.6 &mdash; loss, expected loss, test set &mdash; only applies to the supervised case. Chapter 5 is entirely supervised: regression for continuous Y, logistic regression and naïve Bayes for discrete Y.",
     "math": "Supervised needs (x,y); unsupervised needs only x; reinforcement needs a sequence of (state, action, reward). Classification vs regression is a statement about Y, not about the method."
+   }
+  },
+  {
+   "id": "v3c0a9",
+   "s": "0.1",
+   "page": 4,
+   "q": "Why does the book say learning is <b>an optimization problem</b>, and what part of modeling can never be automated?",
+   "a": "<b>The criterion has three parts.</b> The right new model is the one that best fits the data and known information, <b>minimizes error</b>, and <b>makes the fewest additional assumptions</b>. Three competing demands over a space of candidate models &mdash; that is an optimization problem by construction, which is why <b>the ideas of optimization form a current running throughout this entire book</b>.<div class='eq'>learning made mathematically precise &rarr; automatable &rarr; <b>machine learning</b></div><b>All of the latest and greatest AI and machine learning models</b> rest on exactly this: probability and information theory supply the objective, and an optimizer solves it.<p style='margin-top:8px'><b>But not all modeling and learning can be automated.</b> Once you have the model's basic form and some data, learning from the data can be automated &mdash; but <i>before that can happen</i>, <b>you, as the modeler, must make many choices</b>:</p><div class='eq'>how the model will be evaluated &middot; how to account for the data generation process &middot; how to incorporate prior knowledge &middot; the overall structure of the model &middot; which things to include, and which to omit, approximate, or aggregate</div>Every one of those is upstream of the optimizer, and none of them is in the data.",
+   "r": {
+    "rot": "'learning' sounds mysterious until you write down what makes one model better than another &mdash; fits the data, small error, doesn't assume things you weren't told. now it's a minimization, and minimizations are things computers do. that's the whole trick behind machine learning. what the computer can't do is decide what to measure, what counts as good, what to leave out, and what you already knew. those choices are yours, they happen first, and they're not in the dataset.",
+    "ex": "The five upstream choices map onto the rest of the book: evaluation is &sect;0.1.6's loss and test set, the data generation process is &sect;1.10, prior knowledge is Ch 4's priors, structure is Ch 5's model selection.",
+    "why": "It sets the book's relationship to its subject. If you only learn to run the optimizer you can only turn the crank &mdash; which is Daphne Koller's complaint quoted a page earlier: <i>people without the foundations just turn the crank on existing models in ways that don't allow for innovation and are sometimes just wrong, and they don't even realize it.</i>",
+    "math": "f&#770; = argmin<sub>f</sub> (1/N)&Sigma;L(f(x<sub>i</sub>), y<sub>i</sub>), possibly plus a regularizer encoding 'fewest additional assumptions'. Choosing L, the model class, and the regularizer are all pre-optimization choices."
    }
   },
   {
@@ -107,6 +133,19 @@
    }
   },
   {
+   "id": "v3c0a10",
+   "s": "0.1",
+   "page": 6,
+   "q": "What is <b>sequential modeling</b>, and what two model families does &sect;0.1.5 name?",
+   "a": "Modeling processes that <b>depend on time or occur in a sequence of steps</b> &mdash; and the book spends <i>a significant amount</i> of itself on this, applying everything else to it.<p style='margin-top:8px'><b>Examples and why order matters.</b> Weather: each day depends partly on days before. Language: word order matters <b>twice over</b> &mdash; previous words influence subsequent ones, <i>and</i> word order affects the meaning of the sequence. Also music, and many others.</p><div class='eq'><b>Markov chain:</b> each term depends only on the term <b>immediately preceding</b> it.</div>A strong assumption, and a powerful one &mdash; it makes the whole past summarizable by the present state.<div class='eq'><b>Hidden Markov model:</b> the Markov chain is <b>hidden</b> (latent), and all you observe is a sequence of observations, each <b>partially determined</b> by the corresponding step in the chain.</div>That extra layer is what buys the flexibility: the thing that actually evolves is not the thing you can measure, which is the situation in almost every real system.",
+   "r": {
+    "rot": "most interesting data comes in order, and the order is part of the information. markov says: to predict tomorrow you only need today, not the whole history &mdash; an aggressive simplification that works shockingly often. hidden markov adds the realistic part: the state you care about is invisible and you only see noisy symptoms of it. the weather system is hidden, your thermometer isn't.",
+    "ex": "Speech recognition is the canonical hidden Markov setup: the sequence of phonemes is the hidden chain, the audio waveform is the observation each phoneme partially determines. Same shape as reading a disease's progression from test results.",
+    "why": "It names the destination the earlier chapters are heading toward &mdash; conditioning, independence and sequential reasoning in Ch 1&ndash;2 are exactly the tools a Markov chain needs. It also identifies the assumption you're really making when you build one: that the present screens off the past.",
+    "math": "Markov property: P(X<sub>n+1</sub>|X<sub>n</sub>,&hellip;,X&#8321;) = P(X<sub>n+1</sub>|X<sub>n</sub>). HMM adds an emission distribution P(O<sub>n</sub>|X<sub>n</sub>) over a latent chain. Reinforcement learning's MDPs are the same family with actions attached."
+   }
+  },
+  {
    "id": "v3c0a7",
    "s": "0.1",
    "page": 7,
@@ -117,6 +156,19 @@
     "ex": "The hype cycle it explains: methods get promoted as best, fail to live up to it, and funding collapses &mdash; there have been at least two AI winters on exactly this pattern. No-free-lunch says the cycle is structural, not bad luck.",
     "why": "It changes what a benchmark result means. &ldquo;This method is state of the art&rdquo; is never a claim about all problems, only about the distribution the benchmark samples. It is also the honest reason to care about assumptions: a method earns its performance by encoding something true about your problem class, which is exactly what &sect;5.8.3 says about generative vs discriminative models.",
     "math": "For all S: E[perf(A) | S] &gt; E[perf(PRS) | S] &rArr; E[perf(A) | S<sup>c</sup>] &lt; E[perf(PRS) | S<sup>c</sup>]. Averaged over all problems, every algorithm ties."
+   }
+  },
+  {
+   "id": "v3c0a11",
+   "s": "0.1",
+   "page": 7,
+   "q": "The test set has an analogue in traditional science. What is it, and what does the comparison reveal about both fields?",
+   "a": "<b>The replication study.</b> Train/test in machine learning is what replication is in science: you established a result on one body of evidence, and now you check it against evidence you didn't use.<p style='margin-top:8px'><b>Where science falls short.</b> Replication studies are <b>often expensive</b>, and <b>journals don't usually like to publish those results</b>, so they <b>aren't done nearly as often as they should be</b>. In machine learning, by contrast, it has become <b>expected that every model be evaluated on a test set</b> &mdash; and the book credits that norm with <i>much of machine learning's success over the past 30 years</i>.</p><p><b>Where machine learning falls short.</b> A test set does not completely remove the need for replication, because <b>a replication study tests not only the model but also the data generation process.</b> Splitting one dataset checks the model against fresh <i>rows</i>; it cannot check whether the collection itself was biased, since both halves inherit the same bias.</p><div class='eq'>Test set &rarr; catches overfitting.&nbsp;&nbsp;Replication &rarr; catches a bad experiment.</div>",
+   "r": {
+    "rot": "same idea, two cultures. science: run the experiment again and see if it holds. ML: hide some data, fit on the rest, check against what you hid. science knows it should replicate and mostly doesn't, because it's expensive and nobody publishes it. ML made it mandatory and got thirty good years out of it. but a train/test split only protects you from fooling yourself about the model &mdash; if your data collection was crooked, both halves are crooked in the same way and the split notices nothing.",
+    "ex": "A classifier trained on images from one hospital's scanner will pass its own test split and fail at the hospital next door. The failure is in the data generation process, which is invisible to any split of that data.",
+    "why": "It tells you what the number on the test set actually certifies, which is narrower than people treat it. It also connects directly to Ch 6: the reproducibility crisis is what happens when a field has no test set, and &sect;1.10's causal models are what you need to reason about the data generation process the split can't see.",
+    "math": "Test loss estimates E[L(f&#770;,x,y)] under the <i>same</i> distribution that generated D. If that distribution is wrong, the estimate is unbiased for the wrong quantity."
    }
   }
  ],
