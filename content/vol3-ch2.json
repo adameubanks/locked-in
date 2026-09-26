@@ -592,6 +592,19 @@
    }
   },
   {
+   "id": "v3c2f6",
+   "s": "2.6",
+   "page": 135,
+   "q": "Compute the differential entropy of N(&mu;, &sigma;&sup2;). What makes the integral easy, and what does the answer depend on?",
+   "a": "<b>Take the log of the density first &mdash; it turns the integrand into two terms you already know.</b><div class='eq'>log f<sub>X</sub>(x) = &minus;&frac12;log(2&pi;&sigma;&sup2;) &minus; (x&minus;&mu;)&sup2;/(2&sigma;&sup2;)</div>so<div class='eq'>H(X) = &minus;&int;f<sub>X</sub>&#8901;log f<sub>X</sub> = &frac12;log(2&pi;&sigma;&sup2;)&#8901;&int;f<sub>X</sub> + (1/2&sigma;&sup2;)&#8901;&int;f<sub>X</sub>(x&minus;&mu;)&sup2;</div>The first integral is <b>1</b> (it's a density); the second is <b>&sigma;&sup2;</b> (it's the variance). Nothing else needed:<div class='eq'>H(X) = &frac12;(log(2&pi;&sigma;&sup2;) + 1)&nbsp;&nbsp;(2.48)</div><b>Read what's in it and what isn't.</b> <b>&mu; does not appear</b> &mdash; sliding a distribution along the line doesn't change how uncertain you are about it. Only <b>&sigma;&sup2;</b> matters, logarithmically: doubling &sigma; adds log&#8201;2 regardless of where you started.<p style='margin-top:8px'><b>Remark 2.6.7:</b> the base of the logarithm is <b>unimportant</b> &mdash; it only rescales H by a constant. All that matters is using the same base throughout, and the book always uses the <b>natural</b> log for continuous distributions.</p>",
+   "r": {
+    "rot": "the normal density is e to the minus a quadratic, so taking its log undoes the exponential and leaves you with a constant plus a quadratic. integrating the constant against a density gives the constant; integrating the quadratic gives the variance, by definition. two known quantities, no calculus. and notice &mu; isn't in the answer &mdash; moving the bell curve left or right doesn't make you any more or less uncertain, only widening it does.",
+    "ex": "The trick is general: whenever a density is exp(&minus;something), differential entropy reduces to the expectation of that something plus a normalizing constant. That's why exponential-family distributions have such clean entropies.",
+    "why": "This number is the target in Example 2.6.11's bound: among all distributions with mean &mu; and variance &sigma;&sup2;, the normal attains H = &frac12;(log 2&pi;&sigma;&sup2; + 1) and nothing beats it. So &sect;2.6's maximum-entropy story is settled by this one computation.",
+    "math": "H(N(&mu;,&sigma;&sup2;)) = &frac12;log(2&pi;e&sigma;&sup2;) in nats. Translation invariant; scaling X by a adds log|a|. Unlike discrete entropy it can be <b>negative</b> &mdash; take &sigma;&sup2; &lt; 1/(2&pi;e)."
+   }
+  },
+  {
    "id": "v3c2f4",
    "s": "2.6",
    "page": 136,
@@ -618,6 +631,19 @@
    }
   },
   {
+   "id": "v3c2f7",
+   "s": "2.6",
+   "page": 137,
+   "q": "Prior N(&nu;, &tau;&sup2;). You learn only that <b>Var(X) &le; &alpha;</b>. What is the posterior?",
+   "a": "<div class='eq'>&mu; = &nu;&nbsp;&nbsp;and&nbsp;&nbsp;&sigma;&sup2; = <b>min(&alpha;, &tau;&sup2;)</b></div><b>Nested minimization</b> (2.53): first over distributions with a given mean and variance, then over the means and variances the constraint allows.<p style='margin-top:8px'><b>Inner problem.</b> With &mu;, &sigma;&sup2; fixed, (2.50) says D<sub>kl</sub> = &minus;H(X) + constants, so minimizing relative entropy is <b>maximizing differential entropy</b>, and Example 2.6.12 gives the answer: <b>X &sim; N(&mu;, &sigma;&sup2;)</b>. The posterior is normal without anyone assuming it.</p><p><b>Outer problem.</b> Substitute (2.48) and drop constants:</p><div class='eq'>min<sub>&mu;, &sigma;&sup2;&le;&alpha;</sub> [ log&tau;&sup2; &minus; log&sigma;&sup2; + &sigma;&sup2;/&tau;&sup2; + (&mu;&minus;&nu;)&sup2;/&tau;&sup2; ]</div><b>&mu; appears only in a square</b>, so set &mu; = &nu; &mdash; the constraint said nothing about the mean, so don't move it. The &sigma;&sup2; terms are minimized at &sigma;&sup2; = &tau;&sup2;, so take that <b>unless &alpha; forbids it</b>, giving min(&alpha;, &tau;&sup2;).<p style='margin-top:8px'><b>The behaviour is exactly right.</b> If &alpha; &ge; &tau;&sup2; the news was no news &mdash; you were already that certain &mdash; and <b>nothing changes</b>. If &alpha; &lt; &tau;&sup2; you tighten to exactly &alpha; and <b>not one bit further</b>.</p>",
+   "r": {
+    "rot": "somebody tells you the variance is at most &alpha;. if you were already more certain than that, ignore them &mdash; the news is compatible with what you had. if you were less certain, tighten to exactly &alpha;, not beyond, because tightening further would be assuming something nobody told you. and don't touch the mean at all, since nothing was said about it. that's minimal updating doing precisely what it says.",
+    "ex": "Contrast Example 2.6.12, where you're told the mean <i>is</i> &mu; and the variance <i>is</i> &sigma;&sup2;. Equality constraints leave no slack, so the posterior is N(&mu;,&sigma;&sup2;) outright. Inequality constraints leave room, and minimal updating takes up as little of it as possible.",
+    "why": "It's the clearest demonstration that the relative-entropy principle handles constraints that Bayes' rule cannot even express. There is no likelihood here, no observation to condition on &mdash; just a restriction on the posterior &mdash; and the method still returns an answer, and the right one.",
+    "math": "The inner step converts min D<sub>kl</sub> into max H because D<sub>kl</sub>(X&#8214;Y) = &minus;H(X) + terms depending only on the fixed &mu;, &sigma;&sup2;, &nu;, &tau;&sup2;. Valid because the prior is normal; a different prior changes the reduction."
+   }
+  },
+  {
    "id": "v3c2g3",
    "s": "2.7",
    "page": 140,
@@ -628,6 +654,19 @@
     "ex": "Example 2.7.4: two identical-looking coins, one fair and one landing heads 4/5 of the time. Pick one at random, flip three times, get H,H,T. Then P(fair | HHT) = (1/8)(1/2) / [(1/8)(1/2) + (4/5)&sup2;(1/5)(1/2)] = <b>125/253</b> &mdash; just under a half, so the evidence tilts slightly toward the unfair coin.",
     "why": "The partition form is what makes Bayes computable: without a mutually exclusive, collectively exhaustive family, there is no way to expand P(A). It's also the form the whole of &sect;4.6 uses, where the &ldquo;partition&rdquo; is the continuum of parameter values.",
     "math": "P(E<sub>i</sub>|A) = P(A|E<sub>i</sub>)P(E<sub>i</sub>)/&sum;<sub>j</sub>P(A|E<sub>j</sub>)P(E<sub>j</sub>). Denominator is constant in i; x&prime; is a bound variable."
+   }
+  },
+  {
+   "id": "v3c2g6",
+   "s": "2.7",
+   "page": 141,
+   "q": "&sect;2.7.2 makes a conceptual leap before any computation. What is it, and how does it recover the answer insufficient reason already gave?",
+   "a": "<b>Treat the unknown parameter itself as a random variable.</b> An experiment succeeds with probability p. Since <i>the value of p &isin; [0,1] is unknown to us, we should use probability to describe its possible values</i> &mdash; so p gets a support, a p.d.f., and a distribution of its own.<p style='margin-top:8px'><b>Choosing the prior.</b> With no reason to believe p takes any particular value more than any other, take the <b>uniform</b> prior: f(p) = 1 on [0,1], zero elsewhere.</p><p><b>Consistency check.</b> Insufficient reason said: if you must guess, guess &frac12;. The new framework says: if you must guess one value, guess the <b>mean of the distribution</b> &mdash; and the mean of Uniform([0,1]) is <b>&frac12;</b>. The two agree.</p><div class='eq'>Old: a single number, &frac12;.&nbsp;&nbsp;New: a whole distribution, whose mean is &frac12;.</div><b>The distribution carries strictly more.</b> A point guess cannot express how <i>confident</i> you are, cannot be updated coherently, and cannot distinguish 'I have no idea' from 'I have measured it carefully'. Uniform([0,1]) and a sharp spike at &frac12; have the same mean and mean completely different things.",
+   "r": {
+    "rot": "you don't know p. so stop trying to pick one number for it and describe your ignorance with a distribution instead &mdash; p is now a random variable, spread evenly over [0,1] because you have no favourites. if someone forces a single answer out of you, hand over the mean, which is a half, same as before. but now you're also carrying how sure you are, which is the part a single number throws away.",
+    "ex": "This is the move that makes Theorem 2.7.8 possible: after k successes in n trials the posterior is Beta(k+1, n&minus;k+1), which sharpens as n grows. A point estimate has nothing to sharpen.",
+    "why": "It is the definitional step of Bayesian statistics &mdash; parameters are uncertain quantities, so they get distributions. Everything in &sect;2.7 and Ch 4's Bayesian estimation depends on it, and it is exactly what the frequentist reading of &sect;1.1 forbids, since there is no experiment you could repeat to generate a new p.",
+    "math": "Prior f(p) = 1 on [0,1] is Beta(1,1). Posterior via Bayes with the binomial likelihood; the denominator is the continuous law of total probability, &int;&#8320;&sup1;P(S<sub>n</sub>=k|q)dq."
    }
   },
   {
@@ -683,6 +722,19 @@
    }
   },
   {
+   "id": "v3c2g7",
+   "s": "2.7",
+   "page": 144,
+   "q": "Generalize from a coin to a k-sided die: what replaces the uniform prior on [0,1], and what does the posterior count?",
+   "a": "<b>The parameter is now a whole probability vector</b> p = (p&#8321;,&hellip;,p<sub>k</sub>) for X &sim; Cat(p), and its possible values form the <b>k-simplex</b>:<div class='eq'>S<sub>k</sub> = {p &isin; [0,1]<sup>k</sup> : &Sigma;<sub>i</sub>p<sub>i</sub> = 1}</div>a compact subset of &Ropf;<sup>k</sup>. Lacking information, put the <b>uniform distribution on S<sub>k</sub></b>: f(p) = (1/Z)&#120793;<sub>S</sub>(p) with Z = &int;<sub>S</sub>1&#8201;dp.<p style='margin-top:8px'><b>Now n one-hot draws x&#8321;,&hellip;,x<sub>n</sub>.</b> Bayes' rule, and the multinomial coefficients cancel between numerator and denominator because they don't involve p:</p><div class='eq'>P(p | x&#8321;,&hellip;,x<sub>n</sub>) = &prod;<sub>j</sub>p<sub>j</sub><sup>&Sigma;<sub>i</sub>x<sub>ij</sub></sup> / &int;<sub>S</sub>&prod;<sub>j</sub>q<sub>j</sub><sup>&Sigma;<sub>i</sub>x<sub>ij</sub></sup>dq</div><b>&Sigma;<sub>i</sub>x<sub>ij</sub> is just the number of times category j came up.</b> So the posterior depends on the data <i>only</i> through the k <b>counts</b> &mdash; nothing about the order in which they arrived. This is the <b>Dirichlet</b> distribution, and the beta is its k = 2 case.<p style='margin-top:8px'>The pattern is the same as the coin's: the prior was a flat density over the parameter space, and the posterior is that density reweighted by p<sub>j</sub><sup>count<sub>j</sub></sup>, which concentrates wherever the observed frequencies point.</p>",
+   "r": {
+    "rot": "a coin's unknown p lives on a line segment; a six-sided die's unknown p lives on a triangle-ish slice of &Ropf;&#8310; where the coordinates sum to 1 &mdash; the simplex. spread your ignorance evenly over that. then observe some rolls. the posterior only cares how many of each face you saw, not what order, and it's the flat prior multiplied by p<sub>j</sub> raised to each count. beta is this with two faces.",
+    "ex": "The one-hot encoding earns its keep here: &Sigma;<sub>i</sub>x<sub>ij</sub> literally sums the jth coordinate across draws and out falls the count of category j. With scalar category labels that sum would be meaningless.",
+    "why": "Dirichlet&ndash;categorical is the conjugate pair behind topic models, na&iuml;ve Bayes smoothing, and any model with unknown discrete proportions. And the 'only the counts matter' observation is <b>sufficiency</b>: the counts are a sufficient statistic, so you may discard the raw sequence.",
+    "math": "Dirichlet(&alpha;) has density &prop; &prod;p<sub>j</sub><sup>&alpha;<sub>j</sub>&minus;1</sup> on S<sub>k</sub>. Uniform prior = Dirichlet(1,&hellip;,1); posterior = Dirichlet(1 + count<sub>1</sub>, &hellip;, 1 + count<sub>k</sub>). k = 2 gives Beta."
+   }
+  },
+  {
    "id": "v3c2h1",
    "s": "2.8",
    "page": 146,
@@ -706,6 +758,32 @@
     "ex": "Example 1.6.15 already used this: the expected number of blue marbles in k draws without replacement is kb/(b+r), the same as with replacement, because linearity of expectation doesn't care about the dependence. Only the <b>variance</b> differs.",
     "why": "That variance difference is exactly the finite-population correction in Proposition 2.8.3: Var(X) = np(1&minus;p)&middot;(r+g&minus;n)/(r+g&minus;1) for the hypergeometric, against np(1&minus;p) for the binomial. Sampling without replacement is <b>less</b> variable, and the correction vanishes when the urn is huge relative to n.",
     "math": "E[X<sub>k</sub>] = p = r/(r+g) for all k. Cov(X<sub>i</sub>,X<sub>j</sub>) = &minus;p(1&minus;p)/(r+g&minus;1) &lt; 0. Identically distributed &ne; i.i.d."
+   }
+  },
+  {
+   "id": "v3c2h6",
+   "s": "2.8",
+   "page": 147,
+   "q": "Give the mean and variance of HyperGeom(r,g,n). What is the extra factor, and what does it do at the extremes?",
+   "a": "<div class='eq'>E[X] = np,&nbsp;&nbsp; Var(X) = np(1&minus;p)&#8901;<b>(r+g&minus;n)/(r+g&minus;1)</b>,&nbsp;&nbsp; p = r/(r+g)</div><b>The mean is exactly the binomial's</b> &mdash; replacement or no replacement makes no difference, because each X<sub>i</sub> is identically distributed with P(X<sub>i</sub>=1) = p and <b>linearity of expectation doesn't require independence</b>.<p style='margin-top:8px'><b>The variance is not.</b> The extra factor is the <b>finite population correction</b>, and it is always &le; 1 &mdash; drawing without replacement is <i>less</i> variable.</p><div class='eq'><b>n = 1:</b> factor = 1. One draw, nothing to replace, exactly Bernoulli.</div><div class='eq'><b>n = r+g:</b> factor = 0, so <b>Var(X) = 0</b>. Draw the entire urn and you get exactly r red ones, every time &mdash; no randomness left.</div><div class='eq'><b>n &#8810; r+g:</b> factor &asymp; 1, so the binomial is a good approximation. A small sample from a huge population barely notices the missing balls.</div><b>Why sampling without replacement is less variable:</b> the draws are <b>negatively correlated</b> &mdash; Cov(X<sub>i</sub>,X<sub>j</sub>) = &minus;p(1&minus;p)/(r+g&minus;1) &mdash; so drawing red makes the next red less likely, and the deviations partially cancel.",
+   "r": {
+    "rot": "same average as the binomial, smaller spread. the reason: without replacement the draws push against each other &mdash; take a red one out and the urn is less red, so the next draw tends to compensate. that self-correction damps the swings. drain the whole urn and there's no randomness at all, which is why the correction factor hits exactly zero there. and if the urn is enormous compared to your sample, nothing changes and you may as well use the binomial.",
+    "ex": "This is why survey statisticians can usually ignore the correction: sampling 1,000 people from 300 million gives a factor of about 0.999997. It matters when you audit 40 of 100 invoices, not when you poll a country.",
+    "why": "It completes the pattern from &sect;1.7: with and without replacement share a mean but not a variance, and this is the exact factor. It also shows how dependence enters a variance &mdash; through the covariance terms in Var(&Sigma;X<sub>i</sub>), which vanish only under independence.",
+    "math": "g<sub>X</sub>(x) = C(r,x)C(g,n&minus;x)/C(r+g,n). Var = np(1&minus;p)&#8901;FPC with FPC = (N&minus;n)/(N&minus;1), N = r+g. Cov(X<sub>i</sub>,X<sub>j</sub>) = &minus;p(1&minus;p)/(N&minus;1) for i &ne; j."
+   }
+  },
+  {
+   "id": "v3c2h7",
+   "s": "2.8",
+   "page": 147,
+   "q": "Remark 2.8.2 extracts a combinatorial identity from the hypergeometric. Which one, and what is the argument?",
+   "a": "<b>Count the same thing two ways.</b> How many ways are there to draw n balls from an urn holding r red and g green?<div class='eq'><b>Way 1:</b> ignore the colours &mdash; choose n from r+g, giving <b>C(r+g, n)</b>.</div><div class='eq'><b>Way 2:</b> split by how many reds you got. Exactly x reds and n&minus;x greens can happen C(r,x)C(g,n&minus;x) ways, and x ranges over 0,&hellip;,n. Sum them.</div>Two counts of one set, so they are equal &mdash; <b>Vandermonde's identity</b>:<div class='eq'>C(r+g, n) = &Sigma;<sub>x=0</sub><sup>n</sup> C(r,x)&#8901;C(g, n&minus;x)&nbsp;&nbsp;(2.64)</div><b>And that is exactly the statement that the hypergeometric p.m.f. sums to 1</b> &mdash; divide both sides by C(r+g,n) and the left becomes 1, the right becomes &Sigma;<sub>x</sub>g<sub>X</sub>(x). A combinatorial identity and a normalization condition are the same fact.<p style='margin-top:8px'>The text notes it can alternatively be proved with the <b>binomial theorem</b>, by comparing coefficients of z<sup>n</sup> in (1+z)<sup>r</sup>(1+z)<sup>g</sup> = (1+z)<sup>r+g</sup>.</p>",
+   "r": {
+    "rot": "count one set twice and set the answers equal &mdash; that's the entire proof technique. how many n-ball draws are there? either pick n balls and don't care about colour, or decide how many reds you want, count those, and add over all choices. same set, so same number. and it doubles as the proof that the hypergeometric probabilities add to one, which is the kind of thing you'd otherwise have to grind out.",
+    "ex": "The generating-function proof is the same statement in another language: multiplying (1+z)<sup>r</sup> by (1+z)<sup>g</sup> convolves their coefficient sequences, and convolution of binomial coefficients <i>is</i> the sum on the right.",
+    "why": "Double counting is how most probability identities get proved, and this one shows the direction that's usually more useful: a probability distribution summing to 1 is free information about a sum you might otherwise struggle with.",
+    "math": "Special case r = g = n: &Sigma;<sub>x</sub>C(n,x)&sup2; = C(2n,n), using C(n,n&minus;x) = C(n,x)."
    }
   },
   {
@@ -797,6 +875,32 @@
     "ex": "This is the reason characteristic functions matter so much (&sect;4.2). Convolution is painful and compounds badly: adding n variables means n&minus;1 nested convolutions. Under &phi;<sub>X+Y</sub> = &phi;<sub>X</sub>&phi;<sub>Y</sub> it becomes a single product, or a power for i.i.d. copies.",
     "why": "It is the operation the central limit theorem is secretly about: S<sub>n</sub> is an n-fold convolution of the parent density with itself, and the CLT says that repeated convolution smooths anything into a Gaussian. Seeing it as convolution is what makes that plausible.",
     "math": "g<sub>X+Y</sub> = g<sub>X</sub> * g<sub>Y</sub>; f<sub>X+Y</sub>(z) = &int;f<sub>X</sub>(x)f<sub>Y</sub>(z&minus;x)dx. Integrand is 0 where z&minus;x &notin; supp(Y). Needs independence."
+   }
+  },
+  {
+   "id": "v3c2i6",
+   "s": "2.9",
+   "page": 157,
+   "q": "R &sim; Gamma(a,&lambda;) and S &sim; Gamma(b,&lambda;), independent. Find the joint law of U = R+S and V = R/(R+S).",
+   "a": "Change variables with &Phi;(r,s) = (r+s, r/(r+s)). Inverting: r = uv and s = u(1&minus;v), so <b>&Psi;(u,v) = (uv, u(1&minus;v))</b>, and<div class='eq'>det D&Psi; = det[[v, u],[1&minus;v, &minus;u]] = &minus;uv &minus; u(1&minus;v) = <b>&minus;u</b></div>Substitute into (2.72) and collect powers:<div class='eq'>f(u,v) = [&lambda;e<sup>&minus;u&lambda;</sup>(&lambda;u)<sup>a+b&minus;1</sup>/&Gamma;(a+b)] &#8901; [&Gamma;(a+b)v<sup>a&minus;1</sup>(1&minus;v)<sup>b&minus;1</sup>/(&Gamma;(a)&Gamma;(b))]</div><b>It factors &mdash; a function of u times a function of v &mdash; and each factor is a recognizable density.</b> So three conclusions at once:<div class='eq'><b>U = R + S &sim; Gamma(a+b, &lambda;)</b> &mdash; gammas with a common rate add.<br><b>V = R/(R+S) &sim; Beta(a, b)</b> &mdash; that's where the beta comes from.<br><b>U &#8869; V</b> &mdash; the total is independent of the proportion.</div><b>The last one is the surprise.</b> Knowing R + S = 100 tells you <i>nothing</i> about how it split between R and S. Size and share are unrelated &mdash; a property special to the gamma family, not a general fact.",
+   "r": {
+    "rot": "change variables from (R,S) to (total, share). the jacobian is just u, and when you push the two gamma densities through, the answer splits cleanly into a u-part and a v-part. anything that factors like that is independent. so: the sum is gamma, the fraction is beta, and they don't know about each other. that last bit is genuinely weird &mdash; you can learn the total and still be completely in the dark about the split.",
+    "ex": "This is where Beta(a,b) comes from in the first place, which explains the shapes in Figure 2.8: a and b are the two gamma shape parameters competing for share, so large a relative to b pushes the mass toward 1.",
+    "why": "It's the cleanest demonstration that the multivariate change-of-variables formula does real work &mdash; one substitution and a factorization yields a sum law, a ratio law, and an independence statement that no amount of staring at the original densities would reveal.",
+    "math": "f<sub>Y</sub>(y) = (f<sub>X</sub>&#8728;&Psi;)(y)|det D&Psi;| (2.72). Requires &Phi; a diffeomorphism &mdash; C&sup1; with C&sup1; inverse. Both gammas must share the rate &lambda;; otherwise the exponentials don't combine."
+   }
+  },
+  {
+   "id": "v3c2i7",
+   "s": "2.9",
+   "page": 158,
+   "q": "Prove that the density of a sum is a <b>convolution</b>, and state the trap Nota Bene 2.9.13 warns about.",
+   "a": "<b>Go through the c.d.f., because &ldquo;X + Y &le; z&rdquo; is a region you can integrate over.</b><div class='eq'>F<sub>Z</sub>(z) = P(Y &le; z &minus; X) = &int;<sub>S</sub>P(Y &le; z&minus;x)f<sub>X</sub>(x)dx = &int;<sub>S</sub>&int;<sub>y&le;z&minus;x</sub>f<sub>Y</sub>(y)f<sub>X</sub>(x) dy dx</div>Substitute <b>&zeta; = x + y</b> in the inner integral, turning the slanted region y &le; z&minus;x into the flat one &zeta; &le; z, then swap the order:<div class='eq'>= &int;<sub>&zeta;&le;z</sub>[&int;<sub>S</sub>f<sub>Y</sub>(&zeta;&minus;x)f<sub>X</sub>(x)dx] d&zeta;</div>Differentiate by the Fundamental Theorem of Calculus:<div class='eq'>f<sub>Z</sub>(z) = (f<sub>X</sub>&lowast;f<sub>Y</sub>)(z) = &int;<sub>S</sub>f<sub>X</sub>(x)f<sub>Y</sub>(z&minus;x)dx&nbsp;&nbsp;(2.73)</div><b>The trap.</b> <i>Even when x and &zeta; are in the support S of X and Y, that does not mean &zeta; &minus; x is in the support.</i> The integrand must be taken as <b>0 wherever z &minus; x is outside supp(Y)</b>.<p style='margin-top:8px'><b>Why it matters:</b> for X, Y &sim; Uniform[0,1], writing &int;&#8320;&sup1;1&#8901;1&#8201;dx = 1 for every z is nonsense. The real limits are where <i>both</i> x &isin; [0,1] and z&minus;x &isin; [0,1], which gives the triangular density on [0,2]. <b>The support constraint is what produces the shape.</b></p>",
+   "r": {
+    "rot": "to get the density of X+Y, don't attack the density directly &mdash; do the c.d.f. first, because 'the sum is at most z' is a region you can integrate over. substitute so the slanted boundary becomes flat, swap the integrals, differentiate. out comes a convolution: to land on z, X takes some value x and Y has to make up the difference. and the difference has to be a value Y can actually take &mdash; forget that and you'll integrate over impossible combinations and get the wrong answer.",
+    "ex": "Discrete version, same logic, no calculus: g<sub>Z</sub>(z) = &Sigma;<sub>x</sub>g<sub>X</sub>(x)g<sub>Y</sub>(z&minus;x), conditioning on the value of X and requiring Y to supply the remainder.",
+    "why": "Sums of independent variables are everywhere &mdash; sample means, binomials from Bernoullis, noise accumulating &mdash; and convolution is the operation that describes all of them. It's also why characteristic functions matter in Ch 4: they turn convolution into multiplication.",
+    "math": "Requires independence, which is what lets P(Y &le; z&minus;x | X = x) drop the conditioning. Convolution is commutative and associative, so summing many independent variables is order-independent."
    }
   },
   {
