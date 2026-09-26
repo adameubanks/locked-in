@@ -66,6 +66,19 @@
    }
   },
   {
+   "id": "v4c2a5",
+   "s": "2.1",
+   "page": 48,
+   "q": "Give the formal definition of an ODE. What does <b>ordinary</b> rule out, and what smoothness is demanded of whom?",
+   "a": "<b>Definition 2.1.1.</b> An ODE is a relation<div class='eq'>x<sup>(k)</sup> = f(t, x, x&#775;, x&#776;, &hellip;, x<sup>(k&minus;1)</sup>)&nbsp;&nbsp;(2.1)</div>with x &isin; C<sup>k</sup>(U;&Ropf;) on an open U &sube; &Ropf;, and f &isin; C(V;&Ropf;) continuous on an open V &sube; &Ropf;<sup>k+1</sup>. The highest derivative k is the <b>order</b>.<p style='margin-top:8px'><b>Who needs what.</b> f is <i>known</i> and only has to be <b>continuous</b>. x is <i>unknown</i>, is what you are solving for, and must have <b>k continuous derivatives</b>. Asymmetric on purpose &mdash; the whole existence theory is about upgrading f's modest regularity into x's stronger regularity.</p><p><b>Ordinary</b> means <b>exactly one independent, scalar, real-valued variable</b> &mdash; here, time. Two or more independent variables makes it a <b>partial</b> differential equation. That single-variable restriction is what makes this a theory of <b>dynamical systems</b>: the temporal evolution of a phenomenon.</p>",
+   "r": {
+    "rot": "an ODE is an equation where the thing you want is a function and the equation is about its derivatives. 'ordinary' just means one input variable &mdash; time &mdash; so the answer is a curve, not a surface. order = how many derivatives deep it goes. note what's assumed: f only needs to be continuous, but x has to be k-times differentiable. you're demanding more from the answer than you're given.",
+    "ex": "Example 2.1.2: x = t&#8201;tan t solves x&#775; = (x + t&sup2; + x&sup2;)/t. Verifying is mechanical &mdash; differentiate, substitute, watch both sides agree. Finding it is the hard direction, which is the whole subject.",
+    "why": "It sets the type signature for everything that follows. Solutions are elements of a function space, so the tools are functional-analytic &mdash; which is why &sect;2.2 opens with Banach spaces and contractions rather than with integration tricks.",
+    "math": "System version (Def 2.1.3): x &isin; C<sup>k</sup>(U;&Ropf;<sup>n</sup>), f &isin; C(V;&Ropf;<sup>n</sup>), V &sube; &Ropf;<sup>1+kn</sup>. Remark 2.1.8: &Ropf;<sup>n</sup> can be any Banach space with no extra work."
+   }
+  },
+  {
    "id": "v4c2a2",
    "s": "2.1",
    "page": 49,
@@ -76,6 +89,32 @@
     "ex": "Example 2.1.6 &mdash; Bob on a spring with damping and forcing. Second order, becomes a 2&times;2 linear system. Example 2.1.10 goes further: set y&#8323; = t with y&#8323;&#775; = 1, and even the <i>time dependence</i> disappears, making it autonomous (at the cost of nonlinearity).",
     "why": "It's why your numerical labs all take a function returning a vector of first derivatives. `solve_ivp` has no idea what order your original equation was &mdash; you did the reduction before you called it.",
     "math": "y = (x, x&#775;, &hellip;, x<sup>(k&minus;1)</sup>) &isin; &Ropf;<sup>kn</sup>. Removing t-dependence: append y<sub>last</sub> = t with y&#775;<sub>last</sub> = 1."
+   }
+  },
+  {
+   "id": "v4c2a6",
+   "s": "2.1",
+   "page": 49,
+   "q": "Remark 2.1.5 makes an admission about closed-form solutions. What is it, and what does the book conclude from it?",
+   "a": "<b>There are many differential equations that <i>provably cannot</i> be solved in closed form in terms of elementary functions.</b> Not 'nobody has managed yet' &mdash; proven impossible, the differential-equations analogue of the quintic having no radical formula.<p style='margin-top:8px'>The conclusion is not despair. <b>We can often approximate solutions numerically and therefore still make good predictions and decisions, and that is really the goal of every mathematical modeler.</b></p><p>That sentence reorganizes the whole subject. If closed form were the goal, this chapter would be a catalogue of integration tricks. Because it isn't, the questions that matter become:</p><div class='eq'>Does a solution <b>exist</b>? &nbsp;Is it <b>unique</b>? &nbsp;Does it depend <b>continuously</b> on the data?</div>Answer those and a numerical approximation is meaningful even when no formula exists. Skip them and, as the chapter opens by warning, <b>an algorithm might still give a result, but that result would be meaningless</b> &mdash; or worse, might approximate a <i>different</i> solution than the physical one.",
+   "r": {
+    "rot": "most ODEs have no formula. that's a theorem, not a gap in the literature. so the goal was never 'write down x(t)'. the goal is to know a solution is there, know there's only one, and know that small changes in the setup don't produce wildly different answers &mdash; because then a computer can chase it and you can believe the output. without those three facts the computer is just generating plausible numbers.",
+    "ex": "&sect;4.3.4's <i>numerical hogwash</i> is exactly the failure mode: forward Euler on x&#775; = x&sup2; sails right past the blowup time and reports confident finite values where no solution exists.",
+    "why": "It explains the shape of the whole book &mdash; a chapter of existence theory before any solving, and a chapter of numerics after. Well-posedness is the contract between the two, and neither half means much without it.",
+    "math": "Well posed = existence + uniqueness + continuous dependence on initial data. Non-uniqueness is the worst case: your algorithm may converge to a solution other than the physical one."
+   }
+  },
+  {
+   "id": "v4c2a9",
+   "s": "2.1",
+   "page": 50,
+   "q": "Do the reduction twice, on paper: the second-order oscillator and a fourth-order equation. What pattern do the resulting matrices share?",
+   "a": "<b>Example 2.1.6 &mdash; the oscillator.</b> For x&#776; + p(t)x&#775; + q(t)x = f(t), set y&#8321; = x, y&#8322; = x&#775;:<div class='eq'>y&#775; = [[0, 1],[&minus;q(t), &minus;p(t)]]y + [0, f(t)]<sup>T</sup>&nbsp;&nbsp;(2.5)</div>This is <b>the most general model for Bob on the spring</b>, with time-varying damping and forcing. The mass-spring-dashpot case is p = c/m, q = k/m.<p style='margin-top:8px'><b>Example 2.1.7 &mdash; a buckling column.</b> z&#8243;&#8243; + &lambda;z&#8243; = 0 models a uniform elastic column of length L under axial load P, with &lambda; proportional to P. Set y<sub>j</sub> = d<sup>j&minus;1</sup>z/dx<sup>j&minus;1</sup>:</p><div class='eq'>y&#775; = Ay,&nbsp; A = [[0,1,0,0],[0,0,1,0],[0,0,0,1],[0,0,&minus;&lambda;,0]]</div><b>The shared pattern is the companion form:</b> a superdiagonal of 1s that simply shifts each derivative up a slot, and a <b>single interesting row at the bottom</b> holding the actual equation. Everything above the last row is bookkeeping.<p>Note also that the independent variable here is <b>x</b>, a length along the column, not time &mdash; 'ordinary' requires one independent variable, not that it be time.</p>",
+   "r": {
+    "rot": "the recipe is dumb on purpose. name every derivative you've got: y&#8321; is the function, y&#8322; is its derivative, y&#8323; is the next one. then n&minus;1 of your new equations are pure tautology &mdash; y&#775;&#8321; = y&#8322; just restates the naming &mdash; and the original equation supplies the last row. that's why these matrices are almost all zeros with a diagonal stripe of 1s. all the content lives in one row.",
+    "ex": "Count the cost: a 4th-order scalar equation becomes a 4-dimensional first-order system. In general x of dimension n at order k gives y of dimension <b>nk</b>. You trade order for dimension at a fixed exchange rate.",
+    "why": "It's why the rest of the book only ever discusses x&#775; = f(x,t). Every theorem &mdash; existence, uniqueness, the fundamental matrix, every numerical method &mdash; is stated once for first-order systems and inherited by all orders through this reduction.",
+    "math": "Companion matrix of the characteristic polynomial; its eigenvalues are the roots of the original equation's auxiliary polynomial. Dimension nk."
    }
   },
   {
@@ -92,6 +131,19 @@
    }
   },
   {
+   "id": "v4c2a7",
+   "s": "2.1",
+   "page": 51,
+   "q": "A system depends explicitly on t. How do you make it <b>autonomous</b>, and what does the trick cost?",
+   "a": "<b>Promote time to a state variable.</b> It is the same device as reducing order: add a coordinate, and let it carry the dependence.<p style='margin-top:8px'><b>Example 2.1.10.</b> For x&#776; + p(t)x&#775; + q(t)x = f(t), set y&#8321; = x, y&#8322; = x&#775;, and <b>y&#8323; = t</b>:</p><div class='eq'>y&#775;&#8321; = y&#8322;</div><div class='eq'>y&#775;&#8322; = &minus;p(y&#8323;)y&#8322; &minus; q(y&#8323;)y&#8321; + f(y&#8323;)</div><div class='eq'>y&#775;&#8323; = 1</div>No t appears on any right-hand side. The system is now autonomous, and defines a genuine <b>vector field</b> &mdash; an arrow at each point of state space that never changes.<p style='margin-top:8px'><b>The cost is linearity.</b> The original equation was <i>linear</i> in x. The new one contains p(y&#8323;)y&#8322; and q(y&#8323;)y&#8321; &mdash; <b>products of unknowns</b>. The book labels the result a system of three first-order <b>nonlinear</b> ODEs. You trade a nonautonomous linear system for an autonomous nonlinear one, and which trade is worth making depends entirely on which theory you want to apply.</p>",
+   "r": {
+    "rot": "the clock is ticking outside your system? drag it inside. make t a coordinate whose derivative is 1. now nothing depends on time explicitly, because time is part of the state. the catch: p(t)x&#775; was linear when p was a known function of the clock, but p(y&#8323;)y&#8322; is one unknown multiplying another. you bought time-independence and paid in linearity. there's no free lunch, just a choice of which currency.",
+    "ex": "Compare the honest reduction in Example 2.1.6: x&#776; + p(t)x&#775; + q(t)x = f(t) becomes y&#775; = [[0,1],[&minus;q(t),&minus;p(t)]]y + [0, f(t)]<sup>T</sup> &mdash; still <b>linear</b>, still nonautonomous. That's the path Ch 3 takes.",
+    "why": "It decides the architecture of the next two chapters. Ch 3 keeps time outside and develops the nonautonomous <i>linear</i> theory &mdash; fundamental matrices, AJL, Duhamel. Phase-plane and vector-field methods want autonomy instead. You cannot have both, and the reduction shows exactly what the exchange rate is.",
+    "math": "Autonomous (Def 2.1.9(i)): f(x,t) = f(x), and f is then called a vector field. Adding y<sub>n+1</sub> = t with y&#775;<sub>n+1</sub> = 1 always works; it preserves linearity only when the original coefficients were constant."
+   }
+  },
+  {
    "id": "v4c2a4",
    "s": "2.1",
    "page": 52,
@@ -102,6 +154,32 @@
     "ex": "x&#8320; = 1, t&#8320; = 0 &rArr; x(t) = 1/(1 &minus; t), which detonates at t = 1. Point a numerical solver at it and it will happily produce enormous numbers on both sides of t = 1 while meaning nothing past it.",
     "why": "It's the counterexample that shapes the whole chapter. Picard&ndash;Lindel&ouml;f can only promise a solution on <i>some</i> interval around t&#8320;, and this is why. Theorem 2.3.8 later says what must happen if the maximal interval is finite: the solution leaves every compact set.",
     "math": "&int;dx/x&sup2; = &int;dt &rArr; &minus;1/x = t &minus; t&#8320; &minus; 1/x&#8320;. Maximal interval (&minus;&infin;, t&#8320; + 1/x&#8320;) for x&#8320; &gt; 0."
+   }
+  },
+  {
+   "id": "v4c2a8",
+   "s": "2.1",
+   "page": 52,
+   "q": "Why does an ODE alone not determine a solution, and what does the formal definition of an IVP say about t&#8320;?",
+   "a": "<b>Usually there are infinitely many solutions to a differential equation.</b> An ODE constrains the <i>derivative</i>, so it fixes a curve's shape but not its position &mdash; additional information is needed to single one out.<p style='margin-top:8px'><b>Definition 2.1.11.</b> An IVP is a first-order system x&#775; = f(x,t) together with an initial value x(t&#8320;) = x&#8320; for some t&#8320; &isin; U. It is stated only for first-order systems because <b>all ODEs can be reformulated as first-order systems</b> &mdash; the reduction does the work once, and the theory never has to mention order again.</p><p><b>Two things about t&#8320;:</b> it <i>need not be 0</i>, the name is convention only. And while t &gt; t&#8320; is the usual concern, <b>t &lt; t&#8320; is equally legitimate</b> &mdash; running the system backward describes <b>how the system got to its condition at t&#8320;</b>.</p><p>For a k-th order scalar equation, the reduced state is (x, x&#775;, &hellip;, x<sup>(k&minus;1)</sup>), so 'an initial value' means <b>k</b> numbers &mdash; which is why a second-order oscillator needs both an initial position and an initial velocity.</p>",
+   "r": {
+    "rot": "the equation tells you the slope everywhere. that's a whole field of arrows, and infinitely many curves follow it &mdash; one through every point. name one point and you've picked one curve. t&#8320; being called 'initial' is a naming convention, not a restriction: solving backwards is just as valid, and that's how you ask where something came from.",
+    "ex": "Example 2.1.12: x&#775; = c with x(0) = x&#8320; gives the unique x(t) = x&#8320; + ct. Without the initial value you have the entire family x&#8320; + ct over all x&#8320; &mdash; the same slope, infinitely many lines.",
+    "why": "It explains why the whole chapter is about IVPs rather than ODEs, and why uniqueness is a theorem about the pair. It also quietly tells you the dimension of the solution space of a k-th order equation, which Ch 3 will use constantly.",
+    "math": "First-order system + x(t&#8320;) = x&#8320;. Order-k scalar equation &rarr; k-dimensional state, k initial numbers. The problem is well posed on both sides of t&#8320;."
+   }
+  },
+  {
+   "id": "v4c2b3",
+   "s": "2.2",
+   "page": 54,
+   "q": "Which Banach spaces does the existence proof need, and why is C(I;X) the important one?",
+   "a": "Let (X, &#8214;&middot;&#8214;) be a Banach space &mdash; a normed vector space in which <b>every Cauchy sequence converges</b>. Three more are needed:<div class='eq'><b>X &times; R</b> with &#8214;(x,t)&#8214; = &#8214;x&#8214; + |t|&nbsp;&nbsp;(Exercise 2.5)<br><br><b>L<sup>&infin;</sup>(I;X)</b>, the bounded functions from a compact interval I to X, with the sup norm &#8214;h&#8214;<sub>&infin;</sub> = sup<sub>t&isin;I</sub>&#8214;h(t)&#8214;<br><br><b>C(I;X)</b> &sub; L<sup>&infin;</sup>(I;X), the <b>continuous</b> functions, with the same norm</div><b>Proposition 2.2.1.</b> C(I;X) is a vector subspace of L<sup>&infin;</sup>(I;X) and is <b>itself a Banach space</b> under &#8214;&middot;&#8214;<sub>&infin;</sub>.<p style='margin-top:8px'><b>The proof is the classic &epsilon;/4 + &epsilon;/2 + &epsilon;/4 argument.</b> A Cauchy sequence (g<sub>i</sub>) in C(I;X) converges to some g in L<sup>&infin;</sup>; to show g is continuous, pick i with &#8214;g<sub>i</sub> &minus; g&#8214;<sub>&infin;</sub> &lt; &epsilon;/4 and &delta; with &#8214;g<sub>i</sub>(s) &minus; g<sub>i</sub>(t)&#8214; &lt; &epsilon;/2 for |s&minus;t| &lt; &delta;. Then</p><div class='eq'>&#8214;g(s)&minus;g(t)&#8214; &le; &#8214;g&minus;g<sub>i</sub>&#8214;<sub>&infin;</sub> + &#8214;g<sub>i</sub>(s)&minus;g<sub>i</sub>(t)&#8214; + &#8214;g&minus;g<sub>i</sub>&#8214;<sub>&infin;</sub> &lt; &epsilon;/4 + &epsilon;/2 + &epsilon;/4 = &epsilon;</div><b>Corollary 2.2.2:</b> C(I;X) is a <b>closed</b> subset of L<sup>&infin;</sup>(I;X).<p style='margin-top:8px'><b>Why it matters:</b> the Contraction Mapping Principle needs a <b>closed subset of a Banach space</b>. C(I;X) being complete is exactly what licenses building a solution as a fixed point of a map on functions.</p>",
+   "r": {
+    "rot": "the whole existence proof happens in a space whose <b>points are functions</b>. C(I;X) is the continuous functions on an interval with the sup norm &mdash; two functions are close when they're close <b>everywhere</b>. the fact that matters is completeness: a cauchy sequence of continuous functions converges, and the limit is still continuous. that's the &epsilon;/4-&epsilon;/2-&epsilon;/4 argument, and it's the reason uniform convergence is the right notion here. without it you could build a sequence of approximate solutions converging to something that isn't a function you can use.",
+    "ex": "The sup norm is doing the work. Pointwise convergence would <b>not</b> preserve continuity &mdash; the standard counterexample is x<sup>n</sup> on [0,1] &mdash; so the space would fail to be closed and the fixed-point machinery would not apply.",
+    "why": "This is why &sect;2.2 exists at all: Picard&ndash;Lindelöf constructs the solution as the fixed point of a map C(I;X) &rarr; C(I;X), and every hypothesis of the Contraction Mapping Principle has to be verified for that space before the construction is legal.",
+    "math": "Banach = complete normed space. C(I;X) with &#8214;h&#8214;<sub>&infin;</sub> = sup&#8214;h(t)&#8214; is Banach and closed in L<sup>&infin;</sup>(I;X). Uniform limits of continuous functions are continuous."
    }
   },
   {
@@ -128,19 +206,6 @@
     "ex": "The space you contract on isn't &Ropf;<sup>n</sup> &mdash; it's C(I; X), a space whose <i>points are functions</i>. You're finding a fixed function, not a fixed number. That's the conceptual jump.",
     "why": "This is the single most reused proof technique in analysis: recast your problem as &lsquo;find a fixed point&rsquo;, show the map contracts, get existence and uniqueness in one stroke. You'll see it again for implicit function theorems, for Newton's method, and for numerical schemes in Ch 4.",
     "math": "Needs C(I;X) complete: Prop 2.2.1 shows it's a closed subspace of L<sup>&infin;</sup>(I;X), hence Banach. A Lipschitz map with L &lt; 1 is a contraction (Remark 2.2.5)."
-   }
-  },
-  {
-   "id": "v4c2b3",
-   "s": "2.2",
-   "page": 54,
-   "q": "Which Banach spaces does the existence proof need, and why is C(I;X) the important one?",
-   "a": "Let (X, &#8214;&middot;&#8214;) be a Banach space &mdash; a normed vector space in which <b>every Cauchy sequence converges</b>. Three more are needed:<div class='eq'><b>X &times; R</b> with &#8214;(x,t)&#8214; = &#8214;x&#8214; + |t|&nbsp;&nbsp;(Exercise 2.5)<br><br><b>L<sup>&infin;</sup>(I;X)</b>, the bounded functions from a compact interval I to X, with the sup norm &#8214;h&#8214;<sub>&infin;</sub> = sup<sub>t&isin;I</sub>&#8214;h(t)&#8214;<br><br><b>C(I;X)</b> &sub; L<sup>&infin;</sup>(I;X), the <b>continuous</b> functions, with the same norm</div><b>Proposition 2.2.1.</b> C(I;X) is a vector subspace of L<sup>&infin;</sup>(I;X) and is <b>itself a Banach space</b> under &#8214;&middot;&#8214;<sub>&infin;</sub>.<p style='margin-top:8px'><b>The proof is the classic &epsilon;/4 + &epsilon;/2 + &epsilon;/4 argument.</b> A Cauchy sequence (g<sub>i</sub>) in C(I;X) converges to some g in L<sup>&infin;</sup>; to show g is continuous, pick i with &#8214;g<sub>i</sub> &minus; g&#8214;<sub>&infin;</sub> &lt; &epsilon;/4 and &delta; with &#8214;g<sub>i</sub>(s) &minus; g<sub>i</sub>(t)&#8214; &lt; &epsilon;/2 for |s&minus;t| &lt; &delta;. Then</p><div class='eq'>&#8214;g(s)&minus;g(t)&#8214; &le; &#8214;g&minus;g<sub>i</sub>&#8214;<sub>&infin;</sub> + &#8214;g<sub>i</sub>(s)&minus;g<sub>i</sub>(t)&#8214; + &#8214;g&minus;g<sub>i</sub>&#8214;<sub>&infin;</sub> &lt; &epsilon;/4 + &epsilon;/2 + &epsilon;/4 = &epsilon;</div><b>Corollary 2.2.2:</b> C(I;X) is a <b>closed</b> subset of L<sup>&infin;</sup>(I;X).<p style='margin-top:8px'><b>Why it matters:</b> the Contraction Mapping Principle needs a <b>closed subset of a Banach space</b>. C(I;X) being complete is exactly what licenses building a solution as a fixed point of a map on functions.</p>",
-   "r": {
-    "rot": "the whole existence proof happens in a space whose <b>points are functions</b>. C(I;X) is the continuous functions on an interval with the sup norm &mdash; two functions are close when they're close <b>everywhere</b>. the fact that matters is completeness: a cauchy sequence of continuous functions converges, and the limit is still continuous. that's the &epsilon;/4-&epsilon;/2-&epsilon;/4 argument, and it's the reason uniform convergence is the right notion here. without it you could build a sequence of approximate solutions converging to something that isn't a function you can use.",
-    "ex": "The sup norm is doing the work. Pointwise convergence would <b>not</b> preserve continuity &mdash; the standard counterexample is x<sup>n</sup> on [0,1] &mdash; so the space would fail to be closed and the fixed-point machinery would not apply.",
-    "why": "This is why &sect;2.2 exists at all: Picard&ndash;Lindelöf constructs the solution as the fixed point of a map C(I;X) &rarr; C(I;X), and every hypothesis of the Contraction Mapping Principle has to be verified for that space before the construction is legal.",
-    "math": "Banach = complete normed space. C(I;X) with &#8214;h&#8214;<sub>&infin;</sub> = sup&#8214;h(t)&#8214; is Banach and closed in L<sup>&infin;</sup>(I;X). Uniform limits of continuous functions are continuous."
    }
   },
   {
@@ -183,6 +248,19 @@
    }
   },
   {
+   "id": "v4c2c7",
+   "s": "2.3",
+   "page": 59,
+   "q": "The Picard&ndash;Lindel&ouml;f proof picks &delta; = min(r, r/M, 1/2L). Say what each of the three terms is buying.",
+   "a": "Three separate obligations, one term each.<p style='margin-top:8px'><b>r</b> &mdash; <b>stay inside E.</b> E is open, so some ball B((x&#8320;,t&#8320;), r) fits inside it. Keeping |t &minus; t&#8320;| &le; r keeps the time coordinate in that ball, where f is defined and the bound M applies.</p><p><b>r/M</b> &mdash; <b>make &Phi; map F into F.</b> Before &Phi; can be a contraction on F = <span style='white-space:nowrap'>B̄(x&#8320;, r)</span> &sube; C(I;X), it must land there:</p><div class='eq'>&#8214;&Phi;[h] &minus; x&#8320;&#8214;<sub>&infin;</sub> = sup|&int;<sub>t&#8320;</sub><sup>t</sup>f(h(s),s)ds| &le; M&delta; &le; r</div>which is exactly &delta; &le; r/M. Here M = Lr + M&#8320; bounds &#8214;f&#8214; on the ball, via the triangle inequality plus the Lipschitz condition.<p><b>1/2L</b> &mdash; <b>make it a contraction.</b> The Lipschitz estimate gives</p><div class='eq'>&#8214;&Phi;[h] &minus; &Phi;[g]&#8214;<sub>&infin;</sub> &le; L&delta;&#8214;h &minus; g&#8214;<sub>&infin;</sub> &le; &frac12;&#8214;h &minus; g&#8214;<sub>&infin;</sub>&nbsp;&nbsp;(2.17)</div>so the contraction constant is <b>&frac12;</b>. (If L = 0 the term is &infin; and drops out.)<p><b>And that is why the theorem is local:</b> &delta; is whatever those three constraints allow, and nothing forces it to be large.</p>",
+   "r": {
+    "rot": "three boxes to tick, three terms in the min. r: don't wander out of the region where f behaves. r/M: the operator has to send your set of candidate functions back into that same set, or 'fixed point' is meaningless &mdash; and how far it can push you is (bound on f) &times; (time elapsed), so shrink the time. 1/2L: shrink the time again until the map genuinely squeezes. every one of them is 'take a shorter interval'. that's the entire reason the answer is local.",
+    "ex": "The two r's mean different things and the book footnotes it: one is the radius of a ball around the <i>point</i> (x&#8320;,t&#8320;) in X&times;&Ropf;, the other is the radius of a ball around the <i>constant function</i> x&#8320; in C(I;X).",
+    "why": "It shows locality is an artifact of the proof technique, not a claim about solutions. A contraction argument can only ever give you the neighbourhood where the contraction holds &mdash; Example 2.3.4's solution exists for all t while the theorem promises 1/18 of a second.",
+    "math": "M = Lr + M&#8320; where M&#8320; bounds &#8214;f(x&#8320;,t)&#8214; on [t&#8320;&minus;r, t&#8320;+r]. Contraction constant &frac12; is a convenience; any k &lt; 1 works."
+   }
+  },
+  {
    "id": "v4c2c2",
    "s": "2.3",
    "page": 60,
@@ -193,6 +271,19 @@
     "ex": "Contrast with f(x) = x&sup2; from &sect;2.1: perfectly Lipschitz on bounded sets, so uniqueness holds &mdash; it just blows up in finite time. <b>These are two different diseases.</b> Non-Lipschitz kills uniqueness; unbounded growth kills global existence.",
     "why": "Physically, non-uniqueness is a catastrophe: reality follows one branch and your solver follows another, and neither is wrong. This is why the Lipschitz hypothesis isn't technical bookkeeping &mdash; it's the thing standing between you and a model that predicts nothing.",
     "math": "d/dx(4x<sup>3/4</sup>) = 3x<sup>&minus;1/4</sup> &rarr; &infin; as x &rarr; 0&#8314;. So sup&#8214;Df&#8214; = &infin; on any neighborhood of 0, and Prop 2.2.4's sufficient condition cannot apply."
+   }
+  },
+  {
+   "id": "v4c2c8",
+   "s": "2.3",
+   "page": 60,
+   "q": "The theorem only produces a differentiable x. Remark 2.3.2 gets much more. How does the bootstrap run?",
+   "a": "<b>Read the ODE as a regularity statement and feed it back into itself.</b><p style='margin-top:8px'><b>Step 0.</b> The fixed point x is differentiable on I. But x&#775;(t) = f(x(t),t) and f is <b>continuous</b>, so x&#775; is continuous &mdash; <b>x is C&sup1;</b>, for free.</p><p><b>Step 1.</b> Now assume f is C&sup1;. Differentiate the ODE:</p><div class='eq'>x&#776;(t) = D<sub>x</sub>f(x(t),t)x&#775;(t) + D<sub>t</sub>f(x(t),t)</div>The right side is continuous, so x&#776; is continuous &mdash; <b>x is C&sup2;</b>.<p><b>Step k.</b> The same argument repeats: <b>whenever f is C<sup>k</sup>, x is C<sup>k+1</sup></b>. The solution is always <i>one degree smoother</i> than the equation, because integration adds a derivative.</p><p style='margin-top:8px'><b>Remark 2.3.5 extends the same idea sideways.</b> Picard&ndash;Lindel&ouml;f gives only <i>continuous</i> dependence on x&#8320;. But if f is C<sup>k</sup> then &Phi; is C<sup>k</sup>, and part (2) of the Uniform Contraction Mapping Principle makes the map <b>x&#8320; &#8614; x(t)</b> a C<sup>k</sup> function of the initial value.</p>",
+   "r": {
+    "rot": "the equation says the derivative of x equals something continuous. so x's derivative is continuous, so x is C&sup1;. now differentiate both sides: x's second derivative equals something continuous, so x is C&sup2;. keep going. each round you cash the equation in for one more derivative. the answer always ends up one notch smoother than the data you fed in &mdash; differential equations smooth things out.",
+    "ex": "The sideways version is the one that matters for modelling: smooth f means the <i>solution map</i> x&#8320; &#8614; x(&#8901;) is smooth, so you can differentiate a trajectory with respect to where it started &mdash; the basis of sensitivity analysis and of linearizing around an orbit.",
+    "why": "Well-posedness only demanded <i>continuous</i> dependence, which is the bare minimum for trusting a model. This says you usually get far more, and the extra smoothness is what later chapters need when they differentiate solutions with respect to initial conditions or parameters.",
+    "math": "f &isin; C<sup>k</sup> &rArr; x &isin; C<sup>k+1</sup>, by induction on differentiating x&#775; = f(x,t). f &isin; C<sup>k</sup> &rArr; &Phi; &isin; C<sup>k</sup> &rArr; x&#8320; &#8614; x is C<sup>k</sup> (Uniform CMP part 2)."
    }
   },
   {
@@ -209,6 +300,32 @@
    }
   },
   {
+   "id": "v4c2c9",
+   "s": "2.3",
+   "page": 61,
+   "q": "Work Example 2.3.4 end to end: compute the guaranteed interval for x&#775; = t&sup2;x, x(0) = 1. Then compare it to reality.",
+   "a": "Domain t &isin; (&minus;3,3), x &isin; (&minus;2,2), so a ball of radius <b>r = 1</b> around (x&#8320;,t&#8320;) = (1,0) stays inside.<div class='eq'>M: |t&sup2;x| &le; 9&#8901;2 = <b>18</b> on [&minus;2,2]&times;[&minus;3,3]</div><div class='eq'>L: |t&sup2;x&#8321; &minus; t&sup2;x&#8322;| &le; <b>9</b>|x&#8321; &minus; x&#8322;|</div><div class='eq'>&delta; = min(r, r/M, 1/2L) = min(1, 1/18, 1/18) = <b>1/18</b></div>So Theorem 2.3.1 guarantees a unique solution on <b>[&minus;1/18, 1/18]</b>.<p style='margin-top:8px'><b>Now the reality.</b> Check directly: x(t) = e<sup>t&sup3;/3</sup> solves the IVP, so by uniqueness it <i>is</i> the solution &mdash; and it is defined and solves the equation <b>for all t &isin; &Ropf;</b>.</p><div class='eq'>Guaranteed: 0.056 seconds.&nbsp;&nbsp;Actual: forever.</div><b>The theorem's interval is a floor, not a description.</b> It is built from crude global bounds (the worst-case M and L over the whole box), so it is pessimistic by construction &mdash; and it has to be, since it makes no use of the particular f beyond those two numbers.",
+   "r": {
+    "rot": "run the recipe: bound f, get the lipschitz constant, take the min of three numbers. you're promised a solution for one eighteenth of a second. then you notice the actual solution is e<sup>t&sup3;/3</sup>, which is fine forever. the theorem wasn't wrong, it was just being extremely careful &mdash; it only knows two numbers about f and it assumes the worst about everything else.",
+    "ex": "The pessimism comes from where you evaluate. M = 18 uses the largest |t&sup2;x| anywhere in the box, including the far corner at t = &plusmn;3, but the actual solution near t = 0 has x&#775; &asymp; 0.",
+    "why": "It tells you how to <i>use</i> the theorem: as a guarantee that a solution exists and is unique, never as an estimate of how long it lasts. For the actual interval you need the Unique Extension Theorem to glue local pieces, or the Blowup Theorem to rule out an early ending.",
+    "math": "r = 1, M = 18, L = 9, &delta; = 1/18. Both r/M and 1/2L bind here. True maximal interval: (&minus;&infin;,&infin;)."
+   }
+  },
+  {
+   "id": "v4c2c10",
+   "s": "2.3",
+   "page": 62,
+   "q": "Prove the Unique Extension Theorem. The argument is a topological trick &mdash; what is it?",
+   "a": "<b>Take the largest set where the two solutions agree, and show its boundary can't exist.</b><p style='margin-top:8px'>Suppose &phi; and &psi; both solve the IVP on an open (r,s) &supe; I. By Picard&ndash;Lindel&ouml;f they agree on I. Let <b>J = the union of all open intervals containing I on which &phi; = &psi;</b>. A union of open connected sets sharing I is open and connected, so J = (a,b).</p><p>If (r,s) &nsube; J there is a boundary point <b>t&#8321; &isin; (r,s)</b>. Now the two-step squeeze:</p><div class='eq'><b>(1) Closedness.</b> &phi;, &psi; are differentiable hence continuous, and the set where two continuous functions agree is <b>closed</b> &mdash; so &phi;(t&#8321;) = &psi;(t&#8321;) even though t&#8321; &notin; J.</div><div class='eq'><b>(2) Openness.</b> Apply Picard&ndash;Lindel&ouml;f to the <b>new</b> IVP x&#775; = f(x,t), x(t&#8321;) = &phi;(t&#8321;). Uniqueness gives an open U &ni; t&#8321; on which &phi; = &psi;.</div>Then J &cup; U is an open interval containing I <b>and t&#8321;</b> on which &phi; = &psi; &mdash; contradicting the definition of J, which was supposed to contain every such interval.<p style='margin-top:8px'><b>What it buys:</b> extension need not be <i>possible</i>, but if it is, it is <b>unique</b>. So 'the largest interval containing t&#8320; on which the IVP has a solution' is well defined, and so is the solution on it.</p>",
+   "r": {
+    "rot": "classic connectedness argument. the set where the two solutions agree is closed, because continuous functions that agree keep agreeing in the limit. and it's open, because at any agreement point you can restart picard&ndash;lindel&ouml;f and get a whole neighbourhood of agreement. a set that's both open and closed inside a connected interval is either empty or everything &mdash; and it isn't empty, since they agree on I. so it's everything.",
+    "ex": "Note the theorem does <b>not</b> say the solution extends. x&#775; = x&sup2; can't be extended past t*. It says only that whatever extension exists is the only one, which is what makes 'maximal interval' a definition rather than a wish.",
+    "why": "It is the bridge from local to global. Picard&ndash;Lindel&ouml;f alone gives a shard of solution near t&#8320;; this makes the shards fit together into one canonical object. Combined with P&ndash;L it also delivers Definition 2.3.7's well-posedness in full.",
+    "math": "Uses: the agreement set of continuous functions is closed; P&ndash;L uniqueness makes it open; connectedness of an interval. Endpoints a, b may be infinite."
+   }
+  },
+  {
    "id": "v4c2c4",
    "s": "2.3",
    "page": 63,
@@ -219,6 +336,19 @@
     "ex": "x&#775; = x&sup2; with x&#8320; = 1: x(t) = 1/(1&minus;t) exits every compact subset of &Ropf; as t &rarr; 1&#8315;. Contrast a trajectory trapped in a bounded invariant region &mdash; a conserved energy level set, say &mdash; which is therefore guaranteed to exist for all time.",
     "why": "This is the practical global-existence tool. Finding a conserved quantity or a bounded invariant region (&sect;1.5's energy argument) plus this theorem gives existence for all time, with no formula for the solution required.",
     "math": "Contrapositive: if &exist; compact K &sube; U with x(t) &isin; K for all t &isin; (t&#8320;,&beta;), then &beta; = &infin;."
+   }
+  },
+  {
+   "id": "v4c2c11",
+   "s": "2.3",
+   "page": 63,
+   "q": "f(x) = x&sup2; is Lipschitz on every compact set, and Picard&ndash;Lindel&ouml;f applies at every point of the trajectory. So <i>how</i> does the solution blow up?",
+   "a": "<b>The theorem keeps working right up to the end. It just works over shorter and shorter intervals.</b><p style='margin-top:8px'>At any point along the trajectory there is a neighbourhood on which the solution continues to exist a little longer &mdash; but <b>the size of that &delta; gets smaller and smaller as you approach the blowup</b>. Watch &delta; = min(r, r/M, 1/2L): as x grows, the bound M on x&sup2; grows, L grows, and both r/M and 1/2L collapse toward 0.</p><div class='eq'>&Sigma;&delta;<sub>i</sub> converges &mdash; infinitely many extensions, finite total time</div>Each application legitimately extends the solution; the extensions simply shrink fast enough that they never reach past t*. No contradiction, because <b>Theorem 2.3.1 in no way suggests that a solution will exist for all time</b>.<p style='margin-top:8px'><b>Theorem 2.3.8 (Finite Time Blowup)</b> then says what a finite maximal interval (&alpha;,&beta;) forces topologically: for f &isin; C&sup1; and <b>every compact K &sube; U</b>, there is t &isin; (t&#8320;,&beta;) with <b>x(t) &notin; K</b>. The solution leaves every compact set &mdash; it cannot quietly stop somewhere nice.</p>",
+   "r": {
+    "rot": "zeno, basically. every step forward is legal and every step is shorter than the last, so you take infinitely many of them and never get past t*. the local theorem is telling the truth each time it's applied; it's just that 'a little longer' keeps meaning less. and the blowup theorem adds the kicker: if time runs out, the solution had to escape every compact set. it can't just stop &mdash; it has to leave.",
+    "ex": "In &Ropf;<sup>n</sup> with U = &Ropf;<sup>n</sup>, the compact sets are the closed bounded ones, so leaving every compact set means &#8214;x(t)&#8214; &rarr; &infin;. That is the form used in Thm 3.1.1 to rule out blowup for linear systems.",
+    "why": "It reconciles the two facts that look contradictory on first reading: the hypotheses hold everywhere, and yet the solution dies. It also shows why &sect;3.1's global result needs a <i>growth</i> bound (Gronwall) and not just smoothness &mdash; smoothness was never the obstruction.",
+    "math": "&delta;<sub>i</sub> &rarr; 0 with &Sigma;&delta;<sub>i</sub> &lt; &infin;. Thm 2.3.8 requires f &isin; C&sup1; on U &times; I, &beta; &lt; &infin;; the same statement holds at a finite left endpoint &alpha;."
    }
   },
   {
@@ -237,7 +367,7 @@
   {
    "id": "v4c2c6",
    "s": "2.3",
-   "page": 68,
+   "page": 64,
    "q": "State Gronwall's inequality and the bound on trajectory separation it produces.",
    "a": "<b>Lemma 2.3.10 (Gronwall).</b> For continuous &phi;(t) &ge; 0 and u(t) &ge; 0 on [t&#8320;,T], if<div class='eq'>u(t) &le; u(t&#8320;) + &int;<sub>t&#8320;</sub><sup>t</sup> &phi;(s)u(s) ds</div>then<div class='eq'>u(t) &le; u(t&#8320;) exp(&int;<sub>t&#8320;</sub><sup>t</sup> &phi;(s) ds)</div><b>Prop 2.3.11.</b> Applying it with u(t) = &#8214;x(t) &minus; y(t)&#8214; and &phi; &equiv; L gives, for two solutions with different initial values:<div class='eq'>&#8214;x(t) &minus; y(t)&#8214; &le; &#8214;x&#8320; &minus; y&#8320;&#8214; e<sup>L(t &minus; t&#8320;)</sup></div>This re-proves continuous dependence &mdash; and quantifies it. <span class='muted'>(Remark 2.3.12 notes the bound is usually not tight.)</span>",
    "r": {
@@ -245,6 +375,19 @@
     "ex": "Set &epsilon; = &#8214;x&#8320; &minus; y&#8320;&#8214;. To keep trajectories within tolerance &delta; out to time T you need &epsilon; &le; &delta;e<sup>&minus;LT</sup> &mdash; the required initial precision decays exponentially in your prediction horizon. That is precisely why long-range weather forecasting is hopeless.",
     "why": "This is the rigorous version of &lsquo;sensitive dependence on initial conditions&rsquo;. Notice it doesn't say chaos is impossible &mdash; it says divergence is at worst exponential with rate L. Chaos is what happens when that bound is actually achieved.",
     "math": "&#8214;x(t) &minus; y(t)&#8214; &le; &#8214;x&#8320; &minus; y&#8320;&#8214; + &int;L&#8214;x(s) &minus; y(s)&#8214;ds by Lipschitz. Apply Gronwall with &phi; &equiv; L."
+   }
+  },
+  {
+   "id": "v4c2c12",
+   "s": "2.3",
+   "page": 65,
+   "q": "Prove Gronwall's inequality. What is the trick, and how good is the resulting bound?",
+   "a": "<b>Turn the integral inequality into a differential one by taking a logarithm.</b><p style='margin-top:8px'>Assume u(t&#8320;) &gt; 0 and define the right-hand side as its own function:</p><div class='eq'>x(t) = u(t&#8320;) + &int;<sub>t&#8320;</sub><sup>t</sup>&phi;(s)u(s)ds&nbsp;&nbsp;&rArr;&nbsp;&nbsp; u &le; x,&nbsp; x&#775; = &phi;u,&nbsp; x(t&#8320;) = u(t&#8320;)</div>Now <b>x is differentiable even though u might barely be</b>, and the key step is:<div class='eq'>d/dt&nbsp;ln x(t) = x&#775;/x = &phi;u/x &le; &phi;(t)&nbsp;&nbsp;(since u &le; x)</div>Integrate, exponentiate, and use u &le; x:<div class='eq'>u(t) &le; u(t&#8320;)exp(&int;<sub>t&#8320;</sub><sup>t</sup>&phi;(s)ds)&nbsp;&nbsp;(2.21)</div><b>The u(t&#8320;) = 0 case</b> is handled by running the argument on u + &epsilon;, which satisfies the same hypothesis, then letting &epsilon; &rarr; 0<sup>+</sup>.<p style='margin-top:8px'><b>Remark 2.3.12 on quality:</b> the bound is <b>not very good</b>, particularly when L is large &mdash; e<sup>L(t&minus;t&#8320;)</sup> is wildly pessimistic for a stable system that is actually contracting. What it <i>does</i> guarantee is that uniform Lipschitzness forces solutions to depend <b>at least continuously</b> on the initial data.</p>",
+   "r": {
+    "rot": "you have u bounded by its own integral, which is circular and useless as stated. trick: give the right-hand side a name, x. now x is differentiable with x&#775; = &phi;u, and since u &le; x you get x&#775;/x &le; &phi; &mdash; which is just (ln x)&prime; &le; &phi;. integrate, exponentiate, done. the log is what converts a multiplicative mess into an additive one. the bound itself is loose: it always predicts exponential growth, even when the system is calmly decaying.",
+    "ex": "Prop 2.3.11 is the payoff: &#8214;x(t) &minus; y(t)&#8214; &le; &#8214;x&#8320; &minus; y&#8320;&#8214;e<sup>L(t&minus;t&#8320;)</sup>. Two trajectories can separate no faster than exponentially &mdash; which is both continuous dependence and a hard ceiling on chaos.",
+    "why": "Gronwall is the workhorse for the rest of the book: it proves continuous dependence here, global existence for linear systems in Thm 3.1.1, and the inhomogeneous version in Thm 3.4.1. One lemma, reused every time growth needs bounding.",
+    "math": "Needs &phi;, u continuous and &ge; 0 on [t&#8320;,T]. Generalized form (used in Thm 3.4.1) replaces the constant u(t&#8320;) with a nondecreasing C&sup1; function &alpha;(t)."
    }
   }
  ],
