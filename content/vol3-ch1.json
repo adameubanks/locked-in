@@ -580,6 +580,19 @@
    }
   },
   {
+   "id": "v3c1d9",
+   "s": "1.4",
+   "page": 40,
+   "q": "When is a probability measure <b>uniformly distributed</b>, and what does that turn probability into?",
+   "a": "<b>Definition 1.4.11.</b> If &Omega; is finite and P(&omega;) = 1/|&Omega;| for every &omega; &isin; &Omega;, then P is <b>uniformly distributed</b>.<p style='margin-top:8px'><b>Remark 1.4.12 &mdash; the payoff.</b> Since P(E) = &Sigma;<sub>&omega;&isin;E</sub>P(&omega;),</p><div class='eq'>P(E) = |E| / |&Omega;|</div><b>Probability has become counting.</b> Every question reduces to: how many outcomes are in E, and how many are there in total. That is why combinatorics and probability are taught together.<p style='margin-top:8px'><b>But you have to earn the uniformity.</b> It comes from a <b>symmetry</b>, not from ignorance. For a die, any rotation after it lands leaves your knowledge unchanged, and for any &omega;, &omega;&prime; there is a rotation carrying one to the other &mdash; so P(&omega;) = P(&omega;&prime;), hence 1/6 each. For a deck, there is a symmetry interchanging A&spades; and 3&hearts; while the rest stay fixed, and likewise for any pair &mdash; so 1/52 each.</p><p><b>The symmetry must act on the outcomes you actually listed.</b> Unexample 1.4.8: on &Omega; = {&#9856;, &not;&#9856;} no rotation swaps the two, so they are <b>not</b> 1/2 and 1/2 &mdash; they are 1/6 and 5/6.</p>",
+   "r": {
+    "rot": "if every outcome is equally likely, a probability is just (how many ways it can happen) over (how many things can happen). that's the whole reason counting arguments matter. but 'equally likely' isn't something you assume because you're ignorant &mdash; you need an actual symmetry shuffling the outcomes around without changing what you know. a die has rotations. 'six vs not-six' has nothing, which is why that split isn't 50/50.",
+    "ex": "The bookkeeping gets big fast: a deck of 52 cards has |F| = 2<sup>52</sup> = 4,503,599,627,370,496 events. You never enumerate them &mdash; you count the one you care about and divide.",
+    "why": "It's the bridge from the abstract triple (&Omega;, F, P) to problems you can actually solve, and it's the justification underneath every 'assume a fair die' in the book. It also flags exactly where such assumptions go wrong: no symmetry, no uniformity.",
+    "math": "P uniform &rArr; P(E) = |E|/|&Omega;|. Requires &Omega; finite. The symmetry requirement is what Nota Bene 1.4.9 says most statements of the principle of insufficient reason omit &mdash; <i>and thus are wrong</i>."
+   }
+  },
+  {
    "id": "v3c1d2",
    "s": "1.4",
    "page": 41,
@@ -603,6 +616,32 @@
     "ex": "Example 1.4.17 is the elegant one. Flip until heads; what is P(E), the probability of an even number of flips? Condition on the first flip. If it's heads the game is over on an odd flip, so P(E|H&#8321;) = 0. If not, the game restarts with even and odd <b>swapped</b>, so P(E|H&#8321;<sup>c</sup>) = 1 &minus; P(E). Hence P(E) = (1&minus;P(E))(1&minus;p), giving <b>P(E) = (1&minus;p)/(2&minus;p)</b>.",
     "why": "That self-referential trick &mdash; conditioning on the first step and recognizing the rest as a copy of the original problem &mdash; recurs constantly. It's exactly how Example 1.7.17 solves the three-doors video game (E[X] = 108 points), and it is the seed of the renewal arguments behind Markov chains.",
     "math": "P(B|A) = P(B&#8745;A)/P(A). Total probability over a partition; Bayes needs P(A) &gt; 0. P<sub>new</sub>(&middot;) = P(&middot;|A) is a probability measure."
+   }
+  },
+  {
+   "id": "v3c1d8",
+   "s": "1.4",
+   "page": 42,
+   "q": "Flip a coin (heads with probability p) until heads appears. What's the probability you flipped an <b>even</b> number of times?",
+   "a": "<b>Condition on the first flip, then exploit self-similarity.</b><p style='margin-top:8px'>If heads comes up first (event H&#8321;), the game ends at flip 1 &mdash; odd. So <b>P(E|H&#8321;) = 0</b>, and the whole first branch vanishes:</p><div class='eq'>P(E) = P(E|H&#8321;)P(H&#8321;) + P(E|H&#8321;<sup>c</sup>)P(H&#8321;<sup>c</sup>) = P(E|H&#8321;<sup>c</sup>)(1 &minus; p)</div><b>Now the trick.</b> If the first flip is tails, you're starting the same game over &mdash; but every subsequent count is shifted by one, so <b>even and odd have swapped</b>:<div class='eq'>P(E|H&#8321;<sup>c</sup>) = P(E<sup>c</sup>) = 1 &minus; P(E)</div>Substitute and you have an <b>equation in the unknown you wanted</b>:<div class='eq'>P(E) = (1 &minus; P(E))(1 &minus; p)&nbsp;&nbsp;&rArr;&nbsp;&nbsp; P(E) = <b>(1 &minus; p)/(2 &minus; p)</b></div><b>Sanity checks:</b> p = 1 gives 0 (always stops on flip 1). p &rarr; 0 gives &frac12; (a coin that almost never lands heads takes so long that parity becomes a coin flip of its own). And P(E) &lt; &frac12; always &mdash; odd is always favoured, because flip 1 is the single most likely stopping point.",
+   "r": {
+    "rot": "an infinite sum you don't want to do. instead: split on the first flip. heads &mdash; you're done in one, which is odd, contributes nothing. tails &mdash; you're back at the start, except the parity labels have swapped, so the answer is one minus the answer. that gives you an <i>equation</i> for the thing you're solving for. solve it. the recursion did the infinite sum for you.",
+    "ex": "Nota Bene 1.4.18 names the strategy: <i>whenever the probability of something seems difficult to compute in the abstract, but it would be easy to compute if we only knew something else, consider using the law of total probability, conditioning on the events that make things easier.</i>",
+    "why": "It's the first-step-analysis technique that runs all of Markov chain theory. Condition on the first transition, use the fact that what follows is a copy of the original problem, and solve algebraically instead of summing a series.",
+    "math": "Geometric distribution, P(N = k) = (1&minus;p)<sup>k&minus;1</sup>p. Direct check: &Sigma;<sub>k even</sub>(1&minus;p)<sup>k&minus;1</sup>p = p(1&minus;p)/(1&minus;(1&minus;p)&sup2;) = (1&minus;p)/(2&minus;p)."
+   }
+  },
+  {
+   "id": "v3c1d7",
+   "s": "1.4",
+   "page": 43,
+   "q": "Two covid tests <b>disagree</b>: the first says yes, the second says no. Prior 31%. Is the answer 50%?",
+   "a": "<b>No &mdash; it's about 5%.</b> The intuition that disagreement means 50/50 assumes the tests are equally informative. They aren't. Read the fine print:<div class='eq'>P(T&#8321;|C) = 0.90,&nbsp; P(&not;T&#8321;|&not;C) = 0.92&nbsp;&nbsp;&middot;&nbsp;&nbsp;P(T&#8322;|C) = 0.96,&nbsp; P(&not;T&#8322;|&not;C) = 0.94</div>You need P<sub>new</sub>(C) = P(C|T&#8321;, &not;T&#8322;). Expand and then use <b>conditional independence</b> &mdash; different manufacturers, and taking one has no impact on the other, so P(T&#8321;|C, &not;T&#8322;) = P(T&#8321;|C):<div class='eq'>P<sub>new</sub>(C) = P(T&#8321;|C)&#8901;P(&not;T&#8322;|C)&#8901;P(C) / [P(T&#8321;)&#8901;P(&not;T&#8322;)]</div><div class='eq'>= (0.9)(0.04)(0.31) / {[(0.9)(0.31)+(0.08)(0.69)]&#8901;[(0.04)(0.31)+(0.94)(0.69)]} = <b>0.0505</b></div><b>Why the negative wins so decisively:</b> test 2 has 96% sensitivity, so a <i>false negative</i> has probability only <b>0.04</b>. That tiny factor in the numerator is far more damning than the 0.9 is exonerating. The more sensitive test's negative outweighs the less sensitive test's positive, and you end up <b>six times less likely</b> to have covid than before you tested.",
+   "r": {
+    "rot": "one test says yes, one says no, so it's a coin flip &mdash; wrong. the second test almost never misses covid when it's there, so its 'no' is very hard to explain if you're sick: only a 4% chance. the first test's 'yes' is easier to explain away, since it fires on 8% of healthy people. two votes, wildly different weights. you walked in at 31% and walked out at 5%.",
+    "ex": "The independence assumption is doing real work and it is an <i>assumption</i>. Two tests from the <b>same</b> manufacturer, or two tests sensitive to the same sampling error, would be correlated &mdash; and treating them as independent would make you far too confident.",
+    "why": "It's the general lesson about combining evidence: sources get weighted by how surprising their reading is under each hypothesis, not by how many there are of each. Counting votes is what your intuition does; multiplying likelihood ratios is what's correct.",
+    "math": "Conditional independence T&#8321; &#8869; T&#8322; | C lets the joint likelihood factor. Each denominator is a total-probability expansion: P(T&#8321;) = P(T&#8321;|C)P(C) + P(T&#8321;|&not;C)P(&not;C)."
    }
   },
   {
@@ -632,6 +671,19 @@
    }
   },
   {
+   "id": "v3c1e6",
+   "s": "1.5",
+   "page": 45,
+   "q": "Define the <b>support</b> of a random variable. Why does Remark 1.5.2 apologize for the word?",
+   "a": "<div class='eq'>supp(X) = {X(&omega;) &isin; &Ropf;<sup>d</sup> | P(&omega;) &gt; 0 for some &omega; &isin; &Omega;}</div>The set of values X can actually take &mdash; values reachable from outcomes with <b>nonzero</b> probability.<p style='margin-top:8px'><b>The apology:</b> in most of mathematics, the <i>support</i> of a function is a subset of its <b>domain</b> &mdash; where the function doesn't vanish. Here it is a subset of the <b>codomain</b>, essentially the range of X. Backwards, on the face of it.</p><p><b>The reconciliation.</b> supp(X) is the ordinary support of a different function: the <b>p.m.f.</b> g<sub>X</sub>, whose domain is the value space and which vanishes exactly where X cannot land. <i>The support in the traditional sense of the p.m.f. is the support of X.</i> The word is being used consistently &mdash; about g<sub>X</sub>, not about X.</p><p style='margin-top:8px'><b>Why the P(&omega;) &gt; 0 clause matters.</b> It lets you discard outcomes that never occur, and Remark 1.5.4 then gets a clean statement: the events {X = x} for x &isin; supp(X) form a genuine <b>partition</b> of &Omega; &mdash; mutually exclusive and collectively exhaustive. That partition is what the p.m.f. is defined on.</p>",
+   "r": {
+    "rot": "support = the values X can actually produce. the naming looks wrong, because everywhere else in math 'support' means part of the input side. it's rescued by noticing you're really talking about the p.m.f. &mdash; that function lives on the value space and is zero outside supp(X), so it's the normal meaning after all, just about the other function. the 'probability &gt; 0' part lets you throw away impossible outcomes so the events {X = x} tile &Omega; exactly.",
+    "ex": "A second confusing name in the same breath: Polya's <i>a random variable is neither random, nor a variable</i> &mdash; it's a deterministic function &Omega; &rarr; &Ropf;<sup>d</sup>. Both names are historical, and both are defensible once you see what they're pointing at.",
+    "why": "The partition is the load-bearing consequence. Every later formula that sums over values of X &mdash; the p.m.f. summing to 1, marginalization, LOTUS, total expectation &mdash; is really summing over the blocks of this partition, and needs them to be exclusive and exhaustive.",
+    "math": "Univariate d = 1, bivariate d = 2, multivariate d &ge; 2. Any function &Omega; &rarr; &Ropf;<sup>d</sup> is a random variable &mdash; no other condition, in the discrete setting."
+   }
+  },
+  {
    "id": "v3c1e2",
    "s": "1.5",
    "page": 46,
@@ -655,6 +707,19 @@
     "ex": "Same experiment, three legitimate descriptions: the individual flips X<sub>k</sub>, the count Y (which throws away the order), and the full vector X (which keeps it). Y is a function of X, so it can only lose information &mdash; and that is often what you want.",
     "why": "The partition property is quietly load-bearing. It's why the law of total probability can be stated over the events {Y = y} (Remark 1.7.4), why the tower property holds, and why conditioning on a random variable is well defined at all.",
     "math": "{X = x} = X<sup>&minus;1</sup>(x); these partition &Omega; over x &isin; supp(X). X : &Omega; &rarr; R<sup>d</sup>; every such function is a random variable when F = 2<sup>&Omega;</sup>."
+   }
+  },
+  {
+   "id": "v3c1e7",
+   "s": "1.5",
+   "page": 46,
+   "q": "Three fair flips. Build Y = number of heads from the indicator flips, and derive its p.m.f. from &Omega;.",
+   "a": "<b>Start with one random variable per flip:</b> X<sub>k</sub> = 1 if flip k is H, 0 if T. Then<div class='eq'>Y = X&#8321; + X&#8322; + X&#8323;</div>&mdash; a <b>function of random variables is again a random variable</b>, since composing functions on &Omega; gives a function on &Omega;.<p style='margin-top:8px'><b>Now collect outcomes by value.</b> Each of the 8 outcomes has probability 1/8:</p><div class='eq'>{Y=3} = {HHH}&nbsp;&middot;&nbsp;{Y=2} = {THH, HTH, HHT}<br>{Y=1} = {TTH, THT, HTT}&nbsp;&middot;&nbsp;{Y=0} = {TTT}</div>Four blocks, mutually exclusive and collectively exhaustive &mdash; a <b>partition of &Omega;</b>. Count and divide:<div class='eq'>g<sub>Y</sub>(y) = 1/8 for y = 0, 3&nbsp;&nbsp;and&nbsp;&nbsp;3/8 for y = 1, 2</div><b>Two different objects, don't conflate them.</b> The vector <b>X = (X&#8321;,X&#8322;,X&#8323;)</b> is a <i>multivariate</i> random variable, <b>uniform</b> on its 8-point support &mdash; it records <i>which</i> flips were heads. The scalar <b>Y</b> is univariate and <b>not</b> uniform &mdash; it records only <i>how many</i>. Summing threw away information, and the 3/8's are the outcomes that got merged.",
+   "r": {
+    "rot": "make each flip a 0/1 variable, add them up, and you're counting heads. to get the distribution of the count, sort the eight equally likely outcomes into bins by how many heads they have: one way to get zero, three ways to get one, three ways to get two, one way to get three. divide by eight. note the vector of flips is uniform but the count isn't &mdash; because there are more ways to get a mixed result than an all-or-nothing one.",
+    "ex": "Those counts 1, 3, 3, 1 are the binomial coefficients, which is no accident &mdash; &sect;1.9 derives the binomial distribution as exactly this construction with n flips and bias p.",
+    "why": "It's the standard move in all of probability: express the quantity you care about as a function of simple indicator variables, then work with the function. &sect;1.6's indicator identity and linearity of expectation exist to make that move pay off without ever building the p.m.f.",
+    "math": "Y = &Sigma;X<sub>k</sub> with X<sub>k</sub> &sim; Bernoulli(&frac12;) i.i.d. gives Y &sim; Binomial(3, &frac12;), g<sub>Y</sub>(y) = C(3,y)/8. supp(X) has 8 points, supp(Y) has 4."
    }
   },
   {
@@ -694,6 +759,32 @@
     "ex": "n people throw their hats in a pile and each grabs one at random. Expected number who get their own hat? The events are horribly dependent. But let X<sub>i</sub> = 1 if person i gets their hat. E[X<sub>i</sub>] = 1/n. So E[&Sigma;X<sub>i</sub>] = n &middot; (1/n) = 1. Always 1, for any n. Try that without linearity.",
     "why": "Remark 1.6.16 flags exactly this &#8212; the indicator-plus-linearity combo is the most powerful elementary technique in the chapter. Decompose a horrible count into a sum of indicators, take expectations termwise, ignore all dependence. You will use it constantly.",
     "math": "E[X] = &Sigma;x g<sub>X</sub>(x). E[aX + bY] = aE[X] + bE[Y], no independence required. LOTUS: E[k(X)] = &Sigma;<sub>x</sub> k(x)g<sub>X</sub>(x)."
+   }
+  },
+  {
+   "id": "v3c1f7",
+   "s": "1.6",
+   "page": 50,
+   "q": "Definition 1.6.1 demands the sum converge <b>absolutely</b>. Why absolutely, and what happens when it doesn't?",
+   "a": "<b>If the sum does not converge absolutely, the expected value does not exist.</b> Not infinite, not undefined-but-approachable &mdash; it does not exist, and no amount of care recovers it.<p style='margin-top:8px'><b>Why absolute and not ordinary convergence.</b> A conditionally convergent series can be rearranged to sum to <i>anything</i> (Riemann). But &Sigma;<sub>&omega;&isin;&Omega;</sub>X(&omega;)P(&omega;) is a sum over an <b>unordered</b> set &mdash; &Omega; comes with no canonical order. A quantity whose value depended on the order you happened to list the outcomes in would not be a property of the distribution at all, and Proposition 1.6.2 would be false.</p><div class='eq'>Absolute convergence &rArr; the sum is <b>order-independent</b>, so E[X] is well defined.</div><b>And it's used again downstream.</b> Footnote 20 in the proof of LOTUS: <i>absolute convergence is used to interchange the order of summation</i>. Every double sum in the section &mdash; LOTUS, marginalization, E[XY] = E[X]E[Y] &mdash; silently reorders terms, and absolute convergence is the licence.<p style='margin-top:8px'>For a finite support this is automatic. It only bites for countably infinite supports, where a distribution with heavy enough tails simply has no mean &mdash; and then every later notion built on E, including variance, is unavailable too.</p>",
+   "r": {
+    "rot": "&Omega; is a set, not a list &mdash; nobody said which outcome comes first. so the sum defining E[X] had better not depend on the order you add things up, and the only guarantee of that is absolute convergence. without it you could get different answers by counting in different orders, which means there's no such number. and it isn't just pedantry: every proof in the section swaps the order of two sums, and that's exactly what absolute convergence permits.",
+    "ex": "Finite support &rArr; finite sum &rArr; no issue. Countably infinite support is where it matters: a distribution can be perfectly well defined, sum to 1, and still have no mean, because &Sigma;|x|g(x) diverges.",
+    "why": "It marks the boundary of the whole expectation apparatus. Variance, covariance, LOTUS, the law of large numbers, the central limit theorem &mdash; every one of them assumes a mean exists. When it doesn't, sample averages don't settle down and the usual statistics stop meaning anything.",
+    "math": "Requires &Sigma;<sub>&omega;</sub>|X(&omega;)|P(&omega;) &lt; &infin;, componentwise when d &gt; 1. Riemann rearrangement: a conditionally convergent real series can be reordered to converge to any prescribed value."
+   }
+  },
+  {
+   "id": "v3c1f6",
+   "s": "1.6",
+   "page": 51,
+   "q": "Compute E[X] for Bernoulli, Categorical, and Uniform. What does Proposition 1.6.2 let you ignore while doing it?",
+   "a": "<b>Proposition 1.6.2:</b> expectation is a property <b>only of the distribution</b>. You <i>need not know the particulars of &Omega; or the values of P(&omega;)</i> &mdash; only the p.m.f.:<div class='eq'>E[X] = &Sigma;<sub>x</sub> x&#8901;P(X = x) = &Sigma;<sub>x</sub> x&#8901;g<sub>X</sub>(x)&nbsp;&nbsp;(1.23)</div>The definition sums over &Omega;; this sums over <b>values</b>, collapsing each block {X = x} of the partition into one term.<div class='eq'><b>Bernoulli(p):</b> E[X] = 1&#8901;p + 0&#8901;(1&minus;p) = <b>p</b></div><div class='eq'><b>Cat(p):</b> E[X] = &Sigma;<sub>i</sub>P(X = e<sub>i</sub>)e<sub>i</sub> = &Sigma;<sub>i</sub>p<sub>i</sub>e<sub>i</sub> = <b>p</b></div><div class='eq'><b>Uniform{a,&hellip;,b}:</b> E[X] = (1/(b&minus;a))&Sigma;<sub>x=a</sub><sup>b</sup>x = <b>(a+b)/2</b></div><b>The categorical case is the one to notice.</b> The expectation of a vector-categorical variable <i>is the parameter vector p itself</i> &mdash; and it is a vector, living in the simplex, not a number. Under the scalar convention you'd instead get &Sigma;i&#8901;p<sub>i</sub>, a meaningless weighted average of arbitrary category indices. <b>This is Nota Bene 1.5.20's warning showing up in an actual formula.</b>",
+   "r": {
+    "rot": "expectation doesn't care where your random variable came from. coin, die, weather, stock &mdash; if the p.m.f. matches, the mean matches. so compute it once per distribution and reuse forever. bernoulli gives you p, uniform gives you the midpoint, and categorical gives you back the whole probability vector. that last one is the payoff of the one-hot convention: the mean is the distribution. with scalar categories you'd get a number like 2.3 that means nothing, because category 2 and category 3 were never on a scale.",
+    "ex": "E[Cat(p)] = p is what makes cross-entropy and softmax outputs interpretable in machine learning: the model's output vector <i>is</i> an expected one-hot label, which is why averaging it is legitimate.",
+    "why": "Prop 1.6.2 is what makes named distributions worth having. Everything proved about Bernoulli(p) holds for every coin, test result, click, or earthquake indicator with that p &mdash; the probability space is scaffolding you discard once you have the p.m.f.",
+    "math": "The two formulas agree by grouping &Omega; into the blocks {X = x}: &Sigma;<sub>&omega;</sub>X(&omega;)P(&omega;) = &Sigma;<sub>x</sub>x&Sigma;<sub>&omega;&isin;{X=x}</sub>P(&omega;) = &Sigma;<sub>x</sub>x&#8901;g<sub>X</sub>(x)."
    }
   },
   {
