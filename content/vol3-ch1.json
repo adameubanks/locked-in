@@ -840,6 +840,19 @@
    }
   },
   {
+   "id": "v3c1g7",
+   "s": "1.7",
+   "page": 55,
+   "q": "An urn has b blue and r red marbles; draw k <b>without replacement</b>. Find E[blue drawn] &mdash; and explain the surprise.",
+   "a": "<b>Decompose into indicators.</b> Let &#120793;<sub>i</sub> = 1 if the ith marble drawn is blue. Then X = &Sigma;<sub>i=1</sub><sup>k</sup>&#120793;<sub>i</sub>.<p style='margin-top:8px'><b>Each single draw, considered on its own</b>, and <i>without any information about the other draws</i>, is just one draw from b + r marbles of which b are blue:</p><div class='eq'>P(&#120793;<sub>i</sub> = 1) = b/(b+r)&nbsp;&nbsp;&rArr;&nbsp;&nbsp;E[&#120793;<sub>i</sub>] = b/(b+r)&nbsp;&nbsp;(Prop 1.6.13)</div><div class='eq'>E[X] = <b>kb/(b+r)</b></div><b>Now the surprise, Remark 1.6.16.</b> These indicators are emphatically <b>not independent</b> &mdash; drawing blue makes the next draw less likely to be blue, so P(&#120793;<sub>i</sub>=1|&#120793;<sub>j</sub>=1) &ne; P(&#120793;<sub>i</sub>=1). <b>Linearity of expectation doesn't care.</b> It never required independence.<p style='margin-top:8px'>Consequence: <b>the answer is the same with or without replacement.</b> Replacement changes the dependence structure completely &mdash; and changes the variance &mdash; but each marginal P(&#120793;<sub>i</sub>=1) is unchanged, so the mean is unchanged.</p>",
+   "r": {
+    "rot": "don't chase the hypergeometric distribution. write the count as a sum of yes/no variables, one per draw, and add up their means. each draw on its own is blue with probability b/(b+r) &mdash; the third draw doesn't know it's the third. add k of those. done. and the draws are tangled up with each other, which would wreck almost any other identity, but linearity of expectation is immune. same answer whether you put the marbles back or not.",
+    "ex": "The trick generalizes everywhere: expected number of fixed points of a random permutation, expected collisions in hashing, expected inversions in a shuffle &mdash; all are sums of dependent indicators, and all yield to the same two lines.",
+    "why": "It's the single most useful computational technique in discrete probability, and this example shows exactly why: it converts a hard joint-distribution question into k trivial marginal questions. Note the price &mdash; variance is <b>not</b> linear, so with and without replacement genuinely differ there.",
+    "math": "X &sim; Hypergeometric without replacement, Binomial(k, b/(b+r)) with. Same mean kb/(b+r); the hypergeometric variance carries an extra finite-population correction factor."
+   }
+  },
+  {
    "id": "v3c1g3",
    "s": "1.7",
    "page": 56,
@@ -850,6 +863,19 @@
     "ex": "Example 1.7.2, three fair flips with Y the number of heads: conditioning on A (first flip heads) gives g<sub>Y|A</sub>(2) = (2/8)/(4/8) = &frac12;; conditioning on D (at least one head) gives g<sub>Y|D</sub>(2) = (3/8)/(7/8) = 3/7. Different conditioning events, different renormalizations.",
     "why": "The joint-over-marginal formula is the same one that reappears verbatim for densities in &sect;2.6.1 (f<sub>X|Y</sub> = f<sub>X,Y</sub>/f<sub>Y</sub>) and as the definition of the posterior in Bayesian estimation (&sect;4.6). It is the single most reused formula in the book.",
     "math": "g<sub>X|Y</sub>(x|y) = g<sub>X,Y</sub>(x,y)/g<sub>Y</sub>(y), defined for y &isin; supp(Y). Independence &hArr; g<sub>X|Y</sub>(x|y) = g<sub>X</sub>(x) for all x,y."
+   }
+  },
+  {
+   "id": "v3c1g8",
+   "s": "1.7",
+   "page": 56,
+   "q": "Same three coin flips, two different conditioning events. Compute g<sub>Y|A</sub>(2) and g<sub>Y|D</sub>(2), and say why they differ.",
+   "a": "Y = number of heads. <b>A</b> = first flip is heads. <b>D</b> = at least one flip is heads.<div class='eq'>g<sub>Y|A</sub>(2) = P({Y=2} &cap; A)/P(A) = (2/8)/(4/8) = <b>1/2</b></div><div class='eq'>g<sub>Y|D</sub>(2) = P({Y=2} &cap; D)/P(D) = (3/8)/(7/8) = <b>3/7</b></div><b>Conditioning is restrict-and-renormalize.</b> You shrink &Omega; to the conditioning event and rescale so the surviving probabilities sum to 1. Both numerator and denominator change, which is why the answers aren't obviously ordered.<p style='margin-top:8px'><b>Why A and D differ.</b> A is a <i>strong</i> condition &mdash; it eliminates half the sample space, and of the four survivors, two have exactly two heads. D is <i>weak</i> &mdash; it eliminates only TTT, so the conditional distribution stays close to the unconditional 3/8.</p><div class='eq'>Unconditional 3/8 = 0.375&nbsp;&middot;&nbsp;Given D: 3/7 &asymp; 0.429&nbsp;&middot;&nbsp;Given A: 1/2</div><b>The weaker the news, the less it moves you.</b> Learning 'not all tails' barely changes anything; learning a specific flip's value changes a lot.",
+   "r": {
+    "rot": "conditioning = cross out the outcomes that didn't happen, then rescale what's left so it still adds to 1. that's it, both times. the two answers differ because the two events cross out different amounts: 'first flip was heads' kills half the space, 'at least one head' kills one outcome out of eight. big cut, big change. tiny cut, tiny change.",
+    "ex": "Example 1.7.6 runs the same machinery in the other direction &mdash; conditioning Y on the value of X&#8323; &mdash; and gets g<sub>Y|X&#8323;</sub>(&#8901;|1) = (0, 1/4, 1/2, 1/4): knowing the last flip was heads shifts the whole distribution of the count up by one.",
+    "why": "It makes concrete what a conditional p.m.f. <i>is</i> &mdash; not a new kind of object, just the old one restricted to a sub-population and renormalized. And it quantifies how much a piece of news is worth, which is the thread running from &sect;1.2's syllogisms to Ch 2's information theory.",
+    "math": "g<sub>X|A</sub>(x) = P(X = x|A) = P({X=x} &cap; A)/P(A). Equivalently g<sub>X|Y</sub>(x|y) = g<sub>X,Y</sub>(x,y)/g<sub>Y</sub>(y) when g<sub>Y</sub>(y) &gt; 0."
    }
   },
   {
@@ -931,6 +957,19 @@
    }
   },
   {
+   "id": "v3c1h6",
+   "s": "1.8",
+   "page": 62,
+   "q": "Compute Var(X) for X &sim; Bernoulli(p). Where is it largest, and what does Var(X) = 0 mean?",
+   "a": "Use the computational form Var(X) = E[X&sup2;] &minus; &mu;&sup2;. Since X &isin; {0,1}, <b>X&sup2; = X</b>:<div class='eq'>E[X&sup2;] = 1&sup2;&#8901;p + 0&sup2;&#8901;(1&minus;p) = p&nbsp;&nbsp;&rArr;&nbsp;&nbsp;Var(X) = p &minus; p&sup2; = <b>p(1 &minus; p)</b></div><b>A downward parabola in p.</b> It vanishes at p = 0 and p = 1 &mdash; a coin that always does the same thing has no spread &mdash; and is <b>maximized at p = &frac12;</b>, where Var = 1/4. Maximum uncertainty sits exactly where you know least about which way it will go.<p style='margin-top:8px'><b>Example 1.8.4 &mdash; the general statement.</b> If Var(X) = 0, then E[(X &minus; &mu;)&sup2;] = 0 forces X(&omega;) = &mu; for <i>every</i> &omega;. So X is the constant &mu;&#120793;<sub>&Omega;</sub>, and its distribution is concentrated at a single value &mdash; a <b>point distribution</b>.</p><div class='eq'>Var(X) = 0 &hArr; X is constant &hArr; you know X exactly</div><b>Zero variance is certainty.</b> That's the anchor for reading variance as a measure of what you don't know, and it is the degenerate case that Chebyshev's inequality in &sect;1.9 handles for free.",
+   "r": {
+    "rot": "for a 0/1 variable, squaring changes nothing, so E[X&sup2;] = E[X] = p and the variance is p minus p squared. plot it: zero at both ends, peak at a half. a rigged coin is predictable; a fair one is maximally not. and variance zero doesn't mean 'small spread', it means there is no spread &mdash; the variable is a constant wearing a disguise.",
+    "ex": "The X&sup2; = X shortcut works for every indicator random variable, since &#120793;<sub>E</sub> is Bernoulli(P(E)). So Var(&#120793;<sub>E</sub>) = P(E)(1 &minus; P(E)) with no computation at all.",
+    "why": "p(1&minus;p) shows up constantly downstream &mdash; it's the per-trial variance behind the binomial's np(1&minus;p), the standard error &radic;(p(1&minus;p)/n) in polling, and the reason sample sizes for near-certain events can be small while 50/50 questions need many observations.",
+    "math": "Var(X) = E[(X&minus;&mu;)&sup2;] = E[X&sup2;] &minus; &mu;&sup2;, requiring absolute convergence. Max p(1&minus;p) = 1/4 at p = &frac12;."
+   }
+  },
+  {
    "id": "v3c1h3",
    "s": "1.8",
    "page": 63,
@@ -954,6 +993,19 @@
     "ex": "Example 1.8.13, X ~ Cat(p): for i &ne; j the product X<sub>i</sub>X<sub>j</sub> is always zero (one-hot), so Cov(X<sub>i</sub>,X<sub>j</sub>) = &minus;p<sub>i</sub>p<sub>j</sub>, while the diagonal is p<sub>i</sub>(1&minus;p<sub>i</sub>). That compresses to <b>&Sigma; = diag(p) &minus; pp<sup>T</sup></b>.",
     "why": "The additivity of variance under independence is the single fact that makes the law of large numbers work: it's what turns Var(&sum;X<sub>i</sub>) into n&sigma;&sup2; and hence Var(&mu;&#770;<sub>n</sub>) into &sigma;&sup2;/n. Every &radic;n in the book traces back to this corollary.",
     "math": "&Sigma; = E[(X&minus;&mu;)(X&minus;&mu;)<sup>T</sup>], &Sigma;<sub>ij</sub> = Cov(X<sub>i</sub>,X<sub>j</sub>), symmetric PSD. Var(&sum;a<sub>i</sub>X<sub>i</sub>) = &sum;a<sub>i</sub>&sup2;Var(X<sub>i</sub>) under pairwise independence."
+   }
+  },
+  {
+   "id": "v3c1h7",
+   "s": "1.8",
+   "page": 64,
+   "q": "Derive the covariance matrix of X &sim; Cat(p). Why is <b>every</b> off-diagonal entry negative?",
+   "a": "X is one-hot, so exactly one component is 1 and the rest are 0. That single fact does all the work.<p style='margin-top:8px'><b>Off-diagonal, i &ne; j:</b> the product X<sub>i</sub>X<sub>j</sub> is <b>always zero</b> &mdash; two components cannot both fire. So E[X<sub>i</sub>X<sub>j</sub>] = 0 and</p><div class='eq'>Cov(X<sub>i</sub>, X<sub>j</sub>) = E[X<sub>i</sub>X<sub>j</sub>] &minus; E[X<sub>i</sub>]E[X<sub>j</sub>] = <b>&minus;p<sub>i</sub>p<sub>j</sub></b></div><b>Diagonal:</b> each X<sub>i</sub> is Bernoulli(p<sub>i</sub>), so Cov(X<sub>i</sub>,X<sub>i</sub>) = Var(X<sub>i</sub>) = p<sub>i</sub>(1 &minus; p<sub>i</sub>). Assemble:<div class='eq'>&Sigma; = <b>diag(p) &minus; pp<sup>T</sup></b></div><b>Negativity is structural, not statistical.</b> The components are in <i>competition</i> &mdash; they sum to 1 always, so one being high forces the others low. Every pair is negatively correlated, necessarily, with no data involved.<p style='margin-top:8px'>Compare Example 1.8.14, two fair dice: independent, so the off-diagonals vanish and &Sigma; = (35/12)I. Independence gives a diagonal &Sigma;; a constraint linking the components gives a non-diagonal one.</p>",
+   "r": {
+    "rot": "one-hot means exactly one slot is a 1. so two slots are never both on, their product is always zero, and the covariance is whatever's left: minus (p<sub>i</sub> times p<sub>j</sub>). negative for every pair, always &mdash; not because the categories dislike each other, but because they're fighting over a fixed budget of one. the diagonal is just each slot's own bernoulli variance. stack it up and you get diag(p) &minus; pp<sup>T</sup>.",
+    "ex": "That matrix is <b>singular</b>: &Sigma;&#120793; = p &minus; p(p<sup>T</sup>&#120793;) = p &minus; p = 0, so every row sums to zero. The all-ones vector is a direction of zero variance &mdash; which is right, since &Sigma;<sub>j</sub>X<sub>j</sub> = 1 is a constant, and Example 1.8.4 says a constant has no variance.",
+    "why": "diag(p) &minus; pp<sup>T</sup> is the Hessian-shaped object at the heart of softmax and multinomial logistic regression, so this is the one covariance matrix a machine learning reader will meet most often. It also makes Remark 1.8.12 concrete: &Sigma; is symmetric and positive semi-definite &mdash; semi, not definite, precisely because of that constraint.",
+    "math": "&Sigma;<sub>ij</sub> = Cov(X<sub>i</sub>,X<sub>j</sub>), &Sigma; = E[(X&minus;&mu;)(X&minus;&mu;)<sup>T</sup>]. Symmetric, positive semi-definite; rank d&minus;1 here because &#120793;<sup>T</sup>X = 1 is deterministic."
    }
   },
   {
