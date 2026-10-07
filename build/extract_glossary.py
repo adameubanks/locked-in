@@ -8,8 +8,8 @@ by hand for the chapters we've authored (see curate.json).
 import subprocess, re, json, sys, os
 
 BOOKS = [
-    {"vol":"vol3","pdf":"/home/adam/Documents/Senior/Vol3.pdf","offset":6,"first":19,"last":378,"lig":False},
-    {"vol":"vol4","pdf":"/home/adam/Documents/Senior/Vol4_Ch1-4.pdf","offset":0,"first":3,"last":140,"lig":True},
+    {"vol":"vol3","pdf":"books/Vol3.pdf","offset":6,"first":19,"last":378,"lig":False},
+    {"vol":"vol4","pdf":"books/Vol4_Ch1-4.pdf","offset":0,"first":3,"last":140,"lig":True},
 ]
 KINDS = r"(Definition|Theorem|Lemma|Corollary|Proposition|Axiom)"
 START = re.compile(r"^\s*" + KINDS + r"\s+(\d+\.\d+\.\d+)\.?\s*(.*)$")

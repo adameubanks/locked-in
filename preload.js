@@ -12,5 +12,6 @@ contextBridge.exposeInMainWorld("api", {
   ask:        (req)   => ipcRenderer.invoke("ask", req),
   askCancel:  ()      => ipcRenderer.invoke("ask:cancel"),
   onAskDelta: (cb)    => ipcRenderer.on("ask:delta", (_e, t) => cb(t)),
-  onAskThink: (cb)    => ipcRenderer.on("ask:think", (_e, t) => cb(t))
+  onAskThink: (cb)    => ipcRenderer.on("ask:think", (_e, t) => cb(t)),
+  onZoom:     (cb)    => ipcRenderer.on("zoom", (_e, d) => cb(d))
 });

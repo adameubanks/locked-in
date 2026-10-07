@@ -37,6 +37,14 @@ function createWindow() {
   win.webContents.on("console-message", (_e, level, msg, line, src) => {
     if (level >= 2) console.log(`[renderer] ${msg}  (${src}:${line})`);
   });
+  // Chromium's page zoom leaves unpainted tiles over the canvases; route it to the reader's zoom.
+  const zoom = (d) => { win.webContents.setZoomFactor(1); win.webContents.send("zoom", d); };
+  win.webContents.on("before-input-event", (e, i) => {
+    const d = { "-": -1, "_": -1, "=": 1, "+": 1, "0": 0 }[i.key];
+    if (i.type === "keyDown" && (i.control || i.meta) && d !== undefined) { e.preventDefault(); zoom(d); }
+  });
+  win.webContents.on("zoom-changed", (_e, dir) => zoom(dir === "in" ? 1 : -1));
+  win.webContents.on("did-finish-load", () => win.webContents.setZoomFactor(1));
   win.loadFile(path.join(__dirname, "renderer", "index.html"));
   win.once("ready-to-show", () => win.show());
 
@@ -105,12 +113,13 @@ ipcMain.handle("state:set", (_e, data) => {
 });
 
 ipcMain.handle("pdf:check", (_e, p) => {
+  p = path.resolve(__dirname, p);
   try { return fs.existsSync(p) && fs.statSync(p).size > 0; } catch (e) { return false; }
 });
 
 ipcMain.handle("pdf:read", (_e, p) => {
   // Electron blocks file:// XHR from a file:// page, so the bytes come over IPC.
-  const buf = fs.readFileSync(p);
+  const buf = fs.readFileSync(path.resolve(__dirname, p));
   return new Uint8Array(buf).buffer;
 });
 

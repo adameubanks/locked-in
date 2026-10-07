@@ -24,12 +24,11 @@ of it the Electron binary. The Anthropic SDK is the client for `ask ai`, which
 talks to DeepSeek over its Anthropic-compatible endpoint; no Anthropic account
 is involved.
 
-Then point the app at the books. Each volume in `content/manifest.json` carries
-an absolute path and a page offset, and those paths are the only thing you have
-to change:
+Then put the books in `books/` (gitignored — they're copyrighted). The paths in
+`content/manifest.json` are relative to the repo:
 
-    { "id": "vol3", ..., "pdf": ".../Vol3.pdf",        "pageOffset": 6 }
-    { "id": "vol4", ..., "pdf": ".../Vol4_Ch1-4.pdf",  "pageOffset": 0 }
+    { "id": "vol3", ..., "pdf": "books/Vol3.pdf",        "pageOffset": 6 }
+    { "id": "vol4", ..., "pdf": "books/Vol4_Ch1-4.pdf",  "pageOffset": 0 }
 
 Get one wrong and the reader says so in the pane and names the file it expected.
 `pageOffset` is pdfPage minus bookPage — re-derive it if your scan is numbered

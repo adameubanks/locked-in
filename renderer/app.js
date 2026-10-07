@@ -165,7 +165,7 @@ class Reader {
         this.pages.innerHTML =
           `<div class="empty"><h3>Can't find the PDF</h3>
            <p>Expected <span class="mono" style="font-size:12px">${esc(v.pdf)}</span>.
-           Fix the path in <span class="mono" style="font-size:12px">content/manifest.json</span>.</p></div>`;
+           Put the PDF there or fix the path in <span class="mono" style="font-size:12px">content/manifest.json</span>.</p></div>`;
         return;
       }
       try {
@@ -1470,6 +1470,7 @@ function wireChrome() {
     drag = false; $("#grip").classList.remove("dragging"); save();
     clearTimeout(window._rf); window._rf = setTimeout(() => READERS.forEach(r => r.fit()), 120);
   });
+  window.api.onZoom(d => { const r = READERS[ACTIVE] || READERS[0]; r.setZoom(d ? r.zoom + 0.15 * d : 1); });
   window.addEventListener("resize", () => {
     clearTimeout(window._rf); window._rf = setTimeout(() => READERS.forEach(r => r.fit()), 160);
   });

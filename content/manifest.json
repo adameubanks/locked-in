@@ -4,7 +4,7 @@
       "id": "vol3",
       "short": "Vol 3",
       "title": "Uncertainty and Data",
-      "pdf": "/home/adam/Documents/Senior/Vol3.pdf",
+      "pdf": "books/Vol3.pdf",
       "pageOffset": 6,
       "chapters": [
         {
@@ -48,7 +48,7 @@
       "id": "vol4",
       "short": "Vol 4",
       "title": "Dynamic Modeling",
-      "pdf": "/home/adam/Documents/Senior/Vol4_Ch1-4.pdf",
+      "pdf": "books/Vol4_Ch1-4.pdf",
       "pageOffset": 0,
       "chapters": [
         {
