@@ -138,16 +138,16 @@ ipcMain.handle("library", () => {
    on it. The renderer asks for one sentence at a time. */
 let ttsP = null, ttsN = 0;
 const ttsWait = new Map();
-function tts(text, voice, speed) {
+function tts(words, voice, speed) {
   if (!ttsP) {
     ttsP = utilityProcess.fork(path.join(__dirname, "tts.js"));
     ttsP.on("message", ({ id, ok, err }) => { const [res, rej] = ttsWait.get(id); ttsWait.delete(id); err ? rej(new Error(err)) : res(ok); });
     ttsP.on("exit", () => { ttsWait.forEach(([, rej]) => rej(new Error("The voice process stopped."))); ttsWait.clear(); ttsP = null; });
   }
-  return new Promise((res, rej) => { ttsWait.set(++ttsN, [res, rej]); ttsP.postMessage({ id: ttsN, text, voice, speed }); });
+  return new Promise((res, rej) => { ttsWait.set(++ttsN, [res, rej]); ttsP.postMessage({ id: ttsN, words, voice, speed }); });
 }
 ipcMain.handle("tts:voices", () => tts());
-ipcMain.handle("tts", (_e, text, voice, speed) => tts(String(text), voice, +speed || 1));
+ipcMain.handle("tts", (_e, words, voice, speed) => tts(words.map(String), voice, +speed || 1));
 
 ipcMain.handle("title", (_e, t) => {
   if (win) win.setTitle(t);

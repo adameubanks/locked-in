@@ -945,7 +945,7 @@ async function lsPage(n) {
       (b.size > LS.body + 0.9 || /^([IVX]+\.?|\d+(\.\d+)*\.?|[A-Z]\.)\s+[A-Z]/.test(t));
     if (LS_BACK.test(t) && (b.heading || t.length < 60)) LS.back = true;
     return !(LS.back || ((b.top < 0.08 || b.bottom > 0.92) && t.length < 120) || LS_CAPTION.test(t) ||
-             b.size < LS.body - 0.6 || (!b.heading && (prose < 0.4 || ws.length < 4)));
+             b.size < LS.body - (b.top > 0.7 ? 0.6 : 1.5) || (!b.heading && (prose < 0.4 || ws.length < 4)));
   });
 }
 
@@ -968,7 +968,7 @@ function lsSplit(b) {
     const left = t.slice(s, p);
     if ((left.split("[").length !== left.split("]").length) || left.split("(").length !== left.split(")").length) continue;
     if ((/[.?!]["')\]]?$/.test(left) && !LS_ABBR.test(left) && /^["'(\[]?[A-Z0-9]/.test(t.slice(p + 1))) ||
-        left.length > 300 || (left.length > 160 && /[,;:]$/.test(left))) cut(p);
+        left.length > 200 || (left.length > 90 && /[,;:]$/.test(left))) cut(p);
   }
   cut(t.length);
   return out;
@@ -995,7 +995,8 @@ function lsFill(done) {
 
 function lsKey(i) {
   const s = LS.sents[i];
-  return s && LS.v + "|" + LS.speed + "|" + (s.say || (s.say = LS_SPEAK.reduce((t, [a, b]) => t.replace(a, b), s.text)));
+  if (s && !s.say) s.say = s.text.match(/\S+/g).map(w => LS_SPEAK.reduce((t, [a, b]) => t.replace(a, b), w));
+  return s && LS.v + "|" + LS.speed + "|" + s.say.join(" ");
 }
 
 /* The voice makes one sentence at a time: the one being waited on first,
@@ -1008,14 +1009,14 @@ function lsPump() {
     else { LS.cur = cur; LS.audio.src = cur.url; lsRate(); LS.loaded = LS.i; LS.audio.play().catch(() => {}); lsNote(""); }
   }
   if (LS.busy) return;
-  const i = [0, 1, 2, 3].map(n => LS.i + n).find(i => LS.sents[i] && !LS.cache.has(lsKey(i)));
+  const i = [0, 1, 2, 3].map(n => LS.i + n).find(i => LS.sents[i] && !LS.cache.has(lsKey(i)) && i !== LS.loaded);
   if (i === undefined) return;
   for (const [k, x] of LS.cache) if (LS.cache.size > 40 && x.url && x !== LS.cur) { URL.revokeObjectURL(x.url); LS.cache.delete(k); }
   const key = lsKey(i), e = { speed: LS.speed };
   LS.cache.set(key, e);
   LS.busy = true;
   window.api.tts(LS.sents[i].say, LS.v, LS.speed)
-    .then(w => { e.url = URL.createObjectURL(new Blob([w], { type: "audio/wav" })); }, err => { e.err = (err && err.message) || String(err); })
+    .then(r => { e.times = r.times; e.url = URL.createObjectURL(new Blob([r.wav], { type: "audio/wav" })); }, err => { e.err = (err && err.message) || String(err); })
     .finally(() => { LS.busy = false; lsPump(); });
 }
 
@@ -1048,7 +1049,7 @@ async function lsPlay(i) {
   if (!(i >= 0)) return;
   const g = LS.gen;
   LS.audio.pause();
-  Object.assign(LS, { i, loaded: -1, word: -1, wait: true, v: $("#ls-voice").value || "af_heart", speed: Math.min(2, S.prefs.lsRate || 1) });
+  Object.assign(LS, { i, loaded: -1, word: -1, wait: true, v: S.prefs.lsVoice || "af_heart", speed: Math.min(2, S.prefs.lsRate || 1) });
   lsBtn();
   await lsFill(() => LS.sents.length > i + 4);
   if (g !== LS.gen) return;
@@ -1102,17 +1103,14 @@ function lsBoxes(s, from, to, cls) {
   return last;
 }
 
-/* The voice gives no word timings, so the word is placed by how far through
-   the sentence's characters the audio is. Close, not exact. */
 function lsTick() {
   requestAnimationFrame(lsTick);
-  const s = LS.sents[LS.i], a = LS.audio;
-  if (!s || LS.loaded !== LS.i || !a.duration) return;
+  const s = LS.sents[LS.i], a = LS.audio, ts = LS.cur && LS.cur.times;
+  if (!s || LS.loaded !== LS.i || !ts) return;
   if (LS.r.vol !== LS.vol) { lsOpen(false); return; }
   const ws = s.words || (s.words = [...s.text.matchAll(/\S+/g)].map(m => [m.index, m.index + m[0].length]));
-  const t = (a.currentTime / a.duration) * s.text.length;
   let w = 0;
-  while (w < ws.length - 1 && ws[w + 1][0] <= t) w++;
+  while (w < ws.length - 1 && ts[w + 1] <= a.currentTime) w++;
   if (w === LS.word && !LS.dirty) return;
   LS.word = w; LS.dirty = false;
   lsClear();
@@ -1137,7 +1135,7 @@ function wireListen() {
   $("#ls-rate").value = S.prefs.lsRate || 1;
   if (!$("#ls-rate").value) $("#ls-rate").value = 1;
   lsRate();
-  $("#ls-rate").onchange = e => { S.prefs.lsRate = +e.target.value; save(); lsRate(); };
+  $("#ls-rate").onchange = e => { S.prefs.lsRate = +e.target.value; save(); lsRate(); LS.speed = Math.min(2, S.prefs.lsRate); lsPump(); };
   $("#ls-voice").onchange = e => { S.prefs.lsVoice = e.target.value; save(); if (LS.wait || !LS.audio.paused) lsPlay(LS.i); };
   $("#ls-play").onclick = lsToggle;
   $("#ls-close").onclick = () => lsOpen(false);
