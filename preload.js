@@ -12,10 +12,5 @@ contextBridge.exposeInMainWorld("api", {
   voices:     ()      => ipcRenderer.invoke("tts:voices"),
   setTitle:   (t)     => ipcRenderer.invoke("title", t),
   fullscreen: (on)    => ipcRenderer.invoke("fullscreen", on),
-  ask:        (req)   => ipcRenderer.invoke("ask", req),
-  cards:      (req)   => ipcRenderer.invoke("cards", req),
-  askCancel:  ()      => ipcRenderer.invoke("ask:cancel"),
-  onAskDelta: (cb)    => ipcRenderer.on("ask:delta", (_e, t) => cb(t)),
-  onAskThink: (cb)    => ipcRenderer.on("ask:think", (_e, t) => cb(t)),
   onZoom:     (cb)    => ipcRenderer.on("zoom", (_e, d) => cb(d))
 });

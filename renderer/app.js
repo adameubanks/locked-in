@@ -632,179 +632,6 @@ function toggleNoise() {
 }
 
 /* ============================================================
-   ASK AI — select a passage, ask about it. The page it came from
-   goes along as context. Streams from the main process, which is
-   the only side that holds a key or touches the network.
-   ============================================================ */
-const NO_KEY = "No Gemini key. Get a free one at <code>aistudio.google.com/apikey</code> and put it in " +
-  "<code>~/.locked-in/config.json</code> as <code>{ \"geminiKey\": \"…\" }</code>, or export " +
-  "<code>GEMINI_API_KEY</code> before <code>npm start</code>.";
-const ASK = { ctx: null, turns: [], busy: false, cur: "", err: null,
-               think: "", t0: 0, tick: 0 };
-
-/* light formatting only — the model is asked for prose, not LaTeX */
-function mdLite(t) {
-  return esc(t)
-    .replace(/`([^`]+)`/g, "<code>$1</code>")
-    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
-    .split(/\n{2,}/)
-    .map(par => "<p>" + par.replace(/\n/g, "<br>") + "</p>")
-    .join("");
-}
-
-async function openAsk() {
-  if (!lastSel) return;
-  const v = lastSel.reader.vol;
-  const book = lastSel.page - (v.pageOffset || 0);
-  const sec = sectionForBookPage(v.id, book);
-  const ch = chapterForBookPage(v.id, book);
-  const inEx = !!(ch && ch.exercises && book >= ch.exercises.from && book <= ch.exercises.to);
-
-  ASK.ctx = { vol: v.id, short: v.short, book, page: lastSel.page,
-              sec: sec ? "§" + sec.id + " " + sec.name : null, src: lastSel.text, inEx };
-  ASK.turns = []; ASK.cur = ""; ASK.err = null; ASK.busy = false;
-
-  $("#ak-loc").textContent = v.short + " · p." + book + (sec ? " · §" + sec.id : "");
-  $("#ak-src").textContent = "“" + lastSel.text + "”";
-  const warn = $("#ak-warn");
-  warn.hidden = !inEx;
-  if (inEx) {
-    warn.textContent = "This page is in Chapter " + ch.chapter + "'s exercises. " +
-      "Ask what the problem is testing — the ACME policy doesn't allow AI-written solutions, " +
-      "and this won't produce one.";
-  }
-  $("#ask").hidden = false;
-  $("#sel-pop").hidden = true;
-  askRender();
-  $("#ak-q").value = "";
-  $("#ak-q").focus();
-
-}
-
-function closeAsk() {
-  if (ASK.busy) window.api.askCancel().catch(() => {});
-  askClock(false);
-  ASK.busy = false;
-  $("#ask").hidden = true;
-  blurAway();
-}
-
-/* The model reasons before it answers, and on a dense page that reasoning runs
-   past half a minute. Show the clock and the reasoning itself, or the pane is
-   indistinguishable from a hang. Both are replaced by the answer. */
-function askWaiting() {
-  const secs = ASK.t0 ? Math.round((Date.now() - ASK.t0) / 1000) : 0;
-  const tail = ASK.think.replace(/\s+/g, " ").trim().slice(-200);
-  return `<span class="ak-wait">thinking… ${secs}s</span>` +
-         (tail ? `<div class="ak-think">${esc(tail)}</div>` : "");
-}
-
-function askRepaintWait() {
-  if (!ASK.busy || ASK.cur) return;              // real text has taken over
-  const live = $("#ak-live");
-  if (live) live.innerHTML = askWaiting();
-}
-
-function askClock(on) {
-  clearInterval(ASK.tick);
-  ASK.tick = on ? setInterval(askRepaintWait, 1000) : 0;
-}
-
-function askRender() {
-  const host = $("#ak-thread");
-  let h = ASK.turns.map(t =>
-    `<div class="ak-turn ${t.role === "user" ? "me" : "ai"}">
-       <div class="ak-who">${t.role === "user" ? "you" : "gemini"}</div>
-       <div class="ak-body">${mdLite(t.text)}</div></div>`).join("");
-  if (ASK.busy) {
-    h += `<div class="ak-turn ai"><div class="ak-who">gemini</div>
-      <div class="ak-body" id="ak-live">${ASK.cur ? mdLite(ASK.cur) : askWaiting()}</div></div>`;
-  }
-  if (ASK.err) h += `<div class="ak-turn"><div class="ak-body ak-err">${ASK.err}</div></div>`;
-  if (!h) h += `<div class="ak-turn"><div class="ak-body ak-wait">
-    Ask what it means, why the hypotheses are there, or how it connects to something earlier.</div></div>`;
-  host.innerHTML = h;
-  host.scrollTop = host.scrollHeight;
-  $("#ak-send").hidden = ASK.busy;
-  $("#ak-stop").hidden = !ASK.busy;
-}
-
-/* The passage and its page ride along with the first question only; after that
-   it is in the history the API already gets. */
-function askMessages(question) {
-  const c = ASK.ctx;
-  const msgs = [];
-  // t.api holds what the model was actually sent — the first user turn carries
-  // the passage and page, which a follow-up must not drop from the history.
-  ASK.turns.forEach(t => msgs.push({ role: t.role, content: t.api || t.text }));
-  if (!msgs.length) {
-    msgs.push({ role: "user", content:
-      `I'm reading ${c.short}, printed page ${c.book} (page ${c.page} of the PDF)${c.sec ? ", " + c.sec : ""}.\n\n` +
-      `The passage I selected:\n"""\n${c.src}\n"""\n\n` +
-      `My question: ${question}` });
-  } else {
-    msgs.push({ role: "user", content: question });
-  }
-  return msgs;
-}
-
-async function askSend() {
-  const q = $("#ak-q").value.trim();
-  if (!q || ASK.busy) return;
-  const msgs = askMessages(q);
-  ASK.turns.push({ role: "user", text: q, api: msgs[msgs.length - 1].content });
-  $("#ak-q").value = "";
-  ASK.busy = true; ASK.cur = ""; ASK.err = null;
-  ASK.think = ""; ASK.t0 = Date.now();
-  askRender();
-  askClock(true);
-
-  const res = await window.api.ask({ messages: msgs, pdf: volOf(ASK.ctx.vol).pdf, acme: volOf(ASK.ctx.vol).chapters.length > 0 }).catch(e => ({ error: String(e && e.message || e) }));
-  const answer = ASK.cur;
-  askClock(false);
-  ASK.busy = false; ASK.cur = "";
-
-  if (res && res.error === "no-key") {
-    ASK.err = NO_KEY;
-  } else if (res && res.error) {
-    ASK.err = esc(res.error);
-  } else if (res && res.refusal) {
-    ASK.err = esc(res.refusal);
-  } else if (res && res.aborted) {
-    if (answer) ASK.turns.push({ role: "assistant", text: answer + " …stopped" });
-  } else if (answer) {
-    ASK.turns.push({ role: "assistant", text: answer });
-  }
-  askRender();
-  if (!ASK.err) $("#ak-q").focus();
-}
-
-function wireAsk() {
-  window.api.onAskThink(t => {
-    if (!ASK.busy || ASK.cur) return;
-    ASK.think += t;
-    askRepaintWait();
-  });
-  window.api.onAskDelta(t => {
-    if (!ASK.busy) return;
-    ASK.cur += t;
-    const live = $("#ak-live");
-    if (!live) { askRender(); return; }       // first token: build the turn
-    live.innerHTML = mdLite(ASK.cur);         // after that, patch it in place
-    const host = $("#ak-thread");
-    host.scrollTop = host.scrollHeight;
-  });
-  $("#sel-ask").onclick = openAsk;
-  $("#ak-close").onclick = closeAsk;
-  $("#ak-send").onclick = askSend;
-  $("#ak-stop").onclick = () => { window.api.askCancel().catch(() => {}); };
-  $("#ask").onclick = e => { if (e.target.id === "ask") closeAsk(); };
-  $("#ak-q").onkeydown = e => {
-    if (e.key === "Enter" && !e.shiftKey) { askSend(); e.preventDefault(); }
-  };
-}
-
-/* ============================================================
    LIBRARY — every PDF under books/. An ACME volume opens with its
    study pane; anything else reads solo, full width. Two ways in:
    the sidebar (B) and quick open (O, Ctrl+P, or click the context).
@@ -1461,37 +1288,21 @@ function sectionBar() {
 function curList() {
   if (!CURSEC) return [];
   const ch = chapterOfSection(CURSEC.vol, CURSEC.id);
-  const gen = ((S.gen || {})[CURSEC.vol + "|" + CURSEC.id] || []).map((c, g) => Object.assign({}, c, { vol: CURSEC.vol, s: CURSEC.id, g }));
-  return (ch ? ch.cards.filter(c => c.s === CURSEC.id).map(c => withCh(c, ch)) : []).concat(gen);
-}
-async function genCards(b) {
-  const key = CURSEC.vol + "|" + CURSEC.id, v = volOf(CURSEC.vol), sec = sectionsOf(CURSEC.vol).find(x => x.id === CURSEC.id);
-  const list = curList();
-  b.disabled = true; b.textContent = "writing…";
-  const r = await window.api.cards({
-    pdf: v.pdf, title: v.short, sec: sec.id + " " + sec.name, from: sec.from, to: sec.to, off: v.pageOffset || 0, n: 5,
-    examples: list.filter(c => c.g === undefined).slice(0, 2).map(({ q, a, page, r }) => ({ q, a, page, r })),
-    have: list.map(c => c.q.replace(/<[^>]+>/g, ""))
-  }).catch(e => ({ error: e.message }));
-  if (r.cards) { S.gen = S.gen || {}; (S.gen[key] = S.gen[key] || []).push(...r.cards); save(); render(); }
-  else { b.disabled = false; b.textContent = "generate"; flash($("#pane-study"), r.error === "no-key" ? NO_KEY.replace(/<[^>]+>/g, "") : r.error); }
+  return ch ? ch.cards.filter(c => c.s === CURSEC.id).map(c => withCh(c, ch)) : [];
 }
 
 /* The whole section at once. Every answer is collapsed on its own card rather
-   than gated behind the one before it, so you can work in any order — or open
-   the lot and just read. */
+   than gated behind the one before it, so you can work in any order. */
 function listBar(n, noun) {
   return `<div class="listbar">
     <span class="tiny muted">${n} ${esc(noun)}${n === 1 ? "" : "s"} in &sect;${esc(CURSEC.id)}</span>
-    <button class="revall" data-gen="1">generate</button>
-    <button class="revall" data-revall="1">reveal all</button>
   </div>`;
 }
 
 function vRead() {
   const list = curList();
   if (!CURSEC) return `<p class="tiny muted">Pick a section above.</p>`;
-  if (!list.length) return `<div class="empty"><h3>Nothing authored for &sect;${esc(CURSEC.id)}</h3><button class="revall" data-gen="1">generate</button></div>`;
+  if (!list.length) return `<div class="empty"><h3>Nothing authored for &sect;${esc(CURSEC.id)}</h3></div>`;
   return listBar(list.length, "card") +
     list.map(card).join("");
 }
@@ -1513,7 +1324,6 @@ function card(c, i) {
       ${c.s ? `<span class="sec-tag">&sect;${esc(c.s)}</span>` : ""}
       <span class="muted tiny">${esc(sec ? sec.name : (v.short || ""))}</span>
       ${c.page ? `<button class="pg-ref" data-page="${c.vol}|${c.page}">p.${c.page}</button>` : ""}
-      ${c.g !== undefined ? `<span class="sec-tag">generated</span><button class="pg-ref" data-drop="${c.g}">discard</button>` : ""}
       <span class="q-count">${i + 1}</span>
     </div>
     <div class="q-prompt">${c.q}</div>`;
@@ -1554,17 +1364,6 @@ function wire(root) {
     // one register at a time per card
     $$("[data-reg]", el).forEach(x => x.setAttribute("aria-pressed", String(x === b && on)));
     $$("[data-regout]", el).forEach(x => { x.hidden = !(x.dataset.regout === k && on); });
-  });
-  q("[data-revall]", b => b.onclick = () => {
-    const cards = $$(".card", root).filter(el => $(".answer", el));
-    const opening = cards.some(el => $(".answer", el).hidden);
-    cards.forEach(el => setOpen(el, opening));
-    b.textContent = opening ? "hide all" : "reveal all";
-  });
-  q("[data-gen]", b => b.onclick = () => genCards(b));
-  q("[data-drop]", b => b.onclick = () => {
-    S.gen[CURSEC.vol + "|" + CURSEC.id].splice(+b.dataset.drop, 1);
-    save(); render();
   });
   q("[data-page]", b => b.onclick = () => {
     const [v, p] = b.dataset.page.split("|");
@@ -1624,12 +1423,10 @@ function wireChrome() {
     }
     if (e.key === "Escape") {
       if (!$("#qo").hidden) { $("#qo").hidden = true; return; }
-      if (!$("#ask").hidden) { closeAsk(); return; }
       if (FIND.on) { closeFind(); return; }
       if (document.body.classList.contains("zen")) { $("#btn-zen").click(); return; }
     }
     if (typing) return;
-    if (!$("#ask").hidden) return;             // the overlay owns the keyboard
     if (e.key === "/") { openFind(); e.preventDefault(); return; }
     const r = READERS[ACTIVE] || READERS[0];
     if (e.key === "n") toggleNoise();
@@ -1665,6 +1462,7 @@ async function boot() {
   MANIFEST = await window.api.manifest();
   const st = await window.api.getState();
   if (st) S = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), st);
+  delete S.gen;
   S.prefs = Object.assign({ dim: true, zoom: 1.0, splitPct: 58, split: false }, S.prefs || {});
 
   for (const v of MANIFEST.volumes) {
@@ -1687,7 +1485,6 @@ async function boot() {
   $(".zoom-lvl", r0.el).textContent = Math.round(r0.zoom * 100) + "%";
 
   wireFind();
-  wireAsk();
   wireListen();
   wireLibrary();
   await libLoad();

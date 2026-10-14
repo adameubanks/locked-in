@@ -6,8 +6,7 @@ node_modules/
 *.swp
 *~
 
-# Never commit a key. The app reads ~/.locked-in/config.json, which lives
-# outside the repo, but keep a stray copy from sneaking in.
+# App state lives in ~/.locked-in/, outside the repo; keep stray copies out.
 config.json
 state.json
 *.tmp

@@ -12,7 +12,6 @@
     "pdfjs-dist": "3.11.174"
   },
   "dependencies": {
-    "@google/genai": "^2.29.1",
     "kokoro-js": "^1.2.1"
   }
 }

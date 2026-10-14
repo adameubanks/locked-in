@@ -232,11 +232,6 @@ p{margin:0 0 13px} p:last-child{margin-bottom:0}
 .q-head{display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap}
 .q-count{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint)}
 .listbar{display:flex; align-items:center; gap:10px; margin-bottom:13px}
-.revall{
-  margin-left:auto; flex:0 0 auto; font-size:11px; padding:4px 10px; border-radius:5px;
-  border:1px solid var(--rule); color:var(--ink-faint);
-}
-.revall:hover{border-color:var(--indigo); color:var(--indigo)}
 .rev{align-self:flex-start}
 .q-prompt{font-family:Newsreader,"Noto Serif",Georgia,serif; font-size:20px; line-height:1.38; user-select:text}
 .q-hint{font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-top:12px}
@@ -305,65 +300,6 @@ textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#20242F; border-radius:6px; border:3px solid var(--ground)}
 ::-webkit-scrollbar-thumb:hover{background:#2C3140}
-
-/* ---------------- ask ai ---------------- */
-#ask{
-  position:fixed; inset:0; z-index:86; background:rgba(6,8,12,.72);
-  display:flex; align-items:center; justify-content:center; padding:34px 24px;
-}
-.ak-box{
-  width:min(720px,100%); max-height:88vh; display:flex; flex-direction:column;
-  background:var(--panel); border:1px solid var(--rule); border-radius:11px;
-  box-shadow:0 24px 60px rgba(0,0,0,.7); overflow:hidden;
-}
-.ak-head{
-  display:flex; align-items:baseline; gap:10px; flex:0 0 auto;
-  padding:11px 14px; background:var(--sunk); border-bottom:1px solid var(--rule);
-}
-.ak-title{font-family:Newsreader,serif; font-size:16px}
-.ak-loc{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint)}
-.ak-x{margin-left:auto; color:var(--ink-faint); font-size:18px; line-height:1; padding:0 3px}
-.ak-x:hover{color:var(--ink)}
-.ak-warn{
-  flex:0 0 auto; padding:9px 14px; font-size:12.5px; line-height:1.5;
-  color:var(--miss); background:var(--miss-bg); border-bottom:1px solid #4A2226;
-}
-.ak-src{
-  flex:0 0 auto; max-height:22vh; overflow-y:auto; padding:10px 14px;
-  font-family:Newsreader,serif; font-size:13.5px; line-height:1.5;
-  color:var(--ink-soft); border-left:2px solid var(--lamp);
-  background:var(--sunk); border-bottom:1px solid var(--rule);
-}
-.ak-thread{flex:1 1 auto; min-height:90px; overflow-y:auto; padding:6px 14px 12px}
-.ak-turn{padding:11px 0; border-bottom:1px solid var(--rule-soft)}
-.ak-turn:last-child{border-bottom:none}
-.ak-who{
-  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--ink-faint); margin-bottom:5px;
-}
-.ak-turn.me .ak-who{color:var(--indigo)}
-.ak-turn.ai .ak-who{color:var(--lamp)}
-.ak-body{font-size:14px; line-height:1.62; color:var(--ink)}
-.ak-body p{margin:0 0 9px}
-.ak-body p:last-child{margin-bottom:0}
-.ak-body code{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--lamp)}
-.ak-wait{color:var(--ink-faint); font-size:13px; font-style:italic}
-.ak-think{margin-top:7px; padding-left:9px; border-left:1px solid var(--rule);
-          color:var(--ink-faint); font-size:12px; line-height:1.5; opacity:.72}
-.ak-err{color:var(--miss); font-size:13px; line-height:1.55}
-.ak-err code{font-family:"IBM Plex Mono",monospace; font-size:12px}
-.ak-foot{
-  flex:0 0 auto; display:flex; gap:8px; align-items:flex-end;
-  padding:11px 14px; border-top:1px solid var(--rule); background:var(--sunk);
-}
-#ak-q{
-  flex:1; min-width:0; resize:none; background:var(--raised); color:var(--ink);
-  border:1px solid var(--rule); border-radius:6px; padding:8px 10px;
-  font-family:inherit; font-size:13.5px; line-height:1.5;
-}
-#ak-q:focus{outline:none; border-color:var(--indigo)}
-#ak-q::placeholder{color:var(--ink-faint)}
-.ak-foot .btn{flex:0 0 auto; padding:8px 15px; font-size:13px}
 
 /* ---------------- find bar ---------------- */
 /* Docked above the reader, not over it: a modal that covers the page can't
