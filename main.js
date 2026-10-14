@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, utilityProcess } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
@@ -123,53 +123,93 @@ ipcMain.handle("pdf:read", (_e, p) => {
   return new Uint8Array(buf).buffer;
 });
 
+// Every PDF under books/, as repo-relative paths like the manifest's.
+ipcMain.handle("library", () => {
+  try {
+    return fs.readdirSync(path.join(__dirname, "books"), { recursive: true })
+      .filter(f => /\.pdf$/i.test(f)).map(f => "books/" + f.split(path.sep).join("/")).sort();
+  } catch (e) { return []; }
+});
+
+/* ---------------- listen ----------------
+   Kokoro, an open neural voice, run here on the CPU. The model (~330 MB)
+   comes from Hugging Face on first use and is cached under node_modules;
+   after that it runs offline, in its own process so the window never waits
+   on it. The renderer asks for one sentence at a time. */
+let ttsP = null, ttsN = 0;
+const ttsWait = new Map();
+function tts(text, voice, speed) {
+  if (!ttsP) {
+    ttsP = utilityProcess.fork(path.join(__dirname, "tts.js"));
+    ttsP.on("message", ({ id, ok, err }) => { const [res, rej] = ttsWait.get(id); ttsWait.delete(id); err ? rej(new Error(err)) : res(ok); });
+    ttsP.on("exit", () => { ttsWait.forEach(([, rej]) => rej(new Error("The voice process stopped."))); ttsWait.clear(); ttsP = null; });
+  }
+  return new Promise((res, rej) => { ttsWait.set(++ttsN, [res, rej]); ttsP.postMessage({ id: ttsN, text, voice, speed }); });
+}
+ipcMain.handle("tts:voices", () => tts());
+ipcMain.handle("tts", (_e, text, voice, speed) => tts(String(text), voice, +speed || 1));
+
 ipcMain.handle("title", (_e, t) => {
   if (win) win.setTitle(t);
   return true;
 });
 
-/* ---------------- ask ai ----------------
-   DeepSeek, reached through its Anthropic-compatible endpoint — same wire
-   format, so the Anthropic SDK stays the client and only the base URL and the
-   key change. The key lives in the main process only; the renderer never sees
-   it, and the page CSP still blocks every outbound request from the renderer. */
+/* ---------------- ask ai, generate cards ----------------
+   Gemini, handed the whole PDF rather than an extract of it: it reads the pages
+   as pages, so the mathematics arrives intact and an answer can draw on the rest
+   of the book. The Files API keeps an upload for 48 hours; the URI is remembered
+   per file, so a PDF goes up once every two days, not once per question. The key
+   lives in the main process only; the renderer never sees it, and the page CSP
+   still blocks every outbound request from the renderer. */
 
 const CONFIG_FILE = path.join(STORE_DIR, "config.json");
-const BASE_URL = "https://api.deepseek.com/anthropic";
+const FILES_FILE = path.join(STORE_DIR, "gemini-files.json");
 
 function readConfig() {
   try { return JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8")); } catch (e) { return {}; }
 }
 
-let sdk = null, askStream = null;
-
-// Resolved here rather than left to the SDK's own environment lookup, which
-// would hand an exported ANTHROPIC_API_KEY to api.deepseek.com. A .desktop
-// launcher inherits no shell environment, so config.json is the primary path
-// and an exported key is the override.
+// A .desktop launcher inherits no shell environment, so config.json is the
+// primary path and an exported key is the override.
 function apiKey() {
-  return process.env.DEEPSEEK_API_KEY || readConfig().apiKey || null;
+  return process.env.GEMINI_API_KEY || readConfig().geminiKey || null;
 }
 
-function deepseek() {
-  if (sdk) return sdk;
-  const Anthropic = require("@anthropic-ai/sdk");
-  sdk = new Anthropic({ apiKey: apiKey(), baseURL: BASE_URL });
-  return sdk;
+let ai = null, aiKey = null, askCtl = null;
+function gemini() {
+  const key = apiKey();
+  if (!key) return null;
+  if (key !== aiKey) { const { GoogleGenAI } = require("@google/genai"); ai = new GoogleGenAI({ apiKey: key }); aiKey = key; }
+  return ai;
+}
+const model = () => readConfig().model || "gemini-2.5-flash";
+
+async function pdfPart(rel, onUpload) {
+  const p = path.resolve(__dirname, rel), st = fs.statSync(p), id = `${p}:${st.size}:${st.mtimeMs}`;
+  let known = {};
+  try { known = JSON.parse(fs.readFileSync(FILES_FILE, "utf8")); } catch (e) {}
+  if (!(known[id] && known[id].expires > Date.now() + 3600e3)) {
+    if (onUpload) onUpload();
+    let f = await gemini().files.upload({ file: p, config: { mimeType: "application/pdf" } });
+    while (f.state === "PROCESSING") { await new Promise(r => setTimeout(r, 2000)); f = await gemini().files.get({ name: f.name }); }
+    if (f.state === "FAILED") throw new Error("Gemini couldn't read this PDF.");
+    known[id] = { uri: f.uri, expires: Date.parse(f.expirationTime) || Date.now() + 47 * 3600e3 };
+    fs.writeFileSync(FILES_FILE, JSON.stringify(known, null, 1));
+  }
+  return { fileData: { fileUri: known[id].uri, mimeType: "application/pdf" } };
 }
 
-function askError(e) {
-  const A = require("@anthropic-ai/sdk");
-  if (e instanceof A.AuthenticationError) return "no-key";
-  if (e instanceof A.RateLimitError) return "Rate limited — give it a moment and ask again.";
-  if (e instanceof A.APIConnectionError) return "Can't reach the API. Check your connection.";
-  if (e instanceof A.APIError) return "API error " + e.status + ": " + e.message;
-  return (e && e.message) || String(e);
+function aiError(e) {
+  const m = (e && e.message) || String(e);
+  if (/API key not valid|API_KEY_INVALID|PERMISSION_DENIED/i.test(m)) return "no-key";
+  if (e && e.status === 429) return "Gemini's free-tier limit is used up for now — wait a minute, or until tomorrow for the daily cap.";
+  if (/fetch failed|ENOTFOUND|ECONNRESET/i.test(m)) return "Can't reach Gemini. Check your connection.";
+  return m;
 }
 
 const ASK_SYSTEM = `You are helping a senior undergraduate in BYU's ACME program (Applied and Computational Mathematics) read their textbook: ACME Volume 3, Uncertainty and Data, and Volume 4, Dynamic Modeling.
 
-They select a passage and ask about it. You receive the passage and the full text of the page it came from, both extracted from the PDF. The extraction is imperfect — mathematical notation especially arrives mangled, and Volume 4's font loses some symbols entirely. Read symbols charitably from context, and say plainly when a formula is genuinely unreadable rather than guessing at it.
+The volume they are reading is attached as a PDF. They select a passage and ask about it; the passage and its page come with the question. Answer from the book: tie the passage to where its ideas are set up and where they are used, and cite printed page numbers ("p. 112") when you point elsewhere.
 
 Explain concepts. Lead with the one-sentence version, then the substance. Use the book's own notation and terminology. When the passage is a definition or theorem, the hypotheses are usually the interesting part — say what they rule out and why it is stated that way.
 
@@ -177,60 +217,94 @@ Hard constraint: this student's program forbids AI-produced coursework. Do not s
 
 Be direct and reasonably brief — this is a study aid, not a lecture. No preamble, no restating the question. Plain prose; write mathematics in words or unicode ("the integral of f from a to b", "‖x‖ ≤ L") rather than LaTeX, since the display has no math renderer.`;
 
+// The same tutor for any other PDF in the library: a paper, notes, another book.
+const ASK_ANY = ASK_SYSTEM
+  .replace(/^[\s\S]*?(?=The volume they are reading)/, "You are helping a senior undergraduate in BYU's ACME program (Applied and Computational Mathematics) read a PDF from their library — a paper, lecture notes, or a book.\n\n")
+  .replace("The volume they are reading", "The document")
+  .replace("Answer from the book", "Answer from the document")
+  .replace("the book's own notation", "the document's own notation")
+  .replace("textbook exercises", "exercises or homework problems");
+
 ipcMain.handle("ask", async (_e, req) => {
-  if (askStream) { try { askStream.abort(); } catch (e) {} askStream = null; }
-  const cfg = readConfig();
-  const key = apiKey();
-  if (!key) return { error: "no-key" };
-  // config.json kept the same `apiKey` field across the move to DeepSeek, so a
-  // stale Anthropic key would otherwise be handed to a third party.
-  if (key.startsWith("sk-ant-")) {
-    return { error: "That is an Anthropic key, and ask ai runs on DeepSeek now. " +
-                    "Put your DeepSeek key in ~/.locked-in/config.json instead." };
-  }
+  if (askCtl) askCtl.abort();
+  if (!gemini()) return { error: "no-key" };
+  const ctl = askCtl = new AbortController();
+  const send = (ch, t) => { if (win && !win.isDestroyed()) win.webContents.send(ch, t); };
   try {
-    const stream = deepseek().messages.stream({
-      model: cfg.model || "deepseek-v4-pro",
-      // Reasoning tokens count against this, so it needs real headroom; the
-      // documented ceiling is 384K, so this is nowhere near it.
-      max_tokens: cfg.maxTokens || 32000,
-      system: ASK_SYSTEM,
-      // The compat layer lists `thinking` as supported and ignores
-      // budget_tokens; "thinking": false in config.json drops it entirely if
-      // the adaptive enum is ever rejected. `effort` is the real knob.
-      ...(cfg.thinking === false ? {} : { thinking: { type: "adaptive" } }),
-      output_config: { effort: cfg.effort || "medium" },
-      messages: req.messages
+    const file = await pdfPart(req.pdf, () => send("ask:think", "Uploading the PDF to Gemini — once every two days. "));
+    const contents = req.messages.map((m, i) => ({
+      role: m.role === "assistant" ? "model" : "user",
+      parts: i === 0 ? [file, { text: m.content }] : [{ text: m.content }]
+    }));
+    const stream = await gemini().models.generateContentStream({
+      model: model(), contents,
+      config: { systemInstruction: req.acme ? ASK_SYSTEM : ASK_ANY, thinkingConfig: { includeThoughts: true }, abortSignal: ctl.signal }
     });
-    askStream = stream;
-    const send = (ch, t) => { if (win && !win.isDestroyed()) win.webContents.send(ch, t); };
-    stream.on("text", (t) => send("ask:delta", t));
-    // The model reasons before it answers, and on a dense page that runs past
-    // half a minute. The renderer shows this so the wait doesn't look like a hang.
-    stream.on("thinking", (t) => send("ask:think", t));
-    const final = await stream.finalMessage();
-    askStream = null;
-    if (final.stop_reason === "refusal") {
-      const d = final.stop_details || {};
-      return { refusal: d.explanation || "The request was declined." };
+    let said = false, why = null;
+    for await (const ch of stream) {
+      const c = ch.candidates && ch.candidates[0];
+      if (!c) continue;
+      if (c.finishReason && c.finishReason !== "STOP") why = c.finishReason;
+      // The model reasons before it answers; the renderer shows that so the
+      // wait doesn't look like a hang.
+      for (const part of (c.content && c.content.parts) || []) {
+        if (!part.text) continue;
+        send(part.thought ? "ask:think" : "ask:delta", part.text);
+        if (!part.thought) said = true;
+      }
     }
-    return { ok: true, usage: final.usage };
+    if (!said && why) return { refusal: "Gemini stopped without answering (" + why + ")." };
+    return { ok: true };
   } catch (e) {
-    askStream = null;
-    if (e && e.name === "APIUserAbortError") return { aborted: true };
-    const msg = askError(e);
-    // Drop the memoised client so adding a key means asking again, not
-    // restarting the app.
-    if (msg === "no-key") sdk = null;
-    return { error: msg };
+    if (ctl.signal.aborted) return { aborted: true };
+    return { error: aiError(e) };
+  } finally {
+    if (askCtl === ctl) askCtl = null;
   }
 });
 
 ipcMain.handle("ask:cancel", () => {
-  if (askStream) { try { askStream.abort(); } catch (e) {} askStream = null; }
+  if (askCtl) askCtl.abort();
   return true;
 });
 
+const CARDS_SYSTEM = `You write retrieval-practice cards for a senior undergraduate in BYU's ACME program, from the attached PDF.
+
+A card is a question that forces recall or reasoning about the section — why a hypothesis is there, what breaks without it, how two ideas connect, what a result buys you — not a definition lookup. The answer is a few sentences that settle it, grounded in the book's own notation.
+
+Write HTML, not Markdown or LaTeX: <b>, <i>, <sub>, <sup>, <br>, <p>, and <div class='eq'>…</div> for a displayed formula; mathematics in unicode or HTML entities. Each card also carries four alternate registers of the answer: rot (casual, lowercase, the lowest-effort way to get it), ex (one concrete instance, worked), why (what it buys you, why anyone cares), math (just the mathematics, stripped of prose). page is the printed page the card is about.
+
+Never write a card that solves, or walks through, one of the book's numbered exercises.`;
+
+const { Type } = require("@google/genai");
+const CARD_SCHEMA = {
+  type: Type.ARRAY,
+  items: {
+    type: Type.OBJECT, required: ["q", "a", "page", "r"],
+    properties: {
+      q: { type: Type.STRING }, a: { type: Type.STRING }, page: { type: Type.INTEGER },
+      r: { type: Type.OBJECT, required: ["rot", "ex", "why", "math"],
+           properties: { rot: { type: Type.STRING }, ex: { type: Type.STRING }, why: { type: Type.STRING }, math: { type: Type.STRING } } }
+    }
+  }
+};
+
+ipcMain.handle("cards", async (_e, req) => {
+  if (!gemini()) return { error: "no-key" };
+  const prompt = `Write ${req.n} new cards for §${req.sec} of ${req.title}: printed pages ${req.from}–${req.to}, which are PDF pages ${req.from + req.off}–${req.to + req.off}.\n\n` +
+    (req.examples.length ? `Match the style of these existing cards:\n${JSON.stringify(req.examples)}\n\n` : "") +
+    (req.have.length ? `Don't repeat what these already ask:\n${req.have.map(q => "- " + q).join("\n")}` : "");
+  try {
+    const r = await gemini().models.generateContent({
+      model: model(),
+      contents: [{ role: "user", parts: [await pdfPart(req.pdf), { text: prompt }] }],
+      config: { systemInstruction: CARDS_SYSTEM, responseMimeType: "application/json", responseSchema: CARD_SCHEMA }
+    });
+    return { cards: JSON.parse(r.text) };
+  } catch (e) {
+    return { error: aiError(e) };
+  }
+});
 
 ipcMain.handle("fullscreen", (_e, on) => {
   if (!win) return false;

@@ -7,7 +7,6 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
 /* ---------------- state ---------------- */
 const DEFAULT_STATE = {
-  explain: {},
   lastPos: null,           // {vol, page} of reader 0
   lastPos2: null,          // {vol, page} of reader 1
   prefs: { dim: true, zoom: 1.0, splitPct: 58, split: false }
@@ -15,9 +14,6 @@ const DEFAULT_STATE = {
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
 let MANIFEST = null;
 let CHAPTERS = {};
-let GLOSS = { entries: [] };
-let TERM_RE = null, TERM_MAP = new Map(), TERM_ACRO = new Map();
-let MODE = "read";
 
 
 let saveT = null;
@@ -27,33 +23,21 @@ function save() {
 }
 
 /* ---------------- content helpers ---------------- */
-function volOf(id) { return MANIFEST.volumes.find(v => v.id === id); }
+/* Any PDF opened from disk is a volume too, with no chapters: "file:" + its path.
+   Made on first sight, so a restored lastPos brings it back. */
+function volOf(id) {
+  let v = MANIFEST.volumes.find(v => v.id === id);
+  if (!v && /^file:/.test(id)) {
+    MANIFEST.volumes.push(v = { id, pdf: id.slice(5), short: id.split("/").pop().replace(/\.pdf$/i, ""), pageOffset: 0, chapters: [] });
+  }
+  return v;
+}
 function loadedChapters() { return Object.values(CHAPTERS); }
 function withCh(c, ch) { return Object.assign({}, c, { vol: ch.volume }); }
-/* The Explain deck is the book's own definitions and theorems, grouped into the
-   section whose pages they fall in. */
-let GLOSS_CARDS = [];
-function buildGlossCards() {
-  GLOSS_CARDS = [];
-  GLOSS.entries.forEach(e => {
-    const sec = sectionForBookPage(e.vol, e.page);
-    if (!sec) return;
-    const term = (e.terms && e.terms[0]) || (e.kind + " " + e.num);
-    GLOSS_CARDS.push({
-      id: "g:" + e.id, gloss: true, vol: e.vol, s: sec.id, page: e.page,
-      term, kind: e.kind, num: e.num,
-      q: "Explain <b>" + esc(term) + "</b> in your own words.",
-      a: "<b>" + esc(e.kind) + " " + esc(e.num) + ".</b> " + esc(e.text)
-    });
-  });
-}
-function glossForSection(volId, secId) {
-  return GLOSS_CARDS.filter(c => c.vol === volId && c.s === secId);
-}
 
 
 /* Flattened once and kept: sectionForBookPage runs on every scroll tick and
-   once per glossary entry, and rebuilding this list was the bulk of that work.
+   per find hit, and rebuilding this list was the bulk of that work.
    Chapters all load during boot and nothing adds one later. */
 let SECS = null;
 function sectionsOf(volId) {
@@ -147,15 +131,21 @@ class Reader {
     this.scroll.onscroll = () => {
       clearTimeout(this._st);
       this._st = setTimeout(() => this.dominant(), 90);
-      hideTerm();
     };
-    wireHover(this.scroll);
   }
 
   async open(volId, gotoPage) {
     const v = volOf(volId);
     if (!v) return;
     this.vol = v;
+    if (this.i === 0) {
+      // only an ACME volume has a study pane to show
+      document.body.classList.toggle("solo", !v.chapters.length);
+      S.recent = [volId, ...(S.recent || []).filter(x => x !== volId)].slice(0, 30);
+      this.zoom = (S.zooms && S.zooms[volId]) || S.prefs.zoom || 1;
+      $(".zoom-lvl", this.el).textContent = Math.round(this.zoom * 100) + "%";
+      libRender();
+    }
     this.pages.innerHTML = "";
     this.pageEls = []; this.jobs = new Map(); this.tl = new Map();
     if (this.io) { this.io.disconnect(); this.io = null; }
@@ -205,7 +195,7 @@ class Reader {
     this.pageEls.forEach(e => this.io.observe(e));
 
     const saved = this.i === 0 ? S.lastPos : S.lastPos2;
-    const start = gotoPage || (saved && saved.vol === volId ? saved.page : 1);
+    const start = gotoPage || (this.i === 0 && S.pages && S.pages[volId]) || (saved && saved.vol === volId ? saved.page : 1);
     this.goto(start, true);
   }
 
@@ -269,15 +259,15 @@ class Reader {
      leaves a notch wherever two abut and doubles the tint wherever they
      overlap. Same line if a rectangle's middle falls inside one already
      collected — that is what puts a mended hyphen on two boxes. */
-  boxesFor(n, from, to) {
+  boxesFor(n, from, to, m = this.tl.get(n)) {
     const L = this.tl.get(n);
     let rects;
     try {
-      const a = L.divs[L.mk[from]], b = L.divs[L.mk[to - 1]];
+      const a = L.divs[m.mk[from]], b = L.divs[m.mk[to - 1]];
       if (!a || !b || !a.firstChild || !b.firstChild) return [];
       const r = document.createRange();
-      r.setStart(a.firstChild, Math.min(L.mj[from], a.firstChild.length));
-      r.setEnd(b.firstChild, Math.min(L.mj[to - 1] + 1, b.firstChild.length));
+      r.setStart(a.firstChild, Math.min(m.mj[from], a.firstChild.length));
+      r.setEnd(b.firstChild, Math.min(m.mj[to - 1] + 1, b.firstChild.length));
       rects = r.getClientRects();
     } catch (e) { return []; }
     const rows = [];
@@ -392,7 +382,7 @@ class Reader {
   setZoom(z) {
     this.zoom = Math.max(0.4, Math.min(2.6, Math.round(z * 100) / 100));
     $(".zoom-lvl", this.el).textContent = Math.round(this.zoom * 100) + "%";
-    if (this.i === 0) { S.prefs.zoom = this.zoom; save(); }
+    if (this.i === 0 && this.vol) { S.prefs.zoom = this.zoom; (S.zooms = S.zooms || {})[this.vol.id] = this.zoom; save(); }
     this.reflow();
   }
 
@@ -467,7 +457,7 @@ class Reader {
     this.cur = n;
     $(".pg-input", this.el).value = this.label(n);
     const pos = { vol: this.vol.id, page: n };
-    if (this.i === 0) S.lastPos = pos; else S.lastPos2 = pos;
+    if (this.i === 0) { S.lastPos = pos; (S.pages = S.pages || {})[pos.vol] = n; } else S.lastPos2 = pos;
     save();
     this.paintCtx();
   }
@@ -583,171 +573,17 @@ document.addEventListener("selectionchange", () => {
   const pgEl = node.parentElement.closest(".pg");
   const rdEl = node.parentElement.closest(".reader");
   const rd = READERS[rdEl ? +rdEl.dataset.r : 0] || READERS[0];
+  const rg = sel.getRangeAt(0), page = pgEl ? +pgEl.dataset.page : rd.cur, L = rd.tl.get(page);
   lastSel = {
     text: sel.toString().replace(/\s+/g, " ").trim().slice(0, 600),
-    page: pgEl ? +pgEl.dataset.page : rd.cur,
-    reader: rd
+    page, reader: rd,
+    // where it starts, as a text layer span and offset: listen begins there
+    k: L ? L.divs.indexOf(rg.startContainer.parentElement) : -1, j: rg.startOffset
   };
   pop.hidden = false;
   pop.style.left = Math.min(Math.max(8, rect.left + rect.width / 2 - 70), window.innerWidth - 200) + "px";
   pop.style.top = Math.max(8, rect.top - 44) + "px";
 });
-
-/* ============================================================
-   GLOSSARY — click a term, see the book's own definition
-   ============================================================ */
-function buildTermIndex() {
-  TERM_MAP = new Map();
-  TERM_ACRO = new Map();
-  const terms = [];
-  GLOSS.entries.forEach(e => {
-    (e.terms || []).forEach(t => {
-      const k = normTerm(t);
-      if (!k || k.length < 3) return;
-      // An acronym headword must match in its own case: MAP and BLUE are also
-      // ordinary English words, and matching them case-insensitively turns
-      // every "map" and "blue" in a card into a link to the wrong entry.
-      if (/^[A-Z]{2,6}[0-9]?$/.test(t)) TERM_ACRO.set(k, t);
-      if (!TERM_MAP.has(k)) { TERM_MAP.set(k, e); terms.push(k); }
-    });
-  });
-  // longest first, so "conditional probability" wins over "probability"
-  terms.sort((a, b) => b.length - a.length);
-  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  TERM_RE = terms.length
-    ? new RegExp("(?<![\\w-])(" + terms.map(esc).join("|") + ")(?![\\w-])", "gi")
-    : null;
-}
-function normTerm(t) {
-  return String(t).toLowerCase().replace(/[‘’]/g, "'").replace(/[–—]/g, "-").trim();
-}
-
-const SKIP_IN = "button, a, .term, .q-head, .why, code, textarea, input, label";
-
-function linkTerms(root) {
-  if (!TERM_RE) return;
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-    acceptNode(n) {
-      if (!n.nodeValue || n.nodeValue.length < 3) return NodeFilter.FILTER_REJECT;
-      if (n.parentElement && n.parentElement.closest(SKIP_IN)) return NodeFilter.FILTER_REJECT;
-      return NodeFilter.FILTER_ACCEPT;
-    }
-  });
-  const targets = [];
-  let n;
-  while ((n = walker.nextNode())) targets.push(n);
-
-  targets.forEach(node => {
-    const text = node.nodeValue;
-    TERM_RE.lastIndex = 0;
-    if (!TERM_RE.test(text)) return;
-    TERM_RE.lastIndex = 0;
-    const frag = document.createDocumentFragment();
-    let last = 0, m;
-    while ((m = TERM_RE.exec(text)) !== null) {
-      const key = normTerm(m[1]);
-      const entry = TERM_MAP.get(key);
-      if (!entry) continue;
-      if (TERM_ACRO.has(key) && m[1] !== TERM_ACRO.get(key)) continue;
-      if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
-      const b = document.createElement("button");
-      b.className = "term";
-      b.textContent = m[1];
-      b.dataset.gid = entry.id;
-      frag.appendChild(b);
-      last = m.index + m[1].length;
-    }
-    if (!last) return;
-    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
-    node.parentNode.replaceChild(frag, node);
-  });
-
-  $$(".term", root).forEach(b => {
-    b.onclick = ev => { ev.stopPropagation(); showTerm(b.dataset.gid, b); };
-    b.onmouseenter = () => { if (!pinned) { clearTimeout(hoverT); hoverT = setTimeout(() => showTerm(b.dataset.gid, b, true), 200); } };
-    b.onmouseleave = () => { clearTimeout(hoverT); hideTerm(); };
-  });
-}
-
-function showTerm(gid, anchor, isHover) {
-  const e = GLOSS.entries.find(x => x.id === gid);
-  if (!e) return;
-  const v = volOf(e.vol) || {};
-  const pop = $("#termpop");
-  pinned = !isHover;
-  $("#tp-kind").textContent = e.kind + " " + e.num;
-  $("#tp-loc").textContent = (v.short || e.vol) + " \u00b7 p." + e.page;
-  $("#tp-body").textContent = e.text;
-  $("#tp-goto").onclick = () => { READERS[0].gotoVolBook(e.vol, e.page); hideTerm(true); };
-  $("#tp-close").hidden = !!isHover;
-  pop.classList.toggle("hovering", !!isHover);
-  pop.hidden = false;
-
-  const w = Math.min(430, window.innerWidth - 24);
-  pop.style.width = w + "px";
-  let left, top;
-  if (anchor && anchor.getBoundingClientRect) {
-    const r = anchor.getBoundingClientRect();
-    left = r.left - 20; top = r.bottom + 8;
-    if (top + pop.offsetHeight + 12 > window.innerHeight) top = Math.max(10, r.top - pop.offsetHeight - 8);
-  } else {
-    left = anchor.x + 14; top = anchor.y + 18;
-    if (top + pop.offsetHeight + 12 > window.innerHeight) top = Math.max(10, anchor.y - pop.offsetHeight - 14);
-  }
-  pop.style.left = Math.min(Math.max(10, left), window.innerWidth - w - 10) + "px";
-  pop.style.top = top + "px";
-}
-document.addEventListener("click", e => {
-  const pop = $("#termpop");
-  if (!pop.hidden && !pop.contains(e.target) && !e.target.classList.contains("term")) hideTerm(true);
-});
-
-/* ---- hover a term anywhere, including inside the PDF ----
-   The textbook forward-references things defined chapters later. Rather than
-   wrapping words in the text layer (which would break selection), hit-test the
-   caret under the cursor and read the words around it. */
-let hoverT = null, pinned = false;
-
-function hideTerm(force) {
-  if (pinned && !force) return;
-  pinned = false;
-  $("#termpop").hidden = true;
-}
-
-function phraseAt(x, y) {
-  const range = document.caretRangeFromPoint(x, y);
-  if (!range || !range.startContainer || range.startContainer.nodeType !== 3) return null;
-  const text = range.startContainer.nodeValue || "";
-  const at = range.startOffset;
-  let best = null;                       // widest match wins
-  for (let lo = Math.max(0, at - 40); lo <= at; lo++) {
-    for (let hi = Math.min(text.length, at + 40); hi > at; hi--) {
-      const n = hi - lo;
-      if (n < 3 || n > 44) continue;
-      const before = lo === 0 ? " " : text[lo - 1];
-      const after = hi >= text.length ? " " : text[hi];
-      if (/[\w-]/.test(before) || /[\w-]/.test(after)) continue;   // whole words only
-      const raw = text.slice(lo, hi), cand = normTerm(raw);
-      if (TERM_ACRO.has(cand) && raw !== TERM_ACRO.get(cand)) continue;
-      if (TERM_MAP.has(cand) && (!best || n > best.len)) best = { entry: TERM_MAP.get(cand), len: n };
-    }
-  }
-  return best;
-}
-
-function wireHover(root) {
-  root.addEventListener("mousemove", e => {
-    if (pinned) return;
-    clearTimeout(hoverT);
-    const x = e.clientX, y = e.clientY;
-    hoverT = setTimeout(() => {
-      const hit = phraseAt(x, y);
-      if (hit) showTerm(hit.entry.id, { x, y }, true);
-      else hideTerm();
-    }, 260);
-  });
-  root.addEventListener("mouseleave", () => { clearTimeout(hoverT); hideTerm(); });
-}
 
 /* ============================================================
    NOISE
@@ -800,19 +636,11 @@ function toggleNoise() {
    goes along as context. Streams from the main process, which is
    the only side that holds a key or touches the network.
    ============================================================ */
+const NO_KEY = "No Gemini key. Get a free one at <code>aistudio.google.com/apikey</code> and put it in " +
+  "<code>~/.locked-in/config.json</code> as <code>{ \"geminiKey\": \"…\" }</code>, or export " +
+  "<code>GEMINI_API_KEY</code> before <code>npm start</code>.";
 const ASK = { ctx: null, turns: [], busy: false, cur: "", err: null,
                think: "", t0: 0, tick: 0 };
-
-async function pageTextFor(volId, pdfPage) {
-  if (INDEX) {
-    const hit = INDEX.find(p => p.vol === volId && p.page === pdfPage);
-    if (hit) return hit.text;
-  }
-  const doc = docCache[volId];
-  if (!doc) return "";
-  try { return pageString(await (await doc.getPage(pdfPage)).getTextContent(), volOf(volId)); }
-  catch (e) { return ""; }
-}
 
 /* light formatting only — the model is asked for prose, not LaTeX */
 function mdLite(t) {
@@ -851,7 +679,6 @@ async function openAsk() {
   $("#ak-q").value = "";
   $("#ak-q").focus();
 
-  ASK.ctx.pageText = await pageTextFor(v.id, lastSel.page);
 }
 
 function closeAsk() {
@@ -887,10 +714,10 @@ function askRender() {
   const host = $("#ak-thread");
   let h = ASK.turns.map(t =>
     `<div class="ak-turn ${t.role === "user" ? "me" : "ai"}">
-       <div class="ak-who">${t.role === "user" ? "you" : "deepseek"}</div>
+       <div class="ak-who">${t.role === "user" ? "you" : "gemini"}</div>
        <div class="ak-body">${mdLite(t.text)}</div></div>`).join("");
   if (ASK.busy) {
-    h += `<div class="ak-turn ai"><div class="ak-who">deepseek</div>
+    h += `<div class="ak-turn ai"><div class="ak-who">gemini</div>
       <div class="ak-body" id="ak-live">${ASK.cur ? mdLite(ASK.cur) : askWaiting()}</div></div>`;
   }
   if (ASK.err) h += `<div class="ak-turn"><div class="ak-body ak-err">${ASK.err}</div></div>`;
@@ -912,9 +739,8 @@ function askMessages(question) {
   ASK.turns.forEach(t => msgs.push({ role: t.role, content: t.api || t.text }));
   if (!msgs.length) {
     msgs.push({ role: "user", content:
-      `I'm reading ${c.short}, printed page ${c.book}${c.sec ? ", " + c.sec : ""}.\n\n` +
+      `I'm reading ${c.short}, printed page ${c.book} (page ${c.page} of the PDF)${c.sec ? ", " + c.sec : ""}.\n\n` +
       `The passage I selected:\n"""\n${c.src}\n"""\n\n` +
-      (c.pageText ? `The full page it came from, for context (PDF extraction, rough in places):\n"""\n${c.pageText}\n"""\n\n` : "") +
       `My question: ${question}` });
   } else {
     msgs.push({ role: "user", content: question });
@@ -933,15 +759,13 @@ async function askSend() {
   askRender();
   askClock(true);
 
-  const res = await window.api.ask({ messages: msgs }).catch(e => ({ error: String(e && e.message || e) }));
+  const res = await window.api.ask({ messages: msgs, pdf: volOf(ASK.ctx.vol).pdf, acme: volOf(ASK.ctx.vol).chapters.length > 0 }).catch(e => ({ error: String(e && e.message || e) }));
   const answer = ASK.cur;
   askClock(false);
   ASK.busy = false; ASK.cur = "";
 
   if (res && res.error === "no-key") {
-    ASK.err = "No API key. Put your DeepSeek key in <code>~/.locked-in/config.json</code> as " +
-      `<code>{ "apiKey": "sk-…" }</code>, or export <code>DEEPSEEK_API_KEY</code> ` +
-      "before <code>npm start</code>. Nothing else in the app needs the network.";
+    ASK.err = NO_KEY;
   } else if (res && res.error) {
     ASK.err = esc(res.error);
   } else if (res && res.refusal) {
@@ -981,12 +805,357 @@ function wireAsk() {
 }
 
 /* ============================================================
+   LIBRARY — every PDF under books/. An ACME volume opens with its
+   study pane; anything else reads solo, full width. Two ways in:
+   the sidebar (B) and quick open (O, Ctrl+P, or click the context).
+   ============================================================ */
+let LIB = [];
+const QO = { ids: [], on: 0 };
+
+async function libLoad() {
+  const paths = await window.api.library();
+  const acme = MANIFEST.volumes.filter(v => v.chapters.length);
+  LIB = [...acme.map(v => v.id), ...paths.filter(p => !acme.some(v => v.pdf === p)).map(p => "file:" + p)];
+  libRender();
+}
+function libName(id) { const v = volOf(id); return v.chapters.length ? v.short + " — " + v.title : v.short; }
+function libItems(ids, on) {
+  const cur = READERS[0] && READERS[0].vol && READERS[0].vol.id;
+  return ids.map((id, i) => `<button class="lib-it${id === cur ? " cur" : ""}${i === on ? " on" : ""}" data-id="${esc(id)}">` +
+    (volOf(id).chapters.length ? `<span class="lib-tag">ACME</span>` : "") +
+    `<span class="lib-n">${esc(libName(id))}</span></button>`).join("");
+}
+function libRender() {
+  const dir = id => volOf(id).pdf.slice(6).split("/").slice(0, -1).join("/");
+  $("#lib-list").innerHTML = [...new Set(LIB.map(dir))].sort().map(d => d
+    ? `<details class="lib-dir" open><summary>${esc(d)}</summary>${libItems(LIB.filter(id => dir(id) === d))}</details>`
+    : libItems(LIB.filter(id => !dir(id)))).join("") || `<div class="fb-note">No PDFs yet. Put them in books/.</div>`;
+}
+function libShow(on) {
+  S.prefs.lib = on;
+  $("#lib").hidden = !on;
+  $("#btn-lib").setAttribute("aria-pressed", String(on));
+  save();
+  READERS.forEach(r => r.fit());
+}
+function libOpen(id) {
+  $("#qo").hidden = true;
+  if (!READERS[0].vol || READERS[0].vol.id !== id) READERS[0].open(id);
+}
+
+/* Recent first, then the rest; every word typed has to appear in the name. */
+function qoRender() {
+  const q = $("#qo-q").value.toLowerCase().split(/\s+/).filter(Boolean);
+  const rec = (S.recent || []).filter(id => LIB.includes(id));
+  QO.ids = [...rec, ...LIB.filter(id => !rec.includes(id))].filter(id => q.every(w => libName(id).toLowerCase().includes(w)));
+  QO.on = Math.max(0, Math.min(QO.on, QO.ids.length - 1));
+  $("#qo-list").innerHTML = libItems(QO.ids, QO.on) || `<div class="fb-note">Nothing in books/ matches.</div>`;
+  const on = $(".lib-it.on", $("#qo-list"));
+  if (on) on.scrollIntoView({ block: "nearest" });
+}
+function openQO() {
+  $("#qo").hidden = false;
+  $("#qo-q").value = "";
+  QO.on = 0;
+  qoRender();
+  $("#qo-q").focus();
+}
+
+function wireLibrary() {
+  $("#btn-lib").onclick = () => libShow(!S.prefs.lib);
+  $("#context").onclick = openQO;
+  $("#lib").onclick = e => { const b = e.target.closest(".lib-it"); if (b) libOpen(b.dataset.id); };
+  $("#qo").onclick = e => {
+    const b = e.target.closest(".lib-it");
+    if (b) libOpen(b.dataset.id); else if (e.target.id === "qo") $("#qo").hidden = true;
+  };
+  $("#qo-q").oninput = () => { QO.on = 0; qoRender(); };
+  $("#qo-q").onkeydown = e => {
+    const d = { ArrowDown: 1, ArrowUp: -1 }[e.key];
+    if (d) { QO.on += d; qoRender(); e.preventDefault(); }
+    if (e.key === "Enter" && QO.ids[QO.on]) libOpen(QO.ids[QO.on]);
+  };
+  libShow(!!S.prefs.lib);
+}
+
+/* ============================================================
+   LISTEN — the body text read aloud in a local neural voice, the
+   spoken word marked on the page. Running heads, page numbers,
+   captions, footnotes, displayed math, tables, and everything from
+   a References heading on are left out. Sentences carry a map back
+   to text layer spans (page, span, offset per character) so the
+   word can be boxed the same way a find hit is.
+   ============================================================ */
+const LS = { gen: 0, r: null, vol: null, doc: null, next: 1, body: 0, back: false, pending: null,
+             sents: [], i: 0, loaded: -1, word: -1, dirty: false, userT: 0, wait: false, busy: false, cur: null,
+             v: "", speed: 1, fill: Promise.resolve(), cache: new Map(), audio: new Audio() };
+const LS_ABBR = /(^|\s)\(?(e\.g|i\.e|et al|etc|vs|cf|figs?|eqs?|secs?|refs?|thm|def|no|dr|prof|approx|resp|[a-z])\.$/i;
+const LS_BACK = /^([IVX]+|\d+(\.\d+)*|[A-Z])?\.?\s*(references|bibliography|works cited|acknowledge?ments?|appendix|appendices)\b/i;
+const LS_CAPTION = /^(fig(ure)?|tab(le)?|algorithm|listing)\.?\s*[A-Z]?\d+(\.\d+)*[.:|]?/i;
+const LS_SPEAK = [[/\s?\[\d+(?:\s*[,–-]\s*\d+)*\]/g, ""], [/\be\.g\.,?/gi, "for example,"], [/\bi\.e\.,?/gi, "that is,"],
+  [/\bet al\./gi, "et al"], [/\bFigs?\./g, "Figure"], [/\bEqs?\./g, "Equation"], [/\bSec\./g, "Section"], [/\bcf\./gi, "compare"], [/\bvs\./gi, "versus"]];
+const lsSize = it => Math.round(Math.abs(it.transform[3]) * 2) / 2;
+
+/* Body type is the size most characters are set in, sampled from the pages ahead. */
+async function lsBody(from) {
+  const n = {};
+  for (let p = from; p < from + 8 && p <= LS.doc.numPages; p++) {
+    for (const it of (await (await LS.doc.getPage(p)).getTextContent()).items) {
+      if (typeof it.str === "string") n[lsSize(it)] = (n[lsSize(it)] || 0) + it.str.length;
+    }
+  }
+  return +Object.keys(n).reduce((a, b) => (n[a] > n[b] ? a : b), 0);
+}
+
+/* One page as blocks of readable text, in content order (which is column order
+   for anything set in LaTeX). Index k counts string items, the way pageMap does,
+   so it names the same text layer span. */
+async function lsPage(n) {
+  const page = await LS.doc.getPage(n), h = page.getViewport({ scale: 1 }).height;
+  const items = (await page.getTextContent()).items.filter(it => typeof it.str === "string");
+  const blocks = [];
+  const put = (b, c, k, j) => {
+    if (/\s/.test(c)) { if (!b.text || b.text.endsWith(" ")) return; c = " "; }
+    b.text += c; b.pg.push(n); b.mk.push(k); b.mj.push(j);
+  };
+  let line = null, b = null;
+  items.forEach((it, k) => {
+    const size = lsSize(it), x = it.transform[4], y = it.transform[5];
+    if (!it.str.trim() || it.transform[1] || it.transform[2] || (size < LS.body - 1 && it.str.trim().length <= 3)) return;
+    if (line && Math.abs(y - line.y) < Math.max(size, line.size) * 0.6 && x > line.x) {
+      if (x - line.end > size * 0.15) put(b, " ", k, 0);
+    } else {
+      const prev = line;
+      line = { x, y, size };
+      if (!prev || Math.abs(size - prev.size) > 0.6 || prev.y - y > size * 1.8 || y > prev.y + 1 || x > prev.x + size) {
+        blocks.push(b = { size, top: 1 - y / h, text: "", pg: [], mk: [], mj: [] });
+      } else if (/[a-z]-$/.test(b.text) && /^[a-z]/.test(it.str)) {
+        b.text = b.text.slice(0, -1); b.pg.pop(); b.mk.pop(); b.mj.pop();
+      } else put(b, " ", k, 0);
+    }
+    for (let j = 0; j < it.str.length; j++) put(b, it.str[j], k, j);
+    line.end = x + it.width;
+    b.bottom = 1 - y / h;
+  });
+  return blocks.filter(b => {
+    if (b.text.endsWith(" ")) { b.text = b.text.slice(0, -1); b.pg.pop(); b.mk.pop(); b.mj.pop(); }
+    const t = b.text, ws = t.split(" ");
+    const prose = ws.filter(w => /^\(?([a-z]{2,}|a)[,.;:)]?$/.test(w)).length / ws.length;
+    b.heading = t.length < 100 && !/[,;=.]$/.test(t) &&
+      (b.size > LS.body + 0.9 || /^([IVX]+\.?|\d+(\.\d+)*\.?|[A-Z]\.)\s+[A-Z]/.test(t));
+    if (LS_BACK.test(t) && (b.heading || t.length < 60)) LS.back = true;
+    return !(LS.back || ((b.top < 0.08 || b.bottom > 0.92) && t.length < 120) || LS_CAPTION.test(t) ||
+             b.size < LS.body - 0.6 || (!b.heading && (prose < 0.4 || ws.length < 4)));
+  });
+}
+
+/* A paragraph broken by a page turn, a figure or a displayed equation is put
+   back together before it is cut into sentences. */
+function lsJoin(a, b) {
+  if (/[a-z]-$/.test(a.text) && /^[a-z]/.test(b.text)) { a.text = a.text.slice(0, -1); a.pg.pop(); a.mk.pop(); a.mj.pop(); }
+  else { a.text += " "; a.pg.push(b.pg[0]); a.mk.push(b.mk[0]); a.mj.push(0); }
+  a.text += b.text; a.pg.push(...b.pg); a.mk.push(...b.mk); a.mj.push(...b.mj);
+}
+
+function lsSplit(b) {
+  const out = [], t = b.text;
+  let s = 0;
+  const cut = e => {
+    if (e > s) out.push({ text: t.slice(s, e), pg: b.pg.slice(s, e), mk: b.mk.slice(s, e), mj: b.mj.slice(s, e) });
+    s = e + 1;
+  };
+  for (let p = t.indexOf(" "); p >= 0; p = t.indexOf(" ", p + 1)) {
+    const left = t.slice(s, p);
+    if ((left.split("[").length !== left.split("]").length) || left.split("(").length !== left.split(")").length) continue;
+    if ((/[.?!]["')\]]?$/.test(left) && !LS_ABBR.test(left) && /^["'(\[]?[A-Z0-9]/.test(t.slice(p + 1))) ||
+        left.length > 300 || (left.length > 160 && /[,;:]$/.test(left))) cut(p);
+  }
+  cut(t.length);
+  return out;
+}
+
+async function lsMore() {
+  if (LS.next > LS.doc.numPages) {
+    if (LS.pending) { LS.sents.push(...lsSplit(LS.pending)); LS.pending = null; }
+    return false;
+  }
+  for (const b of await lsPage(LS.next++)) {
+    const p = LS.pending;
+    if (p && !p.heading && !b.heading && !/[.?!:]["')\]]?$/.test(p.text) && /^[a-z(]/.test(b.text)) { lsJoin(p, b); continue; }
+    if (p) LS.sents.push(...lsSplit(p));
+    LS.pending = b;
+  }
+  return true;
+}
+
+/* Pages are read one at a time and in order, whoever asks. */
+function lsFill(done) {
+  return LS.fill = LS.fill.then(async () => { while (!done() && await lsMore()); });
+}
+
+function lsKey(i) {
+  const s = LS.sents[i];
+  return s && LS.v + "|" + LS.speed + "|" + (s.say || (s.say = LS_SPEAK.reduce((t, [a, b]) => t.replace(a, b), s.text)));
+}
+
+/* The voice makes one sentence at a time: the one being waited on first,
+   then the next three, so a skip never queues behind stale prefetches. */
+function lsPump() {
+  const cur = LS.cache.get(lsKey(LS.i));
+  if (LS.wait && cur && (cur.url || cur.err)) {
+    LS.wait = false;
+    if (cur.err) { LS.cache.delete(lsKey(LS.i)); lsNote("Voice failed: " + cur.err); lsBtn(); }
+    else { LS.cur = cur; LS.audio.src = cur.url; lsRate(); LS.loaded = LS.i; LS.audio.play().catch(() => {}); lsNote(""); }
+  }
+  if (LS.busy) return;
+  const i = [0, 1, 2, 3].map(n => LS.i + n).find(i => LS.sents[i] && !LS.cache.has(lsKey(i)));
+  if (i === undefined) return;
+  for (const [k, x] of LS.cache) if (LS.cache.size > 40 && x.url && x !== LS.cur) { URL.revokeObjectURL(x.url); LS.cache.delete(k); }
+  const key = lsKey(i), e = { speed: LS.speed };
+  LS.cache.set(key, e);
+  LS.busy = true;
+  window.api.tts(LS.sents[i].say, LS.v, LS.speed)
+    .then(w => { e.url = URL.createObjectURL(new Blob([w], { type: "audio/wav" })); }, err => { e.err = (err && err.message) || String(err); })
+    .finally(() => { LS.busy = false; lsPump(); });
+}
+
+async function lsStart(sel) {
+  const r = (sel && sel.reader) || READERS[ACTIVE] || READERS[0];
+  if (!r || !r.doc) return;
+  const g = ++LS.gen;
+  LS.audio.pause();
+  lsClear();
+  Object.assign(LS, { r, vol: r.vol, doc: r.doc, next: sel ? sel.page : r.cur, back: false, pending: null,
+                      sents: [], i: NaN, loaded: -1, wait: true, fill: Promise.resolve() });
+  lsOpen(true);
+  lsBtn();
+  LS.body = await lsBody(LS.next);
+  if (g !== LS.gen) return;
+  let i = 0;
+  if (sel && sel.k >= 0) {
+    const after = s => {
+      const e = s.text.length - 1;
+      return s.pg[e] > sel.page || (s.pg[e] === sel.page && (s.mk[e] > sel.k || (s.mk[e] === sel.k && s.mj[e] >= sel.j)));
+    };
+    await lsFill(() => LS.sents.some(after));
+    i = Math.max(0, LS.sents.findIndex(after));
+  }
+  lsPlay(i);
+}
+
+/* Kokoro speaks faster for less work, up to 2×; past that the clip is sped up. */
+async function lsPlay(i) {
+  if (!(i >= 0)) return;
+  const g = LS.gen;
+  LS.audio.pause();
+  Object.assign(LS, { i, loaded: -1, word: -1, wait: true, v: $("#ls-voice").value || "af_heart", speed: Math.min(2, S.prefs.lsRate || 1) });
+  lsBtn();
+  await lsFill(() => LS.sents.length > i + 4);
+  if (g !== LS.gen) return;
+  if (!LS.sents[i]) { LS.wait = false; lsBtn(); return lsNote("End of the document."); }
+  lsPump();
+}
+
+function lsToggle() {
+  if (LS.wait) LS.gen++;
+  if (LS.wait || !LS.audio.paused) { LS.wait = false; LS.audio.pause(); return lsBtn(); }
+  if (LS.sents[LS.i] && LS.r && LS.r.vol === LS.vol) return LS.loaded === LS.i ? LS.audio.play().catch(() => {}) : lsPlay(LS.i);
+  lsStart(null);
+}
+
+function lsBtn() { $("#ls-play").className = "ls-play" + (LS.wait ? " wait" : LS.audio.paused ? "" : " on"); }
+function lsClear() { $$(".say").forEach(e => e.remove()); }
+function lsNote(t) { $("#ls-note").textContent = t; }
+
+function lsOpen(on) {
+  $("#listen").hidden = !on;
+  $("#btn-listen").setAttribute("aria-pressed", String(on));
+  if (!on) { LS.gen++; LS.wait = false; LS.audio.pause(); LS.loaded = -1; LS.sents = []; lsClear(); }
+  if (on && !$("#ls-voice").options.length) {
+    lsNote("Loading the voice (the first run downloads it, ~330 MB)…");
+    window.api.voices().then(vs => {
+      Object.entries(vs).filter(([, x]) => x.language.startsWith("en"))
+        .sort((a, b) => a[1].overallGrade.localeCompare(b[1].overallGrade))
+        .forEach(([id, x]) => $("#ls-voice").add(new Option(`${x.name} · ${x.language.slice(3).toUpperCase()} ${x.gender.toLowerCase()}`, id)));
+      $("#ls-voice").value = S.prefs.lsVoice || "af_heart";
+      if ($("#ls-note").textContent.startsWith("Loading")) lsNote("");
+    }).catch(e => lsNote("Voice failed to load: " + ((e && e.message) || e)));
+  }
+}
+
+/* Boxes for chars [from, to) of a sentence, all on one page. */
+function lsBoxes(s, from, to, cls) {
+  const r = LS.r, n = s.pg[from], L = r.tl.get(n);
+  if (!L) { r.render(n); LS.dirty = true; return null; }
+  const base = L.hl.getBoundingClientRect();
+  let last = null;
+  for (const w of r.boxesFor(n, from, to, s)) {
+    const d = document.createElement("div");
+    d.className = cls;
+    d.style.left = (w.left - base.left) + "px";
+    d.style.top = (w.top - base.top) + "px";
+    d.style.width = (w.right - w.left) + "px";
+    d.style.height = (w.bottom - w.top) + "px";
+    L.hl.appendChild(d);
+    last = w;
+  }
+  return last;
+}
+
+/* The voice gives no word timings, so the word is placed by how far through
+   the sentence's characters the audio is. Close, not exact. */
+function lsTick() {
+  requestAnimationFrame(lsTick);
+  const s = LS.sents[LS.i], a = LS.audio;
+  if (!s || LS.loaded !== LS.i || !a.duration) return;
+  if (LS.r.vol !== LS.vol) { lsOpen(false); return; }
+  const ws = s.words || (s.words = [...s.text.matchAll(/\S+/g)].map(m => [m.index, m.index + m[0].length]));
+  const t = (a.currentTime / a.duration) * s.text.length;
+  let w = 0;
+  while (w < ws.length - 1 && ws[w + 1][0] <= t) w++;
+  if (w === LS.word && !LS.dirty) return;
+  LS.word = w; LS.dirty = false;
+  lsClear();
+  for (let i = 0, from = 0; i <= s.pg.length; i++) {
+    if (i === s.pg.length || s.pg[i] !== s.pg[from]) { lsBoxes(s, from, i, "say"); from = i; }
+  }
+  const box = lsBoxes(s, ws[w][0], ws[w][1], "say w");
+  const view = LS.r.scroll.getBoundingClientRect();
+  if (box && Date.now() - LS.userT > 4000 && (box.top < view.top + 40 || box.bottom > view.bottom - 60)) {
+    LS.r.scroll.scrollTo({ top: LS.r.scroll.scrollTop + box.top - view.top - view.height * 0.35, behavior: "smooth" });
+  }
+}
+
+function lsRate() {
+  LS.audio.defaultPlaybackRate = LS.audio.playbackRate = +$("#ls-rate").value / (LS.cur ? LS.cur.speed : 1);
+}
+
+function wireListen() {
+  LS.audio.onended = () => lsPlay(LS.i + 1);
+  LS.audio.onplay = LS.audio.onpause = lsBtn;
+  [0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3].forEach(v => $("#ls-rate").add(new Option(v + "×", v)));
+  $("#ls-rate").value = S.prefs.lsRate || 1;
+  if (!$("#ls-rate").value) $("#ls-rate").value = 1;
+  lsRate();
+  $("#ls-rate").onchange = e => { S.prefs.lsRate = +e.target.value; save(); lsRate(); };
+  $("#ls-voice").onchange = e => { S.prefs.lsVoice = e.target.value; save(); if (LS.wait || !LS.audio.paused) lsPlay(LS.i); };
+  $("#ls-play").onclick = lsToggle;
+  $("#ls-close").onclick = () => lsOpen(false);
+  $("#btn-listen").onclick = () => ($("#listen").hidden ? lsStart(null) : lsOpen(false));
+  $("#sel-listen").onclick = () => { const s = lastSel; $("#sel-pop").hidden = true; document.getSelection().removeAllRanges(); lsStart(s); };
+  // scrolling away to look at something holds off the follow for a few seconds
+  document.addEventListener("wheel", e => { if (e.target.closest && e.target.closest(".rscroll")) LS.userT = Date.now(); }, { passive: true });
+  lsTick();
+}
+
+/* ============================================================
    FIND — the whole corpus, both volumes at once, and the hits
    drawn on the page you land on. The index is built on first use
    (~3s for 532 pages) and kept for the session.
    ============================================================ */
 let INDEX = null;          // [{vol, page, text, low}] — page is the PDF page
 let indexing = null;       // in-flight build, so two opens don't build twice
+let indexScope = "";       // the volumes INDEX covers (see findScope)
 const FIND = {
   on: false,               // is the bar up — closing it takes the highlights with it
   q: "", needle: "",
@@ -1009,8 +1178,8 @@ let fbLandN = 0;           // only the newest jump gets to move the reader
    real inline compound like "two-dimensional" is left alone. Vol 4's font
    drops the ff/ffi ligatures, so most of its pages carry "di!erent" for
    "different" — repair between letters only, since elsewhere those glyphs are
-   real, and in Vol 3 they are large math delimiters. Same rules the glossary
-   extractor uses, and the same per-volume flag.
+   real, and in Vol 3 they are large math delimiters. The per-volume flag is
+   fixLigatures in the manifest.
 
    None of that preserves the length, which is the whole reason for the map:
    it is what turns a hit's character offset into a box on the page. */
@@ -1054,11 +1223,16 @@ function pageMap(tc, v) {
   return { text, low: text.toLowerCase(), mk, mj };
 }
 
-function pageString(tc, v) { return pageMap(tc, v).text; }
+/* In an ACME volume find covers both; in anything else, just that PDF. */
+function findScope() {
+  const v = READERS[0] && READERS[0].vol;
+  if (!v) return [];
+  return v.chapters.length ? MANIFEST.volumes.filter(x => x.chapters.length) : [v];
+}
 
 async function buildIndex(onProgress) {
   const out = [];
-  for (const v of MANIFEST.volumes) {
+  for (const v of findScope()) {
     let doc = docCache[v.id];
     if (!doc) {
       if (!(await window.api.pdfCheck(v.pdf))) continue;
@@ -1155,13 +1329,13 @@ function fbRender() {
   if (list.hidden) return;
 
   if (!INDEX) {
-    list.innerHTML = `<div class="fb-note">${esc(FIND.status || "Reading both volumes…")}<br>
+    list.innerHTML = `<div class="fb-note">${esc(FIND.status || "Reading…")}<br>
       Once built it stays for the session.</div>`;
     return;
   }
   if (needle.length < 2) {
-    list.innerHTML = `<div class="fb-note">Two characters or more. Searches every page of both
-      volumes &mdash; body text, theorems, and exercises.</div>`;
+    list.innerHTML = `<div class="fb-note">Two characters or more. Searches every page &mdash;
+      in an ACME volume, both of them.</div>`;
     return;
   }
   if (none) {
@@ -1194,17 +1368,23 @@ async function openFind() {
   $("#btn-search").setAttribute("aria-pressed", "true");
   const inp = $("#fb-q");
   inp.value = FIND.q || "";
+  inp.placeholder = READERS[0].vol && !READERS[0].vol.chapters.length ? `Find in ${READERS[0].vol.short}…` : "Find in both volumes…";
   fbRender();
   inp.focus(); inp.select();
   READERS.forEach(r => r.repaintFind());     // the query outlives a close
-  if (INDEX) return;
-  if (!indexing) {
+  const scope = findScope().map(v => v.id).join("|");
+  if (INDEX && indexScope === scope) return;
+  if (indexScope !== scope) {
+    INDEX = null;
+    indexScope = scope;
     indexing = buildIndex((short, i, n) => {
       FIND.status = `indexing ${short} ${i}/${n}`;
       if (FIND.on) fbRender();
     });
   }
-  INDEX = await indexing;
+  const built = await indexing;
+  if (indexScope !== scope) return;           // the document changed while this built
+  INDEX = built;
   FIND.status = null;
   if (!FIND.on) return;
   runFind($("#fb-q").value);
@@ -1253,30 +1433,13 @@ function wireFind() {
 }
 
 /* ============================================================
-   STUDY PANE — pick a section once, then read / explain it.
+   STUDY PANE — pick a section once, then work its cards.
    Exercises live in their own pane and follow the section.
    ============================================================ */
-const MODES = [["read","Read"],["explain","Explain"]];
-
 function render() {
-  const nav = $("#modes");
-  nav.innerHTML = MODES.map(([k, n]) => {
-    // the badge says what this section actually holds, so an empty mode is
-    // visible before you click into it
-    const c = modeCount(k);
-    return `<button data-m="${k}" aria-current="${MODE === k}">${n}` +
-           (c ? `<span class="count">${c}</span>` : "") + `</button>`;
-  }).join("");
-  nav.querySelectorAll("button").forEach(b => b.onclick = () => {
-    MODE = b.dataset.m; render(); $("#study").scrollTop = 0;
-  });
-
-  const views = { read: vRead, explain: vExplain };
-  if (!views[MODE]) MODE = "read";
   const host = $("#study");
-  host.innerHTML = sectionBar() + views[MODE]();
+  host.innerHTML = sectionBar() + vRead();
   wire(host);
-  linkTerms(host);
 }
 
 /* one persistent selector, instead of a picker inside every mode */
@@ -1297,16 +1460,23 @@ function sectionBar() {
   </div>`;
 }
 
-function modeCount(k) {
-  if (!CURSEC) return 0;
-  return curList(k).length;
-}
-
-function curList(mode) {
+function curList() {
   if (!CURSEC) return [];
-  if (mode === "explain") return glossForSection(CURSEC.vol, CURSEC.id);
   const ch = chapterOfSection(CURSEC.vol, CURSEC.id);
-  return ch ? ch.cards.filter(c => c.s === CURSEC.id).map(c => withCh(c, ch)) : [];
+  const gen = ((S.gen || {})[CURSEC.vol + "|" + CURSEC.id] || []).map((c, g) => Object.assign({}, c, { vol: CURSEC.vol, s: CURSEC.id, g }));
+  return (ch ? ch.cards.filter(c => c.s === CURSEC.id).map(c => withCh(c, ch)) : []).concat(gen);
+}
+async function genCards(b) {
+  const key = CURSEC.vol + "|" + CURSEC.id, v = volOf(CURSEC.vol), sec = sectionsOf(CURSEC.vol).find(x => x.id === CURSEC.id);
+  const list = curList();
+  b.disabled = true; b.textContent = "writing…";
+  const r = await window.api.cards({
+    pdf: v.pdf, title: v.short, sec: sec.id + " " + sec.name, from: sec.from, to: sec.to, off: v.pageOffset || 0, n: 5,
+    examples: list.filter(c => c.g === undefined).slice(0, 2).map(({ q, a, page, r }) => ({ q, a, page, r })),
+    have: list.map(c => c.q.replace(/<[^>]+>/g, ""))
+  }).catch(e => ({ error: e.message }));
+  if (r.cards) { S.gen = S.gen || {}; (S.gen[key] = S.gen[key] || []).push(...r.cards); save(); render(); }
+  else { b.disabled = false; b.textContent = "generate"; flash($("#pane-study"), r.error === "no-key" ? NO_KEY.replace(/<[^>]+>/g, "") : r.error); }
 }
 
 /* The whole section at once. Every answer is collapsed on its own card rather
@@ -1315,26 +1485,17 @@ function curList(mode) {
 function listBar(n, noun) {
   return `<div class="listbar">
     <span class="tiny muted">${n} ${esc(noun)}${n === 1 ? "" : "s"} in &sect;${esc(CURSEC.id)}</span>
+    <button class="revall" data-gen="1">generate</button>
     <button class="revall" data-revall="1">reveal all</button>
   </div>`;
 }
 
 function vRead() {
-  const list = curList("read");
+  const list = curList();
   if (!CURSEC) return `<p class="tiny muted">Pick a section above.</p>`;
-  if (!list.length) return `<div class="empty"><h3>Nothing authored for &sect;${esc(CURSEC.id)}</h3>
-    <p>Read it, then try <b>Explain</b> &mdash; the book's own definitions for this section.</p></div>`;
+  if (!list.length) return `<div class="empty"><h3>Nothing authored for &sect;${esc(CURSEC.id)}</h3><button class="revall" data-gen="1">generate</button></div>`;
   return listBar(list.length, "card") +
-    list.map((c, i) => card(c, i, "read")).join("");
-}
-
-function vExplain() {
-  const list = curList("explain");
-  if (!CURSEC) return `<p class="tiny muted">Pick a section above.</p>`;
-  if (!list.length) return `<div class="empty"><h3>No definitions in &sect;${esc(CURSEC.id)}</h3>
-    <p>This section states no formal definitions or theorems.</p></div>`;
-  return listBar(list.length, "definition") +
-    list.map((c, i) => card(c, i, "explain")).join("");
+    list.map(card).join("");
 }
 
 const REGISTERS = [["rot", "brain rot", "lower the load"],
@@ -1345,35 +1506,25 @@ const REGISTERS = [["rot", "brain rot", "lower the load"],
 /* Everything a card can show is rendered up front and hidden; revealing is a
    DOM toggle, not a re-render, so opening one card can't move the others or
    throw away your scroll position. */
-function card(c, i, mode) {
+function card(c, i) {
   const v = volOf(c.vol) || {};
   const sec = c.s ? sectionsOf(c.vol).find(s => s.id === c.s) : null;
-  const isExplain = mode === "explain";
-  const yours = (S.explain || {})[c.id] || "";
 
   let h = `<div class="card">
     <div class="q-head">
       ${c.s ? `<span class="sec-tag">&sect;${esc(c.s)}</span>` : ""}
-      <span class="muted tiny">${esc(c.gloss ? (c.kind + " " + c.num)
-        : (sec ? sec.name : (v.short || "")))}</span>
+      <span class="muted tiny">${esc(sec ? sec.name : (v.short || ""))}</span>
       ${c.page ? `<button class="pg-ref" data-page="${c.vol}|${c.page}">p.${c.page}</button>` : ""}
+      ${c.g !== undefined ? `<span class="sec-tag">generated</span><button class="pg-ref" data-drop="${c.g}">discard</button>` : ""}
       <span class="q-count">${i + 1}</span>
     </div>
     <div class="q-prompt">${c.q}</div>`;
 
-  if (isExplain) {
-    h += `<div class="axis" style="margin-top:16px">
-      <label>In your own words</label>
-      <div class="why">From memory. A rough answer you generated beats a polished one you read.</div>
-      <textarea data-explain="${esc(c.id)}" placeholder="Say it the way you'd say it to someone who hasn't read this…">${esc(yours)}</textarea></div>`;
-  } else {
-    h += `<p class="q-hint">Say it out loud before revealing. Retrieval only works if you attempt the retrieval.</p>`;
-  }
+  h += `<p class="q-hint">Say it out loud before revealing. Retrieval only works if you attempt the retrieval.</p>`;
 
-  h += `<div class="btnrow"><button class="btn ghost rev" data-reveal="1" aria-pressed="false">${
-    isExplain ? "Compare with the book" : "Reveal"}</button></div>`;
+  h += `<div class="btnrow"><button class="btn ghost rev" data-reveal="1" aria-pressed="false">Reveal</button></div>`;
 
-  h += `<div class="answer" hidden><h4>${c.gloss ? "What the book says" : "Answer"}</h4>
+  h += `<div class="answer" hidden><h4>Answer</h4>
     <div class="body">${c.a}</div>`;
   const regs = c.r ? REGISTERS.filter(([k]) => c.r[k]) : [];
   if (regs.length) {
@@ -1385,19 +1536,12 @@ function card(c, i, mode) {
   return h + `</div></div>`;
 }
 
-function revLabel(el, open) {
-  const explain = !!$("[data-explain]", el);
-  el.querySelector(".rev").textContent = open
-    ? (explain ? "Hide the book" : "Hide")
-    : (explain ? "Compare with the book" : "Reveal");
-}
-
 function setOpen(cardEl, open) {
   const ans = $(".answer", cardEl);
   if (!ans) return;
   ans.hidden = !open;
   const rev = $(".rev", cardEl);
-  if (rev) { rev.setAttribute("aria-pressed", String(open)); revLabel(cardEl, open); }
+  if (rev) { rev.setAttribute("aria-pressed", String(open)); rev.textContent = open ? "Hide" : "Reveal"; }
 }
 
 function wire(root) {
@@ -1419,14 +1563,14 @@ function wire(root) {
     cards.forEach(el => setOpen(el, opening));
     b.textContent = opening ? "hide all" : "reveal all";
   });
+  q("[data-gen]", b => b.onclick = () => genCards(b));
+  q("[data-drop]", b => b.onclick = () => {
+    S.gen[CURSEC.vol + "|" + CURSEC.id].splice(+b.dataset.drop, 1);
+    save(); render();
+  });
   q("[data-page]", b => b.onclick = () => {
     const [v, p] = b.dataset.page.split("|");
     READERS[0].gotoVolBook(v, +p);
-  });
-  q("[data-explain]", el => el.oninput = () => {
-    S.explain = S.explain || {};
-    S.explain[el.dataset.explain] = el.value;
-    save();
   });
   const pick = $("#secpick", root);
   if (pick) pick.onchange = () => {
@@ -1454,8 +1598,6 @@ function wireChrome() {
     $("#btn-zen").setAttribute("aria-pressed", String(on));
     await window.api.fullscreen(on);
   };
-  $("#tp-close").onclick = () => hideTerm(true);
-
   let drag = false;
   $("#grip").onmousedown = e => { drag = true; $("#grip").classList.add("dragging"); e.preventDefault(); };
   window.addEventListener("mousemove", e => {
@@ -1478,13 +1620,14 @@ function wireChrome() {
   document.addEventListener("keydown", e => {
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
     if ((e.ctrlKey || e.metaKey) && e.key === "f") { openFind(); e.preventDefault(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === "p") { openQO(); e.preventDefault(); return; }
     if (FIND.on && (e.key === "F3" || ((e.ctrlKey || e.metaKey) && e.key === "g"))) {
       fbStep(e.shiftKey ? -1 : 1); e.preventDefault(); return;
     }
     if (e.key === "Escape") {
+      if (!$("#qo").hidden) { $("#qo").hidden = true; return; }
       if (!$("#ask").hidden) { closeAsk(); return; }
       if (FIND.on) { closeFind(); return; }
-      if (!$("#termpop").hidden) { hideTerm(true); return; }
       if (document.body.classList.contains("zen")) { $("#btn-zen").click(); return; }
     }
     if (typing) return;
@@ -1495,6 +1638,11 @@ function wireChrome() {
     if (e.key === "d") $("#btn-dim").click();
     if (e.key === "l") $("#btn-zen").click();
     if (e.key === "e") setExPane(!S.prefs.split);
+    if (e.key === "o") { openQO(); e.preventDefault(); }
+    if (e.key === "b") $("#btn-lib").click();
+    if (e.key === "r") lsToggle();
+    if (e.key === "[" && !$("#listen").hidden) lsPlay(Math.max(0, LS.i - 1));
+    if (e.key === "]" && !$("#listen").hidden) lsPlay(LS.i + 1);
     if (e.key === "ArrowRight" || e.key === "PageDown") { r.goto(r.cur + 1); e.preventDefault(); }
     if (e.key === "ArrowLeft"  || e.key === "PageUp")   { r.goto(r.cur - 1); e.preventDefault(); }
     // space walks down the list, opening the next card still closed
@@ -1519,7 +1667,6 @@ async function boot() {
   MANIFEST = await window.api.manifest();
   const st = await window.api.getState();
   if (st) S = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), st);
-  delete S.cards; delete S.mine;     // scheduling and self-written cards are gone
   S.prefs = Object.assign({ dim: true, zoom: 1.0, splitPct: 58, split: false }, S.prefs || {});
 
   for (const v of MANIFEST.volumes) {
@@ -1529,9 +1676,6 @@ async function boot() {
       if (data) CHAPTERS[v.id + ":" + c.id] = data;
     }
   }
-  const g = await window.api.chapter("glossary.json");
-  if (g && g.entries) { GLOSS = g; buildTermIndex(); }
-  buildGlossCards();
 
   if (S.prefs.dim) { document.body.classList.add("dim"); $("#btn-dim").setAttribute("aria-pressed", "true"); }
   if (S.prefs.splitPct) {
@@ -1546,6 +1690,9 @@ async function boot() {
 
   wireFind();
   wireAsk();
+  wireListen();
+  wireLibrary();
+  await libLoad();
   wireExGrip($("#exgrip"));
   if (S.prefs.exH) $("#expane").style.height = S.prefs.exH + "px";
   wireChrome();

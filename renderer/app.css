@@ -78,12 +78,36 @@ h1,h2,h3,h4{font-family:Newsreader,"Noto Serif",Georgia,serif; font-weight:500; 
 /* ---------------- split ---------------- */
 #split{display:flex; height:calc(100% - var(--bar-h)); overflow:hidden}
 #pane-pdf{flex:1 1 58%; min-width:0; display:flex; flex-direction:column; background:var(--sunk)}
-#pane-study{flex:1 1 42%; min-width:340px; display:flex; flex-direction:column; background:var(--panel); border-left:1px solid var(--rule)}
+#pane-study{flex:1 1 42%; min-width:340px; position:relative; display:flex; flex-direction:column; background:var(--panel); border-left:1px solid var(--rule)}
 #grip{
   width:5px; cursor:col-resize; background:var(--rule-soft); flex:0 0 5px;
   transition:background .12s;
 }
 #grip:hover,#grip.dragging{background:var(--indigo)}
+/* a PDF outside ACME has no study pane: the reader takes the room */
+body.solo #pane-study,body.solo #grip,body.solo #btn-ex{display:none}
+body.solo #pane-pdf{flex-basis:100% !important}
+
+/* ---------------- library ---------------- */
+.context{-webkit-app-region:no-drag; cursor:pointer; border-radius:5px; padding:2px 7px}
+.context:hover{background:var(--raised)}
+#lib{flex:0 0 230px; display:flex; flex-direction:column; background:var(--panel); border-right:1px solid var(--rule); overflow:hidden}
+.lib-head{padding:10px 14px 8px; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
+.lib-hint{font-family:"IBM Plex Mono",monospace; font-weight:400; letter-spacing:0; text-transform:none; margin-left:4px}
+#lib-list{flex:1; overflow-y:auto; padding:0 6px 10px}
+.lib-it{display:flex; align-items:center; gap:7px; width:100%; text-align:left; padding:6px 8px; border-radius:6px; font-size:13px; color:var(--ink-soft)}
+.lib-it:hover,.lib-it.on{background:var(--raised); color:var(--ink)}
+.lib-it.cur{color:var(--lamp); background:var(--lamp-bg)}
+.lib-dir summary{padding:6px 8px; font-size:12px; color:var(--ink-faint); cursor:pointer; border-radius:6px}
+.lib-dir summary:hover{background:var(--raised); color:var(--ink)}
+.lib-dir .lib-it{padding-left:22px}
+.lib-n{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.lib-tag{flex:0 0 auto; font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.08em; padding:1px 5px; border-radius:4px; color:var(--indigo); background:var(--indigo-bg)}
+#qo{position:fixed; inset:0; z-index:88; background:rgba(6,8,12,.6); display:flex; justify-content:center; align-items:flex-start; padding-top:12vh}
+.qo-box{width:min(560px,92vw); background:var(--panel); border:1px solid var(--rule); border-radius:11px; box-shadow:0 24px 60px rgba(0,0,0,.7); overflow:hidden}
+#qo-q{width:100%; background:none; border:0; border-bottom:1px solid var(--rule); color:var(--ink); font:inherit; font-size:16px; padding:14px 16px; outline:none}
+#qo-q::placeholder{color:var(--ink-faint)}
+#qo-list{max-height:52vh; overflow-y:auto; padding:6px}
 /* "lock in" is fullscreen only. The bar stays: search, exercises, noise and
    dim are all things you reach for mid-session, and hiding them meant leaving
    lock in to press one. */
@@ -158,6 +182,10 @@ body.dim .pg .hlLayer{filter:invert(1) hue-rotate(180deg)}
 .hl{position:absolute; background:rgba(242,176,30,.30); border-radius:2px}
 .hl.cur{background:rgba(242,176,30,.60); box-shadow:0 0 0 1.5px rgba(242,176,30,.95)}
 
+/* read aloud: the sentence faintly, the word as a find hit */
+.say{position:absolute; background:rgba(124,136,236,.16); border-radius:2px}
+.say.w{background:rgba(242,176,30,.55); box-shadow:0 0 0 1.5px rgba(242,176,30,.9)}
+
 #sel-pop{
   position:fixed; z-index:60; display:flex; gap:4px; padding:4px;
   background:var(--raised); border:1px solid var(--rule); border-radius:7px;
@@ -170,20 +198,6 @@ body.dim .pg .hlLayer{filter:invert(1) hue-rotate(180deg)}
 #sel-pop button:hover{filter:brightness(1.1)}
 
 /* ---------------- study pane ---------------- */
-#modes{
-  display:flex; gap:2px; padding:8px 10px; border-bottom:1px solid var(--rule);
-  flex:0 0 auto; overflow-x:auto;
-}
-#modes button{
-  padding:5px 11px; border-radius:5px; font-size:12.5px; color:var(--ink-faint);
-  white-space:nowrap; transition:background .12s, color .12s;
-}
-#modes button:hover{background:var(--raised); color:var(--ink-soft)}
-#modes button[aria-current="true"]{background:var(--indigo-bg); color:var(--indigo); font-weight:600}
-#modes .count{
-  font-family:"IBM Plex Mono",monospace; font-size:10.5px; margin-left:5px;
-  padding:0 4px; border-radius:3px; background:var(--lamp-bg); color:var(--lamp);
-}
 #study{flex:1 1 auto; min-height:0; overflow-y:auto; padding:16px 18px 40px}
 #expane{
   flex:0 0 auto; height:46%; min-height:120px; display:flex; flex-direction:column;
@@ -275,9 +289,6 @@ p{margin:0 0 13px} p:last-child{margin-bottom:0}
 .btn.ghost:hover{border-color:var(--indigo); color:var(--indigo); filter:none}
 .btnrow{display:flex; gap:7px; flex-wrap:wrap; margin-top:16px}
 
-.axis{margin-bottom:17px}
-.axis label{display:block; font-size:13.5px; font-weight:500; margin-bottom:2px}
-.axis .why{font-size:12px; color:var(--ink-faint); margin-bottom:7px; line-height:1.5}
 textarea{
   width:100%; min-height:70px; padding:10px 12px; border-radius:6px;
   border:1px solid var(--rule); background:var(--sunk); color:var(--ink);
@@ -294,14 +305,6 @@ textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#20242F; border-radius:6px; border:3px solid var(--ground)}
 ::-webkit-scrollbar-thumb:hover{background:#2C3140}
-
-/* ---------------- clickable terms ---------------- */
-.term{
-  color:var(--lamp); font:inherit; padding:0; cursor:pointer;
-  border-bottom:1px dashed rgba(242,176,30,.45); border-radius:0;
-  transition:background .12s, border-color .12s;
-}
-.term:hover{background:var(--lamp-bg); border-bottom-color:var(--lamp)}
 
 /* ---------------- ask ai ---------------- */
 #ask{
@@ -389,6 +392,20 @@ textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)
 .fb-toggle[aria-pressed="true"]{color:var(--lamp); background:var(--lamp-bg)}
 .fb-x{color:var(--ink-faint); font-size:18px; line-height:1; padding:0 3px}
 .fb-x:hover{color:var(--ink)}
+#listen{position:relative; z-index:30; flex:0 0 auto; gap:4px; padding:5px 9px; background:var(--ground); border-bottom:1px solid var(--rule)}
+.ls-play{width:24px; height:24px; border-radius:50%; background:var(--lamp); color:#1A1305; flex:0 0 auto; display:grid; place-items:center; padding:0}
+.ls-play:hover{filter:brightness(1.1)}
+.ls-play::before{content:""; width:9px; height:10px; margin-left:2px; background:currentColor; clip-path:polygon(0 0,100% 50%,0 100%)}
+.ls-play.on::before{width:3px; margin:0 5px 0 0; clip-path:none; box-shadow:5px 0 currentColor}
+.ls-play.wait::before{width:10px; height:10px; margin:0; background:none; clip-path:none; border-radius:50%; border:2px solid currentColor; border-right-color:transparent; animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#ls-rate,#ls-voice{-webkit-appearance:none; appearance:none; height:24px; max-width:180px; padding:0 24px 0 9px; border-radius:5px; cursor:pointer;
+  background:var(--raised) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23596173'/%3E%3C/svg%3E") no-repeat right 9px center;
+  color:var(--ink-soft); border:1px solid var(--rule); font:inherit; font-size:12px}
+#ls-rate{margin-left:4px; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+#ls-rate:hover,#ls-voice:hover{color:var(--ink); border-color:#2E3446}
+#ls-rate option,#ls-voice option{background:var(--panel); color:var(--ink)}
+.ls-note{flex:1; min-width:0; font-size:11.5px; color:var(--ink-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .fb-results{
   position:absolute; top:100%; left:0; right:0; max-height:44vh; overflow-y:auto;
   background:var(--panel); border-bottom:1px solid var(--rule);
@@ -410,30 +427,6 @@ textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)
 .fb-snip mark{background:var(--lamp-bg); color:var(--lamp); border-radius:2px; padding:0 1px}
 .fb-note{padding:12px 14px; font-size:12.5px; color:var(--ink-faint); line-height:1.5}
 
-#termpop{
-  position:fixed; z-index:90; background:var(--panel);
-  border:1px solid var(--rule); border-radius:9px; overflow:hidden;
-  box-shadow:0 18px 48px rgba(0,0,0,.72);
-}
-.tp-head{
-  display:flex; align-items:center; gap:9px; padding:9px 12px;
-  background:var(--sunk); border-bottom:1px solid var(--rule);
-}
-.tp-kind{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--lamp); font-weight:600}
-.tp-loc{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint)}
-.tp-x{margin-left:auto; color:var(--ink-faint); font-size:17px; line-height:1; padding:0 3px}
-.tp-x:hover{color:var(--ink)}
-.tp-body{
-  padding:12px 14px; font-size:13.5px; line-height:1.62; color:var(--ink);
-  max-height:280px; overflow-y:auto; user-select:text; white-space:pre-wrap;
-}
-.tp-foot{padding:0 12px 11px}
-.tp-goto{
-  font-size:11.5px; padding:5px 11px; border-radius:5px;
-  border:1px solid var(--rule); color:var(--ink-soft);
-}
-.tp-goto:hover{border-color:#4A3A16; color:var(--lamp); background:var(--lamp-bg)}
-
 /* one persistent section selector */
 .secbar{display:flex; gap:6px; align-items:center; margin-bottom:16px}
 #secpick{
@@ -443,5 +436,3 @@ textarea:focus{outline:none; border-color:var(--indigo); background:var(--panel)
 }
 #secpick:focus{outline:none; border-color:var(--indigo)}
 
-#termpop.hovering{pointer-events:none}
-#termpop.hovering .tp-foot{display:none}

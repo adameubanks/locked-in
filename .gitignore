@@ -12,8 +12,7 @@ config.json
 state.json
 *.tmp
 
-# The book's own text: definitions/theorems extracted from the PDFs.
-# Rebuild locally with `python3 build/extract_glossary.py`.
+# The book's own text, from the retired glossary extractor. Unused now.
 content/glossary.json
 
 # The textbooks themselves (copyrighted). Drop your own copies here.

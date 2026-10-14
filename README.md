@@ -1,13 +1,18 @@
 # LOCKED IN
 
-A study environment for ACME Volumes 3 and 4. The textbook and the study
-scaffolding live in one window, so reading and retrieval aren't in separate apps.
+A study environment for a folder of PDFs, built around ACME Volumes 3 and 4.
+Every PDF in `books/` is in the library (sidebar: `B`; quick open: `O` or
+`Ctrl+P`, or click the title). An ACME volume opens beside its study pane;
+anything else reads full width.
 
-Pick a section and you get two modes over it: **Read** (questions through the
-text) and **Explain** (the book's definitions, which you write in your own words
-first). Every revealed answer also carries alternate registers &mdash; brain rot,
-an example, why you'd care, just the math. Plus a find bar over both volumes
-that steps through the hits and draws them on the page, and an exercises pane.
+For an ACME section you get its question cards, each with alternate registers
+&mdash; brain rot, an example, why you'd care, just the math &mdash; and an
+exercises pane that follows the section, and `generate` writes more cards for it.
+Everywhere: a find bar that draws its
+hits on the page (both volumes in ACME, the open PDF otherwise), `ask ai` on a
+selection (answered with the whole PDF in view), and `listen`, which reads the body text aloud in a local neural
+voice and marks each word on the page as it's spoken (`R`; `[` and `]` step a
+sentence). Select text and choose listen to start there.
 
 ## Install
 
@@ -19,10 +24,8 @@ From the project directory:
 
     npm install
 
-That pulls Electron 32, pdf.js and the Anthropic SDK — about 500 MB, nearly all
-of it the Electron binary. The Anthropic SDK is the client for `ask ai`, which
-talks to DeepSeek over its Anthropic-compatible endpoint; no Anthropic account
-is involved.
+That pulls Electron 32, pdf.js, kokoro-js (the voice) and Google's Gen AI SDK —
+about 700 MB, most of it the Electron binary and the ONNX runtime.
 
 Then put the books in `books/` (gitignored — they're copyrighted). The paths in
 `content/manifest.json` are relative to the repo:
@@ -37,24 +40,9 @@ differently by opening to any page with a printed number and subtracting.
     npm start
 
 `~/.locked-in/` is created on first run. Nothing else is written outside the
-repo, and nothing but `ask ai` touches the network.
-
-## Generating the glossary
-
-`content/glossary.json` is not in the repo. It is the book's own text — every
-definition, theorem and lemma lifted from the PDFs — so it stays with whoever
-owns the book. Build your own copy:
-
-    sudo apt install poppler-utils
-    pip3 install pillow numpy
-    python3 build/extract_glossary.py
-
-`extract_glossary.py` keeps its own `BOOKS` list at the top of the file, with
-the same two absolute paths as the manifest — point those at your PDFs as well.
-
-Until you run it, Explain mode and the hover/click definitions come up empty.
-Reading, the cards, the exercises pane and search all work without it. Re-run it
-whenever a new chapter ships.
+repo. The network is touched by `ask ai` and `generate`, and once by `listen`: the first time
+it runs it downloads the Kokoro voice model (~330 MB) from Hugging Face into
+`node_modules/`, and speaks offline from then on.
 
 ## Launcher
 
@@ -69,20 +57,25 @@ those three lines if it doesn't live in `~/Projects/locked-in`.
 
 Disables hardware acceleration, which some GPU and driver combinations need.
 
-## Ask ai
+## Ask ai and generated cards
 
-Optional, and the only part of the app that touches the network. It runs on
-DeepSeek, through the Anthropic-compatible endpoint at
-`https://api.deepseek.com/anthropic`, so it needs a DeepSeek key:
+Optional. Both run on Gemini, which gets the whole PDF rather than an extract of
+it, so it reads the mathematics as typeset and can point you elsewhere in the
+book. The free tier of the Gemini API is enough; get a key at
+[aistudio.google.com/apikey](https://aistudio.google.com/apikey) (a Google One
+or student plan doesn't change the API's limits either way) and put it in
 
-    ~/.locked-in/config.json     { "apiKey": "sk-…" }
+    ~/.locked-in/config.json     { "geminiKey": "…" }
 
-or an exported `DEEPSEEK_API_KEY` before `npm start`. The config file is the
-primary path because a `.desktop` launcher inherits no shell environment. The key
-is read in the main process and never crosses into the renderer, and it is the
-only key consulted — an exported `ANTHROPIC_API_KEY` is ignored rather than sent
-to DeepSeek.
+or export `GEMINI_API_KEY` before `npm start`. The config file is the primary
+path because a `.desktop` launcher inherits no shell environment. The key is
+read in the main process and never crosses into the renderer.
 
-`config.json` also takes `model` (default `deepseek-v4-pro`; `deepseek-v4-flash`
-is the cheaper one), `effort` (default `medium`), `maxTokens` (default 32000) and
-`thinking` (set it to `false` to send no reasoning parameter at all).
+Each PDF is uploaded once and kept for 48 hours by Google; the upload's address
+is remembered in `~/.locked-in/gemini-files.json`. On the free tier Google may
+use what you send to improve its models, so don't ask about anything you
+wouldn't share. `config.json` also takes `model` (default `gemini-2.5-flash`).
+
+Generated cards are stored in `~/.locked-in/state.json`, tagged in the deck, and
+never touch the authored decks in `content/`. Gemini is told not to work the
+book's exercises, in cards or in answers.
