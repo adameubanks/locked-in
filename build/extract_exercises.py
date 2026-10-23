@@ -18,7 +18,7 @@ from PIL import Image
 import numpy as np
 
 DPI, MIN_FRAC = 100, 0.40
-EXNUM = re.compile(r"^\d+\.\d+\.?$")
+EXNUM = re.compile(r"^\d+\.\d+\.?[*†]*$")
 
 def words_on(pdf, page):
     """(y-fraction, text) for every word on the page, top to bottom."""
@@ -133,10 +133,10 @@ def main():
                     s["exFrom"] = {"page": bp, "y": fy}
                     nxt = marks[i+1] if i+1 < len(marks) else (ex["to"], 1.0)
                     s["exTo"] = {"page": nxt[0], "y": nxt[1]}
+                ch["exMarks"] = [{"page": p, "y": y} for p, y in marks]
+                json.dump(ch, open("content/"+c["file"], "w"), indent=1, ensure_ascii=False)
             else:
-                for s in secs: s.pop("exFrom", None); s.pop("exTo", None)
-            ch["exMarks"] = [{"page": p, "y": y} for p, y in marks]
-            json.dump(ch, open("content/"+c["file"], "w"), indent=1, ensure_ascii=False)
+                print(f"     leaving existing marks (detected {len(marks)}, need {need})")
             out[v["id"]+":"+ch["chapter"]] = len(marks)
     return out
 

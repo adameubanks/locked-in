@@ -1,0 +1,205 @@
+{
+ "volume": "vol4",
+ "chapter": "6",
+ "file": "vol4-ch6.json",
+ "title": "Linear Algebra in Function Spaces",
+ "epigraph": {
+  "text": "Real life solutions of differential equations are not always highly differentiable, some are not differentiable at all, and some are not even continuous.",
+  "by": "Chapter 6, on why weak solutions exist"
+ },
+ "sections": [
+  {
+   "id": "6.1",
+   "name": "Weak Solutions and Distributions",
+   "from": 259,
+   "to": 264,
+   "exFrom": {
+    "page": 290,
+    "y": 0.5327
+   },
+   "exTo": {
+    "page": 290,
+    "y": 0.8327
+   }
+  },
+  {
+   "id": "6.2",
+   "name": "Eigenfunctions",
+   "from": 265,
+   "to": 271,
+   "exFrom": {
+    "page": 290,
+    "y": 0.8327
+   },
+   "exTo": {
+    "page": 291,
+    "y": 0.3973
+   }
+  },
+  {
+   "id": "6.3",
+   "name": "Sturm–Liouville Problems",
+   "from": 272,
+   "to": 275,
+   "exFrom": {
+    "page": 291,
+    "y": 0.3973
+   },
+   "exTo": {
+    "page": 291,
+    "y": 0.7318
+   }
+  },
+  {
+   "id": "6.4",
+   "name": "Green's Functions",
+   "from": 276,
+   "to": 280,
+   "exFrom": {
+    "page": 291,
+    "y": 0.7318
+   },
+   "exTo": {
+    "page": 292,
+    "y": 0.2245
+   }
+  },
+  {
+   "id": "6.5",
+   "name": "Finite Elements in One Dimension",
+   "from": 281,
+   "to": 289,
+   "exFrom": {
+    "page": 292,
+    "y": 0.2245
+   },
+   "exTo": {
+    "page": 293,
+    "y": 0.8273
+   }
+  }
+ ],
+ "exercises": {
+  "from": 290,
+  "to": 293
+ },
+ "exMarks": [
+  {
+   "page": 290,
+   "y": 0.5327
+  },
+  {
+   "page": 290,
+   "y": 0.8327
+  },
+  {
+   "page": 291,
+   "y": 0.3973
+  },
+  {
+   "page": 291,
+   "y": 0.7318
+  },
+  {
+   "page": 292,
+   "y": 0.2245
+  },
+  {
+   "page": 293,
+   "y": 0.8273
+  }
+ ],
+ "cards": [
+  {
+   "id": "v4c6a1",
+   "s": "6.1",
+   "page": 259,
+   "q": "What is the weak formulation of &minus;u&#776; = f with u(0)=u(1)=0, and what does it buy you?",
+   "a": "Multiply by a test function v &isin; C&#8320;<sup>&infin;</sup>([0,1]) (vanishes at the endpoints) and integrate by parts twice:<div class='eq'>(f, v) = &minus;(u, v&#776;)&nbsp;&nbsp; for all such v.</div>This is the <b>weak / variational form</b>. It only needs fv and uv&#776; integrable &mdash; u need not be C&sup2;, continuous, or even a function.<p style='margin-top:8px'>The classical ODE is recovered when u is smooth enough. The point is the extra solutions: a curling wave is not a graph, but it can still be a weak solution.</p>",
+   "r": {
+    "rot": "instead of asking u to have a second derivative (that's a lot of aura to demand), ask that against every smooth bump that dies at the ends, the inner product of f with the bump equals minus u against the bump's second derivative. integration by parts yeeted the derivatives onto the test function. now u can be rough, or not even a function, and the equation still makes sense. dumb-dumb: you stopped asking the solution to be pretty and started asking it to pass a vibe check against every nice test bump.",
+    "ex": "The model problem &minus;u&#776; = f on (0,1) with Dirichlet ends is (6.1). Same pattern later for Green's functions and finite elements.",
+    "why": "It is the language of the rest of the chapter. Distributions, eigenfunctions, Sturm&ndash;Liouville, Green's functions and finite elements all live in this weak inner-product world, not in C&sup2;.",
+    "math": "(f,v)=&minus;(u,v&#776;) &forall; v&isin;C&#8320;<sup>&infin;</sup>. Needs integrability, not classical derivatives."
+   }
+  },
+  {
+   "id": "v4c6a2",
+   "s": "6.1",
+   "page": 261,
+   "q": "Define a distribution and the Dirac delta. How is a weak derivative defined?",
+   "a": "<b>Test functions</b> D(&Omega;) = C&#8320;<sup>&infin;</sup>(&Omega;): smooth, compact support inside &Omega; (hence vanish with all derivatives at &part;&Omega;).<p style='margin-top:8px'><b>Def 6.1.4.</b> A <b>distribution</b> is a continuous linear functional on D(&Omega;). Write v[&phi;]. Every u &isin; L&sup1;<sub>loc</sub> gives one by &phi; &mapsto; (u,&phi;); the Dirac delta &delta;[&phi;] = &phi;(0) is a distribution that is <i>not</i> given by a locally integrable function.</p><p><b>Def 6.1.10 (weak derivative):</b> (&part;u/&part;x<sub>k</sub>)[&phi;] = &minus;u[&part;&phi;/&part;x<sub>k</sub>]. For genuine C&sup1; functions this matches the classical derivative by integration by parts &mdash; the minus sign is that boundary term vanishing.</p>",
+   "r": {
+    "rot": "a distribution is 'what happens when you pair me with every smooth bump.' ordinary functions do this by integration (normal behavior). dirac is the evaluation-at-zero bump-counter: &delta;[&phi;] = &phi;(0). no actual function integrates to that. dirac is not a function. it's an NPC that only talks at x=0. to differentiate a distribution, pass the derivative onto the test function and flip the sign &mdash; the same integration by parts that defined the weak form. so derivatives became 'make the bump do the work.'",
+    "ex": "Nota Bene 6.1.7: everyone writes &delta;(x) and &int;&delta;(x)&phi;(x)dx = &phi;(0) as if &delta; were a function. It isn't; the left-hand side is defined to mean the right.",
+    "why": "Once derivatives live on the test function, you can talk about solutions that aren't differentiable. That is the whole point of the chapter's opening examples.",
+    "math": "D(&Omega;)=C&#8320;<sup>&infin;</sup>. Distribution = continuous linear functional. (&part;u)[&phi;]=&minus;u[&part;&phi;]. &delta;[&phi;]=&phi;(0)."
+   }
+  },
+  {
+   "id": "v4c6b1",
+   "s": "6.2",
+   "page": 266,
+   "q": "Define eigenfunctions of a linear operator on a function space. What extra care does infinite dimension demand?",
+   "a": "<b>Def 6.2.4.</b> L&phi; = &omega;&phi; with &phi; &ne; 0 in the space S on which L acts: &omega; is an eigenvalue, &phi; an eigenfunction. Same sentence as in finite dimensions.<p style='margin-top:8px'><b>The catch:</b> in infinite dimensions, L &minus; &omega;I failing to be invertible does <i>not</i> automatically mean &omega; is an eigenvalue. Spectrum is larger than the set of eigenvalues; you have to actually produce &phi;.</p><p>Example 6.2.5: Lu = u<sub>xx</sub> with u(0)=0, u<sub>x</sub>(1)=0. Try e<sup>rx</sup>, r&sup2;=&omega;, and the boundary conditions kill the exponential/hyperbolic cases, leaving a cosine/sine family with discrete &omega; &lt; 0.</p>",
+   "r": {
+    "rot": "same definition as matrices: L hits &phi; and gives a scalar times &phi;. that's an eigenfunction. the difference is you cannot just look at det(L&minus;&omega;I)=0, because infinite dimensions are ohio. 'not invertible' does not mean there's a kernel. you have to actually produce &phi;. guess a form (exponentials for constant-coefficient), plug in the boundary conditions, and only some &omega; survive. the rest get ratio'd by the boundary.",
+    "ex": "Theorem 6.2.10: self-adjoint L has real eigenvalues, and distinct eigenvalues have orthogonal eigenfunctions &mdash; the infinite-dimensional spectral theorem in miniature.",
+    "why": "Boundary-value problems are eigenvalue problems. The rest of the chapter (SL, Green's, FEM) needs a basis of eigenfunctions the way finite-dimensional linear algebra needs a basis of eigenvectors.",
+    "math": "L&phi;=&omega;&phi;. Infinite-dim: not invertible ⇏ eigenvalue. Self-adjoint &rArr; real &omega;, orthogonal eigenspaces."
+   }
+  },
+  {
+   "id": "v4c6c1",
+   "s": "6.3",
+   "page": 272,
+   "q": "Define a Sturm–Liouville problem. Why does every second-order ODE hide one?",
+   "a": "<b>Def 6.3.1.</b> On a bounded [a,b],<div class='eq'>Lu = (1/r)[ &minus;(p u')' + q u ],&nbsp;&nbsp; p&gt;0, r&gt;0, p,q &isin; C&sup2;</div>The regular SL problem is Lu = &omega; r u (weight r). Singular if p or r vanish, or the interval is unbounded.<p style='margin-top:8px'>Special case p=1, q=0, r=1: L = &minus;d&sup2;/dx&sup2;.</p><p><b>Prop 6.3.4.</b> Any &minus;A u'' &minus; B u' + C u = &omega; u on [a,b] can be rewritten as an SL problem (Exercise 6.11) &mdash; multiply by the integrating factor that turns the first-derivative term into a divergence.</p>",
+   "r": {
+    "rot": "second-order linear BVP in divergence form, with a weight. that's sturm&ndash;liouville. the textbook &minus;u'' is the boring special case (tutorial SL). the punchline is that every second-order ODE can be massaged into this shape with an integrating factor, so the nice spectral theory isn't a niche &mdash; it's the general 1d story. every 1d linear villain was SL in a trench coat.",
+    "ex": "Regular SL with Dirichlet or Neumann ends: eigenvalues are real, simple, bounded below, and the eigenfunctions form an orthogonal basis of the weighted L&sup2; space (Thm 6.3.9).",
+    "why": "SL is the self-adjoint 1d operator. Green's functions and the Fredholm alternative in the next pages are its linear algebra.",
+    "math": "Lu=(1/r)[-(pu')'+qu]. Regular: p,r&gt;0 on compact [a,b]. Every 2nd-order ODE is SL after an integrating factor."
+   }
+  },
+  {
+   "id": "v4c6c2",
+   "s": "6.3",
+   "page": 275,
+   "q": "State the Fredholm alternative for a regular SL operator.",
+   "a": "<b>Thm 6.3.12.</b> For a regular SL operator with the usual boundary conditions, exactly one of the following holds for Lu = f:<ul style='margin:0;padding-left:19px'><li><b>Either</b> 0 is not an eigenvalue, L is invertible, and there is a unique solution for every f;</li><li><b>or</b> 0 is an eigenvalue, and Lu = f has a solution iff f is orthogonal to every eigenfunction for eigenvalue 0. In that case the solution is unique up to adding those eigenfunctions.</li></ul><p style='margin-top:8px'>Same dichotomy as Ax = b in finite dimensions: unique solution vs. solvability conditions from the kernel.</p>",
+   "r": {
+    "rot": "either the homogeneous problem has only the zero solution, and you can solve Lu=f for every f (unique, W, invertible), or it has a kernel, and f has to be orthogonal to that kernel or there's no solution. that's fredholm: infinite-dimensional linear algebra with the same yes/no as matrices. Ax=b lore, but the matrix is an operator. if 0 is an eigenvalue you cannot invert, same as a singular matrix. no cap it's the same tweet.",
+    "ex": "The Green's function of the next section exists precisely in the first case (0 not an eigenvalue). If 0 is an eigenvalue you cannot invert L.",
+    "why": "It tells you when a BVP is well-posed before you try to solve it, and it is the solvability test behind Green's functions.",
+    "math": "Either 0&notin;&sigma;(L) and L<sup>&minus;1</sup> exists, or 0&isin;&sigma;(L) and f &perp; ker L is necessary and sufficient."
+   }
+  },
+  {
+   "id": "v4c6d1",
+   "s": "6.4",
+   "page": 276,
+   "q": "What is a Green's function, and how do eigenfunctions produce one?",
+   "a": "The Green's function G(x,&theta;) of L is the integral kernel of a right inverse:<div class='eq'>L(G(x,&middot;)) = &delta;(x&minus;&theta;),&nbsp;&nbsp; so u(x) = &int; G(x,&theta;) f(&theta;) d&theta; solves Lu = f.</div>Analogy: G is to L as A<sup>+</sup> is to a matrix A (AA<sup>+</sup> = I). The Dirac delta is the identity kernel.<p style='margin-top:8px'><b>Prop 6.4.1.</b> If {&phi;<sub>n</sub>} is an orthonormal eigenbasis with L&phi;<sub>n</sub> = &omega;<sub>n</sub> &phi;<sub>n</sub> and no &omega;<sub>n</sub> = 0, then<div class='eq'>G(x,&theta;) = &Sigma;<sub>n</sub> &phi;<sub>n</sub>(x) &phi;<sub>n</sub>(&theta;) / &omega;<sub>n</sub></div>Same formula as the spectral inverse of a diagonalizable matrix, A<sup>&minus;1</sup> = &Sigma; v<sub>n</sub>v<sub>n</sub><sup>T</sup>/&lambda;<sub>n</sub>.</p>",
+   "r": {
+    "rot": "to invert L, find a kernel G so that hitting G with L in x gives a delta at &theta;. then integrating G against f is applying L<sup>&minus;1</sup>. G is the 'what would the solution look like if the forcing was a click at &theta;.' if you own an orthonormal eigenbasis, write G as the sum of &phi;(x)&phi;(&theta;)/&omega; &mdash; the same spectral inverse you already know for matrices. zero eigenvalues block the inverse (fredholm said so). no eigen-zeroes, you get a green's function. eigen-zeroes, it's over, no inverse.",
+    "ex": "Exercise 6.16: L = &minus;d&sup2;/dx&sup2; on [0,1] with Neumann ends. Constant functions are in the kernel, so no Green's function exists.",
+    "why": "It turns 'solve the BVP' into 'integrate against a kernel you compute once'. FEM in the next section is a different inverse: project onto a finite-dimensional subspace instead of summing the whole eigenbasis.",
+    "math": "LG=&delta;. Spectral: G=&Sigma; &phi;<sub>n</sub>(x)&phi;<sub>n</sub>(&theta;)/&omega;<sub>n</sub> if 0&notin;&sigma;(L)."
+   }
+  },
+  {
+   "id": "v4c6e1",
+   "s": "6.5",
+   "page": 281,
+   "q": "What is the Ritz–Galerkin idea, and what makes finite elements a special case?",
+   "a": "The true solution lives in an infinite-dimensional space V. Pick a finite-dimensional S = span{\\phi;<sub>j</sub>} of easy functions (not necessarily a subspace of V) and seek u<sub>S</sub> &isin; S close to u. That is <b>Ritz–Galerkin</b>.<p style='margin-top:8px'><b>Finite elements</b> are RG with a piecewise-polynomial basis supported on a mesh. In 1D the model basis is <b>hat functions</b>: &phi;<sub>i</sub>(x<sub>i</sub>)=1, &phi;<sub>i</sub>(x<sub>j</sub>)=0 for j&ne;i, linear in between. Small support &rArr; sparse stiffness matrix. S is the continuous piecewise-linear functions that kink only at the nodes.</p><p>Unlike Ch 4's finite differences (values at nodes), FEM produces a function on the whole interval.</p>",
+   "r": {
+    "rot": "don't approximate the derivative &mdash; approximate the space the solution lives in. pick a cheap finite-dimensional subspace, solve the weak form there. that's ritz&ndash;galerkin. finite elements are RG with tents: hat functions that are 1 at one node, 0 at the others, linear in between. because each hat only sees its two neighbours, the matrix is sparse (not fully cooked, just a few bands). unlike finite differences (numbers at nodes), FEM gives you an actual function on the whole interval. dumb-dumb: build the answer out of little tents.",
+    "ex": "Model BVP: &minus;u''=f on (0,1) with mixed ends. Weak form on S, existence/uniqueness in any finite-dimensional S &sub; the energy space (Thm 6.5.4). The FEM solution is the best approximation in S in the energy norm (Thm 6.5.10).",
+    "why": "It is how weak solutions become a numerical method. The same inner-product form that defined distributions now produces a linear system you can actually solve.",
+    "math": "RG: solve the weak form in finite-dim S. FEM: S = piecewise polynomials on a mesh. Hats &rArr; sparse stiffness."
+   }
+  }
+ ]
+}

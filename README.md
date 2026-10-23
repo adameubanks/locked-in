@@ -28,8 +28,15 @@ That pulls Electron 32, pdf.js and kokoro-js (the voice) — about 700 MB, most 
 Then put the books in `books/` (gitignored — they're copyrighted). The paths in
 `content/manifest.json` are relative to the repo:
 
-    { "id": "vol3", ..., "pdf": "books/Vol3.pdf",        "pageOffset": 6 }
-    { "id": "vol4", ..., "pdf": "books/Vol4_Ch1-4.pdf",  "pageOffset": 0 }
+    { "id": "vol3", ..., "pdf": "books/Vol3.pdf",  "pageOffset": 6 }
+    { "id": "vol4", ..., "pdf": "books/Vol4.pdf",  "pageOffset": 0 }
+
+Vol 4 is the Ch 1–4 PDF plus Ch 5–6, with two blank pages so the printed
+page numbers line up (Ch 5 starts at p.143, Ch 6 at p.259). From the split files:
+
+    python3 -c "from reportlab.pdfgen import canvas; from reportlab.lib.pagesizes import letter; c=canvas.Canvas('books/blank2.pdf',pagesize=letter); c.showPage(); c.showPage(); c.save()"
+    pdfunite books/Vol4_Ch1-4.pdf books/blank2.pdf books/V4_Ch5-6_F2026.pdf books/Vol4.pdf
+    rm books/blank2.pdf
 
 Get one wrong and the reader says so in the pane and names the file it expected.
 `pageOffset` is pdfPage minus bookPage — re-derive it if your scan is numbered

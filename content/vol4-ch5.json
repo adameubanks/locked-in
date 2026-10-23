@@ -1,0 +1,677 @@
+{
+ "volume": "vol4",
+ "chapter": "5",
+ "file": "vol4-ch5.json",
+ "title": "Stability Theory",
+ "epigraph": {
+  "text": "Without stability there is no rest and no peace in this life.",
+  "by": "Marsha Carol Watson Gandy"
+ },
+ "sections": [
+  {
+   "id": "5.1",
+   "name": "Stability of Linear Systems and Equilibria",
+   "from": 143,
+   "to": 154,
+   "exFrom": {
+    "page": 246,
+    "y": 0.19
+   },
+   "exTo": {
+    "page": 246,
+    "y": 0.4409
+   }
+  },
+  {
+   "id": "5.2",
+   "name": "Linearization and Phase Portraits",
+   "from": 155,
+   "to": 167,
+   "exFrom": {
+    "page": 246,
+    "y": 0.4409
+   },
+   "exTo": {
+    "page": 247,
+    "y": 0.6218
+   }
+  },
+  {
+   "id": "5.3",
+   "name": "Epidemics and Structural Stability",
+   "from": 168,
+   "to": 175,
+   "exFrom": {
+    "page": 247,
+    "y": 0.6218
+   },
+   "exTo": {
+    "page": 248,
+    "y": 0.1827
+   }
+  },
+  {
+   "id": "5.4",
+   "name": "Lyapunov's Method",
+   "from": 176,
+   "to": 187,
+   "exFrom": {
+    "page": 248,
+    "y": 0.1827
+   },
+   "exTo": {
+    "page": 249,
+    "y": 0.3436
+   }
+  },
+  {
+   "id": "5.5",
+   "name": "*More Lyapunov Stability",
+   "from": 188,
+   "to": 190,
+   "exFrom": {
+    "page": 249,
+    "y": 0.3436
+   },
+   "exTo": {
+    "page": 249,
+    "y": 0.3736
+   }
+  },
+  {
+   "id": "5.6",
+   "name": "*Poincaré–Bendixson Theorem and Bounding Regions",
+   "from": 191,
+   "to": 204,
+   "exFrom": {
+    "page": 249,
+    "y": 0.3736
+   },
+   "exTo": {
+    "page": 249,
+    "y": 0.7164
+   }
+  },
+  {
+   "id": "5.7",
+   "name": "*Stable Manifold Theorem",
+   "from": 205,
+   "to": 211,
+   "exFrom": {
+    "page": 249,
+    "y": 0.7164
+   },
+   "exTo": {
+    "page": 250,
+    "y": 0.3357
+   }
+  },
+  {
+   "id": "5.8",
+   "name": "*Center Manifold Theory",
+   "from": 212,
+   "to": 216,
+   "exFrom": {
+    "page": 250,
+    "y": 0.3357
+   },
+   "exTo": {
+    "page": 250,
+    "y": 0.7727
+   }
+  },
+  {
+   "id": "5.9",
+   "name": "*Bifurcations",
+   "from": 217,
+   "to": 229,
+   "exFrom": {
+    "page": 250,
+    "y": 0.7727
+   },
+   "exTo": {
+    "page": 251,
+    "y": 0.6636
+   }
+  },
+  {
+   "id": "5.10",
+   "name": "Gradient Flow and Optimization Algorithms",
+   "from": 230,
+   "to": 236,
+   "exFrom": {
+    "page": 251,
+    "y": 0.6636
+   },
+   "exTo": {
+    "page": 255,
+    "y": 0.3236
+   }
+  },
+  {
+   "id": "5.11",
+   "name": "The Tennis Racket Theorem",
+   "from": 237,
+   "to": 244,
+   "exFrom": {
+    "page": 255,
+    "y": 0.3236
+   },
+   "exTo": {
+    "page": 257,
+    "y": 0.1409
+   }
+  }
+ ],
+ "exercises": {
+  "from": 245,
+  "to": 257
+ },
+ "cards": [
+  {
+   "id": "v4c5a1",
+   "s": "5.1",
+   "page": 145,
+   "q": "Classify the six generic 2D linear equilibria from the eigenvalues of A.",
+   "a": "For x&#775; = Ax with distinct eigenvalues &omega;&#8321;, &omega;&#8322; (Example 5.1.1):<ul style='margin:0;padding-left:19px'><li><b>Both real, &omega;&#8321;,&omega;&#8322; &lt; 0:</b> asymptotically stable node &mdash; all solutions &rarr; 0.</li><li><b>Opposite signs:</b> saddle &mdash; one stable eigendirection, one unstable; not stable.</li><li><b>Both real, &gt; 0:</b> unstable node &mdash; everything except 0 runs to infinity.</li><li><b>Purely imaginary, distinct:</b> center &mdash; periodic orbits; stable but <i>not</i> asymptotically stable.</li><li><b>Complex, Re &gt; 0:</b> unstable spiral.</li><li><b>Complex, Re &lt; 0:</b> asymptotically stable spiral (damped oscillator).</li></ul><p style='margin-top:8px'>The whole classification is the sign pattern of Re(&omega;). Figures 5.2&ndash;5.3 make each case visual.</p>",
+   "r": {
+    "rot": "chat this is the whole 2d bestiary and the rule is one (1) thing: look at the real part of the eigenvalues. both negative = everyone logs off and dies (sink, W). both positive = everyone is crashing out off the map (source, L). one of each = saddle, that friend who is so back AND so over. pure imaginary = walking in circles forever, locked in but never arriving. spiral = same walk but they added a little rizz (in) or a little crashout (out). dumb-dumb version: arrows either go home, leave, or do a little dance.",
+    "ex": "The undamped oscillator sits in case (iv); add friction and you get case (vi). Same matrix shape, one sign flip in Re(&omega;), qualitatively different long-term behaviour.",
+    "why": "It is the picture every later theorem is measuring you against. Asymptotic stability, uniform stability, centers, saddles &mdash; they all show up here first as eigenvalue cases.",
+    "math": "Distinct &omega;&#8321; &ne; &omega;&#8322;. Classification by (sign Re &omega;&#8321;, sign Re &omega;&#8322;) and whether Im = 0."
+   }
+  },
+  {
+   "id": "v4c5a2",
+   "s": "5.1",
+   "page": 145,
+   "q": "State Theorem 5.1.2. What does it say about &#8214;exp(tA)&#8214;?",
+   "a": "<b>Theorem 5.1.2.</b> If Re(&omega;) &lt; 0 for every eigenvalue &omega; of A &isin; M<sub>n</sub>(&Copf;), then there exist &epsilon; &gt; 0 and C &gt; 0 such that<div class='eq'>&#8214;exp(tA)&#8214; &le; C e<sup>&minus;&epsilon;t</sup> for all t &ge; 0.</div><b>Proof idea:</b> pick a contour &Gamma; in the open left half-plane enclosing &sigma;(A) (Figure 5.4); on &Gamma; one has |e<sup>zt</sup>| &le; e<sup>&minus;&epsilon;&prime;t</sup>. Write exp(tA) by the Spectral Resolution Theorem as a contour integral of e<sup>tz</sup>R<sub>A</sub>(z), pull the decay out, and set C to the remaining integral of &#8214;R<sub>A</sub>&#8214;.<p style='margin-top:8px'><b>Definition 5.1.3:</b> A is <b>exponentially stable</b> when such an &epsilon; exists; the largest &epsilon; is the <b>spectral gap</b> &mdash; distance from &sigma;(A) to the imaginary axis.</p>",
+   "r": {
+    "rot": "if every eigenvalue is in the left half-plane, the matrix exponential itself is cooked &mdash; not just the solutions, the whole operator. it dies like Ce<sup>&minus;&epsilon;t</sup>. &epsilon; is how far the spectrum sits from the imaginary axis (aura gap). C is the 'non-normal tax': some matrices can still pop off for a while before the decay mogs them. so 'spectrum on the left' means you win eventually, not that you look good on frame 1.",
+    "ex": "Corollary 5.1.5 is the immediate payoff: every IVP solution x(t) = exp(tA)x&#8320; goes to 0. Remark 5.1.4 warns this is finite-dimensional &mdash; infinite-dimensional operators can have spectrum in the left half-plane that accumulates on the axis.",
+    "why": "This is the linear engine under everything that follows: asymptotic stability of the origin, the linearization theorem, Lyapunov's equation, stable manifolds. If you only remember one theorem from &sect;5.1, remember this one.",
+    "math": "Re(&omega;) &lt; 0 &forall;&omega; &isin; &sigma;(A) &rArr; &#8214;e<sup>tA</sup>&#8214; &le; Ce<sup>&minus;&epsilon;t</sup>. Spectral gap = dist(&sigma;(A), i&Ropf;)."
+   }
+  },
+  {
+   "id": "v4c5a3",
+   "s": "5.1",
+   "page": 148,
+   "q": "What does the constant C buy you, and where does transient growth come from?",
+   "a": "<b>Remark 5.1.6.</b> C allows <b>transient growth</b> before the exponential wins. Two sources, both visible in the spectral expansion of exp(tA):<ul style='margin:0;padding-left:19px'><li><b>Nonzero eigennilpotents</b> D<sub>&omega;</sub> &mdash; polynomial factors t<sup>k</sup> when geometric multiplicity &lt; algebraic.</li><li><b>Nonorthogonal eigenprojections</b> with &#8214;P<sub>&omega;</sub>&#8214; &gg; 1 &mdash; non-normal A.</li></ul><p style='margin-top:8px'>For small t and large C the solution can move far from 0 even though it eventually decays. Exponentially stable does <i>not</i> mean monotonically decaying.</p>",
+   "r": {
+    "rot": "the bound is C times a dying exponential, not the dying exponential. C can be huge. so the solution can look like it's crashing out, sprinting AWAY from zero, and then later the exponential finally clocks in and it's so over. that's transient growth. two ways to cook a big C: non-normal matrices (eigenvectors all leaning the same way, mid geometry) and jordan blocks (the extra t<sup>k</sup>e<sup>&lambda;t</sup> terms).",
+    "ex": "The damped oscillator (Example 5.1.7) is the friendly case: both eigenvalues have negative real part whenever damping and spring constants are positive, so the origin is exponentially stable.",
+    "why": "It stops you from reading 'exponentially stable' as 'immediately quiet'. Transient amplification is a real modeling phenomenon, not a defect of the bound.",
+    "math": "&#8214;e<sup>tA</sup>x&#8320;&#8214; &le; C&#8214;x&#8320;&#8214;e<sup>&minus;&epsilon;t</sup>; C absorbs t<sup>k</sup> from nilpotents and &#8214;P&#8214; from non-normality."
+   }
+  },
+  {
+   "id": "v4c5a4",
+   "s": "5.1",
+   "page": 150,
+   "q": "Define uniformly stable. How is the spectral condition weaker than exponential stability?",
+   "a": "<b>Theorem 5.1.9 / Def 5.1.10.</b> A is <b>uniformly stable</b> if Re(&omega;) &le; 0 for all &omega; &isin; &sigma;(A) <i>and</i> every purely imaginary eigenvalue is semisimple (geometric = algebraic multiplicity). Then &#8214;exp(tA)&#8214; &le; M for all t &ge; 0.<p style='margin-top:8px'><b>Weaker than exponential:</b> spectrum may <i>touch</i> the imaginary axis. The semisimple requirement kills the nilpotent t<sup>k</sup> factors on that axis &mdash; without it you get polynomial growth, the first form of instability in the section.</p><p>Corollary 5.1.11: every solution of x&#775; = Ax is bounded on t &ge; 0. (Proof is Exercise 5.3.)</p>",
+   "r": {
+    "rot": "exponential stability = spectrum strictly left, solutions die. uniform stability = they're allowed to sit on the imaginary axis and just vibe, as long as there are no jordan blocks there. then solutions stay bounded: they can orbit forever (center energy) but they don't grow. put a nontrivial nilpotent on the axis and you get polynomial blowup, which is already an L. sitting on the fence is fine; being a jordan block on the fence is ohio.",
+    "ex": "A center (purely imaginary, distinct eigenvalues) is the prototype: uniformly stable, not exponentially stable. The undamped oscillator lives here.",
+    "why": "It is the linear fact underneath Definition 5.1.17's 'stable but not asymptotically stable'. Without it, centers wouldn't fit the theory.",
+    "math": "Re(&omega;) &le; 0 and m<sub>g</sub>(&omega;) = m<sub>a</sub>(&omega;) on the axis &rArr; &#8214;e<sup>tA</sup>&#8214; bounded. Failure of semisimplicity &rArr; t<sup>k</sup> growth."
+   }
+  },
+  {
+   "id": "v4c5a5",
+   "s": "5.1",
+   "page": 151,
+   "q": "Define equilibrium, orbit, and phase portrait.",
+   "a": "<b>Def 5.1.12.</b> x is an <b>equilibrium</b> of x&#775; = f(x) if f(x) = 0 &mdash; equivalently, the constant function x(t) &equiv; x is a solution, with maximal interval &Ropf;.<p style='margin-top:8px'><b>Def 5.1.13.</b> For the IVP through x&#8320; with maximal interval I:</p><ul style='margin:0;padding-left:19px'><li><b>Orbit:</b> {x(t) : t &isin; I} &sub; &Omega;.</li><li><b>Phase portrait:</b> the collection of all orbits of f in &Omega;.</li></ul><p style='margin-top:8px'>Remark 5.1.14: the whole game of dynamical systems is describing the qualitative features of the phase portrait. Remark 5.1.16: to guarantee I = &Ropf; on &Ropf;<sup>n</sup>, replace f by f/(1+&#8214;f&#8214;) &mdash; same orbits, no finite-time blowup.</p>",
+   "r": {
+    "rot": "three vocab words, that's the whole chapter. <b>equilibrium</b> = a point the vector field does not move. NPC energy. it's just standing there. <b>orbit</b> = the curve a solution traces, the path the guy actually walks. <b>phase portrait</b> = all those walks drawn at once, the whole lobby. every stability definition after this is just 'what do the nearby walks do.'",
+    "ex": "Example 5.1.15 redraws the six linear cases as vector-field + orbit plots (Figure 5.5). Same information as Figures 5.2&ndash;5.3, different language.",
+    "why": "Without these three words the definitions of stable / asymptotically stable / attracting don't parse. They are the nouns; stability is the adjective.",
+    "math": "f(x) = 0 &hArr; equilibrium. Orbit = image of the solution. Phase portrait = set of all orbits."
+   }
+  },
+  {
+   "id": "v4c5a6",
+   "s": "5.1",
+   "page": 153,
+   "q": "Define stable, asymptotically stable, and attracting. How do they differ?",
+   "a": "<b>Def 5.1.17 (stable / Lyapunov stable):</b> for every &epsilon; &gt; 0 there is &delta; &gt; 0 so that &#8214;x&#8320; &minus; x&#8214; &lt; &delta; &rArr; the solution exists for all t &gt; 0 and &#8214;x(t) &minus; x&#8214; &lt; &epsilon;. Nearby solutions <b>stay</b> nearby.<p style='margin-top:8px'><b>Def 5.1.21 (asymptotically stable):</b> stable, <i>and</i> there is &delta; &gt; 0 so that &#8214;x&#8320; &minus; x&#8214; &lt; &delta; &rArr; x(t) &rarr; x. Nearby solutions stay nearby <b>and converge</b>.</p><p><b>Attracting:</b> not stable, but nearby solutions still converge to x &mdash; they may wander far first. Possible, and it happens.</p><div class='eq'>stable &ne; asymptotically stable &ne; attracting</div><p>Prop 5.1.20: uniformly stable A &rArr; origin stable. Prop 5.1.22: exponentially stable A &rArr; origin asymptotically stable.</p>",
+   "r": {
+    "rot": "three nested ideas people mix up like they're the same clip. <b>stable</b> = start close, stay close (don't wander off). <b>asymptotically stable</b> = stay close AND come home. <b>attracting</b> = you'll come home eventually, but maybe after a whole side quest. a center is stable but not asymptotically stable (circling, never parking). attracting-but-not-stable is the cursed one: solutions sneak away, touch grass, then come back. main character arc, not a neighborhood.",
+    "ex": "Of the six linear pictures, exponentially stable matrices give asymptotic stability; the center (uniformly stable) gives stability without attraction; saddles and sources give neither.",
+    "why": "This trichotomy is the payoff of the whole section. Everything later &mdash; linearization, Lyapunov, manifolds &mdash; is a tool for deciding which of these three you have.",
+    "math": "Stable: &forall;&epsilon;&exist;&delta;. Asymp. stable: stable + local attraction. Attracting: attraction without stability."
+   }
+  },
+  {
+   "id": "v4c5b1",
+   "s": "5.2",
+   "page": 156,
+   "q": "Define the linearization at an equilibrium. When is the equilibrium hyperbolic?",
+   "a": "Translate v = x &minus; x&#772; near an equilibrium of x&#775; = f(x). Taylor expand:<div class='eq'>v&#775; = Df(x&#772;)v + Q(v),&nbsp;&nbsp; Q(v) = O(&#8214;v&#8214;&sup2;),&nbsp;&nbsp; lim<sub>v&rarr;0</sub>&#8214;Q(v)&#8214;/&#8214;v&#8214; = 0.</div><b>Def 5.2.1.</b> The <b>linearization</b> is v&#775; = Df(x&#772;)v. The equilibrium is <b>hyperbolic</b> if no eigenvalue of A = Df(x&#772;) has zero real part.<p style='margin-top:8px'>Hyperbolicity is the ticket that lets linear information control the nonlinear picture. Nonhyperbolic equilibria need Lyapunov functions, center manifolds, or pictures.</p>",
+   "r": {
+    "rot": "near an equilibrium, throw away everything past the jacobian and pretend the system is linear. that's linearization. it's the 'trust the first-order vibes' move. <b>hyperbolic</b> means nothing is sitting on the imaginary axis or at zero &mdash; no eigenvalues on the fence. if something is on the fence, linearization refuses to call it and you need a different tool. hyperbolic = the linearization actually has aura. nonhyperbolic = it's giving 'it's complicated.'",
+    "ex": "Example 5.2.9 (x&#775; = &minus;x&sup3;) and Example 5.2.16 both have Df = 0 at the origin &mdash; nonhyperbolic, and the linearization is mute. Both are asymptotically stable by other arguments.",
+    "why": "It is the single most used tool in applied dynamics, and knowing when it is allowed to speak is half the skill. Theorem 5.2.2 is what it says when it can.",
+    "math": "A = Df(x&#772;). Hyperbolic &hArr; Re(&omega;) &ne; 0 &forall;&omega; &isin; &sigma;(A). Q = o(&#8214;v&#8214;) as v &rarr; 0."
+   }
+  },
+  {
+   "id": "v4c5b2",
+   "s": "5.2",
+   "page": 156,
+   "q": "State the Asymptotic Stability Theorem. What is the proof strategy?",
+   "a": "<b>Theorem 5.2.2.</b> If x&#772; is hyperbolic and &sigma;(Df(x&#772;)) lies in the open left half-plane, then x&#772; is asymptotically stable for the nonlinear system.<p style='margin-top:8px'><b>Strategy:</b> write the variation by Duhamel,<div class='eq'>v(t) = e<sup>tA</sup>v&#8320; + &int;&#8320;<sup>t</sup> e<sup>(t&minus;s)A</sup>Q(v(s)) ds,</div>use &#8214;e<sup>tA</sup>&#8214; &le; Ke<sup>&minus;&gamma;t</sup> from Theorem 5.1.2, take &#8214;Q(v)&#8214; &le; &epsilon;&#8214;v&#8214; for small v, multiply by e<sup>&gamma;t</sup>, and apply <b>Gronwall</b>. Choose &epsilon; &lt; &gamma;/K so the exponent is negative: stability and attraction both fall out.</p>",
+   "r": {
+    "rot": "linearization in the left half-plane &rArr; the nonlinear equilibrium is asymptotically stable. translation: if the fake linear version is a W, the real nonlinear version is also a W, at least nearby. proof is duhamel + gronwall: the linear part dies, the leftover nonlinear junk is smaller than any &epsilon;&#8214;v&#8214; near zero, and you pick &epsilon; small enough that decay still mogs the junk. same combo as existence theory, different ending.",
+    "ex": "The Hartman&ndash;Grobman theorem (stated, not proved) says the full local phase portrait of a hyperbolic equilibrium matches its linearization &mdash; Theorem 5.2.2 is the stable special case.",
+    "why": "It is the theorem you reach for first on every new equilibrium. When it applies, you are done. When it doesn't, the rest of the chapter exists.",
+    "math": "Hyperbolic + Re(&sigma;(A)) &lt; 0 &rArr; asymptotically stable. Needs f &isin; C&sup3;, Gronwall, Thm 5.1.2."
+   }
+  },
+  {
+   "id": "v4c5b3",
+   "s": "5.2",
+   "page": 158,
+   "q": "Why must a hyperbolic equilibrium be isolated?",
+   "a": "<b>Prop 5.2.3.</b> Translate so the equilibrium is at 0; set g(x) = f(x + x&#772;). Then g(0) = 0 and Dg(0) = Df(x&#772;) is nonsingular (no zero eigenvalue, by hyperbolicity). The Inverse Function Theorem says g is locally invertible, so nothing nearby maps to 0 &mdash; no other nearby equilibria.<p style='margin-top:8px'><b>Contrapositive:</b> a non-isolated equilibrium cannot be hyperbolic. The SIR model in &sect;5.3 is the running example &mdash; a whole plane of equilibria, none hyperbolic, linearization theorem unavailable.</p>",
+   "r": {
+    "rot": "hyperbolic means the jacobian is invertible there. invertible derivative = locally one-to-one, so the vector field cannot hit zero again nearby. isolated, no clones. a whole line or plane of equilibria is automatically nonhyperbolic &mdash; the linearization theorem has nothing to say, it's giving 'do not perceive me.' if your fixed points come in a pack, don't even try theorem 5.2.2.",
+    "ex": "The text flags a further trap: there exist stable nonhyperbolic equilibria whose linearization is unstable (polynomial instability of the linearization). Hyperbolicity is sufficient for the correspondence, not necessary for stability.",
+    "why": "It tells you immediately when to stop trying linearization. Non-isolated &rArr; skip to Lyapunov, invariants, or dimension reduction.",
+    "math": "Hyperbolic &rArr; 0 &notin; &sigma;(Df) &rArr; IFT &rArr; isolated. Non-isolated &rArr; not hyperbolic."
+   }
+  },
+  {
+   "id": "v4c5b4",
+   "s": "5.2",
+   "page": 159,
+   "q": "How do you read the entire phase portrait of a scalar ODE x&#775; = f(x) off the graph of f?",
+   "a": "Zeros of f are equilibria and partition the interval into subintervals where f keeps a constant sign.<ul style='margin:0;padding-left:19px'><li>f &gt; 0 &rArr; x(t) increasing (move right).</li><li>f &lt; 0 &rArr; x(t) decreasing (move left).</li></ul><p style='margin-top:8px'>That is the whole phase portrait. Linearization recovers the same verdict: f&prime;(x&#772;) &lt; 0 is a sink, f&prime;(x&#772;) &gt; 0 a source &mdash; the slope of the graph at the intercept.</p><p>Example 5.2.6 (x&#775; = sin x): the explicit solution is useless; the graph of sin x with arrows decides everything. Example 5.2.9 (x&#775; = &minus;x&sup3;): asymptotically stable by the picture, but Df(0) = 0 so linearization is silent.</p>",
+   "r": {
+    "rot": "one dimension is a tutorial level. plot f. zeros are the equilibria. where f is positive, arrows go right (they're locked in that way). where f is negative, arrows go left. that's every orbit, no solving, no cap. the linearization at a zero is just the slope of that graph: downhill crossing = sink (W), uphill = source (everyone leaves). slope zero = nonhyperbolic, but the picture still works because you can just look at it with your eyes.",
+    "ex": "Example 5.2.7 gives a phase portrait from a hand-drawn f with no formula at all &mdash; intervals of attraction read straight off the graph.",
+    "why": "Scalar autonomous ODEs are completely classifiable by a picture. It is the warm-up for nullclines in the plane, and the reason 'draw f' is always step one.",
+    "math": "Equilibria = f<sup>&minus;1</sup>(0). Sign(f) = direction of flow. f&prime;(x&#772;) &lt; 0 &rArr; asymp. stable when hyperbolic."
+   }
+  },
+  {
+   "id": "v4c5b5",
+   "s": "5.2",
+   "page": 162,
+   "q": "What is a nullcline, and how do you use nullclines to sketch a planar phase portrait?",
+   "a": "<b>Def 5.2.11.</b> The nullcline for coordinate x<sub>k</sub> is {x : f<sub>k</sub>(x) = 0} &mdash; where that component of the velocity vanishes.<p style='margin-top:8px'>In 2D, the two nullclines partition the plane into regions of constant sign pattern for (x&#775;, y&#775;). Equilibria sit at their intersections. Flow crosses an x&#775; = 0 nullcline <b>vertically</b> and a y&#775; = 0 nullcline <b>horizontally</b>; a nullcline that is an axis of one coordinate often cannot be crossed at all.</p><p>Recipe: find nullclines &rarr; mark equilibria &rarr; pick one test point per region to get the arrow &rarr; sketch. Examples 5.2.13&ndash;5.2.16 walk through it; Figures 5.9&ndash;5.10 are the pictures.</p>",
+   "r": {
+    "rot": "nullcline = where one velocity component is zero, so you're only allowed to move in the other direction. x-nullcline: purely vertical, like an elevator. y-nullcline: purely horizontal, like a hallway. where they cross, you're fully NPC (equilibrium). the regions between them each get one arrow vibe. sketch the arrows, connect the dots &mdash; that's a phase portrait without solving a single ODE. unemployed behavior that somehow works.",
+    "ex": "Example 5.2.14 (rotation matrix) has nullclines on the axes and a center at the origin &mdash; stable, not asymptotically stable, eigenvalues purely imaginary.",
+    "why": "Nullclines are the planar substitute for 'graph f'. In higher dimensions they exist but are hard to draw, which is why the book leans on them in 2D and switches tools later.",
+    "math": "x<sub>k</sub>-nullcline = {f<sub>k</sub> = 0}. Equilibria = intersections. Sign chart on complementary regions &rarr; phase portrait."
+   }
+  },
+  {
+   "id": "v4c5c1",
+   "s": "5.3",
+   "page": 168,
+   "q": "Why does linearization fail for the SIR equilibria, and what does the nonzero eigenvalue still tell you?",
+   "a": "Setting the SIR vector field to zero forces I = 0 with S, R free &mdash; a <b>plane of equilibria</b>, none isolated, hence none hyperbolic (Prop 5.2.3). Theorem 5.2.2 is unavailable.<p style='margin-top:8px'>The linearization at (S&#8320;, 0, R&#8320;) still has eigenvalues 0, 0, bS&#8320; &minus; k. The zero double eigenvalue reflects the plane of equilibria. The third eigenvalue controls the <b>intermediate</b> fate of I:<div class='eq'>I&#775; = (bS &minus; k)I</div>As S decreases (S&#775; = &minus;bSI &lt; 0), eventually bS &minus; k flips negative and I begins to fall &mdash; the peak of the epidemic.</p>",
+   "r": {
+    "rot": "SIR has a whole plane of fixed points, so none of them is hyperbolic and the asymptotic-stability theorem just logs off. but the leftover eigenvalue bS &minus; k still tells you if infection is so back or so over in the middle of the outbreak. it's not a stability proof. it's a forecast. dumb-dumb: linearization can't grade the homework, but that one number is still the 'is this going viral' check.",
+    "ex": "Dimension reduction via S+I+R = 1 (an invariant) cuts the system to 2D in the (I,R)-plane, where the same eigenvalue reappears as b &minus; bR&#8320; &minus; k = bS&#8320; &minus; k.",
+    "why": "It is the textbook case of 'linearization is incomplete but not useless'. Structural conclusions need other tools; local growth rates can still be read off.",
+    "math": "Non-isolated &rArr; nonhyperbolic. &sigma; = {0,0,bS&#8320;&minus;k}. Sign of bS&minus;k governs I&#775;."
+   }
+  },
+  {
+   "id": "v4c5c2",
+   "s": "5.3",
+   "page": 172,
+   "q": "What is structural stability, and why are both Lotka&ndash;Volterra models a failure of it?",
+   "a": "Informally: x&#775; = f(x) is <b>structurally stable</b> if every nearby vector field g has a phase portrait qualitatively the same as f's. For modeling this is the question 'do small measurement errors destroy the conclusions?'<p style='margin-top:8px'><b>First-order LV</b> (Ex 5.3.1): coexistence equilibrium is a center &mdash; nested periodic orbits. <b>Second-order LV</b> (Ex 5.3.2): add any finite carrying capacity g &gt; 0 and the center becomes an asymptotically stable spiral (or source). A tiny, physically mandatory perturbation changes the entire qualitative picture.</p><p>Remark 5.3.3: without structural stability you should distrust the model, not just retune parameters. The 'fix' arrives in &sect;5.6 with a limit cycle.</p>",
+   "r": {
+    "rot": "structural stability asks: if i'm a little wrong about the equations, am i still right about the movie? first-order lotka&ndash;volterra says eternal predator-prey cycles, very aesthetic. add the tiniest carrying capacity (one (1) extra term) and the cycles become a spiral into a point. the model was not built different. it was balanced on a knife edge. that's an L for robustness: your conclusion should survive a small patch, not instantly become a different genre.",
+    "ex": "Figure 5.11 vs Figures 5.12&ndash;5.13: same biological story, opposite long-term prediction, difference is one quadratic term.",
+    "why": "It is why 'my simulation looks periodic' is not enough. If the periodicity is structurally unstable, the real system won't show it.",
+    "math": "Structural stability &asymp; phase portrait survives C&sup1;-small perturbations. LV center &rarr; spiral under carrying capacity: fails."
+   }
+  },
+  {
+   "id": "v4c5d1",
+   "s": "5.4",
+   "page": 178,
+   "q": "Define an invariant (conserved quantity). Why does it matter for planar systems?",
+   "a": "<b>Def 5.4.2.</b> N is an <b>invariant</b> of x&#775; = f(x) if dN/dt = 0 along solutions. By the chain rule this is exactly DxN &middot; f(x) = 0 &mdash; no need to solve the ODE.<p style='margin-top:8px'><b>Why care:</b> (i) an invariant can cut dimension (SIR: S+I+R = 1 reduces 3 &rarr; 2); (ii) in the plane, level curves of an invariant <b>are</b> the orbits &mdash; you have 'solved' the system (nonlinear pendulum, Example 5.4.5).</p><p>Conservative equations x&#776; = &minus;U&prime;(x) have energy E = &frac12;x&#775;&sup2; + U(x) as invariant (Example 5.4.1). Add damping and E&#775; &le; 0 &mdash; no longer conserved, but still useful as a Lyapunov function.</p>",
+   "r": {
+    "rot": "an invariant is a quantity the motion cannot change. compute DxN &middot; f; if it's zero you're done, no solving, you found a conserved bit. in 2d the level sets of N ARE the trajectories &mdash; the phase portrait is just a contour plot of N. that's why energy methods feel like cheating. they are cheating. it's looking at the answer key. lock in, compute one derivative, skip the ODE.",
+    "ex": "Example 5.4.4: N = 1 &minus; S &minus; I &minus; R is the SIR invariant. Example 5.4.5: pendulum energy levels are the orbits.",
+    "why": "Invariants are the raw material for Lyapunov functions (E&#775; &le; 0 instead of = 0) and for dimension reduction. Both payoffs show up immediately in this section.",
+    "math": "Invariant &hArr; DxN &middot; f = 0. Planar level sets = orbits. Energy for x&#776; = &minus;U&prime;(x)."
+   }
+  },
+  {
+   "id": "v4c5d2",
+   "s": "5.4",
+   "page": 180,
+   "q": "Define a Lyapunov function. State Lyapunov's Local Stability Theorem.",
+   "a": "<b>Def 5.4.7&ndash;5.4.8.</b> V is positive definite on a neighbourhood of 0 if V(0) = 0 and V &gt; 0 elsewhere. V is a <b>Lyapunov function</b> for the equilibrium at 0 if it is C&sup1;, positive definite, and its orbital derivative satisfies<div class='eq'>V&#775;(x) = DV(x) &middot; f(x) &le; 0</div>near 0.<p style='margin-top:8px'><b>Theorem 5.4.9 (Local Stability).</b> If a Lyapunov function exists, the equilibrium is stable.</p><p><b>Proof idea:</b> on the sphere &#8214;x&#8214; = &epsilon; the continuous positive-definite V has a positive minimum m. Pick &delta; so V &lt; m inside the &delta;-ball. Along a trajectory V is nonincreasing, so the solution cannot reach the sphere &mdash; trapped inside forever.</p>",
+   "r": {
+    "rot": "find a height function V that's zero only at the equilibrium and never increases along the flow. like a bowl. solutions starting low cannot climb out past a level set &mdash; they're trapped in the bowl. that's stability. you don't need the linearization, you don't need hyperbolicity, you need a good V. lyapunov is just 'i found a bowl and nothing can climb out of it, so yes they stay close.' dumb-dumb: gravity but make it math.",
+    "ex": "Example 5.4.11: V = x&#8308; + y&#8308; has V&#775; = 0 for a system whose linearization is the zero matrix &mdash; stable by Lyapunov, invisible to linearization. Remark 5.4.10: use this when linearization gives a center but numerics suggest stability.",
+    "why": "It is the escape hatch when Theorem 5.2.2 doesn't apply. Finding V is the hard part ('divine inspiration', or nowadays sum-of-squares SDP); checking V is mechanical.",
+    "math": "V &gt; 0 off 0, V(0) = 0, V&#775; = DV&middot;f &le; 0 &rArr; stable. Proof: V can't reach its minimum on &#8214;x&#8214; = &epsilon;."
+   }
+  },
+  {
+   "id": "v4c5d3",
+   "s": "5.4",
+   "page": 183,
+   "q": "What extra condition on V upgrades stability to asymptotic stability?",
+   "a": "<b>Theorem 5.4.12 (Local Asymptotic Stability).</b> If V is a Lyapunov function and moreover V&#775;(x) &lt; 0 for all x &ne; 0 near 0, then the equilibrium is asymptotically stable.<p style='margin-top:8px'><b>Proof idea:</b> stability is already in hand. If a solution stayed bounded away from 0, V&#775; &le; &minus;&mu; &lt; 0 on that compact annulus, so V(x(t)) &le; V(x&#8320;) &minus; &mu;t &rarr; &minus;&infin;, contradicting positive-definiteness. A second contradiction argument upgrades 'gets arbitrarily close' to 'converges'.</p><p>Example 5.4.13: V = x&#8308; + y&#8308; with V&#775; = &minus;4(x&#8309; + y&#8309;) &lt; 0 off 0 proves the origin of Example 5.2.16 asymptotically stable &mdash; where Df = 0 said nothing.</p>",
+   "r": {
+    "rot": "same bowl, but now V strictly decreases everywhere except the equilibrium. solutions cannot loiter at a positive height (no camping). they have to slide all the way to zero. V&#775; &le; 0 gave 'trapped in the lobby.' V&#775; &lt; 0 gives 'the lobby is draining, everyone goes home.' upgrade from stable to asymptotically stable is literally 'stop letting them vibe at constant height.'",
+    "ex": "The damped pendulum (Example 5.4.14) is the cautionary case: energy has V&#775; = &minus;sy&sup2; &le; 0 but not &lt; 0 off 0 (vanishes on the x-axis), so Lyapunov only gives stability; asymptotic stability comes from linearization instead. Use both tools.",
+    "why": "Strict decrease is the difference between a center (energy conserved) and a spiral (energy dissipated). It is also why damping terms matter.",
+    "math": "V&#775; &lt; 0 off 0 &rArr; asymptotically stable. V&#775; &le; 0 only &rArr; stable (maybe not asymptotic)."
+   }
+  },
+  {
+   "id": "v4c5d4",
+   "s": "5.4",
+   "page": 187,
+   "q": "What does a Lyapunov function buy you for the Lorenz system when r &lt; 1?",
+   "a": "Example 5.4.15: the Lorenz equations<div class='eq'>x&#775; = &sigma;(y &minus; x),&nbsp;&nbsp; y&#775; = rx &minus; y &minus; xz,&nbsp;&nbsp; z&#775; = xy &minus; bz.</div>With V = x&sup2;/&sigma; + y&sup2; + z&sup2;, the exercises show V&#775; &lt; 0 whenever 0 &lt; r &lt; 1 (and b, &sigma; &gt; 0). So the origin is <b>globally</b> asymptotically stable for r &lt; 1 &mdash; every trajectory converges to 0, no chaos.<p style='margin-top:8px'>As r crosses 1 the origin loses stability (a bifurcation; &sect;5.9). Same V, same equations, different parameter regime, opposite conclusion.</p>",
+   "r": {
+    "rot": "lorenz is famous for chaos, the original 'this graph is so ohio' system. but for r &lt; 1 a simple quadratic lyapunov function kills every trajectory into the origin. global W. chaos is a parameter-dependent DLC, not a personality trait of the equations. the same V that proves 'everyone comes home' for r &lt; 1 is silent once r exceeds 1. different settings, different game.",
+    "ex": "Exercise 5.18 asks you to verify the orbital derivative; the hint about (x &minus; ((r+1)/2)y)&sup2; is the algebraic trick.",
+    "why": "It bookends the section: Lyapunov methods reach global conclusions linearization never could, and they set up the bifurcation story of &sect;5.9.",
+    "math": "V = x&sup2;/&sigma; + y&sup2; + z&sup2;, V&#775; &lt; 0 for r &lt; 1 &rArr; global asymptotic stability of 0."
+   }
+  },
+  {
+   "id": "v4c5e1",
+   "s": "5.5",
+   "page": 189,
+   "q": "What is a Hurwitz matrix, and what does Lyapunov's equation say?",
+   "a": "<b>Def 5.5.1.</b> A is <b>Hurwitz</b> if Re(&omega;) &lt; 0 for every eigenvalue &mdash; i.e., exponentially stable.<p style='margin-top:8px'><b>Lemma 5.5.2 (Lyapunov's equation).</b> A is Hurwitz iff for every positive-definite Q there is a unique positive-definite P with<div class='eq'>A<sup>H</sup>P + PA = &minus;Q.</div></p><p><b>(&rArr;)</b> P = &int;&#8320;<sup>&infin;</sup> e<sup>A<sup>H</sup>t</sup> Q e<sup>tA</sup> dt converges precisely because A is Hurwitz. <b>(&lArr;)</b> V(x) = x<sup>H</sup>Px has V&#775; = &minus;x<sup>H</sup>Qx &lt; 0, so e<sup>tA</sup> &rarr; 0.</p><p>Remark 5.5.3: this is Sylvester's equation AX + XB = C with B = A<sup>H</sup>, C = &minus;Q.</p>",
+   "r": {
+    "rot": "hurwitz = all eigenvalues in the open left half-plane, i.e. the linear system is exponentially cooked (in a good way: it dies). lyapunov's equation says that's equivalent to: pick any positive-definite Q you want, there's a positive-definite P solving A*P + PA = &minus;Q. one direction: build P as an integral of the decaying semigroup (let the decay cook). other direction: turn P into a quadratic lyapunov function. so 'spectrum on the left' and 'i have a quadratic bowl' are the same tweet.",
+    "ex": "If A is diagonalizable the converse is elementary on the diagonal entries: 2 Re(&omega;<sub>k</sub>) p<sub>kk</sub> = &minus;q<sub>kk</sub> &lt; 0. The Bartels&ndash;Stewart algorithm (&sect;5.5.3) solves it numerically via Schur form without diagonalizing.",
+    "why": "It converts a spectral question into a linear-algebra question, and it supplies the quadratic Lyapunov function used to redo the stability theorem in Theorem 5.5.5.",
+    "math": "Hurwitz &hArr; &forall;Q &gt; 0 &exist;! P &gt; 0: A<sup>H</sup>P + PA = &minus;Q. V = x<sup>H</sup>Px then has V&#775; = &minus;x<sup>H</sup>Qx."
+   }
+  },
+  {
+   "id": "v4c5e2",
+   "s": "5.5",
+   "page": 190,
+   "q": "How does Theorem 5.5.5 redo the asymptotic stability theorem with Lyapunov functions?",
+   "a": "<b>Theorem 5.5.5.</b> If A = Df(x&#772;) is Hurwitz, then x&#772; is asymptotically stable.<p style='margin-top:8px'><b>Proof:</b> get P &gt; 0 from Lyapunov's equation for any Q &gt; 0. Set V(x) = x<sup>H</sup>Px on the translated system x&#775; = Ax + g(x) with g = o(&#8214;x&#8214;). Then<div class='eq'>V&#775; = &minus;x<sup>H</sup>Qx + 2x<sup>H</sup>Pg(x) &le; &minus;(&lambda;<sub>min</sub>(Q) &minus; 2&phi;&#8214;P&#8214;)&#8214;x&#8214;&sup2;</div>for &#8214;x&#8214; small. Choose &phi; &lt; &lambda;<sub>min</sub>(Q)/(2&#8214;P&#8214;) and V&#775; is negative definite &mdash; Theorem 5.4.12 applies.</p><p>Same conclusion as Theorem 5.2.2, different engine: quadratic Lyapunov function instead of Duhamel + Gronwall.</p>",
+   "r": {
+    "rot": "same theorem as 5.2, lyapunov speedrun: solve for P, build the quadratic V, check that the nonlinear remainder cannot overcome &minus;x*Qx near zero. pick the remainder small enough and V&#775; stays negative. two proofs of one fact is the point &mdash; use whichever tool fits the next problem. linearization if the jacobian is a W; lyapunov if the jacobian is mid and you still have a bowl.",
+    "ex": "Remark 5.5.7 says so explicitly: another version of the stability theorem already proved.",
+    "why": "Having both proofs matters because the Lyapunov route extends to cases where you can find V but can't easily control the Duhamel integral &mdash; and conversely.",
+    "math": "A Hurwitz &rArr; &exist;P,Q &gt; 0 with A<sup>H</sup>P+PA=&minus;Q &rArr; V=x<sup>H</sup>Px has V&#775; &lt; 0 near 0."
+   }
+  },
+  {
+   "id": "v4c5f1",
+   "s": "5.6",
+   "page": 193,
+   "q": "State Bendixson's criterion. What does it rule out?",
+   "a": "<b>Theorem 5.6.2 (Bendixson).</b> If f = (P, Q) is C&sup1; on a simply connected U &sub; &Ropf;&sup2; and &nabla;&middot;f = P<sub>x</sub> + Q<sub>y</sub> is not identically zero and does not change sign on U, then x&#775; = f(x) has <b>no periodic orbit</b> in U.<p style='margin-top:8px'><b>Proof:</b> a periodic orbit ! would give &oint;<sub>!</sub> P dy &minus; Q dx = 0 by the ODEs, hence &iint;<sub>S</sub> &nabla;&middot;f = 0 by the divergence form of Green. But a one-signed, not-identically-zero continuous divergence can't integrate to zero over the interior.</p><p>Example 5.6.3: &nabla;&middot;f = &minus;6(x&#8308;+y&#8308;) &lt; 0 off 0 kills all periodic orbits, even though the linearization is a center. Lyapunov then upgrades the origin to asymptotically stable.</p>",
+   "r": {
+    "rot": "in the plane, if the divergence of the vector field never changes sign and isn't zero, there are no periodic orbits. period. green's theorem turns a loop into an area integral of divergence; a one-signed integrand cannot give zero. it's a 'this cycle does not exist' test &mdash; cheap, conclusive, 2d-only. if div is always positive or always negative, nobody is doing laps. the loop would have to be both a source and a sink and that's not rizz.",
+    "ex": "Remark 5.6.17: Bendixson and Poincar&eacute;&ndash;Bendixson are strictly two-dimensional. Higher dimensions get chaos instead.",
+    "why": "It is the first half of the planar story: sometimes you can prove cycles don't exist. The second half (Poincar&eacute;&ndash;Bendixson) proves they do.",
+    "math": "Simply connected + &nabla;&middot;f one-signed and &ne; 0 &rArr; no periodic orbit. Green + contradiction."
+   }
+  },
+  {
+   "id": "v4c5f2",
+   "s": "5.6",
+   "page": 197,
+   "q": "Define limit cycle, forward invariant set, and state the Poincaré–Bendixson Theorem.",
+   "a": "<b>Def 5.6.7.</b> A <b>periodic orbit</b> is a closed trajectory. A <b>limit cycle</b> is an isolated periodic orbit &mdash; nearby orbits are not themselves periodic.<p style='margin-top:8px'><b>Def 5.6.9.</b> A is <b>forward invariant</b> (a trapping region) if x(0) &isin; A &rArr; x(t) &isin; A for all t &ge; 0.</p><p><b>Theorem 5.6.11 (Poincar&eacute;&ndash;Bendixson).</b> In the plane, a compact forward-invariant set containing no equilibria must contain a periodic orbit.</p><p>Remark 5.6.13: the theorem gives existence, not stability. Lyapunov functions are the usual tool for building the trapping region (Example 5.6.5: V = x&sup2; + y&sup2; produces an annulus around the unit-circle limit cycle).</p>",
+   "r": {
+    "rot": "trap solutions in a compact planar region with no fixed points, and there has to be a periodic orbit inside. that's the whole theorem. a limit cycle is an isolated one &mdash; nearby solutions approach it rather than being periodic themselves (they're glazing the cycle, not on it). building the trap is the craft; poincar&eacute;&ndash;bendixson is the hammer. dumb-dumb: if you put a hamster in a box with no exits and no place to sit still, it will run in a loop.",
+    "ex": "Example 5.6.14 finally gives the third-order Lotka&ndash;Volterra model a limit cycle via a hand-built trapping region from orbit segments and transverse lines &mdash; structural stability repaired.",
+    "why": "It is the existence engine for planar oscillation. Combined with Bendixson (nonexistence) you can often decide completely whether a 2D system oscillates.",
+    "math": "Compact + forward invariant + equilibrium-free + planar &rArr; &exist; periodic orbit. Limit cycle = isolated periodic orbit."
+   }
+  },
+  {
+   "id": "v4c5f3",
+   "s": "5.6",
+   "page": 200,
+   "q": "How do you build a trapping region for the glycolysis model (Example 5.6.16)?",
+   "a": "Goal: compact forward-invariant equilibrium-free A, then invoke Poincar&eacute;&ndash;Bendixson.<ol style='margin:0;padding-left:19px'><li><b>First quadrant invariant:</b> on y = 0, V = y has V&#775; = b &gt; 0 (flow enters upward); on x = 0, V = x has V&#775; = ay &gt; 0 (flow enters rightward).</li><li><b>Outer boundary:</b> V = x + y has V&#775; = &minus;x + b &lt; 0 for x &gt; b, so a far diagonal segment pushes inward; close the gap near the y-axis with a horizontal segment where V = y has V&#775; &lt; 0.</li><li><b>Excise the unstable equilibrium:</b> loop an orbit once around it and cut with a transverse segment, as in Example 5.6.14.</li></ol><p style='margin-top:8px'>Result: compact A, no equilibria, hence a limit cycle (Figure 5.15 for a = 0.08, b = 0.6).</p>",
+   "r": {
+    "rot": "three walls of a hamster box. (1) the axes push into the first quadrant, so you start inside. (2) a far wall where some V decreases so solutions cannot escape to infinity (no touching grass outside the map). (3) cut a hole around the unstable fixed point with a transverse cut, because that guy is a source and would ruin the 'no equilibria inside' rule. nothing left in the box but a cycle. poincar&eacute;&ndash;bendixson clocks in. let him cook.",
+    "ex": "The same transverse-cut trick built the Lotka&ndash;Volterra trap in Example 5.6.14 when a simple quadratic V wasn't enough.",
+    "why": "It is the practical skill the section is teaching: Poincar&eacute;&ndash;Bendixson is useless without a trapping region, and trapping regions are built from Lyapunov functions and orbit geometry.",
+    "math": "Invariance of quadrant + outer level set of V + excised neighbourhood of unstable eq &rArr; PB applies."
+   }
+  },
+  {
+   "id": "v4c5g1",
+   "s": "5.7",
+   "page": 206,
+   "q": "Define the stable, unstable, and center subspaces of a matrix A.",
+   "a": "<b>Def 5.7.1.</b> For A &isin; M<sub>n</sub>:<ul style='margin:0;padding-left:19px'><li><b>Stable subspace E<sup>s</sup>:</b> span of (generalized) eigenvectors with Re(&omega;) &lt; 0.</li><li><b>Unstable subspace E<sup>u</sup>:</b> Re(&omega;) &gt; 0.</li><li><b>Center subspace E<sup>c</sup>:</b> Re(&omega;) = 0.</li></ul><p style='margin-top:8px'>These are invariant for the linear system, and they dictate asymptotics: x&#8320; &isin; E<sup>s</sup> &rArr; x(t) &rarr; 0 as t &rarr; &infin;; x&#8320; &isin; E<sup>u</sup> &rArr; x(t) &rarr; 0 as t &rarr; &minus;&infin;; on E<sup>c</sup> with semisimple imaginary eigenvalues, &#8214;x(t)&#8214; stays constant.</p><p>For a hyperbolic fixed point, E<sup>c</sup> = {0} and P<sup>s</sup> + P<sup>u</sup> = I.</p>",
+   "r": {
+    "rot": "chop the space into three invariant pieces by the sign of Re(&omega;). <b>stable</b> directions die forward in time (they log off). <b>unstable</b> directions die backward in time (they only look good in reverse). <b>center</b> directions sit on the fence and refuse to pick a side. for hyperbolic equilibria the center piece is empty and the whole space is stable plus unstable. that's the whole character select screen for linear systems.",
+    "ex": "Def 5.7.2: a manifold of dimension k is something locally isomorphic to &Ropf;<sup>k</sup> &mdash; circle, torus, pringle; a figure-eight is not (crossing).",
+    "why": "Linear subspaces are the model for what the Stable / Center Manifold Theorems produce in the nonlinear setting. Know the linear picture first.",
+    "math": "E<sup>s</sup>, E<sup>u</sup>, E<sup>c</sup> = spectral subspaces for Re &lt; 0, &gt; 0, = 0. Hyperbolic &rArr; E<sup>c</sup> = {0}."
+   }
+  },
+  {
+   "id": "v4c5g2",
+   "s": "5.7",
+   "page": 208,
+   "q": "State the Stable Manifold Theorem. What does the proof construct?",
+   "a": "<b>Theorem 5.7.5.</b> At a hyperbolic equilibrium with dim E<sup>s</sup> = k, there is a k-dimensional C&sup1; manifold W<sup>s</sup><sub>loc</sub> tangent to E<sup>s</sup>, invariant under the flow, on which solutions &rarr; 0 as t &rarr; &infin;. Likewise an (n&minus;k)-dimensional unstable manifold W<sup>u</sup><sub>loc</sub> tangent to E<sup>u</sup>.<p style='margin-top:8px'><b>Construction:</b> rewrite the variation as the integral equation (5.17) involving P<sup>s</sup> and P<sup>u</sup>, view it as a map on a function space, and apply the Contraction Mapping Principle. The fixed point's value at t = 0 graphs the manifold over E<sup>s</sup>; Dh(0) = 0 gives tangency.</p><p>Remark 5.7.8: the contraction also gives an iterative algorithm for approximating the manifold (Example 5.7.9).</p>",
+   "r": {
+    "rot": "near a saddle, the nonlinear system has curved versions of the stable and unstable eigenspaces &mdash; manifolds tangent to those subspaces, invariant, same asymptotic vibe. the linear picture but with a little rizz (bending). the proof builds them as the fixed point of an integral equation via contraction mapping, the same tool that gave existence in ch 2. so the 'there is a curved stable set' theorem is just contraction mapping in a trench coat.",
+    "ex": "Example 5.7.9: x&#775; = &minus;x &minus; y&sup2;, y&#775; = y + x&sup2; has local stable manifold y = &minus;x&sup2;/3 and unstable manifold x = &minus;y&sup2;/3, computed by iterating from x&#8320; = 0.",
+    "why": "It is the geometric content of 'saddle': not just eigenvalues, but two invariant surfaces that organize the whole local phase portrait. Hartman&ndash;Grobman (Remark 5.7.10) upgrades this to topological equivalence with the linearization.",
+    "math": "Hyperbolic &rArr; &exist; W<sup>s</sup><sub>loc</sub> &asymp; E<sup>s</sup>, W<sup>u</sup><sub>loc</sub> &asymp; E<sup>u</sup>, both invariant. Proof: contraction on (5.17)."
+   }
+  },
+  {
+   "id": "v4c5h1",
+   "s": "5.8",
+   "page": 212,
+   "q": "State the Center Manifold Theorem. Why is it useful?",
+   "a": "<b>Theorem 5.8.2.</b> At a nonhyperbolic equilibrium there exists a local center manifold M, graph of a C<sup>k</sup> map over E<sup>c</sup>, such that: M is locally invariant and tangent to E<sup>c</sup>; every globally bounded orbit near the equilibrium lies in M; and every solution approaching the equilibrium is asymptotically shadowed by a solution on M.<p style='margin-top:8px'><b>Usefulness (Remark 5.8.5):</b> the local dynamics reduce to a system of dimension dim E<sup>c</sup> &lt; n. Stability questions that linearization can't decide get decided on this lower-dimensional system.</p><p>Caveat (Remark 5.8.4): M depends on the cutoff used in the proof &mdash; center manifolds are typically <b>not unique</b>, but the local dynamics they carry agree.</p>",
+   "r": {
+    "rot": "when eigenvalues sit on the imaginary axis, the interesting dynamics live on a lower-dimensional surface tangent to the center subspace. that's the center manifold. restrict to that surface and you've reduced the problem: the boring decaying/exploding directions are NPCs, the plot is on the center. the manifold isn't unique (multiple valid cuts), but the local behaviour you read off it is. side quest: drop the dimensions you don't care about, watch the drama on the remaining screen.",
+    "ex": "Example 5.8.6: A = diag(0,&minus;1), approximate center manifold y = x&sup2;. Substituting y = 0 into x&#775; wrongly predicts stability (x&#775; = &minus;x&#8309;); substituting y = x&sup2; gives x&#775; = x&#8308; + O(x&#8309;) &mdash; unstable. The manifold correction matters.",
+    "why": "It is the tool for nonhyperbolic equilibria, and the bridge to bifurcation theory: bifurcations happen precisely when eigenvalues cross the imaginary axis, i.e., when a center subspace appears.",
+    "math": "Nonhyperbolic &rArr; &exist; local center manifold M &asymp; E<sup>c</sup>, locally invariant. Dynamics reduce to dim E<sup>c</sup>."
+   }
+  },
+  {
+   "id": "v4c5i1",
+   "s": "5.9",
+   "page": 218,
+   "q": "What is the Persistence Theorem, and why are hyperbolic equilibria locally structurally stable?",
+   "a": "<b>Def 5.9.1.</b> An equilibrium is <b>nondegenerate</b> if 0 &notin; &sigma;(Df) &mdash; no zero eigenvalue.<p style='margin-top:8px'><b>Theorem 5.9.2 (Persistence).</b> A nondegenerate equilibrium persists uniquely under small parameter changes: there is a C&sup1; branch g(&mu;) of nearby equilibria. Proof: Implicit Function Theorem.</p><p><b>Hyperbolic &rArr; locally structurally stable:</b> hyperbolicity implies nondegeneracy, so the equilibrium persists; eigenvalues move continuously, so the stable/unstable counts can't jump; local dynamics are therefore unchanged under small parameter perturbations.</p>",
+   "r": {
+    "rot": "if the jacobian isn't singular, the implicit function theorem says the equilibrium moves smoothly when you nudge the parameter &mdash; it doesn't appear or vanish, it just scoots. if it's also hyperbolic, the eigenvalue counts cannot jump either, so the local phase portrait looks the same. hyperbolic equilibria are sturdy. they have aura. small patches don't change the genre. that's local structural stability, aka 'this character is not getting nerfed by a 0.001 patch.'",
+    "ex": "The Lorenz origin at r = 1 is where persistence of the <i>stability type</i> fails &mdash; an eigenvalue hits zero and a bifurcation occurs.",
+    "why": "It explains why bifurcations require nonhyperbolicity: as long as you stay hyperbolic, nothing qualitative changes. That is the necessary condition of &sect;5.9.2.",
+    "math": "Nondegenerate &rArr; IFT &rArr; unique local branch g(&mu;). Hyperbolic &rArr; eigenvalue counts persist &rArr; local structural stability."
+   }
+  },
+  {
+   "id": "v4c5i2",
+   "s": "5.9",
+   "page": 219,
+   "q": "What is the necessary condition for a bifurcation? Is it sufficient?",
+   "a": "A bifurcation of local dynamics at an equilibrium can occur only when that equilibrium is <b>not hyperbolic</b> &mdash; some eigenvalue has zero real part (including a zero eigenvalue).<p style='margin-top:8px'><b>Not sufficient</b> (Remark 5.9.3): x&#775; = &mu;&sup2;x + x&sup3; = x(&mu;&sup2; + x&sup2;) has a degenerate equilibrium at 0 when &mu; = 0, but for every &mu; the phase portrait is just one unstable equilibrium at 0. Nonhyperbolic, no bifurcation.</p><p><b>Pseudo-definition 5.9.4:</b> a bifurcation occurs at &mu;&#8320; when the local dynamics at an equilibrium for &mu;&#8320; differ from those for &mu; nearby.</p>",
+   "r": {
+    "rot": "no bifurcation without a nonhyperbolic equilibrium &mdash; something has to sit on the imaginary axis for the qualitative picture to even be allowed to change. but sitting on the axis isn't enough; you can be nonhyperbolic and still look the same on both sides of the parameter (mid, no plot twist). necessary, not sufficient. dumb-dumb: you cannot get a plot twist unless someone is on the fence, but being on the fence doesn't guarantee a plot twist. could just be standing there.",
+    "ex": "All the named bifurcations below (saddle-node, transcritical, pitchfork, Hopf) occur at a nonhyperbolic point; the examples also show the variety of ways the phase portrait can change.",
+    "why": "It is the gatekeeper. Before classifying a bifurcation, check that an eigenvalue has hit the imaginary axis. If none has, you are looking at a persistence phenomenon, not a bifurcation.",
+    "math": "Bifurcation &rArr; nonhyperbolic equilibrium at &mu;&#8320;. Converse false: see x&#775; = x(&mu;&sup2; + x&sup2;)."
+   }
+  },
+  {
+   "id": "v4c5i3",
+   "s": "5.9",
+   "page": 219,
+   "q": "Describe the saddle-node, transcritical, and pitchfork bifurcations.",
+   "a": "All are codimension-1 bifurcations for scalar ODEs, drawn as bifurcation diagrams (&mu; horizontal, x vertical, phase lines on selected slices).<ul style='margin:0;padding-left:19px'><li><b>Saddle-node</b> (x&#775; = x&sup2; + &mu;): two equilibria of opposite stability collide and annihilate. For &mu; &gt; 0 none; &mu; = 0 one semistable; &mu; &lt; 0 a sink and a source.</li><li><b>Transcritical</b> (x&#775; = &mu;x &minus; x&sup2;): two equilibria pass through each other and <b>exchange</b> stability. Always at least one equilibrium (x = 0).</li><li><b>Pitchfork</b> (subcritical: x&#775; = &mu;x + x&sup3;): three equilibria of alternating stability coalesce into one, which switches stability. Supercritical has the branches on the other side of &mu;.</li></ul><p style='margin-top:8px'>Remark 5.9.8: these pictures cover the local qualitative features of all codimension-1 bifurcations.</p>",
+   "r": {
+    "rot": "three ways two or three fixed points can rearrange as a parameter slides. that's the bifurcation starter pack. <b>saddle-node</b>: they collide and vanish (two guys merge and leave the lobby). <b>transcritical</b>: they cross and swap who's stable (they trade the aura). <b>pitchfork</b>: a symmetric triple merges into one (the twins disappear, one main character remains). draw &mu; across, x up, and the phase line on a few vertical slices &mdash; that's the bifurcation diagram. it's a comic strip of 'who exists and who is a W.'",
+    "ex": "Hysteresis (Example 5.9.9) chains saddle-nodes and a pitchfork so that returning &mu; to its old value does <i>not</i> return x to its old value &mdash; the fruit-fly / unemployment moral.",
+    "why": "Named bifurcations are the vocabulary for 'the model changed character'. Recognizing which one you have tells you whether equilibria appear, exchange, or split.",
+    "math": "Saddle-node: create/annihilate. Transcritical: exchange. Pitchfork: symmetric split/merge. All require a zero eigenvalue."
+   }
+  },
+  {
+   "id": "v4c5i4",
+   "s": "5.9",
+   "page": 229,
+   "q": "What is a Hopf bifurcation, and how does the subcritical case produce hysteresis?",
+   "a": "A <b>Hopf bifurcation</b> occurs when a complex-conjugate pair of eigenvalues crosses the imaginary axis. The fixed point changes from stable spiral to unstable spiral (or vice versa), and a limit cycle is born.<p style='margin-top:8px'><b>Subcritical Hopf</b> (Example 5.9.14, in polar form): for &mu; &lt; 0 the origin is stable, surrounded by an unstable limit cycle and a large stable limit cycle. As &mu; crosses 0 the small unstable cycle collapses onto the origin, leaving the origin unstable and the large stable cycle. Decreasing &mu; back through 0 does <b>not</b> return nearby solutions to the origin &mdash; they stay on the large cycle until a further threshold. That gap is hysteresis (Remark 5.9.15).</p><p>The supercritical case (Exercise 5.40&ndash;5.42) births a stable cycle as the origin loses stability.</p>",
+   "r": {
+    "rot": "hopf = a spiral that changes stability by sprouting a periodic orbit. the equilibrium goes from 'spiral home' to 'spiral away' and a cycle is born in the middle. <b>subcritical</b> means the cycle exists on the side where the fixed point is still stable &mdash; so when you cross, solutions jump to a large oscillation and will not jump back just by undoing the parameter. that's hysteresis: the movie remembers which way you came. it's giving 'you can't unsee it.' one-way door in the plane.",
+    "ex": "The supercritical homework system r&#775; = r(&mu; &minus; r&sup2;), &theta;&#775; = 1 has the explicit stable cycle r = &radic;&mu; for &mu; &gt; 0.",
+    "why": "Hopf is the mechanism that turns a stable equilibrium into oscillation without any eigenvalue becoming real. It is how the planar limit cycles of &sect;5.6 can appear as a parameter varies.",
+    "math": "Hopf: complex pair crosses i&Ropf;. Subcritical: unstable cycle collapses into origin; hysteresis on reverse sweep."
+   }
+  },
+  {
+   "id": "v4c5j1",
+   "s": "5.10",
+   "page": 230,
+   "q": "What is the gradient flow, and how is gradient descent related to it?",
+   "a": "For C&sup1; f : &Ropf;<sup>n</sup> &rarr; &Ropf;, the <b>gradient flow</b> is<div class='eq'>x&#775;(t) = &minus;&nabla;f(x(t)),&nbsp;&nbsp; x(0) = x&#8320;.</div>The chain rule gives (d/dt)f(x(t)) = &minus;&#8214;&nabla;f&#8214;&sup2; &le; 0, so f never increases along the flow. Equilibria are the critical points of f.<p style='margin-top:8px'><b>Forward Euler</b> with step h on the flow is exactly gradient descent:<div class='eq'>x<sub>k+1</sub> = x<sub>k</sub> &minus; h&nabla;f(x<sub>k</sub>)</div>The learning rate <i>is</i> the time step. Heavy-ball momentum is likewise a discretization of a damped oscillator.</p>",
+   "r": {
+    "rot": "gradient descent isn't a new object. it's euler on 'walk downhill as fast as you can.' the ODE is the gradient flow, x&#775; = &minus;&nabla;f. f decreases along it because you're always going against the gradient (anti-rizz direction for the function, which is actually the W direction for minimizing). discretize with a step h and you get the familiar GD update. momentum is the same trick one derivative higher: a damped particle in the potential f. so GD is just 'follow the slope, but make it discrete.'",
+    "ex": "Example 5.10.2: f = &frac12;&omega;x&sup2; has flow x(t) = x&#8320;e<sup>&minus;&omega;t</sup>. Gradient descent is x<sub>k</sub> = (1&minus;&omega;h)<sup>k</sup>x&#8320; &mdash; the same multiplier as forward Euler on u&#775; = &minus;&omega;u. Monotone decay for h &le; 1/&omega;, oscillating decay until h = 2/&omega;, divergence past that.",
+    "why": "It recasts Volume 2's optimizer as a numerical ODE, so Ch 4's stability regions and this chapter's Lyapunov theory apply directly. The step-size restriction of gradient descent is Euler's region of absolute stability.",
+    "math": "Flow: x&#775; = &minus;&nabla;f. Euler &rArr; GD. d/dt f = &minus;&#8214;&nabla;f&#8214;&sup2; &le; 0."
+   }
+  },
+  {
+   "id": "v4c5j2",
+   "s": "5.10",
+   "page": 231,
+   "q": "Derive the step-size limit for gradient descent from linearization. Why is a badly conditioned Hessian a stiff system?",
+   "a": "At a nondegenerate minimum, H = D&sup2;f(x*) &gt; 0, the Jacobian of the flow is &minus;H, so x* is asymptotically stable by Theorem 5.2.2. For the discrete map, z<sub>k+1</sub> = (I &minus; hH)z<sub>k</sub> + O(&#8214;z&#8214;&sup2;). Eigenvalues of I &minus; hH are 1 &minus; h&omega;<sub>i</sub>, a contraction iff |1 &minus; h&omega;| &lt; 1 for every eigenvalue, i.e.<div class='eq'>0 &lt; h &lt; 2/&omega;<sub>max</sub></div>If &nabla;f is L-Lipschitz then &omega;<sub>max</sub> &le; L, recovering h &lt; 2/L.<p style='margin-top:8px'>When &kappa;(H) = &omega;<sub>max</sub>/&omega;<sub>min</sub> is large the flow is <b>stiff</b> in the sense of &sect;4.5.1: the fastest mode caps h, and the slowest then contracts by at best 1 &minus; 2/&kappa; per step &mdash; the zigzag of Volume 2.</p>",
+   "r": {
+    "rot": "linearize at the minimum: the hessian's eigenvalues are the decay rates. euler has to be stable for the fastest one, which forces a tiny h, which makes the slow direction crawl. that's stiffness, and that's why ill-conditioned quadratics zigzag forever under gradient descent. the fast direction is crashing out so you take baby steps, and then the slow direction is like '...are we there yet' for a thousand iterations. skill issue of the geometry, not of your code.",
+    "ex": "Implicit Euler would drop the step restriction (Exercise 5.43) at the cost of a nonlinear solve per step &mdash; the same explicit/implicit trade as Ch 4.",
+    "why": "It is why 'just shrink the learning rate' cannot fix a badly scaled problem: the cap is set by the wrong eigenvalue. Momentum exists to change the ODE, not to tune h.",
+    "math": "Need |1 &minus; h&omega;<sub>i</sub>| &lt; 1 &forall;i &rArr; h &lt; 2/&omega;<sub>max</sub>. Stiff when &kappa; = &omega;<sub>max</sub>/&omega;<sub>min</sub> &gg; 1."
+   }
+  },
+  {
+   "id": "v4c5j3",
+   "s": "5.10",
+   "page": 232,
+   "q": "Define L-smooth, strongly convex, and PL. What rate does the descent lemma give for gradient descent?",
+   "a": "<ul style='margin:0;padding-left:19px'><li><b>L-smooth:</b> &#8214;&nabla;f(x)&minus;&nabla;f(y)&#8214; &le; L&#8214;x&minus;y&#8214;.</li><li><b>&mu;-strongly convex:</b> f(y) &ge; f(x) + &langle;&nabla;f(x), y&minus;x&rangle; + (&mu;/2)&#8214;y&minus;x&#8214;&sup2;.</li><li><b>PL:</b> &frac12;&#8214;&nabla;f&#8214;&sup2; &ge; &mu;(f &minus; f*). Strong convexity &rArr; PL; converse false (need not even be convex).</li></ul><p style='margin-top:8px'><b>Descent lemma:</b> L-smooth &rArr; f(y) &le; f(x)+&langle;&nabla;f,y&minus;x&rangle;+(L/2)&#8214;y&minus;x&#8214;&sup2;.</p><p><b>Thm 5.10.6:</b> GD with 0 &lt; h &lt; 2/L and PL gives f(x<sub>k</sub>)&minus;f* &le; &rho;(h)<sup>k</sup>(f(x&#8320;)&minus;f*) with &rho;(h) = 1 &minus; 2&mu;h(1&minus;Lh/2). Best at h = 1/L: &rho; = 1 &minus; &mu;/L. Global, no nondegeneracy needed. Condition ratio &kappa; = L/&mu;.</p>",
+   "r": {
+    "rot": "three adjectives that buy rates. <b>L-smooth</b> = the gradient doesn't jump, so you get a quadratic upper bound (the descent lemma: the function cannot outrun a parabola). <b>strongly convex</b> = at least as curved as &mu;x&sup2;/2, a guaranteed bowl. <b>PL</b> is the weaker 'gradient is large when you're high' that actually enters the proof. plug the GD step into the descent lemma, use PL, and the gap multiplies by 1&minus;1/&kappa; each step. that's linear convergence. dumb-dumb: smooth means no teleporting slopes; PL means if you're still high you still have a way down.",
+    "ex": "f = x&#8308; is convex with a unique min but neither strongly convex nor L-smooth on &Ropf;. f = 1+x&sup2; is 1-smooth convex but not strongly convex (curvature dies at infinity).",
+    "why": "V = f&minus;f* is a Lyapunov function for the flow; the descent lemma is its discrete counterpart. Choosing V is part of the analysis &mdash; &#8214;x&minus;x*&#8214;&sup2; can give a much weaker rate (Exercise 5.48).",
+    "math": "L-smooth + PL + h &lt; 2/L &rArr; gap &times; [1&minus;2&mu;h(1&minus;Lh/2)] per step. Best h = 1/L, rate 1&minus;1/&kappa;."
+   }
+  },
+  {
+   "id": "v4c5j4",
+   "s": "5.10",
+   "page": 233,
+   "q": "How does the heavy-ball method arise from a damped oscillator, and what acceleration does it buy?",
+   "a": "The <b>heavy-ball ODE</b> is a unit-mass particle in the potential f with friction &gamma; &gt; 0:<div class='eq'>x&#776; + &gamma;x&#775; + &nabla;f(x) = 0</div>For f = &frac12;&omega;x&sup2; this is the damped oscillator of Ch 1. Semi-implicit Euler on (x, v = x&#775;) is Polyak's heavy-ball method; evaluating the gradient at a look-ahead point is Nesterov.<p style='margin-top:8px'>Energy E = (f&minus;f*) + &frac12;&#8214;v&#8214;&sup2; has &#274; = &minus;&gamma;&#8214;v&#8214;&sup2; &le; 0 (stability, no rate). A better Lyapunov function gives decay like e<sup>&minus;&radic;&mu; t</sup> when f is &mu;-strongly convex &mdash; continuous acceleration: &kappa; &rarr; &radic;&kappa;.</p><p><b>Thm 5.10.9</b> (quadratics): Polyak's parameters make V<sub>k+1</sub> = &beta; V<sub>k</sub> with &radic;&beta; &asymp; 1 &minus; 2/&radic;&kappa;, vs GD's 1 &minus; 2/&kappa;. Figure 5.16: &kappa; = 100, GD needs 691 steps for 10<sup>6</sup> error drop, heavy-ball 85.</p>",
+   "r": {
+    "rot": "don't discretize the gradient flow &mdash; discretize a damped particle in the same potential. friction is the extra knob. on a quadratic you can tune it so the worst modes are critically damped, and the rate depends on &radic;&kappa; instead of &kappa;. that's acceleration, and that's why momentum exists. GD is walking downhill. heavy-ball is rolling downhill with a little inertia so you don't zigzag like a lost NPC. nesterov is the same grind but looking one step ahead.",
+    "ex": "Limitations (&sect;5.10.5): Polyak's parameters can cycle on some strongly convex L-smooth f (Exercise 5.53) &mdash; no Lyapunov function can certify that. Nesterov has a Lyapunov function giving 1&minus;1/&radic;&kappa; for every such f, which is why it is the default.",
+    "why": "It is the payoff of treating optimizers as dynamical systems: the &radic;&kappa; improvement is the same phenomenon as critical damping, and the failure modes are the same as poorly tuned oscillators.",
+    "math": "Heavy-ball ODE: x&#776;+&gamma;x&#775;+&nabla;f=0. Polyak &alpha; = 4/(&radic;L+&radic;&mu;)&sup2;, &beta; = (&radic;&kappa;&minus;1)/(&radic;&kappa;+1). Rate ~ 1&minus;2/&radic;&kappa;."
+   }
+  },
+  {
+   "id": "v4c5k1",
+   "s": "5.11",
+   "page": 237,
+   "q": "State the tennis racket theorem. What does the model actually track?",
+   "a": "<b>Tennis racket / intermediate-axis theorem:</b> a rigid body with three distinct principal moments 0 &lt; I&#8321; &lt; I&#8322; &lt; I&#8323; rotates stably about the axes of largest and smallest moment, and unstably about the intermediate axis. A spin about e&#8322; flips periodically (Dzhanibekov, 1985).<p style='margin-top:8px'><b>Model:</b> angular momentum L in the body frame, Euler's equations with no torque<div class='eq'>L&#775; = L &times; &omega;,&nbsp;&nbsp; &omega;<sub>i</sub> = L<sub>i</sub>/I<sub>i</sub></div>L is constant in space; the body rotates under it, so the body-frame coordinates of L change. Equilibria are the three principal axes (whole lines, hence non-isolated, hence nonhyperbolic &mdash; Theorem 5.2.2 is unavailable).</p>",
+   "r": {
+    "rot": "toss a tennis racket spinning about the handle or the face-normal and it wobbles but holds (W). toss it spinning about the in-between axis and it flips (the original 'it's so over' clip, dzhanibekov). euler's equations are just 'angular momentum is fixed in space, watch it from the body.' the three axes are the only steady spins, and none of them is a hyperbolic equilibrium (whole lines of them), so theorem 5.2.2 logs off. you need invariants, not linearization. this is the chapter's final boss being a physics meme.",
+    "ex": "A wingnut: e&#8321; through both wings (smallest I), e&#8322; the bolt (intermediate), e&#8323; perpendicular to the wings (largest I). The nut unscrews about e&#8322; &mdash; exactly the unstable axis.",
+    "why": "It is a physical theorem proved with this chapter's tools: equilibria, linearization (where it is valid), invariants, Lyapunov functions. The zero eigenvalue from the line of equilibria is why linearization cannot finish the job.",
+    "math": "0 &lt; I&#8321; &lt; I&#8322; &lt; I&#8323;. Euler: L&#775; = L &times; &omega;. Equilibria = principal axes, not isolated, not hyperbolic."
+   }
+  },
+  {
+   "id": "v4c5k2",
+   "s": "5.11",
+   "page": 238,
+   "q": "Name Euler's two invariants and read the phase portrait off them. Which curves prove instability of the intermediate axis?",
+   "a": "Two conserved quantities:<div class='eq'>M(L) = &#8214;L&#8214;&sup2;,&nbsp;&nbsp; H(L) = &frac12;(a&#8321;L&#8321;&sup2; + a&#8322;L&#8322;&sup2; + a&#8323;L&#8323;&sup2;)</div>with a<sub>i</sub> = 1/I<sub>i</sub> (H is rotational kinetic energy). M compact &rArr; global existence. Together they cut the sphere by an ellipsoid, so orbits are known curves.<p style='margin-top:8px'>On the critical energy H = a&#8322;/2 (sphere through the intermediate-axis equilibria) the intersection is two closed curves that <b>cross at &plusmn;e&#8322;</b>. Those heteroclinic connections travel from one intermediate equilibrium to the other &mdash; they are the flips, and they prove instability. Nearby, loops around &plusmn;e&#8321; and &plusmn;e&#8323; are periodic (stable wobbles). Lyapunov functions built from H, M prove stability of the extreme axes; because they are conserved they cannot prove asymptotic stability.</p>",
+   "r": {
+    "rot": "two constants of motion: |L|&sup2; and energy. draw the sphere and the energy ellipsoid; their intersection is the orbit. at the critical energy those curves cross at the intermediate-axis ends &mdash; a solution can ride from one end to the other, which is the flip. that's caught in 4k: a path that leaves the 'equilibrium.' loops around the short and long axes stay loops (stable wobbles). conserved quantities give stability of the extremes but never attraction, because they don't decrease. you can stay on the ride, you cannot be sucked into the station.",
+    "ex": "Forward Euler on this system spirals off the sphere (Exercise 5.60): |L<sub>k+1</sub>|&sup2; = |L<sub>k</sub>|&sup2; + h&sup2;|L&times;&omega;|&sup2;. The centers have purely imaginary eigenvalues, outside Euler's stability region for every h &gt; 0. Implicit midpoint conserves both invariants exactly.",
+    "why": "The whole chapter is on display: invariants draw the portrait, linearization gives wobble frequencies and the slow spin between flips, Lyapunov gives stability of the extremes, and the heteroclinics give instability. Dissipation (Explorer 1, Exercise 5.61) destroys the picture &mdash; only the largest-moment axis survives.",
+    "math": "M = |L|&sup2;, H = &frac12;&Sigma; a<sub>i</sub>L<sub>i</sub>&sup2; conserved. Heteroclinics through &plusmn;e&#8322; &rArr; intermediate axis unstable."
+   }
+  }
+ ],
+ "exMarks": [
+  {
+   "page": 246,
+   "y": 0.19
+  },
+  {
+   "page": 246,
+   "y": 0.4409
+  },
+  {
+   "page": 247,
+   "y": 0.6218
+  },
+  {
+   "page": 248,
+   "y": 0.1827
+  },
+  {
+   "page": 249,
+   "y": 0.3436
+  },
+  {
+   "page": 249,
+   "y": 0.3736
+  },
+  {
+   "page": 249,
+   "y": 0.7164
+  },
+  {
+   "page": 250,
+   "y": 0.3357
+  },
+  {
+   "page": 250,
+   "y": 0.7727
+  },
+  {
+   "page": 251,
+   "y": 0.6636
+  },
+  {
+   "page": 255,
+   "y": 0.3236
+  },
+  {
+   "page": 257,
+   "y": 0.1409
+  }
+ ]
+}

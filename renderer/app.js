@@ -419,7 +419,10 @@ class Reader {
     this.want = { page: n, y: yFrac || 0 };   // survives a reflow mid-animation
     this.render(n);
     const off = el.offsetTop + Math.max(0, (yFrac || 0) * el.offsetHeight - 26);
-    this.scroll.scrollTo({ top: off, behavior: "smooth" });
+    // Smooth scroll never finishes across a long chapter (Ch 5's exercises
+    // sit ~90 pages past the text). Jump if the target is more than two pages away.
+    const far = Math.abs(off - this.scroll.scrollTop) > 2 * (el.offsetHeight || 800);
+    this.scroll.scrollTo({ top: off, behavior: far ? "auto" : "smooth" });
     this.setCur(n);
     clearTimeout(this._st);
     this._st = setTimeout(() => this.dominant(), 420);

@@ -48,7 +48,7 @@
       "id": "vol4",
       "short": "Vol 4",
       "title": "Dynamic Modeling",
-      "pdf": "books/Vol4_Ch1-4.pdf",
+      "pdf": "books/Vol4.pdf",
       "pageOffset": 0,
       "chapters": [
         {
@@ -70,6 +70,16 @@
           "id": "4",
           "title": "Some Numerical Methods for ODEs",
           "file": "vol4-ch4.json"
+        },
+        {
+          "id": "5",
+          "title": "Stability Theory",
+          "file": "vol4-ch5.json"
+        },
+        {
+          "id": "6",
+          "title": "Linear Algebra in Function Spaces",
+          "file": "vol4-ch6.json"
         }
       ],
       "fixLigatures": true
