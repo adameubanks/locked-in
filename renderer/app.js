@@ -589,48 +589,182 @@ document.addEventListener("selectionchange", () => {
 });
 
 /* ============================================================
-   NOISE
+   FOCUS — ambient electronic, Brain.fm-shaped. 16 Hz used to be
+   a chop on the noise, which is a helicopter. Now it's a faint
+   shimmer on the air, over a pad, bass, beat and climbing line.
    ============================================================ */
 
-let audio = null, noiseSrc = null, noiseGain = null;
-function brownBuffer(actx, seconds) {
+let audio = null, focusNodes = null, focusGain = null, focusBufs = null;
+function burst(actx, seconds, decay) {
   const n = Math.floor(actx.sampleRate * seconds);
   const buf = actx.createBuffer(1, n, actx.sampleRate);
-  const d = buf.getChannelData(0);
-  let last = 0;
-  for (let i = 0; i < n; i++) {
-    last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02;
-    d[i] = last;
-  }
-  const a = d[0], b = d[n - 1];
-  for (let i = 0; i < n; i++) d[i] -= a + (b - a) * (i / (n - 1));   // seamless loop
-  let peak = 0;
-  for (let i = 0; i < n; i++) peak = Math.max(peak, Math.abs(d[i]));
-  if (peak > 0) for (let i = 0; i < n; i++) d[i] = d[i] / peak * 0.9;
+  const d = buf.getChannelData(0), tau = actx.sampleRate * decay;
+  for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / tau);
   return buf;
 }
-function toggleNoise() {
+function phrase(actx, freqs, hz, dur, gain, tri) {
+  const sr = actx.sampleRate, n = Math.floor(sr * freqs.length / hz);
+  const buf = actx.createBuffer(2, n, sr);
+  const L = buf.getChannelData(0), R = buf.getChannelData(1);
+  const period = sr / hz, tau = sr * dur;
+  for (let step = 0; step < freqs.length; step++) {
+    const f = freqs[step], pan = step & 1 ? 0.4 : -0.4;
+    const start = Math.floor(step * period);
+    const len = Math.floor(Math.max(period, tau * 3));
+    for (let k = 0; k < len; k++) {
+      const x = (f * k / sr) % 1;
+      const w = tri ? 1 - 4 * Math.abs(x - 0.5) : Math.sin(2 * Math.PI * x);
+      const s = w * Math.exp(-k / tau) * gain;
+      const i = (start + k) % n;
+      L[i] += s * (0.65 - pan * 0.45);
+      R[i] += s * (0.65 + pan * 0.45);
+    }
+  }
+  return buf;
+}
+function tone(actx, type, freq, detune, pan, dest, g) {
+  const o = actx.createOscillator();
+  o.type = type; o.frequency.value = freq; o.detune.value = detune;
+  const p = actx.createStereoPanner(); p.pan.value = pan;
+  const gg = actx.createGain(); gg.gain.value = g;
+  o.connect(p).connect(gg).connect(dest);
+  return o;
+}
+function playBuf(actx, buf, dest) {
+  const s = actx.createBufferSource();
+  s.buffer = buf; s.loop = true; s.connect(dest); return s;
+}
+function toggleFocus() {
   const btn = $("#btn-noise");
-  if (noiseSrc) {
-    noiseGain.gain.linearRampToValueAtTime(0, audio.currentTime + 0.4);
-    const s = noiseSrc; noiseSrc = null;
-    setTimeout(() => { try { s.stop(); } catch (e) {} }, 500);
+  if (focusNodes) {
+    const dying = focusNodes, g = focusGain;
+    focusNodes = null; focusGain = null;
+    g.gain.cancelScheduledValues(audio.currentTime);
+    g.gain.linearRampToValueAtTime(0, audio.currentTime + 0.5);
+    setTimeout(() => {
+      dying.forEach(n => { try { n.stop(); } catch (e) {} });
+      try { g.disconnect(); } catch (e) {}
+    }, 550);
     btn.setAttribute("aria-pressed", "false");
     return;
   }
   if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
   if (audio.state === "suspended") audio.resume();
-  const src = audio.createBufferSource();
-  src.buffer = brownBuffer(audio, 20);
-  src.loop = true;
-  const lp = audio.createBiquadFilter();
-  lp.type = "lowpass"; lp.frequency.value = 900; lp.Q.value = 0.4;
-  noiseGain = audio.createGain();
-  noiseGain.gain.value = 0;
-  src.connect(lp).connect(noiseGain).connect(audio.destination);
-  src.start();
-  noiseGain.gain.linearRampToValueAtTime(0.22, audio.currentTime + 1.2);
-  noiseSrc = src;
+
+  const master = audio.createGain();
+  master.gain.value = 0;
+  const comp = audio.createDynamicsCompressor();
+  comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 2.4;
+  comp.attack.value = 0.04; comp.release.value = 0.22;
+  master.connect(comp).connect(audio.destination);
+  focusGain = master;
+
+  const verb = audio.createGain();
+  [0.029, 0.037, 0.047, 0.061, 0.073, 0.089].forEach((t, i) => {
+    const d = audio.createDelay(0.2); d.delayTime.value = t;
+    const f = audio.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 2600;
+    const fb = audio.createGain(); fb.gain.value = 0.56;
+    const p = audio.createStereoPanner(); p.pan.value = i & 1 ? 0.75 : -0.75;
+    verb.connect(d); d.connect(f).connect(fb); fb.connect(d); fb.connect(p).connect(master);
+  });
+
+  const padLp = audio.createBiquadFilter();
+  padLp.type = "lowpass"; padLp.frequency.value = 1400; padLp.Q.value = 1.1;
+  const pad = audio.createGain(); pad.gain.value = 0.58;
+  padLp.connect(pad);
+  pad.connect(master); pad.connect(verb);
+
+  const pump = audio.createOscillator();
+  pump.frequency.value = 2;
+  const pumpG = audio.createGain(); pumpG.gain.value = 0.11;
+  pump.connect(pumpG).connect(pad.gain);
+
+  const sweep = audio.createOscillator();
+  sweep.frequency.value = 0.03;
+  const sweepG = audio.createGain(); sweepG.gain.value = 420;
+  sweep.connect(sweepG).connect(padLp.frequency);
+
+  const chLfo = [];
+  [[0.016, 0.0028, -0.8, 0.14], [0.023, 0.0035, 0.8, 0.21]].forEach(([dt, depth, pan, rate]) => {
+    const d = audio.createDelay(); d.delayTime.value = dt;
+    const lfo = audio.createOscillator(); lfo.frequency.value = rate;
+    const lg = audio.createGain(); lg.gain.value = depth;
+    lfo.connect(lg).connect(d.delayTime);
+    const p = audio.createStereoPanner(); p.pan.value = pan;
+    const g = audio.createGain(); g.gain.value = 0.42;
+    pad.connect(d).connect(p).connect(g).connect(master);
+    chLfo.push(lfo);
+  });
+
+  const oscs = [
+    tone(audio, "sine", 65.41, 0, 0, pad, 0.5),
+    tone(audio, "sine", 65.41, 7, 0, pad, 0.22),
+    tone(audio, "sawtooth", 65.41, -8, -0.18, padLp, 0.2),
+    tone(audio, "sawtooth", 65.41, 10, 0.18, padLp, 0.2),
+    tone(audio, "sawtooth", 98.00, -7, -0.38, padLp, 0.15),
+    tone(audio, "sawtooth", 98.00, 11, 0.38, padLp, 0.15),
+    tone(audio, "sawtooth", 164.81, -9, -0.52, padLp, 0.1),
+    tone(audio, "sawtooth", 164.81, 8, 0.52, padLp, 0.1),
+    tone(audio, "sawtooth", 196.00, -6, 0.42, padLp, 0.08),
+    tone(audio, "sawtooth", 246.94, 10, -0.28, padLp, 0.055),
+    tone(audio, "sawtooth", 293.66, -5, 0.22, padLp, 0.045)
+  ];
+
+  const air = audio.createBiquadFilter();
+  air.type = "highpass"; air.frequency.value = 2200;
+  const airAm = audio.createGain(); airAm.gain.value = 0.1;
+  const airD = audio.createGain(); airD.gain.value = 0.02;
+  pad.connect(air).connect(airAm).connect(verb);
+  const lfo16 = audio.createOscillator();
+  lfo16.frequency.value = 16;
+  lfo16.connect(airD).connect(airAm.gain);
+
+  const kickLp = audio.createBiquadFilter();
+  kickLp.type = "lowpass"; kickLp.frequency.value = 135; kickLp.Q.value = 1.3;
+  const kickG = audio.createGain(); kickG.gain.value = 0.2;
+  kickLp.connect(kickG).connect(master);
+
+  const tickBp = audio.createBiquadFilter();
+  tickBp.type = "bandpass"; tickBp.frequency.value = 3100; tickBp.Q.value = 3.5;
+  const tickG = audio.createGain(); tickG.gain.value = 0.028;
+  const tickP = audio.createStereoPanner(); tickP.pan.value = 0.45;
+  tickBp.connect(tickG).connect(tickP).connect(verb);
+
+  if (!focusBufs) focusBufs = {
+    kick: burst(audio, 0.5, 0.055),
+    arp: phrase(audio,
+      [130.81, 164.81, 196.00, 261.63, 196.00, 164.81, 130.81, 196.00, 261.63, 329.63, 261.63, 196.00],
+      8, 0.28, 0.08, true),
+    fast: phrase(audio, [261.63, 329.63, 392.00, 523.25], 16, 0.1, 0.03, true),
+    climb: phrase(audio,
+      [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 523.25, 440.00, 392.00],
+      0.62, 2.1, 0.12, false)
+  };
+  const kick = playBuf(audio, focusBufs.kick, kickLp);
+  const tick = playBuf(audio, focusBufs.kick, tickBp);
+
+  const arpLp = audio.createBiquadFilter();
+  arpLp.type = "lowpass"; arpLp.frequency.value = 1050; arpLp.Q.value = 0.9;
+  const arpG = audio.createGain(); arpG.gain.value = 0.55;
+  arpLp.connect(arpG); arpG.connect(master); arpG.connect(verb);
+  const arp = playBuf(audio, focusBufs.arp, arpLp);
+
+  const fastLp = audio.createBiquadFilter();
+  fastLp.type = "lowpass"; fastLp.frequency.value = 1600; fastLp.Q.value = 0.7;
+  const fastG = audio.createGain(); fastG.gain.value = 0.12;
+  fastLp.connect(fastG); fastG.connect(verb);
+  const fast = playBuf(audio, focusBufs.fast, fastLp);
+
+  const climbLp = audio.createBiquadFilter();
+  climbLp.type = "lowpass"; climbLp.frequency.value = 1900; climbLp.Q.value = 0.75;
+  const climbG = audio.createGain(); climbG.gain.value = 0.65;
+  climbLp.connect(climbG); climbG.connect(verb); climbG.connect(master);
+  const climb = playBuf(audio, focusBufs.climb, climbLp);
+
+  const nodes = [pump, sweep, lfo16, kick, tick, arp, fast, climb, ...oscs, ...chLfo];
+  nodes.forEach(n => n.start());
+  master.gain.linearRampToValueAtTime(0.24, audio.currentTime + 1.6);
+  focusNodes = nodes;
   btn.setAttribute("aria-pressed", "true");
 }
 
@@ -1384,7 +1518,7 @@ function wire(root) {
    CHROME
    ============================================================ */
 function wireChrome() {
-  $("#btn-noise").onclick = toggleNoise;
+  $("#btn-noise").onclick = toggleFocus;
   $("#btn-ex").onclick = () => setExPane(!S.prefs.split);
   $("#btn-dim").onclick = () => {
     S.prefs.dim = !S.prefs.dim;
@@ -1432,7 +1566,7 @@ function wireChrome() {
     if (typing) return;
     if (e.key === "/") { openFind(); e.preventDefault(); return; }
     const r = READERS[ACTIVE] || READERS[0];
-    if (e.key === "n") toggleNoise();
+    if (e.key === "n") toggleFocus();
     if (e.key === "d") $("#btn-dim").click();
     if (e.key === "l") $("#btn-zen").click();
     if (e.key === "e") setExPane(!S.prefs.split);
