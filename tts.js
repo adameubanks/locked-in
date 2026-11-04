@@ -10,11 +10,13 @@ const kokoro = () => tts || (tts = import("kokoro-js").then(async ({ KokoroTTS }
   return k;
 }).catch(e => { tts = null; throw e; }));
 
-process.parentPort.on("message", async ({ data: { id, words, voice, speed } }) => {
+process.parentPort.on("message", async ({ data: { id, words, voice } }) => {
   try {
     const k = await kokoro();
     if (!words) return process.parentPort.postMessage({ id, ok: k.voices });
-    const a = await k.generate(words.filter(Boolean).join(" "), { voice, speed });
+    // Always generate at 1×. Higher Kokoro speed shrinks phonemes until syllables vanish;
+    // the player stretches the clip instead.
+    const a = await k.generate(words.filter(Boolean).join(" "), { voice, speed: 1 });
     const d = k.out.durations.data, sec = a.audio.length / a.sampling_rate / d.reduce((s, x) => s + x, 0);
     const starts = [];
     let p = 1, t = d[0];
@@ -22,8 +24,11 @@ process.parentPort.on("message", async ({ data: { id, words, voice, speed } }) =
     // a page word can be several spoken ones ("4.4"), so count each and spread any mismatch
     const { phonemize } = await import("phonemizer"), c = [];
     for (const w of words) {
-      const x = w.replace(/\.(?!\d)|[^\w.']/g, "").toLowerCase();
-      c.push(x ? (await phonemize(x, "en-us")).join(" ").split(/\s+/).filter(Boolean).length : 0);
+      const x = String(w).trim();
+      if (!x) { c.push(0); continue; }
+      let n = 0;
+      try { n = (await phonemize(x, "en-us")).join(" ").split(/\s+/).filter(Boolean).length; } catch (e) {}
+      c.push(n || 1);
     }
     const total = c.reduce((s, x) => s + x, 0) || 1;
     let acc = 0;

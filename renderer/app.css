@@ -184,7 +184,7 @@ body.dim .pg .hlLayer{filter:invert(1) hue-rotate(180deg)}
 
 /* read aloud: the sentence faintly, the word as a find hit */
 .say{position:absolute; background:rgba(124,136,236,.16); border-radius:2px}
-.say.w{background:rgba(242,176,30,.55); box-shadow:0 0 0 1.5px rgba(242,176,30,.9)}
+.say.w{background:rgba(242,176,30,.55); box-shadow:0 0 0 1px rgba(242,176,30,.85)}
 
 #sel-pop{
   position:fixed; z-index:60; display:flex; gap:4px; padding:4px;

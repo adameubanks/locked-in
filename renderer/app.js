@@ -9,7 +9,7 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const DEFAULT_STATE = {
   lastPos: null,           // {vol, page} of reader 0
   lastPos2: null,          // {vol, page} of reader 1
-  prefs: { dim: true, zoom: 1.0, splitPct: 58, split: false }
+  prefs: { dim: true, zoom: 1.0, splitPct: 58, split: false, focusMode: "ember" }
 };
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
 let MANIFEST = null;
@@ -261,26 +261,37 @@ class Reader {
      collected — that is what puts a mended hyphen on two boxes. */
   boxesFor(n, from, to, m = this.tl.get(n)) {
     const L = this.tl.get(n);
-    let rects;
-    try {
-      const a = L.divs[m.mk[from]], b = L.divs[m.mk[to - 1]];
-      if (!a || !b || !a.firstChild || !b.firstChild) return [];
-      const r = document.createRange();
-      r.setStart(a.firstChild, Math.min(m.mj[from], a.firstChild.length));
-      r.setEnd(b.firstChild, Math.min(m.mj[to - 1] + 1, b.firstChild.length));
-      rects = r.getClientRects();
-    } catch (e) { return []; }
+    if (!L || !m || to <= from) return [];
     const rows = [];
-    for (const q of rects) {
-      if (q.width < 0.5 || q.height < 0.5) continue;
+    const add = q => {
+      if (q.width < 0.5 || q.height < 0.5) return;
       const mid = q.top + q.height / 2;
       const row = rows.find(w => mid > w.top && mid < w.bottom);
-      if (!row) { rows.push({ top: q.top, bottom: q.bottom, left: q.left, right: q.right }); continue; }
+      if (!row) { rows.push({ top: q.top, bottom: q.bottom, left: q.left, right: q.right }); return; }
       row.top = Math.min(row.top, q.top);
       row.bottom = Math.max(row.bottom, q.bottom);
       row.left = Math.min(row.left, q.left);
       row.right = Math.max(row.right, q.right);
-    }
+    };
+    // One range per run of consecutive glyphs in a single span. A range that
+    // jumps from span A to span B also covers every span between them in the
+    // text layer — subscripts, footnote marks, empty EOL nodes — and the box
+    // swallows them.
+    try {
+      for (let i = from; i < to; ) {
+        const k = m.mk[i];
+        let j1 = m.mj[i], i1 = i + 1;
+        while (i1 < to && m.mk[i1] === k && m.mj[i1] === j1 + 1) { j1 = m.mj[i1]; i1++; }
+        const a = L.divs[k];
+        if (a && a.firstChild) {
+          const r = document.createRange();
+          r.setStart(a.firstChild, Math.min(m.mj[i], a.firstChild.length));
+          r.setEnd(a.firstChild, Math.min(j1 + 1, a.firstChild.length));
+          for (const q of r.getClientRects()) add(q);
+        }
+        i = i1;
+      }
+    } catch (e) { return []; }
     return rows;
   }
 
@@ -589,12 +600,44 @@ document.addEventListener("selectionchange", () => {
 });
 
 /* ============================================================
-   FOCUS — ambient electronic, Brain.fm-shaped. 16 Hz used to be
-   a chop on the noise, which is a helicopter. Now it's a faint
-   shimmer on the air, over a pad, bass, beat and climbing line.
+   FOCUS — lyric-free ambient electronic tracks. Empirically:
+   no lyrics, moderate volume, not loud/fast; 16 Hz only as a
+   faint air shimmer (whole-mix AM sounded like a helicopter).
+   A random track each time — same architecture, different keys
+   and densities so it still sounds like music.
    ============================================================ */
 
-let audio = null, focusNodes = null, focusGain = null, focusBufs = null;
+const FOCUS_TRACKS = [
+  { id: "ember",  label: "ember",  root: 65.41, bright: 1400, kick: 0.2,  tick: 0.028, arpG: 0.55, climbG: 0.65, fastG: 0.12, pump: 0.11, saw: 1,   arpHz: 8,   climbHz: 0.62 },
+  { id: "tide",   label: "tide",   root: 73.42, bright: 980,  kick: 0.08, tick: 0.012, arpG: 0.32, climbG: 0.4,  fastG: 0.04, pump: 0.06, saw: 0.55, arpHz: 4,   climbHz: 0.4  },
+  { id: "lattice",label: "lattice",root: 87.31, bright: 1600, kick: 0.14, tick: 0.035, arpG: 0.62, climbG: 0.35, fastG: 0.18, pump: 0.09, saw: 0.85, arpHz: 6,   climbHz: 0.5  },
+  { id: "drift",  label: "drift",  root: 55.00, bright: 850,  kick: 0,    tick: 0.01,  arpG: 0.22, climbG: 0.5,  fastG: 0,    pump: 0.04, saw: 0.35, arpHz: 2.5, climbHz: 0.35 },
+  { id: "glow",   label: "glow",   root: 77.78, bright: 1200, kick: 0.12, tick: 0.02,  arpG: 0.4,  climbG: 0.55, fastG: 0.08, pump: 0.08, saw: 0.7,  arpHz: 5,   climbHz: 0.55 }
+];
+let audio = null, focusNodes = null, focusGain = null, focusBufs = null, focusCur = null;
+
+function focusLabel() {
+  const on = !!focusNodes;
+  const lab = $("#noise-label");
+  if (lab) lab.textContent = on && focusCur ? focusCur.label : "focus";
+  const btn = $("#btn-noise");
+  if (btn) {
+    btn.title = (on && focusCur ? focusCur.label + " — " : "") + "Focus music (N)";
+    btn.setAttribute("aria-pressed", String(on));
+  }
+}
+function tone(actx, type, freq, detune, pan, dest, g) {
+  const o = actx.createOscillator();
+  o.type = type; o.frequency.value = freq; o.detune.value = detune;
+  const p = actx.createStereoPanner(); p.pan.value = pan;
+  const gg = actx.createGain(); gg.gain.value = g;
+  o.connect(p).connect(gg).connect(dest);
+  return o;
+}
+function playBuf(actx, buf, dest) {
+  const s = actx.createBufferSource();
+  s.buffer = buf; s.loop = true; s.connect(dest); return s;
+}
 function burst(actx, seconds, decay) {
   const n = Math.floor(actx.sampleRate * seconds);
   const buf = actx.createBuffer(1, n, actx.sampleRate);
@@ -622,46 +665,28 @@ function phrase(actx, freqs, hz, dur, gain, tri) {
   }
   return buf;
 }
-function tone(actx, type, freq, detune, pan, dest, g) {
-  const o = actx.createOscillator();
-  o.type = type; o.frequency.value = freq; o.detune.value = detune;
-  const p = actx.createStereoPanner(); p.pan.value = pan;
-  const gg = actx.createGain(); gg.gain.value = g;
-  o.connect(p).connect(gg).connect(dest);
-  return o;
+function stopFocus(fade) {
+  if (!focusNodes) return;
+  const dying = focusNodes, g = focusGain;
+  focusNodes = null; focusGain = null; focusCur = null;
+  const t = fade == null ? 0.5 : fade;
+  g.gain.cancelScheduledValues(audio.currentTime);
+  g.gain.linearRampToValueAtTime(0, audio.currentTime + t);
+  setTimeout(() => {
+    dying.forEach(n => { try { n.stop(); } catch (e) {} });
+    try { g.disconnect(); } catch (e) {}
+  }, t * 1000 + 50);
+  focusLabel();
 }
-function playBuf(actx, buf, dest) {
-  const s = actx.createBufferSource();
-  s.buffer = buf; s.loop = true; s.connect(dest); return s;
+function scale(root) {
+  const r = n => root * Math.pow(2, n / 12);
+  return { r1: r(0), r5: r(7), r8: r(12), r10: r(15), r12: r(19), r15: r(24), r17: r(28), r19: r(31), r22: r(36) };
 }
-function toggleFocus() {
-  const btn = $("#btn-noise");
-  if (focusNodes) {
-    const dying = focusNodes, g = focusGain;
-    focusNodes = null; focusGain = null;
-    g.gain.cancelScheduledValues(audio.currentTime);
-    g.gain.linearRampToValueAtTime(0, audio.currentTime + 0.5);
-    setTimeout(() => {
-      dying.forEach(n => { try { n.stop(); } catch (e) {} });
-      try { g.disconnect(); } catch (e) {}
-    }, 550);
-    btn.setAttribute("aria-pressed", "false");
-    return;
-  }
-  if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
-  if (audio.state === "suspended") audio.resume();
-
-  const master = audio.createGain();
-  master.gain.value = 0;
-  const comp = audio.createDynamicsCompressor();
-  comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 2.4;
-  comp.attack.value = 0.04; comp.release.value = 0.22;
-  master.connect(comp).connect(audio.destination);
-  focusGain = master;
-
+function startTrack(master, t) {
+  const s = scale(t.root);
   const verb = audio.createGain();
-  [0.029, 0.037, 0.047, 0.061, 0.073, 0.089].forEach((t, i) => {
-    const d = audio.createDelay(0.2); d.delayTime.value = t;
+  [0.029, 0.037, 0.047, 0.061, 0.073, 0.089].forEach((dly, i) => {
+    const d = audio.createDelay(0.2); d.delayTime.value = dly;
     const f = audio.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 2600;
     const fb = audio.createGain(); fb.gain.value = 0.56;
     const p = audio.createStereoPanner(); p.pan.value = i & 1 ? 0.75 : -0.75;
@@ -669,19 +694,18 @@ function toggleFocus() {
   });
 
   const padLp = audio.createBiquadFilter();
-  padLp.type = "lowpass"; padLp.frequency.value = 1400; padLp.Q.value = 1.1;
+  padLp.type = "lowpass"; padLp.frequency.value = t.bright; padLp.Q.value = 1.1;
   const pad = audio.createGain(); pad.gain.value = 0.58;
-  padLp.connect(pad);
-  pad.connect(master); pad.connect(verb);
+  padLp.connect(pad); pad.connect(master); pad.connect(verb);
 
   const pump = audio.createOscillator();
   pump.frequency.value = 2;
-  const pumpG = audio.createGain(); pumpG.gain.value = 0.11;
+  const pumpG = audio.createGain(); pumpG.gain.value = t.pump;
   pump.connect(pumpG).connect(pad.gain);
 
   const sweep = audio.createOscillator();
   sweep.frequency.value = 0.03;
-  const sweepG = audio.createGain(); sweepG.gain.value = 420;
+  const sweepG = audio.createGain(); sweepG.gain.value = t.bright * 0.3;
   sweep.connect(sweepG).connect(padLp.frequency);
 
   const chLfo = [];
@@ -696,18 +720,19 @@ function toggleFocus() {
     chLfo.push(lfo);
   });
 
+  const sw = t.saw;
   const oscs = [
-    tone(audio, "sine", 65.41, 0, 0, pad, 0.5),
-    tone(audio, "sine", 65.41, 7, 0, pad, 0.22),
-    tone(audio, "sawtooth", 65.41, -8, -0.18, padLp, 0.2),
-    tone(audio, "sawtooth", 65.41, 10, 0.18, padLp, 0.2),
-    tone(audio, "sawtooth", 98.00, -7, -0.38, padLp, 0.15),
-    tone(audio, "sawtooth", 98.00, 11, 0.38, padLp, 0.15),
-    tone(audio, "sawtooth", 164.81, -9, -0.52, padLp, 0.1),
-    tone(audio, "sawtooth", 164.81, 8, 0.52, padLp, 0.1),
-    tone(audio, "sawtooth", 196.00, -6, 0.42, padLp, 0.08),
-    tone(audio, "sawtooth", 246.94, 10, -0.28, padLp, 0.055),
-    tone(audio, "sawtooth", 293.66, -5, 0.22, padLp, 0.045)
+    tone(audio, "sine", s.r1, 0, 0, pad, 0.5),
+    tone(audio, "sine", s.r1, 7, 0, pad, 0.22),
+    tone(audio, "sawtooth", s.r1, -8, -0.18, padLp, 0.2 * sw),
+    tone(audio, "sawtooth", s.r1, 10, 0.18, padLp, 0.2 * sw),
+    tone(audio, "sawtooth", s.r5, -7, -0.38, padLp, 0.15 * sw),
+    tone(audio, "sawtooth", s.r5, 11, 0.38, padLp, 0.15 * sw),
+    tone(audio, "sawtooth", s.r10, -9, -0.52, padLp, 0.1 * sw),
+    tone(audio, "sawtooth", s.r10, 8, 0.52, padLp, 0.1 * sw),
+    tone(audio, "sawtooth", s.r12, -6, 0.42, padLp, 0.08 * sw),
+    tone(audio, "sawtooth", s.r15, 10, -0.28, padLp, 0.055 * sw),
+    tone(audio, "sawtooth", s.r17, -5, 0.22, padLp, 0.045 * sw)
   ];
 
   const air = audio.createBiquadFilter();
@@ -719,53 +744,81 @@ function toggleFocus() {
   lfo16.frequency.value = 16;
   lfo16.connect(airD).connect(airAm.gain);
 
-  const kickLp = audio.createBiquadFilter();
-  kickLp.type = "lowpass"; kickLp.frequency.value = 135; kickLp.Q.value = 1.3;
-  const kickG = audio.createGain(); kickG.gain.value = 0.2;
-  kickLp.connect(kickG).connect(master);
+  if (!focusBufs) focusBufs = { kick: burst(audio, 0.5, 0.055) };
+  const key = t.id;
+  if (!focusBufs[key]) {
+    focusBufs[key] = {
+      arp: phrase(audio, [s.r8, s.r10, s.r12, s.r15, s.r12, s.r10, s.r8, s.r12, s.r15, s.r17, s.r15, s.r12],
+        t.arpHz, 0.28, 0.08, true),
+      fast: phrase(audio, [s.r15, s.r17, s.r19, s.r22], Math.max(8, t.arpHz * 2), 0.1, 0.03, true),
+      climb: phrase(audio, [s.r15, s.r17, s.r19, s.r12 * 2, s.r22, s.r15 * 2, s.r17 * 2, s.r15 * 2, s.r22, s.r12 * 2],
+        t.climbHz, 2.1, 0.12, false)
+    };
+  }
+  const bufs = focusBufs[key];
+  const nodes = [pump, sweep, lfo16, ...oscs, ...chLfo];
 
-  const tickBp = audio.createBiquadFilter();
-  tickBp.type = "bandpass"; tickBp.frequency.value = 3100; tickBp.Q.value = 3.5;
-  const tickG = audio.createGain(); tickG.gain.value = 0.028;
-  const tickP = audio.createStereoPanner(); tickP.pan.value = 0.45;
-  tickBp.connect(tickG).connect(tickP).connect(verb);
+  if (t.kick > 0) {
+    const kickLp = audio.createBiquadFilter();
+    kickLp.type = "lowpass"; kickLp.frequency.value = 135; kickLp.Q.value = 1.3;
+    const kickG = audio.createGain(); kickG.gain.value = t.kick;
+    kickLp.connect(kickG).connect(master);
+    const kick = playBuf(audio, focusBufs.kick, kickLp);
+    nodes.push(kick);
+  }
+  if (t.tick > 0) {
+    const tickBp = audio.createBiquadFilter();
+    tickBp.type = "bandpass"; tickBp.frequency.value = 3100; tickBp.Q.value = 3.5;
+    const tickG = audio.createGain(); tickG.gain.value = t.tick;
+    const tickP = audio.createStereoPanner(); tickP.pan.value = 0.45;
+    tickBp.connect(tickG).connect(tickP).connect(verb);
+    nodes.push(playBuf(audio, focusBufs.kick, tickBp));
+  }
+  if (t.arpG > 0) {
+    const arpLp = audio.createBiquadFilter();
+    arpLp.type = "lowpass"; arpLp.frequency.value = 1050; arpLp.Q.value = 0.9;
+    const arpG = audio.createGain(); arpG.gain.value = t.arpG;
+    arpLp.connect(arpG); arpG.connect(master); arpG.connect(verb);
+    nodes.push(playBuf(audio, bufs.arp, arpLp));
+  }
+  if (t.fastG > 0) {
+    const fastLp = audio.createBiquadFilter();
+    fastLp.type = "lowpass"; fastLp.frequency.value = 1600; fastLp.Q.value = 0.7;
+    const fastG = audio.createGain(); fastG.gain.value = t.fastG;
+    fastLp.connect(fastG); fastG.connect(verb);
+    nodes.push(playBuf(audio, bufs.fast, fastLp));
+  }
+  if (t.climbG > 0) {
+    const climbLp = audio.createBiquadFilter();
+    climbLp.type = "lowpass"; climbLp.frequency.value = 1900; climbLp.Q.value = 0.75;
+    const climbG = audio.createGain(); climbG.gain.value = t.climbG;
+    climbLp.connect(climbG); climbG.connect(verb); climbG.connect(master);
+    nodes.push(playBuf(audio, bufs.climb, climbLp));
+  }
 
-  if (!focusBufs) focusBufs = {
-    kick: burst(audio, 0.5, 0.055),
-    arp: phrase(audio,
-      [130.81, 164.81, 196.00, 261.63, 196.00, 164.81, 130.81, 196.00, 261.63, 329.63, 261.63, 196.00],
-      8, 0.28, 0.08, true),
-    fast: phrase(audio, [261.63, 329.63, 392.00, 523.25], 16, 0.1, 0.03, true),
-    climb: phrase(audio,
-      [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 523.25, 440.00, 392.00],
-      0.62, 2.1, 0.12, false)
-  };
-  const kick = playBuf(audio, focusBufs.kick, kickLp);
-  const tick = playBuf(audio, focusBufs.kick, tickBp);
-
-  const arpLp = audio.createBiquadFilter();
-  arpLp.type = "lowpass"; arpLp.frequency.value = 1050; arpLp.Q.value = 0.9;
-  const arpG = audio.createGain(); arpG.gain.value = 0.55;
-  arpLp.connect(arpG); arpG.connect(master); arpG.connect(verb);
-  const arp = playBuf(audio, focusBufs.arp, arpLp);
-
-  const fastLp = audio.createBiquadFilter();
-  fastLp.type = "lowpass"; fastLp.frequency.value = 1600; fastLp.Q.value = 0.7;
-  const fastG = audio.createGain(); fastG.gain.value = 0.12;
-  fastLp.connect(fastG); fastG.connect(verb);
-  const fast = playBuf(audio, focusBufs.fast, fastLp);
-
-  const climbLp = audio.createBiquadFilter();
-  climbLp.type = "lowpass"; climbLp.frequency.value = 1900; climbLp.Q.value = 0.75;
-  const climbG = audio.createGain(); climbG.gain.value = 0.65;
-  climbLp.connect(climbG); climbG.connect(verb); climbG.connect(master);
-  const climb = playBuf(audio, focusBufs.climb, climbLp);
-
-  const nodes = [pump, sweep, lfo16, kick, tick, arp, fast, climb, ...oscs, ...chLfo];
   nodes.forEach(n => n.start());
+  return nodes;
+}
+function startFocus() {
+  if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+  if (audio.state === "suspended") audio.resume();
+  focusCur = FOCUS_TRACKS[Math.floor(Math.random() * FOCUS_TRACKS.length)];
+  S.prefs.focusMode = focusCur.id;
+  save();
+  const master = audio.createGain();
+  master.gain.value = 0;
+  const comp = audio.createDynamicsCompressor();
+  comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 2.4;
+  comp.attack.value = 0.04; comp.release.value = 0.22;
+  master.connect(comp).connect(audio.destination);
+  focusGain = master;
+  focusNodes = startTrack(master, focusCur);
   master.gain.linearRampToValueAtTime(0.24, audio.currentTime + 1.6);
-  focusNodes = nodes;
-  btn.setAttribute("aria-pressed", "true");
+  focusLabel();
+}
+function toggleFocus() {
+  if (focusNodes) stopFocus();
+  else startFocus();
 }
 
 /* ============================================================
@@ -845,10 +898,11 @@ function wireLibrary() {
 /* ============================================================
    LISTEN — the body text read aloud in a local neural voice, the
    spoken word marked on the page. Running heads, page numbers,
-   captions, footnotes, displayed math, tables, and everything from
-   a References heading on are left out. Sentences carry a map back
-   to text layer spans (page, span, offset per character) so the
-   word can be boxed the same way a find hit is.
+   captions, footnotes, tables, and everything from a References
+   heading on are left out. Inline and displayed math are kept and
+   spoken. Sentences carry a map back to text layer spans (page,
+   span, offset per character) so the word can be boxed the same
+   way a find hit is.
    ============================================================ */
 const LS = { gen: 0, r: null, vol: null, doc: null, next: 1, body: 0, back: false, pending: null,
              sents: [], i: 0, loaded: -1, word: -1, dirty: false, userT: 0, wait: false, busy: false, cur: null,
@@ -858,7 +912,39 @@ const LS_BACK = /^([IVX]+|\d+(\.\d+)*|[A-Z])?\.?\s*(references|bibliography|work
 const LS_CAPTION = /^(fig(ure)?|tab(le)?|algorithm|listing)\.?\s*[A-Z]?\d+(\.\d+)*[.:|]?/i;
 const LS_SPEAK = [[/\s?\[\d+(?:\s*[,–-]\s*\d+)*\]/g, ""], [/\be\.g\.,?/gi, "for example,"], [/\bi\.e\.,?/gi, "that is,"],
   [/\bet al\./gi, "et al"], [/\bFigs?\./g, "Figure"], [/\bEqs?\./g, "Equation"], [/\bSec\./g, "Section"], [/\bcf\./gi, "compare"], [/\bvs\./gi, "versus"]];
+const LS_MATH = [
+  [/¬/g, " not "], [/≪/g, " much less than "], [/≫/g, " much greater than "],
+  [/≤|⩽/g, " less than or equal to "], [/≥|⩾/g, " greater than or equal to "],
+  [/≠/g, " not equal to "], [/≈/g, " approximately "], [/≡/g, " equivalent to "],
+  [/∈/g, " in "], [/∉/g, " not in "], [/⊂|⊆/g, " subset of "], [/∪/g, " union "], [/∩/g, " intersection "],
+  [/∑/g, " sum "], [/∏/g, " product "], [/∫/g, " integral "], [/∂/g, " partial "], [/∞/g, " infinity "],
+  [/→/g, " to "], [/⇒/g, " implies "], [/⇔/g, " if and only if "], [/∀/g, " for all "], [/∃/g, " there exists "],
+  [/×|·|⋅/g, " times "], [/±/g, " plus or minus "], [/∴/g, " therefore "], [/√/g, " square root "],
+  [/∼|~/g, " distributed as "], [/ℓ/g, " ell "], [/ℝ/g, " the reals "], [/ℕ/g, " the naturals "],
+  [/ℤ/g, " the integers "], [/ℂ/g, " the complexes "],
+  [/α/g, " alpha "], [/β/g, " beta "], [/γ/g, " gamma "], [/δ/g, " delta "], [/ε|ϵ/g, " epsilon "],
+  [/θ/g, " theta "], [/λ/g, " lambda "], [/μ/g, " mu "], [/π/g, " pi "], [/ρ/g, " rho "],
+  [/σ/g, " sigma "], [/τ/g, " tau "], [/φ|ϕ/g, " phi "], [/ψ/g, " psi "], [/ω/g, " omega "],
+  [/Δ/g, " delta "], [/Γ/g, " gamma "], [/Θ/g, " theta "], [/Λ/g, " lambda "], [/Σ/g, " sigma "],
+  [/Φ/g, " phi "], [/Ω/g, " omega "], [/κ/g, " kappa "], [/η/g, " eta "], [/ν/g, " nu "],
+  [/ξ/g, " xi "], [/χ/g, " chi "], [/ζ/g, " zeta "]];
+const LS_OP = { "|": "given", "=": "equals", "+": "plus", "−": "minus", "-": "minus",
+  "<": "less than", ">": "greater than", "/": "over", "(": "of", ")": "" };
 const lsSize = it => Math.round(Math.abs(it.transform[3]) * 2) / 2;
+
+function lsSpeak(w, sc) {
+  let t = LS_SPEAK.reduce((s, [a, b]) => s.replace(a, b), w);
+  t = LS_MATH.reduce((s, [a, b]) => s.replace(a, b), t)
+    .replace(/\|/g, " given ").replace(/(?<=[A-Za-z])\(/g, " of ")
+    .replace(/^\((?![a-z]{2,}|\d)/, "of ").replace(/[()]/g, " ")
+    .replace(/=/g, " equals ").replace(/−/g, " minus ").replace(/\+/g, " plus ");
+  t = t.replace(/\s+/g, " ").trim();
+  if (LS_OP[t] !== undefined) t = LS_OP[t];
+  const sub = sc.length && sc.every(x => x < 0), sup = sc.length && sc.every(x => x > 0);
+  if (sub && t) t = "sub " + t;
+  else if (sup && t) t = t === "2" ? "squared" : t === "3" ? "cubed" : "to the " + t;
+  return t.trim();
+}
 
 /* Body type is the size most characters are set in, sampled from the pages ahead. */
 async function lsBody(from) {
@@ -873,59 +959,73 @@ async function lsBody(from) {
 
 /* One page as blocks of readable text, in content order (which is column order
    for anything set in LaTeX). Index k counts string items, the way pageMap does,
-   so it names the same text layer span. */
+   so it names the same text layer span. sc is −1/0/+1 for sub/body/super, so
+   the voice can say "x sub i" without changing what gets boxed on the page. */
 async function lsPage(n) {
   const page = await LS.doc.getPage(n), h = page.getViewport({ scale: 1 }).height;
   const items = (await page.getTextContent()).items.filter(it => typeof it.str === "string");
   const blocks = [];
-  const put = (b, c, k, j) => {
-    if (/\s/.test(c)) { if (!b.text || b.text.endsWith(" ")) return; c = " "; }
-    b.text += c; b.pg.push(n); b.mk.push(k); b.mj.push(j);
+  const put = (b, c, k, j, sc) => {
+    if (/\s/.test(c)) { if (!b.text || b.text.endsWith(" ")) return; c = " "; sc = 0; }
+    b.text += c; b.pg.push(n); b.mk.push(k); b.mj.push(j); b.sc.push(sc);
   };
+  const pop = b => { b.text = b.text.slice(0, -1); b.pg.pop(); b.mk.pop(); b.mj.pop(); b.sc.pop(); };
   let line = null, b = null;
   items.forEach((it, k) => {
-    const size = lsSize(it), x = it.transform[4], y = it.transform[5];
-    if (!it.str.trim() || it.transform[1] || it.transform[2] || (size < LS.body - 1 && it.str.trim().length <= 3)) return;
-    if (line && Math.abs(y - line.y) < Math.max(size, line.size) * 0.6 && x > line.x) {
-      if (x - line.end > size * 0.15) put(b, " ", k, 0);
+    const size = lsSize(it), x = it.transform[4], y = it.transform[5], s = it.str;
+    if (!s.trim()) { if (b && /\s/.test(s)) put(b, " ", k, 0, 0); return; }
+    if (Math.abs(it.transform[1]) > 0.25 || Math.abs(it.transform[2]) > 0.25) return;
+    const topish = y > h * 0.88, botish = y < h * 0.12;
+    const small = size < LS.body - 1;
+    // page numbers, and footnote markers (a raised digit after punctuation)
+    if (small && /^\d{1,3}$/.test(s.trim()) && (topish || botish || (b && line && y > line.y + 0.8 && /[.?!]$/.test(b.text)))) return;
+    const onLine = line && x > line.x - 1 && Math.abs(y - line.y) < Math.max(size, line.size);
+    const sc = (onLine && size < line.size - 1) ? (y > line.y + 0.5 ? 1 : y < line.y - 0.4 ? -1 : 0) : 0;
+    if (onLine) {
+      if (b.sc.length && b.sc[b.sc.length - 1] !== sc && !b.text.endsWith(" ")) put(b, " ", k, 0, 0);
+      else if (x - line.end > Math.max(size, line.size) * 0.15) put(b, " ", k, 0, 0);
     } else {
       const prev = line;
-      line = { x, y, size };
-      if (!prev || Math.abs(size - prev.size) > 0.6 || prev.y - y > size * 1.8 || y > prev.y + 1 || x > prev.x + size) {
-        blocks.push(b = { size, top: 1 - y / h, text: "", pg: [], mk: [], mj: [] });
-      } else if (/[a-z]-$/.test(b.text) && /^[a-z]/.test(it.str)) {
-        b.text = b.text.slice(0, -1); b.pg.pop(); b.mk.pop(); b.mj.pop();
-      } else put(b, " ", k, 0);
+      line = { x, y, size: small && prev ? prev.size : size };
+      if (!prev || (!small && Math.abs(size - prev.size) > 0.6) || prev.y - y > Math.max(size, prev.size) * 1.8 ||
+          (y > prev.y + 1 && !small) || x > prev.x + Math.max(size, prev.size) * 4) {
+        blocks.push(b = { size, top: 1 - y / h, text: "", pg: [], mk: [], mj: [], sc: [] });
+      } else if (/[a-z]-$/.test(b.text) && /^[a-z]/.test(s)) pop(b);
+      else put(b, " ", k, 0, 0);
     }
-    for (let j = 0; j < it.str.length; j++) put(b, it.str[j], k, j);
+    for (let j = 0; j < s.length; j++) put(b, s[j], k, j, sc);
     line.end = x + it.width;
+    if (!small) { line.y = y; line.size = size; }
     b.bottom = 1 - y / h;
   });
   return blocks.filter(b => {
-    if (b.text.endsWith(" ")) { b.text = b.text.slice(0, -1); b.pg.pop(); b.mk.pop(); b.mj.pop(); }
+    if (b.text.endsWith(" ")) pop(b);
     const t = b.text, ws = t.split(" ");
     const prose = ws.filter(w => /^\(?([a-z]{2,}|a)[,.;:)]?$/.test(w)).length / ws.length;
+    const mathish = /[¬≪≫≤≥≠≈≡∈∉⊂⊆∪∩∑∏∫∂∞→⇒⇔∀∃×·±∴√∼=|]/.test(t) ||
+      ws.filter(w => /^[A-Za-z]$/.test(w)).length >= 3;
     b.heading = t.length < 100 && !/[,;=.]$/.test(t) &&
       (b.size > LS.body + 0.9 || /^([IVX]+\.?|\d+(\.\d+)*\.?|[A-Z]\.)\s+[A-Z]/.test(t));
     if (LS_BACK.test(t) && (b.heading || t.length < 60)) LS.back = true;
     return !(LS.back || ((b.top < 0.08 || b.bottom > 0.92) && t.length < 120) || LS_CAPTION.test(t) ||
-             b.size < LS.body - (b.top > 0.7 ? 0.6 : 1.5) || (!b.heading && (prose < 0.4 || ws.length < 4)));
+             (b.size < LS.body - (b.top > 0.7 ? 0.6 : 1.5) && !mathish) ||
+             (!b.heading && !mathish && (prose < 0.35 || ws.length < 4)));
   });
 }
 
 /* A paragraph broken by a page turn, a figure or a displayed equation is put
    back together before it is cut into sentences. */
 function lsJoin(a, b) {
-  if (/[a-z]-$/.test(a.text) && /^[a-z]/.test(b.text)) { a.text = a.text.slice(0, -1); a.pg.pop(); a.mk.pop(); a.mj.pop(); }
-  else { a.text += " "; a.pg.push(b.pg[0]); a.mk.push(b.mk[0]); a.mj.push(0); }
-  a.text += b.text; a.pg.push(...b.pg); a.mk.push(...b.mk); a.mj.push(...b.mj);
+  if (/[a-z]-$/.test(a.text) && /^[a-z]/.test(b.text)) { a.text = a.text.slice(0, -1); a.pg.pop(); a.mk.pop(); a.mj.pop(); a.sc.pop(); }
+  else { a.text += " "; a.pg.push(b.pg[0]); a.mk.push(b.mk[0]); a.mj.push(0); a.sc.push(0); }
+  a.text += b.text; a.pg.push(...b.pg); a.mk.push(...b.mk); a.mj.push(...b.mj); a.sc.push(...b.sc);
 }
 
 function lsSplit(b) {
   const out = [], t = b.text;
   let s = 0;
   const cut = e => {
-    if (e > s) out.push({ text: t.slice(s, e), pg: b.pg.slice(s, e), mk: b.mk.slice(s, e), mj: b.mj.slice(s, e) });
+    if (e > s) out.push({ text: t.slice(s, e), pg: b.pg.slice(s, e), mk: b.mk.slice(s, e), mj: b.mj.slice(s, e), sc: b.sc.slice(s, e) });
     s = e + 1;
   };
   for (let p = t.indexOf(" "); p >= 0; p = t.indexOf(" ", p + 1)) {
@@ -959,8 +1059,10 @@ function lsFill(done) {
 
 function lsKey(i) {
   const s = LS.sents[i];
-  if (s && !s.say) s.say = s.text.match(/\S+/g).map(w => LS_SPEAK.reduce((t, [a, b]) => t.replace(a, b), w));
-  return s && LS.v + "|" + LS.speed + "|" + s.say.join(" ");
+  if (s && !s.say) {
+    s.say = [...s.text.matchAll(/\S+/g)].map(m => lsSpeak(m[0], (s.sc || []).slice(m.index, m.index + m[0].length)));
+  }
+  return s && LS.v + "|" + s.say.join(" ");
 }
 
 /* The voice makes one sentence at a time: the one being waited on first,
@@ -976,10 +1078,10 @@ function lsPump() {
   const i = [0, 1, 2, 3].map(n => LS.i + n).find(i => LS.sents[i] && !LS.cache.has(lsKey(i)) && i !== LS.loaded);
   if (i === undefined) return;
   for (const [k, x] of LS.cache) if (LS.cache.size > 40 && x.url && x !== LS.cur) { URL.revokeObjectURL(x.url); LS.cache.delete(k); }
-  const key = lsKey(i), e = { speed: LS.speed };
+  const key = lsKey(i), e = {};
   LS.cache.set(key, e);
   LS.busy = true;
-  window.api.tts(LS.sents[i].say, LS.v, LS.speed)
+  window.api.tts(LS.sents[i].say, LS.v, 1)
     .then(r => { e.times = r.times; e.url = URL.createObjectURL(new Blob([r.wav], { type: "audio/wav" })); }, err => { e.err = (err && err.message) || String(err); })
     .finally(() => { LS.busy = false; lsPump(); });
 }
@@ -1008,12 +1110,12 @@ async function lsStart(sel) {
   lsPlay(i);
 }
 
-/* Kokoro speaks faster for less work, up to 2×; past that the clip is sped up. */
+/* Generate at 1× so Kokoro doesn't eat syllables; the player applies the rate. */
 async function lsPlay(i) {
   if (!(i >= 0)) return;
   const g = LS.gen;
   LS.audio.pause();
-  Object.assign(LS, { i, loaded: -1, word: -1, wait: true, v: S.prefs.lsVoice || "af_heart", speed: Math.min(2, S.prefs.lsRate || 1) });
+  Object.assign(LS, { i, loaded: -1, word: -1, wait: true, v: S.prefs.lsVoice || "af_heart" });
   lsBtn();
   await lsFill(() => LS.sents.length > i + 4);
   if (g !== LS.gen) return;
@@ -1089,7 +1191,9 @@ function lsTick() {
 }
 
 function lsRate() {
-  LS.audio.defaultPlaybackRate = LS.audio.playbackRate = +$("#ls-rate").value / (LS.cur ? LS.cur.speed : 1);
+  const r = +$("#ls-rate").value || 1;
+  LS.audio.preservesPitch = true;
+  LS.audio.defaultPlaybackRate = LS.audio.playbackRate = r;
 }
 
 function wireListen() {
@@ -1099,7 +1203,7 @@ function wireListen() {
   $("#ls-rate").value = S.prefs.lsRate || 1;
   if (!$("#ls-rate").value) $("#ls-rate").value = 1;
   lsRate();
-  $("#ls-rate").onchange = e => { S.prefs.lsRate = +e.target.value; save(); lsRate(); LS.speed = Math.min(2, S.prefs.lsRate); lsPump(); };
+  $("#ls-rate").onchange = e => { S.prefs.lsRate = +e.target.value; save(); lsRate(); };
   $("#ls-voice").onchange = e => { S.prefs.lsVoice = e.target.value; save(); if (LS.wait || !LS.audio.paused) lsPlay(LS.i); };
   $("#ls-play").onclick = lsToggle;
   $("#ls-close").onclick = () => lsOpen(false);
@@ -1600,7 +1704,8 @@ async function boot() {
   const st = await window.api.getState();
   if (st) S = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), st);
   delete S.gen;
-  S.prefs = Object.assign({ dim: true, zoom: 1.0, splitPct: 58, split: false }, S.prefs || {});
+  S.prefs = Object.assign({ dim: true, zoom: 1.0, splitPct: 58, split: false, focusMode: "ember" }, S.prefs || {});
+  focusLabel();
 
   for (const v of MANIFEST.volumes) {
     for (const c of v.chapters) {
