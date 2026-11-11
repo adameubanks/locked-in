@@ -80,6 +80,11 @@
           "id": "6",
           "title": "Linear Algebra in Function Spaces",
           "file": "vol4-ch6.json"
+        },
+        {
+          "id": "7",
+          "title": "Modeling with PDEs",
+          "file": "vol4-ch7.json"
         }
       ],
       "fixLigatures": true

@@ -1,0 +1,244 @@
+{
+ "volume": "vol4",
+ "chapter": "7",
+ "file": "vol4-ch7.json",
+ "title": "Modeling with PDEs",
+ "epigraph": {
+  "text": "Today's scientists have substituted mathematics for experiments, and they wander off through equation after equation, and eventually build a structure which has no relation to reality.",
+  "by": "Nikola Tesla"
+ },
+ "sections": [
+  {
+   "id": "7.1",
+   "name": "Introduction to PDEs",
+   "from": 295,
+   "to": 301,
+   "exFrom": {
+    "page": 320,
+    "y": 0.2727
+   },
+   "exTo": {
+    "page": 320,
+    "y": 0.8627
+   }
+  },
+  {
+   "id": "7.2",
+   "name": "Conservation Laws in One Dimension",
+   "from": 301,
+   "to": 305,
+   "exFrom": {
+    "page": 320,
+    "y": 0.8627
+   },
+   "exTo": {
+    "page": 321,
+    "y": 0.7727
+   }
+  },
+  {
+   "id": "7.3",
+   "name": "Multidimensional Conservation Laws",
+   "from": 305,
+   "to": 310,
+   "exFrom": {
+    "page": 321,
+    "y": 0.7727
+   },
+   "exTo": {
+    "page": 322,
+    "y": 0.4073
+   }
+  },
+  {
+   "id": "7.4",
+   "name": "The Wave Equation",
+   "from": 310,
+   "to": 313,
+   "exFrom": {
+    "page": 322,
+    "y": 0.4073
+   },
+   "exTo": {
+    "page": 323,
+    "y": 0.3391
+   }
+  },
+  {
+   "id": "7.5",
+   "name": "Auxiliary Conditions",
+   "from": 313,
+   "to": 319,
+   "exFrom": {
+    "page": 323,
+    "y": 0.3391
+   },
+   "exTo": {
+    "page": 324,
+    "y": 0.1409
+   }
+  }
+ ],
+ "exercises": {
+  "from": 320,
+  "to": 324
+ },
+ "exMarks": [
+  {
+   "page": 320,
+   "y": 0.2727
+  },
+  {
+   "page": 320,
+   "y": 0.8627
+  },
+  {
+   "page": 321,
+   "y": 0.7727
+  },
+  {
+   "page": 322,
+   "y": 0.4073
+  },
+  {
+   "page": 323,
+   "y": 0.3391
+  },
+  {
+   "page": 324,
+   "y": 0.1409
+  }
+ ],
+ "cards": [
+  {
+   "id": "v4c7a1",
+   "s": "7.1",
+   "page": 296,
+   "q": "How does the general solution of a PDE differ from that of an ODE?",
+   "a": "An ODE general solution contains <b>arbitrary constants</b>. A PDE general solution contains <b>arbitrary functions</b>. Example 7.1.1: &part;<sub>x</sub>&part;<sub>y</sub>u = 0 has general solution u(x,y) = f(x)+g(y) on R&sup2; (or an open rectangle). Initial/boundary conditions later pin those functions down (Section 7.5).",
+   "r": {
+    "rot": "odes give you free numbers (constants). pdes give you free whole functions. like the difference between picking a spawn point and picking an entire custom character creator. &part;x&part;yu=0 just means 'be any f(x)+g(y)' &mdash; two vibes, one in x and one in y, added. boundary data is what nerfs the character creator later.",
+    "ex": "Example 7.1.4: au<sub>x</sub>+bu<sub>y</sub>=0 has solutions u=f(ay&minus;bx) for any differentiable f &mdash; again an arbitrary function of one variable.",
+    "why": "It explains why a PDE alone almost never picks a unique solution, and why auxiliary conditions exist.",
+    "math": "ODE: arbitrary constants. PDE: arbitrary functions. e.g. &part;x&part;yu=0 &rArr; u=f(x)+g(y)."
+   }
+  },
+  {
+   "id": "v4c7a2",
+   "s": "7.1",
+   "page": 298,
+   "q": "Define order and linearity for a PDE. When is a linear PDE homogeneous?",
+   "a": "<b>Order</b> (Def 7.1.7): highest total order of any partial derivative of u that appears.<p style='margin-top:8px'><b>Linear</b> (Def 7.1.9): writable as Lu=f with L a linear differential operator, L(au+bv)=aLu+bLv. Homogeneous if f=0; inhomogeneous otherwise.</p><p><b>Quasilinear:</b> linear in the highest-order derivatives only (e.g. Burgers ut+u u<sub>x</sub>=0).</p>",
+   "r": {
+    "rot": "order = how many times you differentiated the main character in the scariest term. linear = the operator treats sums and scalars like a chill linear map (superposition stays unbothered). if the right-hand side is zero it's homogeneous (no external lore injected). quasilinear is 'linear where it counts' &mdash; highest derivatives behave, lower ones can be chaotic evil.",
+    "ex": "ut+u<sub>xx</sub>=0 order 2; u&sup2;cos(x)+u<sub>t</sub>u<sub>x</sub>&sup3;=0 order 1; utxx+cosh(uttxx)u<sub>x</sub>=t&sup2;cos(x) order 4.",
+    "why": "Classification and solution methods split hard on linear vs nonlinear, and order tells you how many auxiliary conditions to expect.",
+    "math": "Order = max derivative order in F. Linear: Lu=f. Homogeneous: f=0. Quasilinear: linear in top-order derivatives."
+   }
+  },
+  {
+   "id": "v4c7a3",
+   "s": "7.1",
+   "page": 300,
+   "q": "Classify second-order linear PDEs in two variables via the discriminant.",
+   "a": "For a u<sub>tt</sub> + b u<sub>xt</sub> + c u<sub>xx</sub> + lower = f, the discriminant is D=b&sup2;&minus;4ac (Def 7.1.16).<ul style='margin:0;padding-left:19px'><li>D&gt;0: <b>hyperbolic</b> (wave-like)</li><li>D=0: <b>parabolic</b> (diffusive)</li><li>D&lt;0: <b>elliptic</b> (equilibrium)</li></ul><p style='margin-top:8px'>Heat u<sub>t</sub>=k u<sub>xx</sub> is parabolic; wave u<sub>tt</sub>&minus;c&sup2;u<sub>xx</sub>=0 is hyperbolic; Laplace u<sub>xx</sub>+u<sub>yy</sub>=0 is elliptic. Type can change by region (Tricomi).</p>",
+   "r": {
+    "rot": "same energy as classifying conic sections. compute D=b&sup2;&minus;4ac and read the vibe: D positive = waves (hyperbolic, chatty in time), D zero = diffusion (parabolic, smooths drama), D negative = equilibrium (elliptic, no time-evolution main quest). heat spreads, waves bounce, laplace just sits there being harmonic. if D flips sign across the domain, the PDE is genre-fluid (Tricomi behavior).",
+    "ex": "Example 7.1.17 lists heat, wave, and Laplace with explicit separated solutions for each type.",
+    "why": "Type chooses the toolkit: characteristics and finite propagation for hyperbolic, smoothing for parabolic, boundary-value theory for elliptic.",
+    "math": "D=b&sup2;&minus;4ac. &gt;0 hyperbolic, =0 parabolic, &lt;0 elliptic."
+   }
+  },
+  {
+   "id": "v4c7b1",
+   "s": "7.2",
+   "page": 301,
+   "q": "Write the integral and differential forms of a 1D conservation law. When do they differ?",
+   "a": "Integral form on [a,b]:<div class='eq'>d/dt &int;<sub>a</sub><sup>b</sup> u dx = J(a,t)&minus;J(b,t) + &int;<sub>a</sub><sup>b</sup> f dx</div>Rate of change of amount = influx &minus; outflux + sources. If u,J are C&sup1; and f continuous this is equivalent to the PDE <b>u<sub>t</sub> + J<sub>x</sub> = f</b>. If u or J jumps (shock), the PDE fails but the integral form still holds.",
+   "r": {
+    "rot": "count the stuff in a segment of road: it changes because cars enter left, leave right, or hop in from a driveway (source). that's the integral story &mdash; no derivatives required, still valid when traffic is discontinuous mid. if everything is smooth you get the differential form u<sub>t</sub>+J<sub>x</sub>=f. shocks: integral stays based, PDE catches a fade.",
+    "ex": "Traffic: u=density, J=uv with v=v<sub>max</sub>(1&minus;u/u<sub>max</sub>) gives the LWR model after nondimensionalizing.",
+    "why": "Almost every continuum PDE in the chapter is a conservation law in disguise. Integral form is the physically primary statement.",
+    "math": "&int;u̇ = J(a)&minus;J(b)+&int;f. Smooth &rArr; u<sub>t</sub>+J<sub>x</sub>=f."
+   }
+  },
+  {
+   "id": "v4c7b2",
+   "s": "7.2",
+   "page": 303,
+   "q": "In the traffic model, how are flux and velocity related, and what PDE results?",
+   "a": "Density u(x,t) of cars; velocity modeled as v=v<sub>max</sub>(1&minus;u/u<sub>max</sub>) (Greenshields). Flux is J=uv, so J=v<sub>max</sub> u(1&minus;u/u<sub>max</sub>). With no sources the conservation law becomes<div class='eq'>u<sub>t</sub> + (uv)<sub>x</sub> = 0</div>After nondimensionalizing, a standard inviscid traffic / Burgers-like flux appears. Discontinuous densities are allowed via the integral form.",
+   "r": {
+    "rot": "cars go fast when the road is empty and crawl when it's packed &mdash; v drops linearly with density. flux = density times speed, so empty and bumper-to-bumper both send almost no cars past a point (mid density is the main character for throughput). conservation says the density plot can only rearrange by that flux. traffic jam = shock arc, and the PDE quietly leaves the chat while the integral form keeps scoring.",
+    "ex": "Section 7.2.2 builds integral model &rarr; flux model &rarr; sources/sinks &rarr; nondimensional PDE.",
+    "why": "Concrete nonlinear conservation law that later chapters will solve with characteristics and shocks.",
+    "math": "v=v<sub>max</sub>(1&minus;u/u<sub>max</sub>), J=uv, u<sub>t</sub>+(uv)<sub>x</sub>=0."
+   }
+  },
+  {
+   "id": "v4c7c1",
+   "s": "7.3",
+   "page": 308,
+   "q": "State the higher-dimensional conservation law and the role of the divergence theorem.",
+   "a": "For a well-behaved region E &sub; &Omega;, amount &int;<sub>E</sub> u changes by boundary flux plus sources:<div class='eq'>d/dt &int;<sub>E</sub> u dx = &minus;&int;<sub>&part;E</sub> J·n dS + &int;<sub>E</sub> f dx</div>Divergence theorem turns the boundary integral into &int;<sub>E</sub> &nabla;·J, so if everything is C&sup1; you get <b>u<sub>t</sub> + &nabla;·J = f</b> pointwise (Prop 7.3.11 clears the integrand).",
+   "r": {
+    "rot": "same traffic story but the 'road segment' is now a blob in R<sup>n</sup>. stuff inside changes by what flows through the skin (flux dotted with outward normal) plus sources. divergence theorem is the cheat code that turns 'flow through the skin' into 'divergence integrated over the blob,' so the PDE becomes u<sub>t</sub>+div J=f. if your domain is cursed (unbounded slab), the theorem can fail &mdash; unexample energy.",
+    "ex": "Example 7.3.7: F(x)=x on the unit ball, both sides of the divergence theorem equal 4&pi;.",
+    "why": "It is the bridge from 1D conservation to heat, advection&ndash;diffusion, and continuum mechanics in higher D.",
+    "math": "&int;u̇ = &minus;&int;<sub>&part;E</sub>J·n + &int;f. Smooth &rArr; u<sub>t</sub>+&nabla;·J=f."
+   }
+  },
+  {
+   "id": "v4c7c2",
+   "s": "7.3",
+   "page": 310,
+   "q": "Contrast advective and diffusive flux. How does Fick/Fourier give the heat equation?",
+   "a": "<b>Advective:</b> J=u v (carried with a velocity field).<br><b>Diffusive:</b> J=&minus;&phi; &nabla;u (Fick; Fourier for heat) &mdash; flows down the gradient.<p style='margin-top:8px'>Constant &phi;, conservation u<sub>t</sub>+&nabla;·J=f becomes<div class='eq'>u<sub>t</sub> = &phi; &Delta;u + f</div>the heat / diffusion equation. If f depends on u (e.g. f=ru) it is reaction&ndash;diffusion. Combined advection+diffusion: J=uv&minus;&phi;&nabla;u.</p>",
+   "r": {
+    "rot": "advection = the quantity is locked in and rides the current (main-character flow). diffusion = it rage-quits high concentration and spreads to low (anti-gradient arc). Fick/Fourier say flux = &minus;&phi; times gradient. plug into conservation, div(grad u)=Laplacian, and you spawn the heat equation. dye in a river = both at once: ride the flow and smear.",
+    "ex": "Example 7.3.12 derives u<sub>t</sub>=&phi;&Delta;u+f from J=&minus;&phi;&nabla;u.",
+    "why": "Names the two flux mechanisms behind heat, pollutants, and later advection&ndash;diffusion exercises.",
+    "math": "J_adv=uv, J_diff=&minus;&phi;&nabla;u &rArr; u<sub>t</sub>=&phi;&Delta;u+f."
+   }
+  },
+  {
+   "id": "v4c7d1",
+   "s": "7.4",
+   "page": 311,
+   "q": "Write the wave equation and show it is hyperbolic. What does it model here?",
+   "a": "<div class='eq'>u<sub>tt</sub> = c&sup2; u<sub>xx</sub>&nbsp;&nbsp;(c&ne;0)</div>In the second-order classification, a=1 (u<sub>tt</sub>), b=0, c_coeff=&minus;c&sup2;, so D=4c&sup2;&gt;0: <b>hyperbolic</b>. Derived from Newton&rsquo;s second law on a taut string under small transverse displacement u(x,t), with constant tension and density; c&sup2; is tension/density. Models string vibrations, and later sound/light analogs.",
+   "r": {
+    "rot": "second time-derivative equals c&sup2; times second space-derivative. that's the wave equation &mdash; the hyperbolic final boss of this chapter. plucked string: tension yanks curved bits back, mass times acceleration follows, small-slope approximations cook it down to u<sub>tt</sub>=c&sup2;u<sub>xx</sub>. waves oscillate and travel; they do not smear like heat. D=4c&sup2;&gt;0 so the classification agrees it's wave-coded.",
+    "ex": "Separated solutions sin(n&pi;x)cos(cn&pi;t) from Example 7.1.17 reappear as formal building blocks under Dirichlet ends.",
+    "why": "Canonical hyperbolic model; sets up boundary/initial conditions in 7.5 and later d&rsquo;Alembert/separation methods.",
+    "math": "u<sub>tt</sub>&minus;c&sup2;u<sub>xx</sub>=0, D=4c&sup2;&gt;0 hyperbolic."
+   }
+  },
+  {
+   "id": "v4c7e1",
+   "s": "7.5",
+   "page": 314,
+   "q": "What is a well-posed problem, and what are Dirichlet, Neumann, and Robin conditions?",
+   "a": "<b>Well posed:</b> existence, uniqueness, and continuous dependence on the data.<p style='margin-top:8px'>Rule of thumb: order-k spatial derivative &rArr; k boundary conditions on different parts of &part;&Omega; (e.g. one per end in 1D). Three standard types:</p><ul style='margin:0;padding-left:19px'><li><b>Dirichlet:</b> prescribe u on the boundary (fixed end / fixed temperature)</li><li><b>Neumann:</b> prescribe &part;u/&part;n (flux / free sliding end)</li><li><b>Robin:</b> prescribe a(&part;u/&part;n)+b u (springy end / Newton cooling)</li></ul><p>The rule of thumb is necessary lore, not a guarantee &mdash; sideways heat is a classic ill-posed combo.</p>",
+   "r": {
+    "rot": "well posed = a solution exists, it's the only one, and tiny data chaos does not spawn huge solution chaos. dirichlet = nail the value (clamped string, fixed temp). neumann = nail the slope/flux (insulated end, frictionless ring). robin = mix of value and flux (spring on the ring, cooling law). second order in x usually wants one condition at each end &mdash; but stack both value and flux at the same end and you can invent an unwell-posed sideways heat episode.",
+    "ex": "Example 7.5.1 interprets all three for the wave equation; Example 7.5.5 does the heat rod, including the ill-posed sideways case.",
+    "why": "A PDE without the right auxiliary data does not define a model. This section is how you finish the specification.",
+    "math": "Well posed: &exist;! + continuous dependence. D: u|=f. N: &part;n u|=g. R: &part;n u+au|=h."
+   }
+  },
+  {
+   "id": "v4c7e2",
+   "s": "7.5",
+   "page": 319,
+   "q": "How many initial conditions does a PDE need in time, and why?",
+   "a": "Match the highest time derivative, as for ODEs: first-order in t (conservation / heat) needs <b>one</b> initial condition u(x,0)=f(x); second-order in t (wave) needs <b>two</b>, typically u(x,0)=f and u<sub>t</sub>(x,0)=g. Unlike ODEs, the phase space is infinite-dimensional, so one usually studies specific data rather than a full phase portrait. Purely spatial equations (Laplace) take boundary data only &mdash; no initial time.",
+   "r": {
+    "rot": "time order decides the spawn kit. heat/conservation: one screenshot of the field at t=0. wave: screenshot plus how fast every point is moving (position and velocity, like a second-order ODE). laplace has no time, so it only wants boundary gossip. infinite-dimensional phase space means you rarely get the whole portrait &mdash; you pick a run and hit start.",
+    "ex": "Remark 7.5.7&ndash;7.5.10: infinite domains as approximations; final-time data as a different (often harder) ask; Laplace has no initial condition.",
+    "why": "Closes the auxiliary-condition count for every model derived in the chapter.",
+    "math": "Order 1 in t: one IC. Order 2 in t: two ICs. Elliptic/no time: boundary only."
+   }
+  }
+ ]
+}

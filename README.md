@@ -31,16 +31,11 @@ Then put the books in `books/` (gitignored — they're copyrighted). The paths i
     { "id": "vol3", ..., "pdf": "books/Vol3.pdf",  "pageOffset": 6 }
     { "id": "vol4", ..., "pdf": "books/Vol4.pdf",  "pageOffset": 0 }
 
-Vol 4 is the Ch 1–4 PDF plus Ch 5–6, with two blank pages so the printed
-page numbers line up (Ch 5 starts at p.143, Ch 6 at p.259). From the split files:
-
-    python3 -c "from reportlab.pdfgen import canvas; from reportlab.lib.pagesizes import letter; c=canvas.Canvas('books/blank2.pdf',pagesize=letter); c.showPage(); c.showPage(); c.save()"
-    pdfunite books/Vol4_Ch1-4.pdf books/blank2.pdf books/V4_Ch5-6_F2026.pdf books/Vol4.pdf
-    rm books/blank2.pdf
-
-Get one wrong and the reader says so in the pane and names the file it expected.
-`pageOffset` is pdfPage minus bookPage — re-derive it if your scan is numbered
-differently by opening to any page with a printed number and subtracting.
+Keep a single combined PDF per volume (`Vol3.pdf`, `Vol4.pdf`). Vol 4’s printed
+pages are aligned so Ch 5 starts at p.143, Ch 6 at p.259, and Ch 7 at p.295.
+Get the path wrong and the reader says so in the pane and names the file it
+expected. `pageOffset` is pdfPage minus bookPage — re-derive it if your scan is
+numbered differently by opening to any page with a printed number and subtracting.
 
     npm start
 
