@@ -12,7 +12,7 @@
    "id": "7.1",
    "name": "Introduction to PDEs",
    "from": 295,
-   "to": 301,
+   "to": 300,
    "exFrom": {
     "page": 320,
     "y": 0.2727
@@ -26,7 +26,7 @@
    "id": "7.2",
    "name": "Conservation Laws in One Dimension",
    "from": 301,
-   "to": 305,
+   "to": 304,
    "exFrom": {
     "page": 320,
     "y": 0.8627
@@ -40,7 +40,7 @@
    "id": "7.3",
    "name": "Multidimensional Conservation Laws",
    "from": 305,
-   "to": 310,
+   "to": 309,
    "exFrom": {
     "page": 321,
     "y": 0.7727
@@ -54,7 +54,7 @@
    "id": "7.4",
    "name": "The Wave Equation",
    "from": 310,
-   "to": 313,
+   "to": 312,
    "exFrom": {
     "page": 322,
     "y": 0.4073

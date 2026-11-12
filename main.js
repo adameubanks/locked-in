@@ -117,6 +117,14 @@ ipcMain.handle("pdf:check", (_e, p) => {
   try { return fs.existsSync(p) && fs.statSync(p).size > 0; } catch (e) { return false; }
 });
 
+ipcMain.handle("pdf:stat", (_e, p) => {
+  p = path.resolve(__dirname, p);
+  try {
+    const s = fs.statSync(p);
+    return { size: s.size, mtimeMs: s.mtimeMs };
+  } catch (e) { return null; }
+});
+
 ipcMain.handle("pdf:read", (_e, p) => {
   // Electron blocks file:// XHR from a file:// page, so the bytes come over IPC.
   const buf = fs.readFileSync(path.resolve(__dirname, p));

@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld("api", {
   getState:   ()      => ipcRenderer.invoke("state:get"),
   setState:   (d)     => ipcRenderer.invoke("state:set", d),
   pdfCheck:   (p)     => ipcRenderer.invoke("pdf:check", p),
+  pdfStat:    (p)     => ipcRenderer.invoke("pdf:stat", p),
   pdfRead:    (p)     => ipcRenderer.invoke("pdf:read", p),
   library:    ()      => ipcRenderer.invoke("library"),
   tts:        (t, v, s) => ipcRenderer.invoke("tts", t, v, s),

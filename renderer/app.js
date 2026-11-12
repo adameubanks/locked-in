@@ -52,6 +52,22 @@ function sectionsOf(volId) {
 function sectionForBookPage(volId, p) {
   return sectionsOf(volId).find(s => p >= s.from && p <= s.to) || null;
 }
+/* Exercise groups are pinned by (page, y) marks; pick the last group whose
+   start is at or above the current spot so the exercises pane and the section
+   stay paired while you scroll either side. */
+function posKey(page, y) { return page + Math.max(0, Math.min(1, y || 0)); }
+function sectionForExercisePos(volId, page, y) {
+  const secs = sectionsOf(volId).filter(s => s.exFrom);
+  if (!secs.length) return null;
+  const at = posKey(page, y);
+  let hit = null;
+  for (const s of secs) {
+    if (posKey(s.exFrom.page, s.exFrom.y) <= at + 1e-6) hit = s;
+  }
+  const last = secs[secs.length - 1];
+  if (last.exTo && at > posKey(last.exTo.page, last.exTo.y) + 1e-6) return null;
+  return hit;
+}
 function chapterForBookPage(volId, p) {
   return loadedChapters().find(c => c.volume === volId &&
     ((c.sections.length && p >= c.sections[0].from && p <= c.sections[c.sections.length - 1].to) ||
@@ -74,7 +90,7 @@ function esc(s) {
 pdfjsLib.GlobalWorkerOptions.workerSrc = "../vendor/pdf.worker.js";
 
 const READERS = [];
-let docCache = {};       // volId -> pdfjs document (shared between readers)
+let docCache = {};       // volId -> { doc, size, mtimeMs }
 
 class Reader {
   constructor(index, hostSel) {
@@ -150,7 +166,9 @@ class Reader {
     this.pageEls = []; this.jobs = new Map(); this.tl = new Map();
     if (this.io) { this.io.disconnect(); this.io = null; }
 
-    if (!docCache[volId]) {
+    const st = await window.api.pdfStat(v.pdf);
+    const cached = docCache[volId];
+    if (!cached || !st || cached.size !== st.size || cached.mtimeMs !== st.mtimeMs) {
       if (!(await window.api.pdfCheck(v.pdf))) {
         this.pages.innerHTML =
           `<div class="empty"><h3>Can't find the PDF</h3>
@@ -160,13 +178,14 @@ class Reader {
       }
       try {
         const buf = await window.api.pdfRead(v.pdf);
-        docCache[volId] = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+        const doc = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+        docCache[volId] = { doc, size: st ? st.size : 0, mtimeMs: st ? st.mtimeMs : 0 };
       } catch (e) {
         this.pages.innerHTML = `<div class="empty"><h3>Failed to open the PDF</h3></div>`;
         return;
       }
     }
-    this.doc = docCache[volId];
+    this.doc = docCache[volId].doc;
     $(".pg-total", this.el).textContent = "/ " + this.doc.numPages;
 
     const p1 = await this.doc.getPage(1);
@@ -477,20 +496,44 @@ class Reader {
   }
 
   paintCtx() {
-    if (this.i === 0 && this.vol) {
+    if (this.vol) {
       const bk = this.cur - (this.vol.pageOffset || 0);
-      const sc = sectionForBookPage(this.vol.id, bk);
-      if (sc && (!CURSEC || CURSEC.vol !== this.vol.id || CURSEC.id !== sc.id)) {
-        setSection(this.vol.id, sc.id);
+      const ch = chapterForBookPage(this.vol.id, bk);
+      const inEx = ch && ch.exercises && bk >= ch.exercises.from && bk <= ch.exercises.to;
+      let sc = null;
+      if (inEx) {
+        const el = this.pageEls[this.cur - 1];
+        // gotoAt parks 26px above the mark; undo that so boundary marks
+        // (e.g. 4.3→4.4 both on p.276) don't read as the previous section.
+        // While want is set we're still settling a programmatic jump — trust it.
+        let y = 0;
+        if (this.want && this.want.page === this.cur) y = this.want.y;
+        else if (el && el.offsetHeight) {
+          y = Math.max(0, Math.min(1, (this.scroll.scrollTop - el.offsetTop + 26) / el.offsetHeight));
+        }
+        sc = sectionForExercisePos(this.vol.id, bk, y);
+        if (sc) {
+          // Only drive the text pane from a user scroll on exercises; a
+          // follow-jump from the text pane must not yank it back.
+          if (this.i === 1) setSection(this.vol.id, sc.id, { navText: !this.want, fromEx: true });
+          else setSection(this.vol.id, sc.id, { fromEx: true });
+        }
+      } else if (this.i === 0) {
+        sc = sectionForBookPage(this.vol.id, bk);
+        if (sc) setSection(this.vol.id, sc.id);
       }
     }
     if (ACTIVE !== this.i || !this.vol) return;
     const book = this.cur - (this.vol.pageOffset || 0);
-    const sec = sectionForBookPage(this.vol.id, book);
+    const sec = sectionForBookPage(this.vol.id, book) ||
+      (CURSEC && CURSEC.vol === this.vol.id && sectionsOf(this.vol.id).find(s => s.id === CURSEC.id));
     const ch = chapterForBookPage(this.vol.id, book);
     const inEx = ch && ch.exercises && book >= ch.exercises.from && book <= ch.exercises.to;
     const el = $("#context");
-    if (inEx) {
+    if (inEx && sec) {
+      el.innerHTML = `${esc(this.vol.short)} &middot; <b>&sect;${esc(sec.id)} Exercises</b> <span class="muted">p.${book}</span>`;
+      window.api.setTitle(`LOCKED IN — ${this.vol.short} §${sec.id} Exercises, p.${book}`);
+    } else if (inEx) {
       el.innerHTML = `${esc(this.vol.short)} &middot; <b>Ch ${esc(ch.chapter)} Exercises</b> <span class="muted">p.${book}</span>`;
       window.api.setTitle(`LOCKED IN — ${this.vol.short} Ch ${ch.chapter} Exercises, p.${book}`);
     } else if (sec) {
@@ -506,15 +549,16 @@ class Reader {
 let ACTIVE = 0;                    // pane the context bar follows
 let CURSEC = null;                 // {vol, id} — what both panes are about
 
-/* The exercises pane follows whatever section you are on. */
+/* Text pane and exercises pane stay paired on the same section. */
 function setSection(volId, secId, opts) {
   opts = opts || {};
   const changed = !CURSEC || CURSEC.vol !== volId || CURSEC.id !== secId;
   CURSEC = { vol: volId, id: secId };
   const sec = sectionsOf(volId).find(s => s.id === secId);
   if (!sec) return;
-  if (opts.navText) READERS[0].gotoVolBook(volId, sec.from);
-  if (READERS[1] && (changed || opts.force)) {
+  if (opts.navText && (changed || opts.force)) READERS[0].gotoVolBook(volId, sec.from);
+  // fromEx: the exercises pane already put us here — don't yank it back.
+  if (READERS[1] && !opts.fromEx && (changed || opts.force)) {
     if (sec.exFrom) READERS[1].gotoVolAt(volId, sec.exFrom.page, sec.exFrom.y);
     else flash(READERS[1].el, "No exercises recorded for this section");
   }
@@ -1299,12 +1343,15 @@ function findScope() {
 async function buildIndex(onProgress) {
   const out = [];
   for (const v of findScope()) {
-    let doc = docCache[v.id];
-    if (!doc) {
+    let slot = docCache[v.id];
+    if (!slot) {
       if (!(await window.api.pdfCheck(v.pdf))) continue;
+      const st = await window.api.pdfStat(v.pdf);
       const buf = await window.api.pdfRead(v.pdf);
-      doc = docCache[v.id] = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+      const doc = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+      slot = docCache[v.id] = { doc, size: st ? st.size : 0, mtimeMs: st ? st.mtimeMs : 0 };
     }
+    const doc = slot.doc;
     for (let i = 1; i <= doc.numPages; i++) {
       const m = pageMap(await (await doc.getPage(i)).getTextContent(), v);
       out.push({ vol: v.id, page: i, text: m.text, low: m.low });
