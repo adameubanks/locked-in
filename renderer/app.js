@@ -147,6 +147,9 @@ class Reader {
     this.scroll.onscroll = () => {
       clearTimeout(this._st);
       this._st = setTimeout(() => this.dominant(), 90);
+      // Keep soft exercise-follow from firing mid-scroll (e.g. peeking at the
+      // end of the previous section on a chapter-start page).
+      if (pendingFollow) armExFollow();
     };
   }
 
@@ -500,27 +503,17 @@ class Reader {
       const bk = this.cur - (this.vol.pageOffset || 0);
       const ch = chapterForBookPage(this.vol.id, bk);
       const inEx = ch && ch.exercises && bk >= ch.exercises.from && bk <= ch.exercises.to;
-      let sc = null;
-      if (inEx) {
-        const el = this.pageEls[this.cur - 1];
-        // gotoAt parks 26px above the mark; undo that so boundary marks
-        // (e.g. 4.3→4.4 both on p.276) don't read as the previous section.
-        // While want is set we're still settling a programmatic jump — trust it.
-        let y = 0;
-        if (this.want && this.want.page === this.cur) y = this.want.y;
-        else if (el && el.offsetHeight) {
-          y = Math.max(0, Math.min(1, (this.scroll.scrollTop - el.offsetTop + 26) / el.offsetHeight));
-        }
-        sc = sectionForExercisePos(this.vol.id, bk, y);
-        if (sc) {
-          // Only drive the text pane from a user scroll on exercises; a
-          // follow-jump from the text pane must not yank it back.
-          if (this.i === 1) setSection(this.vol.id, sc.id, { navText: !this.want, fromEx: true });
-          else setSection(this.vol.id, sc.id, { fromEx: true });
-        }
-      } else if (this.i === 0) {
-        sc = sectionForBookPage(this.vol.id, bk);
+      if (this.i === 0 && !inEx) {
+        const sc = sectionForBookPage(this.vol.id, bk);
         if (sc) setSection(this.vol.id, sc.id);
+      } else if (this.i === 1 && inEx && !this.want) {
+        // User scrolling exercises updates the study section only — never yanks text.
+        const el = this.pageEls[this.cur - 1];
+        const y = el && el.offsetHeight
+          ? Math.max(0, Math.min(1, (this.scroll.scrollTop - el.offsetTop) / el.offsetHeight))
+          : 0;
+        const sc = sectionForExercisePos(this.vol.id, bk, y);
+        if (sc) setSection(this.vol.id, sc.id, { fromEx: true });
       }
     }
     if (ACTIVE !== this.i || !this.vol) return;
@@ -548,8 +541,26 @@ class Reader {
 
 let ACTIVE = 0;                    // pane the context bar follows
 let CURSEC = null;                 // {vol, id} — what both panes are about
+let pendingFollow = null;          // soft exercise follow target
+let FOLLOW_T = null;
+const FOLLOW_MS = 1600;
 
-/* Text pane and exercises pane stay paired on the same section. */
+function armExFollow() {
+  if (!pendingFollow || !READERS[1]) return;
+  clearTimeout(FOLLOW_T);
+  const { vol, id } = pendingFollow;
+  FOLLOW_T = setTimeout(() => {
+    FOLLOW_T = null;
+    pendingFollow = null;
+    if (!CURSEC || CURSEC.vol !== vol || CURSEC.id !== id) return;
+    const sec = sectionsOf(vol).find(s => s.id === id);
+    if (sec && sec.exFrom) READERS[1].gotoVolAt(vol, sec.exFrom.page, sec.exFrom.y);
+    else if (sec) flash(READERS[1].el, "No exercises recorded for this section");
+  }, FOLLOW_MS);
+}
+
+/* Text scroll updates the study section right away; exercises catch up after
+   you stop scrolling. Section picker jumps both immediately. */
 function setSection(volId, secId, opts) {
   opts = opts || {};
   const changed = !CURSEC || CURSEC.vol !== volId || CURSEC.id !== secId;
@@ -557,10 +568,21 @@ function setSection(volId, secId, opts) {
   const sec = sectionsOf(volId).find(s => s.id === secId);
   if (!sec) return;
   if (opts.navText && (changed || opts.force)) READERS[0].gotoVolBook(volId, sec.from);
-  // fromEx: the exercises pane already put us here — don't yank it back.
-  if (READERS[1] && !opts.fromEx && (changed || opts.force)) {
-    if (sec.exFrom) READERS[1].gotoVolAt(volId, sec.exFrom.page, sec.exFrom.y);
-    else flash(READERS[1].el, "No exercises recorded for this section");
+  if (opts.fromEx) {
+    clearTimeout(FOLLOW_T);
+    FOLLOW_T = null;
+    pendingFollow = null;
+  } else if (READERS[1] && (changed || opts.force)) {
+    if (opts.force) {
+      clearTimeout(FOLLOW_T);
+      FOLLOW_T = null;
+      pendingFollow = null;
+      if (sec.exFrom) READERS[1].gotoVolAt(volId, sec.exFrom.page, sec.exFrom.y);
+      else flash(READERS[1].el, "No exercises recorded for this section");
+    } else {
+      pendingFollow = { vol: volId, id: secId };
+      armExFollow();
+    }
   }
   if (changed) render();
 }
